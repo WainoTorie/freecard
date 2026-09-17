@@ -73,6 +73,15 @@
             font-size:16px;
             cursor:pointer;
         }
+        .log-area{
+            margin-top:30px;
+        }
+        .log-item{
+            background:#f8fafc;
+            padding:12px;
+            border-radius:8px;
+            margin-bottom:10px;
+        }
     </style>
 </head>
 <body>
@@ -127,6 +136,12 @@
             <textarea id="reason"></textarea>
         </div>
         <button type="button" onclick="submitRecord()">提交记录</button>
+
+        <!-- 历史记录区域，恢复原来的功能 -->
+        <div class="log-area">
+            <h3>📜 历史记录</h3>
+            <div id="logList"></div>
+        </div>
     </div>
 
 <script>
@@ -139,6 +154,24 @@ function loadData(){
     };
     document.getElementById("torieCount").innerText = data.torie;
     document.getElementById("joryCount").innerText = data.jory;
+    renderLogs(data.logs);
+}
+
+// 渲染日志列表
+function renderLogs(logs){
+    const logDom = document.getElementById("logList");
+    logDom.innerHTML = "";
+    // 倒序：最新记录在最上面
+    logs.slice().reverse().forEach(item=>{
+        const div = document.createElement("div");
+        div.className = "log-item";
+        const typeText = item.type === "add" ? "增加" : "减少";
+        div.innerHTML = `
+            <div>${item.time} | ${item.operator} ${typeText} ${item.num}张</div>
+            <div>原因：${item.reason}</div>
+        `;
+        logDom.appendChild(div);
+    })
 }
 
 // 提交记录核心函数
