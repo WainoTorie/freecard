@@ -1,156 +1,1010 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>自由卡双人记录</title>
-    <!-- 引入Supabase的魔法工具 -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { background: #f4f7fa; padding: 20px; font-family: system-ui, sans-serif; }
-        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 2px 12px #00000010; }
-        h1 { text-align: center; color: #2563eb; }
-        .score-row { display: grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:30px; }
-        .card-box { background:#eff6ff; text-align:center; padding:20px; border-radius:12px; }
-        .name { font-size:22px; font-weight:bold; color:#2563eb; }
-        .num { font-size:40px; font-weight:bold; margin:8px 0; }
-        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
-        label { display:block; margin-bottom:6px; font-weight:500; }
-        select,textarea { width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:16px; }
-        textarea { min-height:80px; }
-        button { background:#2563eb; color:white; border:none; padding:12px 24px; border-radius:8px; font-size:16px; cursor:pointer; }
-        button:hover { background:#1d4ed8; }
-        .log-area { margin-top:30px; }
-        .log-item { background:#f8fafc; padding:12px; border-radius:8px; margin-bottom:10px; border-left: 4px solid #2563eb; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一起变好 · 自由卡记录</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f6f8;
+      color: #222;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 14px 40px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin: 8px 0 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.05);
+    }
+
+    /* 余额 */
+    .balances {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .balance {
+      text-align: center;
+      padding: 18px 10px;
+      border-radius: 14px;
+      background: #f7f8fa;
+    }
+
+    .balance .name {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .balance .num {
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    .balance .unit {
+      font-size: 14px;
+      color: #777;
+      margin-left: 3px;
+    }
+
+    /* 表单 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 0 12px;
+      font-size: 15px;
+      background: #fff;
+      outline: none;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: #999;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .submit {
+      width: 100%;
+      height: 46px;
+      border-radius: 11px;
+      background: #222;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .submit:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* 状态 */
+    .status {
+      min-height: 20px;
+      text-align: center;
+      font-size: 13px;
+      margin-top: 10px;
+      color: #666;
+    }
+
+    .status.error {
+      color: #d33;
+    }
+
+    .status.success {
+      color: #16834b;
+    }
+
+    /* tabs */
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .tab {
+      height: 38px;
+      border-radius: 9px;
+      background: #f1f2f4;
+      color: #555;
+    }
+
+    .tab.active {
+      background: #222;
+      color: #fff;
+    }
+
+    /* 统计 */
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .stat .value {
+      font-size: 23px;
+      font-weight: 700;
+    }
+
+    .stat .label {
+      font-size: 12px;
+      color: #777;
+      margin-top: 3px;
+    }
+
+    .chart {
+      height: 150px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 30px;
+      border-bottom: 1px solid #ddd;
+      margin: 10px 0 20px;
+      padding: 0 20px;
+    }
+
+    .bar-box {
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .bar-wrap {
+      height: 100%;
+      width: 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .bar {
+      width: 30px;
+      min-height: 2px;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .bar.plus {
+      background: #35a66f;
+    }
+
+    .bar.minus {
+      background: #e45c5c;
+    }
+
+    .bar-num {
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .bar-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* 流水 */
+    .list-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .log {
+      display: grid;
+      grid-template-columns: 125px 55px 35px 45px 1fr 42px;
+      align-items: center;
+      gap: 6px;
+      padding: 11px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 13px;
+    }
+
+    .log:last-child {
+      border-bottom: 0;
+    }
+
+    .time {
+      color: #777;
+    }
+
+    .operator {
+      font-weight: 600;
+    }
+
+    .change {
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .change.plus {
+      color: #15945b;
+    }
+
+    .change.minus {
+      color: #dc4444;
+    }
+
+    .reason {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .delete {
+      color: #d44;
+      background: none;
+      font-size: 12px;
+      padding: 5px 2px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #999;
+      padding: 30px 0;
+      font-size: 14px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #888;
+      padding: 20px;
+    }
+
+    /* 手机 */
+    @media (max-width: 600px) {
+      .wrap {
+        padding: 14px 10px 30px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .log {
+        grid-template-columns: 90px 45px 28px 35px 1fr 38px;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .chart {
+        gap: 20px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>自由卡双人记录</h1>
-        <div class="score-row">
-            <div class="card-box">
-                <div class="name">Torie</div>
-                <div class="num" id="torieCount">0</div>
-                <div>张</div>
-            </div>
-            <div class="card-box">
-                <div class="name">Jory</div>
-                <div class="num" id="joryCount">0</div>
-                <div>张</div>
-            </div>
-        </div>
 
-        <div class="form-row">
-            <div>
-                <label>操作人</label>
-                <select id="operator">
-                    <option>Torie</option>
-                    <option>Jory</option>
-                </select>
-            </div>
-            <div>
-                <label>变动类型</label>
-                <select id="changeType">
-                    <option value="add">增加✅</option>
-                    <option value="sub">减少❌</option>
-                </select>
-            </div>
-        </div>
-        <div style="margin-bottom:16px;">
-            <label>卡片数量 (1~10)</label>
-            <select id="cardNum">
-                <option>1</option><option>2</option><option>3</option><option>4</option>
-                <option>5</option><option>6</option><option>7</option><option>8</option>
-                <option>9</option><option>10</option>
-            </select>
-        </div>
-        <div style="margin-bottom:20px;">
-            <label>事件原因</label>
-            <textarea id="reason"></textarea>
-        </div>
-        <button type="button" onclick="submitRecord()">提交记录</button>
+<div class="wrap">
 
-        <div class="log-area">
-            <h3>📜 历史记录</h3>
-            <div id="logList">正在读取数据，请稍等...</div>
+  <h1>一起变好 · 自由卡记录</h1>
+
+  <!-- 余额 -->
+  <div class="card">
+    <div class="balances">
+      <div class="balance">
+        <div class="name">Torie</div>
+        <div>
+          <span class="num" id="balanceTorie">0</span>
+          <span class="unit">张</span>
         </div>
+      </div>
+
+      <div class="balance">
+        <div class="name">Jory</div>
+        <div>
+          <span class="num" id="balanceJory">0</span>
+          <span class="unit">张</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 录入 -->
+  <div class="card">
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label>操作人</label>
+        <select id="operator">
+          <option value="Torie">Torie</option>
+          <option value="Jory">Jory</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>变动类型</label>
+        <select id="changeType">
+          <option value="增加">增加 ✅</option>
+          <option value="减少">减少 ❌</option>
+        </select>
+      </div>
+
+      <div class="field full">
+        <label>事件原因</label>
+        <input
+          id="reason"
+          type="text"
+          maxlength="200"
+          placeholder="例如：完成今日学习任务"
+        >
+      </div>
+
+      <div class="field">
+        <label>卡片数量</label>
+        <select id="cardNum"></select>
+      </div>
+
     </div>
 
+    <button class="submit" id="submitBtn" onclick="addLog()">
+      提交记录
+    </button>
+
+    <div id="status" class="status"></div>
+
+  </div>
+
+  <!-- 统计 & 历史 -->
+  <div class="card">
+
+    <div class="tabs">
+      <button class="tab active" data-period="today">今日</button>
+      <button class="tab" data-period="week">本周</button>
+      <button class="tab" data-period="month">本月</button>
+      <button class="tab" data-period="all">总计</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="value" id="totalPlus">0</div>
+        <div class="label">增加</div>
+      </div>
+
+      <div class="stat">
+        <div class="value" id="totalMinus">0</div>
+        <div class="label">减少</div>
+      </div>
+
+      <div class="stat">
+        <div class="value" id="totalCount">0</div>
+        <div class="label">记录</div>
+      </div>
+    </div>
+
+    <div class="chart">
+      <div class="bar-box">
+
+        <div class="bar-wrap">
+          <div class="bar-num" id="plusNum">0</div>
+          <div class="bar plus" id="plusBar"></div>
+          <div class="bar-label">增加 ✅</div>
+        </div>
+
+        <div class="bar-wrap">
+          <div class="bar-num" id="minusNum">0</div>
+          <div class="bar minus" id="minusBar"></div>
+          <div class="bar-label">减少 ❌</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="list-title">历史流水</div>
+
+    <div id="logList">
+      <div class="loading">正在加载...</div>
+    </div>
+
+  </div>
+
+</div>
+
+
 <script>
-// 这里放你的钥匙和地址
-const SUPABASE_URL = 'https://vimaqasjmrocpqyepudw.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  /* =========================
+     Supabase 配置
+     ========================= */
 
-// 打开网页时，先从云端数据库里把数据拿出来
-async function loadData(){
-    let { data: logs } = await supabase.from('freecard_log').select('*').order('created_at', { ascending: true });
-    
-    if(!logs) logs = [];
-    
-    // 重新算一遍分数
-    let torie = 0, jory = 0;
-    logs.forEach(item => {
-        if(item.operator === 'Torie'){
-            if(item.change_type === 'add') torie += item.card_num;
-            else torie -= item.card_num;
-        } else if(item.operator === 'Jory'){
-            if(item.change_type === 'add') jory += item.card_num;
-            else jory -= item.card_num;
+  const SUPABASE_URL =
+    "https://vimaqasjmrocpqyepudw.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
+
+  // 注意：
+  // 这里使用 supabaseClient，避免和 CDN 提供的 supabase 全局对象冲突
+  const supabaseClient =
+    window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+  /* =========================
+     页面状态
+     ========================= */
+
+  let allLogs = [];
+  let currentPeriod = "today";
+
+
+  /* =========================
+     初始化
+     ========================= */
+
+  const cardNumSelect = document.getElementById("cardNum");
+
+  for (let i = 1; i <= 10; i++) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i + " 张";
+    cardNumSelect.appendChild(option);
+  }
+
+
+  /* =========================
+     时间范围
+     ========================= */
+
+  function getPeriodStart(period) {
+    const now = new Date();
+
+    if (period === "all") {
+      return null;
+    }
+
+    if (period === "today") {
+      return new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      );
+    }
+
+    if (period === "week") {
+      const day = now.getDay();
+
+      // 周一作为一周开始
+      const diff = day === 0 ? 6 : day - 1;
+
+      return new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() - diff
+      );
+    }
+
+    if (period === "month") {
+      return new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+      );
+    }
+  }
+
+
+  function filterLogs(logs, period) {
+    const start = getPeriodStart(period);
+
+    if (!start) {
+      return logs;
+    }
+
+    return logs.filter(log => {
+      return new Date(log.created_at) >= start;
+    });
+  }
+
+
+  /* =========================
+     格式化时间
+     ========================= */
+
+  function formatTime(timestamp) {
+    const date = new Date(timestamp);
+
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    const h = String(date.getHours()).padStart(2, "0");
+    const min = String(date.getMinutes()).padStart(2, "0");
+
+    return `${y}-${m}-${d} ${h}:${min}`;
+  }
+
+
+  /* =========================
+     加载全部数据
+     ========================= */
+
+  async function loadLogs() {
+
+    const { data, error } = await supabaseClient
+      .from("freecard_log")
+      .select("*")
+      .order("created_at", {
+        ascending: false
+      });
+
+    if (error) {
+      console.error(error);
+
+      showStatus(
+        "读取数据库失败：" + error.message,
+        true
+      );
+
+      return;
+    }
+
+    allLogs = data || [];
+
+    refresh();
+  }
+
+
+  /* =========================
+     重新计算余额
+     ========================= */
+
+  function calculateBalance(operator) {
+
+    return allLogs
+      .filter(log => log.operator === operator)
+      .reduce((total, log) => {
+
+        const num = Number(log.card_num) || 0;
+
+        if (log.change_type === "增加") {
+          return total + num;
         }
+
+        if (log.change_type === "减少") {
+          return total - num;
+        }
+
+        return total;
+
+      }, 0);
+  }
+
+
+  function updateBalances() {
+
+    const torie = calculateBalance("Torie");
+    const jory = calculateBalance("Jory");
+
+    document.getElementById("balanceTorie").textContent = torie;
+    document.getElementById("balanceJory").textContent = jory;
+  }
+
+
+  /* =========================
+     刷新全部界面
+     ========================= */
+
+  function refresh() {
+
+    updateBalances();
+
+    const logs = filterLogs(
+      allLogs,
+      currentPeriod
+    );
+
+    renderStats(logs);
+    renderLogs(logs);
+  }
+
+
+  /* =========================
+     统计
+     ========================= */
+
+  function renderStats(logs) {
+
+    let plus = 0;
+    let minus = 0;
+
+    logs.forEach(log => {
+
+      const num = Number(log.card_num) || 0;
+
+      if (log.change_type === "增加") {
+        plus += num;
+      }
+
+      if (log.change_type === "减少") {
+        minus += num;
+      }
+
     });
 
-    document.getElementById("torieCount").innerText = torie;
-    document.getElementById("joryCount").innerText = jory;
-    
-    // 渲染历史记录
-    const logDom = document.getElementById("logList");
-    logDom.innerHTML = "";
-    logs.reverse().forEach(item=>{
-        const div = document.createElement("div");
-        div.className = "log-item";
-        const typeText = item.change_type === "add" ? "增加" : "减少";
-        const timeStr = new Date(item.created_at).toLocaleString();
-        div.innerHTML = `<div><strong>${timeStr}</strong> | ${item.operator} ${typeText} ${item.card_num}张</div><div>原因：${item.reason}</div>`;
-        logDom.appendChild(div);
-    });
-}
+    document.getElementById("totalPlus").textContent = plus;
+    document.getElementById("totalMinus").textContent = minus;
+    document.getElementById("totalCount").textContent = logs.length;
 
-// 按下按钮时，把数据写到云端数据库
-async function submitRecord(){
-    const btn = document.querySelector("button");
-    btn.innerText = "正在提交...";
-    btn.disabled = true;
+    document.getElementById("plusNum").textContent = plus;
+    document.getElementById("minusNum").textContent = minus;
 
-    const op = document.getElementById("operator").value;
-    const type = document.getElementById("changeType").value;
-    const num = parseInt(document.getElementById("cardNum").value);
-    const reason = document.getElementById("reason").value.trim();
+    const max = Math.max(plus, minus, 1);
 
-    if(!reason){
-        alert("请填写事件原因");
-        btn.innerText = "提交记录";
-        btn.disabled = false;
+    document.getElementById("plusBar").style.height =
+      Math.max(2, plus / max * 100) + "%";
+
+    document.getElementById("minusBar").style.height =
+      Math.max(2, minus / max * 100) + "%";
+  }
+
+
+  /* =========================
+     历史流水
+     ========================= */
+
+  function renderLogs(logs) {
+
+    const list = document.getElementById("logList");
+
+    if (!logs.length) {
+      list.innerHTML =
+        '<div class="empty">这个时间段暂无记录</div>';
+      return;
+    }
+
+    list.innerHTML = logs.map(log => {
+
+      const isPlus = log.change_type === "增加";
+
+      return `
+        <div class="log">
+
+          <div class="time">
+            ${formatTime(log.created_at)}
+          </div>
+
+          <div class="operator">
+            ${escapeHtml(log.operator)}
+          </div>
+
+          <div class="change ${isPlus ? "plus" : "minus"}">
+            ${isPlus ? "＋" : "−"}
+          </div>
+
+          <div>
+            ${Number(log.card_num)}
+          </div>
+
+          <div class="reason" title="${escapeHtml(log.reason || "")}">
+            ${escapeHtml(log.reason || "—")}
+          </div>
+
+          <button
+            class="delete"
+            onclick="deleteLog('${log.id}')"
+          >
+            删除
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+  }
+
+
+  /* =========================
+     添加记录
+     ========================= */
+
+  async function addLog() {
+
+    const operator =
+      document.getElementById("operator").value;
+
+    const changeType =
+      document.getElementById("changeType").value;
+
+    const reason =
+      document.getElementById("reason").value.trim();
+
+    const cardNum =
+      Number(document.getElementById("cardNum").value);
+
+    const submitBtn =
+      document.getElementById("submitBtn");
+
+
+    if (!reason) {
+      showStatus("请填写事件原因", true);
+      return;
+    }
+
+
+    if (!cardNum || cardNum < 1 || cardNum > 10) {
+      showStatus("卡片数量必须是 1～10 张", true);
+      return;
+    }
+
+
+    // 减少时检查当前余额
+    if (changeType === "减少") {
+
+      const balance =
+        calculateBalance(operator);
+
+      if (cardNum > balance) {
+        showStatus(
+          `${operator} 当前只有 ${balance} 张，不能减少 ${cardNum} 张`,
+          true
+        );
         return;
+      }
     }
 
-    const { error } = await supabase.from('freecard_log').insert([
-        { operator: op, change_type: type, card_num: num, reason: reason }
-    ]);
 
-    if(error){
-        alert("提交失败了：" + error.message);
-    } else {
-        alert("提交成功！数据已经保存到云端啦。");
-        document.getElementById("reason").value = "";
-        loadData(); // 重新刷新一下数据
+    submitBtn.disabled = true;
+    submitBtn.textContent = "提交中...";
+
+
+    const { error } = await supabaseClient
+      .from("freecard_log")
+      .insert({
+        operator: operator,
+        change_type: changeType,
+        card_num: cardNum,
+        reason: reason
+      });
+
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "提交记录";
+
+
+    if (error) {
+
+      console.error(error);
+
+      showStatus(
+        "提交失败：" + error.message,
+        true
+      );
+
+      return;
     }
-    
-    btn.innerText = "提交记录";
-    btn.disabled = false;
-}
 
-// 一打开网页就开始加载数据
-loadData();
+
+    document.getElementById("reason").value = "";
+
+    showStatus("记录成功 ✓");
+
+    // Realtime 正常情况下会自动刷新
+    // 这里额外读取一次，确保当前页面立即更新
+    await loadLogs();
+  }
+
+
+  /* =========================
+     删除记录
+     ========================= */
+
+  async function deleteLog(id) {
+
+    const log =
+      allLogs.find(item => item.id === id);
+
+    if (!log) {
+      return;
+    }
+
+
+    const ok = confirm(
+      `确定删除这条记录吗？\n\n` +
+      `${formatTime(log.created_at)}\n` +
+      `${log.operator} ${log.change_type} ${log.card_num} 张\n` +
+      `${log.reason || ""}\n\n` +
+      `删除后余额会自动重新计算。`
+    );
+
+
+    if (!ok) {
+      return;
+    }
+
+
+    const { error } = await supabaseClient
+      .from("freecard_log")
+      .delete()
+      .eq("id", id);
+
+
+    if (error) {
+
+      console.error(error);
+
+      showStatus(
+        "删除失败：" + error.message,
+        true
+      );
+
+      return;
+    }
+
+
+    showStatus("记录已删除 ✓");
+
+    await loadLogs();
+  }
+
+
+  /* =========================
+     Realtime
+     ========================= */
+
+  supabaseClient
+    .channel("freecard-realtime")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "freecard_log"
+      },
+      payload => {
+
+        console.log(
+          "Realtime:",
+          payload.eventType
+        );
+
+        // 任何新增 / 删除 / 修改
+        // 都重新从数据库读取完整流水
+        loadLogs();
+      }
+    )
+    .subscribe(status => {
+
+      console.log(
+        "Realtime status:",
+        status
+      );
+
+    });
+
+
+  /* =========================
+     Tab
+     ========================= */
+
+  document.querySelectorAll(".tab")
+    .forEach(tab => {
+
+      tab.addEventListener("click", () => {
+
+        document.querySelectorAll(".tab")
+          .forEach(item =>
+            item.classList.remove("active")
+          );
+
+        tab.classList.add("active");
+
+        currentPeriod =
+          tab.dataset.period;
+
+        refresh();
+      });
+
+    });
+
+
+  /* =========================
+     防止 HTML 注入
+     ========================= */
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  /* =========================
+     状态提示
+     ========================= */
+
+  let statusTimer;
+
+  function showStatus(message, error = false) {
+
+    const status =
+      document.getElementById("status");
+
+    status.textContent = message;
+
+    status.className =
+      "status " +
+      (error ? "error" : "success");
+
+    clearTimeout(statusTimer);
+
+    statusTimer = setTimeout(() => {
+      status.textContent = "";
+      status.className = "status";
+    }, 3500);
+  }
+
+
+  /* =========================
+     启动
+     ========================= */
+
+  loadLogs();
+
 </script>
+
 </body>
 </html>
