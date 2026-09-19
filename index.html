@@ -2,2217 +2,620 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>一起变好 · 自由卡记录</title>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg: #f2f2f7;
+      --card: rgba(255,255,255,0.88);
+      --text-1: #1d1d1f;
+      --text-2: #86868b;
+      --text-3: #aeaeb2;
+      --border: rgba(0,0,0,0.06);
+      --torie: #007aff;
+      --jory: #ff9500;
+      --green: #34c759;
+      --red: #ff3b30;
+      --r-lg: 20px;
+      --r-md: 14px;
+      --r-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.06);
+      --font: -apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
     }
 
-    body {
-      margin: 0;
-      padding: 24px 24px 110px;
-      background: #f5f5f7;
-      color: #1d1d1f;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "SF Pro Text",
-        "Helvetica Neue",
-        Arial,
-        sans-serif;
-    }
-
-    .container {
-      width: min(900px, 100%);
-      margin: 0 auto;
-    }
-
-    h1 {
-      margin: 0;
-      text-align: center;
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .subtitle {
-      margin: 8px 0 28px;
-      text-align: center;
-      color: #86868b;
-      font-size: 14px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 22px;
-      margin-bottom: 18px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-    }
-
-    /* =========================
-       余额
-    ========================= */
-
-    .balances {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .balance-box {
-      text-align: center;
-      padding: 18px 10px;
-      border-radius: 16px;
-      background: #f5f5f7;
-    }
-
-    .balance-name {
-      font-size: 15px;
-      color: #6e6e73;
-      margin-bottom: 6px;
-    }
-
-    .balance-number {
-      font-size: 34px;
-      font-weight: 700;
-      letter-spacing: -1px;
-    }
-
-    .balance-unit {
-      font-size: 14px;
-      color: #86868b;
-      margin-left: 3px;
-    }
-
-    /* =========================
-       标题
-    ========================= */
-
-    .section-title {
-      font-size: 19px;
-      font-weight: 700;
-      margin: 0 0 18px;
-    }
-
-    /* =========================
-       表单
-    ========================= */
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .form-group.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 13px;
-      color: #6e6e73;
-    }
-
-    select,
-    input {
-      width: 100%;
-      height: 44px;
-      padding: 0 12px;
-      border: 1px solid #d2d2d7;
-      border-radius: 10px;
-      background: #fff;
-      color: #1d1d1f;
-      font-size: 15px;
-      outline: none;
-    }
-
-    select:focus,
-    input:focus {
-      border-color: #86868b;
-    }
-
-    .submit-btn {
-      width: 100%;
-      height: 46px;
-      margin-top: 16px;
-      border: none;
-      border-radius: 11px;
-      background: #1d1d1f;
-      color: white;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .submit-btn:hover {
-      opacity: 0.9;
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    #status {
-      min-height: 20px;
-      margin-top: 12px;
-      text-align: center;
-      font-size: 13px;
-      color: #6e6e73;
-    }
-
-    /* =========================
-       统计周期
-    ========================= */
-
-    .period-tabs {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      padding: 4px;
-      background: #f5f5f7;
-      border-radius: 11px;
-      margin-bottom: 24px;
-    }
-
-    .period-tab {
-      height: 36px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: #6e6e73;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .period-tab.active {
-      background: white;
-      color: #1d1d1f;
-      font-weight: 600;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    }
-
-    /* =========================
-       统计图
-    ========================= */
-
-    .stats-group {
-      margin-bottom: 28px;
-    }
-
-    .stats-group:last-child {
-      margin-bottom: 0;
-    }
-
-    .stats-label {
-      margin-bottom: 12px;
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .bar-row {
-      display: grid;
-      grid-template-columns: 58px 1fr 38px;
-      align-items: center;
-      gap: 10px;
-      margin: 11px 0;
-    }
-
-    .bar-name {
-      font-size: 14px;
-      color: #6e6e73;
-    }
-
-    .bar-track {
-      height: 18px;
-      background: #f0f0f2;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .bar {
-      height: 100%;
-      min-width: 0;
-      border-radius: 6px;
-      background: #1d1d1f;
-      transition: width 0.35s ease;
-    }
-
-    .bar.jory {
-      background: #8e8e93;
-    }
-
-    .bar-number {
-      text-align: right;
-      font-size: 14px;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .empty-stats {
-      padding: 12px 0;
-      color: #86868b;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    /* =========================
-       历史流水
-    ========================= */
-
-    .history-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .history-header .section-title {
-      margin: 0;
-    }
-
-    .history-filter {
-      width: auto;
-      min-width: 130px;
-      height: 38px;
-      font-size: 14px;
-    }
-
-    .history-list {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .history-item {
-      display: grid;
-      grid-template-columns: 125px 65px 48px 48px 1fr auto;
-      align-items: center;
-      gap: 10px;
-      padding: 13px 0;
-      border-bottom: 1px solid #eeeef0;
-      font-size: 14px;
-    }
-
-    .history-item:last-child {
-      border-bottom: none;
-    }
-
-    .history-time {
-      color: #86868b;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .history-person {
-      font-weight: 600;
-    }
-
-    .history-change {
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .history-change.plus {
-      color: #34a853;
-    }
-
-    .history-change.minus {
-      color: #e53935;
-    }
-
-    .history-number {
-      font-weight: 600;
-    }
-
-    .history-reason {
-      color: #424245;
-      word-break: break-word;
-    }
-
-    .delete-btn {
-      border: none;
-      background: transparent;
-      color: #86868b;
-      font-size: 13px;
-      cursor: pointer;
-      padding: 5px 0;
-    }
-
-    .delete-btn:hover {
-      color: #1d1d1f;
-    }
-
-    .empty-history {
-      padding: 30px 0 12px;
-      text-align: center;
-      color: #86868b;
-      font-size: 14px;
-    }
-
-    /* =========================
-       App 页面 / 底部导航
-    ========================= */
-
-    .app-page {
-      display: none;
-      animation: pageIn 0.18s ease;
-    }
-
-    .app-page.active {
-      display: block;
-    }
-
-    @keyframes pageIn {
-      from {
-        opacity: 0;
-        transform: translateY(4px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .bottom-nav {
-      position: fixed;
-      z-index: 1000;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      width: min(520px, calc(100% - 28px));
-      padding: 7px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid rgba(210, 210, 215, 0.72);
-      border-radius: 20px;
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.10),
-        0 2px 8px rgba(0, 0, 0, 0.05);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-
-    .nav-btn {
-      min-height: 58px;
-      border: 0;
-      border-radius: 15px;
-      background: transparent;
-      color: #86868b;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      font-size: 12px;
-      font-weight: 500;
-      transition:
-        background 0.18s ease,
-        color 0.18s ease,
-        transform 0.12s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .nav-btn:active {
-      transform: scale(0.96);
-    }
-
-    .nav-icon {
-      font-size: 20px;
-      line-height: 1;
-    }
-
-    .nav-btn.active {
-      background: #1d1d1f;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .page-title {
-      margin: 0 0 18px;
-      font-size: 28px;
-      line-height: 1.2;
-      font-weight: 700;
-      letter-spacing: -0.6px;
-    }
-
-    /* =========================
-       手机
-    ========================= */
-
-    @media (max-width: 680px) {
-      body {
-        padding: 14px 14px 104px;
-      }
-
-      .card {
-        padding: 17px;
-        border-radius: 17px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-group.full {
-        grid-column: auto;
-      }
-
-      .history-header {
-        align-items: flex-start;
-      }
-
-      .history-filter {
-        min-width: 120px;
-      }
-
-      .history-item {
-        grid-template-columns: 1fr auto;
-        gap: 5px 10px;
-        padding: 15px 0;
-      }
-
-      .history-time {
-        grid-column: 1;
-      }
-
-      .history-person {
-        grid-column: 1;
-        grid-row: 2;
-      }
-
-      .history-change,
-      .history-number {
-        grid-row: 2;
-      }
-
-      .history-change {
-        margin-left: auto;
-      }
-
-      .history-number {
-        justify-self: start;
-      }
-
-      .history-reason {
-        grid-column: 1 / -1;
-        margin-top: 2px;
-      }
-
-      .delete-btn {
-        grid-column: 2;
-        grid-row: 1;
-      }
-
-      .balance-number {
-        font-size: 30px;
-      }
-
-      .bar-row {
-        grid-template-columns: 48px 1fr 32px;
-        gap: 7px;
-      }
-
-      .bottom-nav {
-        bottom: 12px;
-        width: calc(100% - 24px);
-        border-radius: 18px;
-      }
-
-      .nav-btn {
-        min-height: 54px;
-        border-radius: 14px;
-      }
-
-      .nav-icon {
-        font-size: 19px;
-      }
-
-      .page-title {
-        font-size: 24px;
-      }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text-1); font-family: var(--font); padding: 20px 16px 120px; min-height: 100vh; line-height: 1.5; }
+    .container { width: min(680px,100%); margin: 0 auto; }
+
+    /* Typography */
+    .page-title { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 6px; background: linear-gradient(135deg,#1d1d1f,#4a4a4e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .subtitle { color: var(--text-2); font-size: 15px; margin-bottom: 28px; }
+    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+    /* Cards */
+    .card { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+
+    /* Balances */
+    .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .balance-box { text-align: center; padding: 20px 12px; border-radius: var(--r-md); transition: transform .2s; }
+    .balance-box.torie { background: rgba(0,122,255,0.08); color: var(--torie); }
+    .balance-box.jory { background: rgba(255,149,0,0.08); color: var(--jory); }
+    .balance-name { font-size: 14px; font-weight: 600; opacity: .8; margin-bottom: 4px; }
+    .balance-number { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+    .balance-unit { font-size: 13px; font-weight: 500; opacity: .7; margin-left: 2px; }
+
+    /* Form */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1/-1; }
+    label { font-size: 13px; font-weight: 600; color: var(--text-2); margin-left: 2px; }
+    select,input { width: 100%; height: 48px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r-sm); background: rgba(255,255,255,0.9); color: var(--text-1); font-size: 16px; outline: none; transition: all .2s; appearance: none; }
+    select:focus,input:focus { border-color: var(--torie); box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
+    .submit-btn { width: 100%; height: 50px; margin-top: 18px; border: none; border-radius: var(--r-md); background: var(--text-1); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; transition: all .2s; }
+    .submit-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* Period Tabs */
+    .period-tabs { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; padding: 4px; background: rgba(0,0,0,0.04); border-radius: var(--r-md); margin-bottom: 24px; }
+    .period-tab { height: 38px; border: none; border-radius: 10px; background: transparent; color: var(--text-2); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .2s; }
+    .period-tab.active { background: #fff; color: var(--text-1); font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    /* Stats Summary Card */
+    .stats-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 24px; }
+    .summary-item { text-align: center; padding: 14px 8px; border-radius: var(--r-md); background: rgba(0,0,0,0.03); }
+    .summary-label { font-size: 12px; color: var(--text-2); font-weight: 600; margin-bottom: 4px; }
+    .summary-value { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .summary-value.plus { color: var(--green); }
+    .summary-value.minus { color: var(--red); }
+    .summary-value.net { color: var(--torie); }
+
+    /* Bars */
+    .stats-group { margin-bottom: 24px; }
+    .stats-group:last-child { margin-bottom: 0; }
+    .stats-label { margin-bottom: 12px; font-size: 15px; font-weight: 700; color: var(--text-2); }
+    .bar-row { display: grid; grid-template-columns: 50px 1fr 36px; align-items: center; gap: 10px; margin: 10px 0; }
+    .bar-name { font-size: 13px; font-weight: 600; color: var(--text-2); }
+    .bar-track { height: 20px; background: rgba(0,0,0,0.04); border-radius: 10px; overflow: hidden; }
+    .bar { height: 100%; border-radius: 10px; transition: width .5s cubic-bezier(.22,1,.36,1); min-width: 0; }
+    .bar.torie-bar { background: linear-gradient(90deg,var(--torie),#5ac8fa); }
+    .bar.jory-bar { background: linear-gradient(90deg,var(--jory),#ffd60a); }
+    .bar-number { text-align: right; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .empty-stats { padding: 20px 0; color: var(--text-3); font-size: 14px; text-align: center; }
+
+    /* History */
+    .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .history-header .section-title { margin: 0; }
+    .history-filter { width: auto; min-width: 120px; height: 40px; font-size: 14px; border-radius: var(--r-sm); }
+    .history-item { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 16px 0; border-bottom: 1px solid var(--border); animation: fadeIn .3s ease; }
+    .history-item:last-child { border-bottom: none; }
+    .history-top { display: flex; align-items: baseline; gap: 8px; }
+    .history-person { font-weight: 700; font-size: 15px; }
+    .history-reason { color: var(--text-2); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-time { font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; margin-top: 2px; }
+    .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .history-change { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+    .history-change.plus { color: var(--green); }
+    .history-change.minus { color: var(--red); }
+    .delete-btn { border: none; background: rgba(255,59,48,0.1); color: var(--red); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; cursor: pointer; margin-top: 4px; transition: all .2s; }
+    .delete-btn:hover { background: var(--red); color: #fff; }
+    .empty-history { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
+
+    /* ========== SHOP STYLES ========== */
+    .shop-view-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: rgba(0,0,0,0.04); border-radius: var(--r-md); margin-bottom: 20px; }
+    .shop-view-btn { height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 15px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all .2s; }
+    .shop-view-btn.active.torie { background: #fff; color: var(--torie); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .shop-view-btn.active.jory { background: #fff; color: var(--jory); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    .shop-item { padding: 18px 0; border-bottom: 1px solid var(--border); animation: fadeIn .3s ease; }
+    .shop-item:last-child { border-bottom: none; }
+    .shop-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .shop-item-name { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .shop-item-cost { font-size: 14px; font-weight: 700; color: var(--text-2); white-space: nowrap; }
+    .shop-progress-text { font-size: 13px; color: var(--text-2); margin-bottom: 6px; font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; }
+    .shop-bar-track { height: 14px; background: rgba(0,0,0,0.05); border-radius: 7px; overflow: hidden; }
+    .shop-bar { height: 100%; border-radius: 7px; transition: width .5s cubic-bezier(.22,1,.36,1); }
+    .shop-bar.torie { background: linear-gradient(90deg,var(--torie),#5ac8fa); }
+    .shop-bar.jory { background: linear-gradient(90deg,var(--jory),#ffd60a); }
+    .shop-bar.full { background: linear-gradient(90deg,var(--green),#30d158) !important; }
+    .shop-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .shop-action-btn { flex: 1; height: 36px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; }
+    .shop-action-btn:active { transform: scale(0.96); }
+    .btn-redeem { background: var(--green); color: #fff; }
+    .btn-redeem:disabled { background: rgba(0,0,0,0.08); color: var(--text-3); cursor: not-allowed; }
+    .btn-edit { background: rgba(0,0,0,0.05); color: var(--text-2); }
+    .btn-del { background: rgba(255,59,48,0.1); color: var(--red); }
+
+    .add-product-form { display: grid; grid-template-columns: 1fr 100px auto; gap: 10px; align-items: end; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
+    .add-product-form .form-group { gap: 4px; }
+    .add-btn { height: 48px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; padding: 0 18px; white-space: nowrap; }
+    .add-btn:active { transform: scale(0.96); }
+
+    .empty-shop { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
+
+    /* Nav */
+    .app-page { display: none; animation: pageSlideIn .25s ease; }
+    .app-page.active { display: block; }
+    @keyframes pageSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(400px,calc(100% - 32px)); padding: 6px; display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; background: rgba(255,255,255,0.92); border: 1px solid rgba(255,255,255,0.5); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+    .nav-btn { height: 56px; border: 0; border-radius: 18px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; font-weight: 600; transition: all .2s; }
+    .nav-btn:active { transform: scale(0.92); }
+    .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-btn.active { background: var(--text-1); color: #fff; }
+
+    /* Toast */
+    .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
+    .toast { padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all .3s; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--red); }
+
+    @media (max-width:480px) {
+      body { padding: 16px 12px 110px; }
+      .page-title { font-size: 28px; }
+      .card { padding: 20px; border-radius: 18px; }
+      .balance-number { font-size: 30px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: auto; }
+      .stats-summary { grid-template-columns: 1fr; gap: 6px; }
+      .summary-item { display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 12px 16px; }
+      .summary-label { margin-bottom: 0; }
+      .add-product-form { grid-template-columns: 1fr 80px; }
+      .add-product-form .form-group:first-child { grid-column: 1/-1; }
+      .add-btn { grid-column: 2; }
+      .bottom-nav { bottom: 12px; border-radius: 20px; }
+      .nav-btn { height: 52px; border-radius: 16px; }
     }
   </style>
 </head>
-
 <body>
 
-  <div class="container">
+<div class="toast-container"><div id="toast" class="toast"></div></div>
 
-    <!-- =========================
-         记录自由卡页面
-    ========================= -->
+<div class="container">
 
-    <section id="page-record" class="app-page active">
-
-      <div class="page-title">
-        记录自由卡
+  <!-- ====== 记录页 ====== -->
+  <section id="page-record" class="app-page active">
+    <div class="page-title">记录自由卡</div>
+    <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
+    <div class="card">
+      <div class="balances">
+        <div class="balance-box torie"><div class="balance-name">Torie</div><div><span id="torieBalance" class="balance-number">0</span><span class="balance-unit">张</span></div></div>
+        <div class="balance-box jory"><div class="balance-name">Jory</div><div><span id="joryBalance" class="balance-number">0</span><span class="balance-unit">张</span></div></div>
       </div>
-
-      <div class="subtitle">
-        记录每一次获得，也记录每一次自由
+    </div>
+    <div class="card">
+      <h2 class="section-title">📝 新增记录</h2>
+      <div class="form-grid">
+        <div class="form-group"><label for="operator">谁</label><select id="operator"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
+        <div class="form-group"><label for="changeType">变化</label><select id="changeType"><option value="增加">增加 ✅</option><option value="减少">减少 ❌</option></select></div>
+        <div class="form-group full"><label for="reason">原因</label><input id="reason" type="text" maxlength="100" placeholder="例如：完成英语学习、玩游戏" /></div>
+        <div class="form-group"><label for="cardNum">数量</label><select id="cardNum"></select></div>
       </div>
+      <button id="submitBtn" class="submit-btn">提交记录</button>
+    </div>
+  </section>
 
-      <!-- 当前余额 -->
+  <!-- ====== 商店页 ====== -->
+  <section id="page-shop" class="app-page">
+    <div class="page-title">自由卡商店</div>
+    <div class="subtitle">用努力兑换心愿 🏪</div>
 
-      <div class="card">
-
-        <div class="balances">
-
-          <div class="balance-box">
-            <div class="balance-name">
-              Torie
-            </div>
-
-            <div>
-              <span
-                id="torieBalance"
-                class="balance-number"
-              >0</span>
-
-              <span class="balance-unit">
-                张
-              </span>
-            </div>
-          </div>
-
-
-          <div class="balance-box">
-            <div class="balance-name">
-              Jory
-            </div>
-
-            <div>
-              <span
-                id="joryBalance"
-                class="balance-number"
-              >0</span>
-
-              <span class="balance-unit">
-                张
-              </span>
-            </div>
-          </div>
-
-        </div>
-
+    <div class="card">
+      <div class="shop-view-switch">
+        <button class="shop-view-btn active torie" data-view="Torie">👧 Torie 的橱窗</button>
+        <button class="shop-view-btn jory" data-view="Jory">👦 Jory 的橱窗</button>
       </div>
-
-
-      <!-- 新增记录 -->
-
-      <div class="card">
-
-        <h2 class="section-title">
-          记录自由卡
-        </h2>
-
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label for="operator">
-              谁
-            </label>
-
-            <select id="operator">
-
-              <option value="Torie">
-                Torie
-              </option>
-
-              <option value="Jory">
-                Jory
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="changeType">
-              变化
-            </label>
-
-            <select id="changeType">
-
-              <option value="增加">
-                增加✅
-              </option>
-
-              <option value="减少">
-                减少❌
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group full">
-
-            <label for="reason">
-              原因
-            </label>
-
-            <input
-              id="reason"
-              type="text"
-              maxlength="100"
-              placeholder="例如：完成英语学习、玩游戏"
-            />
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="cardNum">
-              数量
-            </label>
-
-            <select id="cardNum"></select>
-
-          </div>
-
-        </div>
-
-
-        <button
-          id="submitBtn"
-          class="submit-btn"
-        >
-          提交记录
-        </button>
-
-
-        <div id="status"></div>
-
+      <div id="shopList"></div>
+      <div class="add-product-form">
+        <div class="form-group"><label>商品名称</label><input id="newProductName" type="text" maxlength="30" placeholder="🏨 周末酒店" /></div>
+        <div class="form-group"><label>价格(张)</label><input id="newProductCost" type="number" min="1" max="999" placeholder="100" /></div>
+        <button class="add-btn" id="addProductBtn">添加</button>
       </div>
+    </div>
+  </section>
 
-    </section>
+  <!-- ====== 数据页（统计+流水） ====== -->
+  <section id="page-data" class="app-page">
+    <div class="page-title">数据统计</div>
+    <div class="subtitle">看见成长的轨迹 📊</div>
 
-
-    <!-- =========================
-         统计页面
-    ========================= -->
-
-    <section id="page-stats" class="app-page">
-
-      <div class="page-title">
-        统计
+    <div class="card">
+      <h2 class="section-title">📈 统计概览</h2>
+      <div class="period-tabs">
+        <button class="period-tab active" data-period="today">今日</button>
+        <button class="period-tab" data-period="week">本周</button>
+        <button class="period-tab" data-period="month">本月</button>
+        <button class="period-tab" data-period="all">总计</button>
       </div>
+      <div id="statsSummary" class="stats-summary"></div>
+      <div id="statsContent"></div>
+    </div>
 
-      <div class="card">
-
-        <h2 class="section-title">
-          统计
-        </h2>
-
-
-        <div class="period-tabs">
-
-          <button
-            class="period-tab active"
-            data-period="today"
-          >
-            今日
-          </button>
-
-          <button
-            class="period-tab"
-            data-period="week"
-          >
-            本周
-          </button>
-
-          <button
-            class="period-tab"
-            data-period="month"
-          >
-            本月
-          </button>
-
-          <button
-            class="period-tab"
-            data-period="all"
-          >
-            总计
-          </button>
-
-        </div>
-
-
-        <div id="statsContent"></div>
-
+    <div class="card">
+      <div class="history-header">
+        <h2 class="section-title">🧾 流水明细</h2>
+        <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
       </div>
-
-    </section>
-
-
-    <!-- =========================
-         历史流水页面
-    ========================= -->
-
-    <section id="page-history" class="app-page">
-
-      <div class="page-title">
-        历史流水
-      </div>
-
-      <div class="card">
-
-        <div class="history-header">
-
-          <h2 class="section-title">
-            历史流水
-          </h2>
-
-
-          <select
-            id="historyFilter"
-            class="history-filter"
-          >
-
-            <option value="all">
-              全部
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div
-          id="historyList"
-          class="history-list"
-        ></div>
-
-      </div>
-
-    </section>
-
-  </div>
-
-
-  <!-- =========================
-       底部 App 导航
-  ========================= -->
-
-  <nav class="bottom-nav" aria-label="页面导航">
-
-    <button
-      class="nav-btn active"
-      data-page="record"
-      type="button"
-      aria-label="记录自由卡"
-      aria-current="page"
-    >
-      <span class="nav-icon">📝</span>
-      <span>记录</span>
-    </button>
-
-
-    <button
-      class="nav-btn"
-      data-page="stats"
-      type="button"
-      aria-label="统计"
-      aria-current="false"
-    >
-      <span class="nav-icon">📊</span>
-      <span>统计</span>
-    </button>
-
-
-    <button
-      class="nav-btn"
-      data-page="history"
-      type="button"
-      aria-label="历史流水"
-      aria-current="false"
-    >
-      <span class="nav-icon">🧾</span>
-      <span>流水</span>
-    </button>
-
-  </nav>
-
-
-  <script>
-
-    /* =====================================================
-       Supabase
-    ===================================================== */
-
-    const SUPABASE_URL =
-      "https://vimaqasjmrocpqyepudw.supabase.co";
-
-    const SUPABASE_KEY =
-      "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
-
-
-    /* =====================================================
-       状态
-    ===================================================== */
-
-    let allLogs = [];
-
-    let currentPeriod = "today";
-
-    let currentHistoryFilter = "all";
-
-
-    /* =====================================================
-       初始化
-    ===================================================== */
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-
-        initCardOptions();
-
-
-        /* =========================
-           App 底部导航
-        ========================= */
-
-        document
-          .querySelectorAll(".nav-btn")
-          .forEach(button => {
-
-            button.addEventListener(
-              "click",
-              () => {
-
-                const page =
-                  button.dataset.page;
-
-
-                document
-                  .querySelectorAll(".app-page")
-                  .forEach(section => {
-
-                    section.classList.toggle(
-                      "active",
-                      section.id ===
-                        `page-${page}`
-                    );
-
-                  });
-
-
-                document
-                  .querySelectorAll(".nav-btn")
-                  .forEach(btn => {
-
-                    const isActive =
-                      btn === button;
-
-                    btn.classList.toggle(
-                      "active",
-                      isActive
-                    );
-
-                    btn.setAttribute(
-                      "aria-current",
-                      isActive
-                        ? "page"
-                        : "false"
-                    );
-
-                  });
-
-
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth"
-                });
-
-              }
-            );
-
-          });
-
-
-        loadLogs();
-
-
-        document
-          .querySelectorAll(".period-tab")
-          .forEach(button => {
-
-            button.addEventListener(
-              "click",
-              () => {
-
-                document
-                  .querySelectorAll(
-                    ".period-tab"
-                  )
-                  .forEach(btn =>
-                    btn.classList.remove(
-                      "active"
-                    )
-                  );
-
-
-                button.classList.add(
-                  "active"
-                );
-
-
-                currentPeriod =
-                  button.dataset.period;
-
-
-                renderStats();
-
-              }
-            );
-
-          });
-
-
-        document
-          .getElementById("submitBtn")
-          .addEventListener(
-            "click",
-            addLog
-          );
-
-
-        document
-          .getElementById(
-            "historyFilter"
-          )
-          .addEventListener(
-            "change",
-            event => {
-
-              currentHistoryFilter =
-                event.target.value;
-
-              renderHistory();
-
-            }
-          );
-
-
-        /* =========================
-           实时同步
-        ========================= */
-
-        supabaseClient
-          .channel(
-            "freecard-realtime"
-          )
-          .on(
-            "postgres_changes",
-            {
-              event: "*",
-              schema: "public",
-              table: "freecard_log"
-            },
-            () => {
-
-              loadLogs();
-
-            }
-          )
-          .subscribe();
-
-      }
-    );
-
-
-    /* =====================================================
-       数量选项
-    ===================================================== */
-
-    function initCardOptions() {
-
-      const select =
-        document.getElementById(
-          "cardNum"
-        );
-
-
-      for (
-        let i = 1;
-        i <= 10;
-        i++
-      ) {
-
-        const option =
-          document.createElement(
-            "option"
-          );
-
-
-        option.value = i;
-
-        option.textContent =
-          `${i} 张`;
-
-
-        select.appendChild(
-          option
-        );
-
-      }
-
-    }
-
-
-    /* =====================================================
-       读取全部记录
-    ===================================================== */
-
-    async function loadLogs() {
-
-      const {
-        data,
-        error
-      } = await supabaseClient
-        .from("freecard_log")
-        .select("*")
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
-
-
-      if (error) {
-
-        showStatus(
-          "读取数据失败：" +
-          error.message,
-          true
-        );
-
-        return;
-      }
-
-
-      allLogs = data || [];
-
-      refreshEverything();
-
-    }
-
-
-    /* =====================================================
-       总刷新
-    ===================================================== */
-
-    function refreshEverything() {
-
-      updateBalances();
-
-      updateHistoryFilterOptions();
-
+      <div id="historyList" class="history-list"></div>
+    </div>
+  </section>
+
+</div>
+
+<nav class="bottom-nav" aria-label="页面导航">
+  <button class="nav-btn active" data-page="record" type="button" aria-label="记录" aria-current="page"><span class="nav-icon">📝</span><span>记录</span></button>
+  <button class="nav-btn" data-page="shop" type="button" aria-label="商店" aria-current="false"><span class="nav-icon">🏪</span><span>商店</span></button>
+  <button class="nav-btn" data-page="data" type="button" aria-label="数据" aria-current="false"><span class="nav-icon">📊</span><span>数据</span></button>
+</nav>
+
+<script>
+/* =====================================================
+   Supabase
+===================================================== */
+const SUPABASE_URL = "https://vimaqasjmrocpqyepudw.supabase.co";
+const SUPABASE_KEY = "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* =====================================================
+   State
+===================================================== */
+let allLogs = [];
+let allProducts = [];
+let currentPeriod = "today";
+let currentHistoryFilter = "all";
+let shopView = "Torie";
+
+/* =====================================================
+   Init
+===================================================== */
+document.addEventListener("DOMContentLoaded", async () => {
+  initCardOptions();
+  setupNav();
+  setupPeriodTabs();
+  setupForm();
+  setupHistoryFilter();
+  setupShopViewSwitch();
+  setupAddProduct();
+
+  await Promise.all([loadLogs(), loadProducts()]);
+
+  sb.channel("freecard-realtime")
+    .on("postgres_changes", { event: "*", schema: "public", table: "freecard_log" }, () => loadLogs())
+    .subscribe();
+
+  sb.channel("shop-realtime")
+    .on("postgres_changes", { event: "*", schema: "public", table: "freecard_shop" }, () => loadProducts())
+    .subscribe();
+});
+
+/* =====================================================
+   Navigation
+===================================================== */
+function setupNav() {
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const page = btn.dataset.page;
+      document.querySelectorAll(".app-page").forEach(s => s.classList.toggle("active", s.id === `page-${page}`));
+      document.querySelectorAll(".nav-btn").forEach(b => {
+        const a = b === btn;
+        b.classList.toggle("active", a);
+        b.setAttribute("aria-current", a ? "page" : "false");
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+}
+
+function setupPeriodTabs() {
+  document.querySelectorAll(".period-tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".period-tab").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentPeriod = btn.dataset.period;
       renderStats();
-
-      renderHistory();
-
-    }
-
-
-    /* =====================================================
-       余额
-    ===================================================== */
-
-    function calculateBalance(
-      operator
-    ) {
-
-      return allLogs
-        .filter(
-          log =>
-            log.operator === operator
-        )
-        .reduce(
-          (
-            total,
-            log
-          ) => {
-
-            const num =
-              Number(
-                log.card_num
-              ) || 0;
-
-
-            if (
-              log.change_type ===
-              "增加"
-            ) {
-
-              return total + num;
-
-            }
-
-
-            if (
-              log.change_type ===
-              "减少"
-            ) {
-
-              return total - num;
-
-            }
-
-
-            return total;
-
-          },
-          0
-        );
-
-    }
-
-
-    function updateBalances() {
-
-      const torie =
-        calculateBalance(
-          "Torie"
-        );
-
-      const jory =
-        calculateBalance(
-          "Jory"
-        );
-
-
-      document.getElementById(
-        "torieBalance"
-      ).textContent =
-        torie;
-
-
-      document.getElementById(
-        "joryBalance"
-      ).textContent =
-        jory;
-
-    }
-
-
-    /* =====================================================
-       时间
-    ===================================================== */
-
-    function getStartOfToday() {
-
-      const date =
-        new Date();
-
-      date.setHours(
-        0,
-        0,
-        0,
-        0
-      );
-
-      return date;
-
-    }
-
-
-    function getStartOfWeek() {
-
-      const date =
-        getStartOfToday();
-
-      const day =
-        date.getDay();
-
-      const diff =
-        day === 0
-          ? 6
-          : day - 1;
-
-
-      date.setDate(
-        date.getDate() - diff
-      );
-
-
-      return date;
-
-    }
-
-
-    function getStartOfMonth() {
-
-      const date =
-        new Date();
-
-      date.setHours(
-        0,
-        0,
-        0,
-        0
-      );
-
-      date.setDate(1);
-
-      return date;
-
-    }
-
-
-    function filterLogsByPeriod(
-      logs,
-      period
-    ) {
-
-      if (
-        period === "all"
-      ) {
-
-        return logs;
-
-      }
-
-
-      let startDate;
-
-
-      if (
-        period === "today"
-      ) {
-
-        startDate =
-          getStartOfToday();
-
-      }
-
-
-      if (
-        period === "week"
-      ) {
-
-        startDate =
-          getStartOfWeek();
-
-      }
-
-
-      if (
-        period === "month"
-      ) {
-
-        startDate =
-          getStartOfMonth();
-
-      }
-
-
-      return logs.filter(
-        log =>
-          new Date(
-            log.created_at
-          ) >= startDate
-      );
-
-    }
-
-
-    /* =====================================================
-       统计
-       四条柱状图使用同一个最大尺度
-    ===================================================== */
-
-    function getStats(
-      operator
-    ) {
-
-      const logs =
-        filterLogsByPeriod(
-          allLogs,
-          currentPeriod
-        ).filter(
-          log =>
-            log.operator === operator
-        );
-
-
-      let earned = 0;
-
-      let spent = 0;
-
-
-      logs.forEach(
-        log => {
-
-          const num =
-            Number(
-              log.card_num
-            ) || 0;
-
-
-          if (
-            log.change_type ===
-            "增加"
-          ) {
-
-            earned += num;
-
-          }
-
-
-          if (
-            log.change_type ===
-            "减少"
-          ) {
-
-            spent += num;
-
-          }
-
-        }
-      );
-
-
-      return {
-        earned,
-        spent
-      };
-
-    }
-
-
-    function renderStats() {
-
-      const torie =
-        getStats("Torie");
-
-      const jory =
-        getStats("Jory");
-
-
-      /*
-        四个数据共同决定尺度：
-        Torie 获得
-        Jory 获得
-        Torie 消耗
-        Jory 消耗
-      */
-
-      const commonMax =
-        Math.max(
-          torie.earned,
-          torie.spent,
-          jory.earned,
-          jory.spent
-        );
-
-
-      const html = `
-
-        <div class="stats-group">
-
-          <div class="stats-label">
-            获得
-          </div>
-
-          ${
-            commonMax === 0
-              ? `
-                <div class="empty-stats">
-                  这个时间段还没有获得记录
-                </div>
-              `
-              : `
-                ${renderBar(
-                  "Torie",
-                  torie.earned,
-                  commonMax,
-                  false
-                )}
-
-                ${renderBar(
-                  "Jory",
-                  jory.earned,
-                  commonMax,
-                  true
-                )}
-              `
-          }
-
-        </div>
-
-
-        <div class="stats-group">
-
-          <div class="stats-label">
-            消耗
-          </div>
-
-          ${
-            commonMax === 0
-              ? `
-                <div class="empty-stats">
-                  这个时间段还没有消耗记录
-                </div>
-              `
-              : `
-                ${renderBar(
-                  "Torie",
-                  torie.spent,
-                  commonMax,
-                  false
-                )}
-
-                ${renderBar(
-                  "Jory",
-                  jory.spent,
-                  commonMax,
-                  true
-                )}
-              `
-          }
-
-        </div>
-
-      `;
-
-
-      document.getElementById(
-        "statsContent"
-      ).innerHTML =
-        html;
-
-    }
-
-
-    function renderBar(
-      name,
-      value,
-      max,
-      isJory
-    ) {
-
-      const width =
-        max === 0
-          ? 0
-          : (
-              value / max
-            ) * 100;
-
-
-      return `
-
-        <div class="bar-row">
-
-          <div class="bar-name">
-            ${name}
-          </div>
-
-          <div class="bar-track">
-
-            <div
-              class="
-                bar
-                ${isJory ? "jory" : ""}
-              "
-              style="
-                width: ${width}%;
-              "
-            ></div>
-
-          </div>
-
-          <div class="bar-number">
-            ${value}
-          </div>
-
-        </div>
-
-      `;
-
-    }
-
-
-    /* =====================================================
-       历史年月筛选
-    ===================================================== */
-
-    function updateHistoryFilterOptions() {
-
-      const select =
-        document.getElementById(
-          "historyFilter"
-        );
-
-
-      const months =
-        new Set();
-
-
-      allLogs.forEach(
-        log => {
-
-          const date =
-            new Date(
-              log.created_at
-            );
-
-
-          const year =
-            date.getFullYear();
-
-
-          const month =
-            String(
-              date.getMonth() + 1
-            ).padStart(
-              2,
-              "0"
-            );
-
-
-          months.add(
-            `${year}-${month}`
-          );
-
-        }
-      );
-
-
-      const sortedMonths =
-        [...months].sort(
-          (a, b) =>
-            b.localeCompare(a)
-        );
-
-
-      const currentValue =
-        currentHistoryFilter;
-
-
-      select.innerHTML =
-        `
-          <option value="all">
-            全部
-          </option>
-        `;
-
-
-      sortedMonths.forEach(
-        key => {
-
-          const [
-            year,
-            month
-          ] =
-            key.split("-");
-
-
-          const option =
-            document.createElement(
-              "option"
-            );
-
-
-          option.value =
-            key;
-
-
-          option.textContent =
-            `${year}年${Number(month)}月`;
-
-
-          select.appendChild(
-            option
-          );
-
-        }
-      );
-
-
-      if (
-        [...select.options].some(
-          option =>
-            option.value ===
-            currentValue
-        )
-      ) {
-
-        select.value =
-          currentValue;
-
-      } else {
-
-        currentHistoryFilter =
-          "all";
-
-        select.value =
-          "all";
-
-      }
-
-    }
-
-
-    /* =====================================================
-       历史流水
-    ===================================================== */
-
-    function getHistoryLogs() {
-
-      if (
-        currentHistoryFilter ===
-        "all"
-      ) {
-
-        return allLogs;
-
-      }
-
-
-      return allLogs.filter(
-        log => {
-
-          const date =
-            new Date(
-              log.created_at
-            );
-
-
-          const year =
-            date.getFullYear();
-
-
-          const month =
-            String(
-              date.getMonth() + 1
-            ).padStart(
-              2,
-              "0"
-            );
-
-
-          return (
-            `${year}-${month}` ===
-            currentHistoryFilter
-          );
-
-        }
-      );
-
-    }
-
-
-    function renderHistory() {
-
-      const container =
-        document.getElementById(
-          "historyList"
-        );
-
-
-      const logs =
-        getHistoryLogs();
-
-
-      if (
-        logs.length === 0
-      ) {
-
-        container.innerHTML = `
-          <div class="empty-history">
-            暂无记录
-          </div>
-        `;
-
-        return;
-      }
-
-
-      container.innerHTML =
-        logs
-          .map(
-            log => {
-
-              const date =
-                new Date(
-                  log.created_at
-                );
-
-
-              const time =
-                formatDateTime(
-                  date
-                );
-
-
-              const isPlus =
-                log.change_type ===
-                "增加";
-
-
-              const symbol =
-                isPlus
-                  ? "+"
-                  : "−";
-
-
-              return `
-
-                <div
-                  class="history-item"
-                >
-
-                  <div
-                    class="history-time"
-                  >
-                    ${time}
-                  </div>
-
-
-                  <div
-                    class="history-person"
-                  >
-                    ${escapeHtml(
-                      log.operator
-                    )}
-                  </div>
-
-
-                  <div
-                    class="
-                      history-change
-                      ${
-                        isPlus
-                          ? "plus"
-                          : "minus"
-                      }
-                    "
-                  >
-                    ${symbol}
-                  </div>
-
-
-                  <div
-                    class="history-number"
-                  >
-                    ${Number(
-                      log.card_num
-                    )}
-                  </div>
-
-
-                  <div
-                    class="history-reason"
-                  >
-                    ${escapeHtml(
-                      log.reason ||
-                      "—"
-                    )}
-                  </div>
-
-
-                  <button
-                    class="delete-btn"
-                    onclick="
-                      deleteLog(
-                        '${log.id}'
-                      )
-                    "
-                  >
-                    删除
-                  </button>
-
-                </div>
-
-              `;
-
-            }
-          )
-          .join("");
-
-    }
-
-
-    /* =====================================================
-       新增记录
-    ===================================================== */
-
-    async function addLog() {
-
-      const operator =
-        document.getElementById(
-          "operator"
-        ).value;
-
-
-      const changeType =
-        document.getElementById(
-          "changeType"
-        ).value;
-
-
-      const reason =
-        document.getElementById(
-          "reason"
-        ).value.trim();
-
-
-      const cardNum =
-        Number(
-          document.getElementById(
-            "cardNum"
-          ).value
-        );
-
-
-      if (!reason) {
-
-        showStatus(
-          "请填写原因",
-          true
-        );
-
-        return;
-
-      }
-
-
-      if (
-        !Number.isInteger(
-          cardNum
-        ) ||
-        cardNum < 1 ||
-        cardNum > 10
-      ) {
-
-        showStatus(
-          "数量必须是 1–10 张",
-          true
-        );
-
-        return;
-
-      }
-
-
-      /* =========================
-         防止余额减少到负数
-      ========================= */
-
-      if (
-        changeType ===
-        "减少"
-      ) {
-
-        const balance =
-          calculateBalance(
-            operator
-          );
-
-
-        if (
-          balance < cardNum
-        ) {
-
-          showStatus(
-            `${operator} 当前只有 ${balance} 张自由卡，不能减少 ${cardNum} 张`,
-            true
-          );
-
-          return;
-
-        }
-
-      }
-
-
-      const button =
-        document.getElementById(
-          "submitBtn"
-        );
-
-
-      button.disabled = true;
-
-      button.textContent =
-        "保存中…";
-
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from(
-            "freecard_log"
-          )
-          .insert({
-            operator,
-            change_type:
-              changeType,
-            card_num:
-              cardNum,
-            reason
-          });
-
-
-      button.disabled = false;
-
-      button.textContent =
-        "提交记录";
-
-
-      if (error) {
-
-        showStatus(
-          "保存失败：" +
-          error.message,
-          true
-        );
-
-        return;
-
-      }
-
-
-      document.getElementById(
-        "reason"
-      ).value = "";
-
-
-      showStatus(
-        "记录成功"
-      );
-
-
-      await loadLogs();
-
-    }
-
-
-    /* =====================================================
-       删除记录
-    ===================================================== */
-
-    async function deleteLog(
-      id
-    ) {
-
-      const confirmed =
-        confirm(
-          "确定要删除这条自由卡记录吗？\n删除后余额和统计会重新计算。"
-        );
-
-
-      if (!confirmed) {
-        return;
-      }
-
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from(
-            "freecard_log"
-          )
-          .delete()
-          .eq(
-            "id",
-            id
-          );
-
-
-      if (error) {
-
-        showStatus(
-          "删除失败：" +
-          error.message,
-          true
-        );
-
-        return;
-
-      }
-
-
-      showStatus(
-        "记录已删除"
-      );
-
-
-      await loadLogs();
-
-    }
-
-
-    /* =====================================================
-       日期格式
-    ===================================================== */
-
-    function formatDateTime(
-      date
-    ) {
-
-      const year =
-        date.getFullYear();
-
-
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(
-          2,
-          "0"
-        );
-
-
-      const day =
-        String(
-          date.getDate()
-        ).padStart(
-          2,
-          "0"
-        );
-
-
-      const hours =
-        String(
-          date.getHours()
-        ).padStart(
-          2,
-          "0"
-        );
-
-
-      const minutes =
-        String(
-          date.getMinutes()
-        ).padStart(
-          2,
-          "0"
-        );
-
-
-      return `${year}-${month}-${day} ${hours}:${minutes}`;
-
-    }
-
-
-    /* =====================================================
-       HTML 安全处理
-    ===================================================== */
-
-    function escapeHtml(
-      value
-    ) {
-
-      return String(
-        value
-      )
-        .replaceAll(
-          "&",
-          "&amp;"
-        )
-        .replaceAll(
-          "<",
-          "&lt;"
-        )
-        .replaceAll(
-          ">",
-          "&gt;"
-        )
-        .replaceAll(
-          '"',
-          "&quot;"
-        )
-        .replaceAll(
-          "'",
-          "&#039;"
-        );
-
-    }
-
-
-    /* =====================================================
-       状态提示
-    ===================================================== */
-
-    function showStatus(
-      message,
-      isError = false
-    ) {
-
-      const status =
-        document.getElementById(
-          "status"
-        );
-
-
-      status.textContent =
-        message;
-
-
-      status.style.color =
-        isError
-          ? "#c62828"
-          : "#6e6e73";
-
-
-      clearTimeout(
-        showStatus.timer
-      );
-
-
-      showStatus.timer =
-        setTimeout(
-          () => {
-
-            status.textContent =
-              "";
-
-          },
-          3000
-        );
-
-    }
-
-  </script>
+    });
+  });
+}
+
+function setupForm() { document.getElementById("submitBtn").addEventListener("click", addLog); }
+function setupHistoryFilter() {
+  document.getElementById("historyFilter").addEventListener("change", e => { currentHistoryFilter = e.target.value; renderHistory(); });
+}
+
+/* =====================================================
+   Shop View Switch
+===================================================== */
+function setupShopViewSwitch() {
+  document.querySelectorAll(".shop-view-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      shopView = btn.dataset.view;
+      document.querySelectorAll(".shop-view-btn").forEach(b => {
+        b.classList.remove("active");
+      });
+      btn.classList.add("active");
+      renderShop();
+    });
+  });
+}
+
+/* =====================================================
+   Card Options
+===================================================== */
+function initCardOptions() {
+  const sel = document.getElementById("cardNum");
+  for (let i = 1; i <= 10; i++) { const o = document.createElement("option"); o.value = i; o.textContent = `${i} 张`; sel.appendChild(o); }
+}
+
+/* =====================================================
+   Load Data
+===================================================== */
+async function loadLogs() {
+  const { data, error } = await sb.from("freecard_log").select("*").order("created_at", { ascending: false });
+  if (error) { showToast("读取记录失败：" + error.message, "error"); return; }
+  allLogs = data || [];
+  refreshAll();
+}
+
+async function loadProducts() {
+  const { data, error } = await sb.from("freecard_shop").select("*").order("created_at", { ascending: true });
+  if (error) {
+    // Table might not exist yet — show helpful message
+    console.warn("freecard_shop table not found:", error.message);
+    allProducts = [];
+    renderShop();
+    return;
+  }
+  allProducts = data || [];
+  renderShop();
+}
+
+function refreshAll() {
+  updateBalances();
+  updateHistoryFilterOptions();
+  renderStats();
+  renderHistory();
+  renderShop(); // Re-render shop to update progress bars
+}
+
+/* =====================================================
+   Balances
+===================================================== */
+function calcBalance(op) {
+  return allLogs.filter(l => l.operator === op).reduce((t, l) => t + (l.change_type === "增加" ? Number(l.card_num)||0 : -(Number(l.card_num)||0)), 0);
+}
+
+function updateBalances() {
+  document.getElementById("torieBalance").textContent = calcBalance("Torie");
+  document.getElementById("joryBalance").textContent = calcBalance("Jory");
+}
+
+/* =====================================================
+   Time Helpers
+===================================================== */
+function getStartOfToday() { const d = new Date(); d.setHours(0,0,0,0); return d; }
+function getStartOfWeek() { const d = getStartOfToday(); const day = d.getDay(); d.setDate(d.getDate() - (day===0?6:day-1)); return d; }
+function getStartOfMonth() { const d = new Date(); d.setHours(0,0,0,0); d.setDate(1); return d; }
+
+function filterByPeriod(logs, period) {
+  if (period === "all") return logs;
+  const map = { today: getStartOfToday, week: getStartOfWeek, month: getStartOfMonth };
+  const start = map[period]();
+  return logs.filter(l => new Date(l.created_at) >= start);
+}
+
+/* =====================================================
+   Stats + Summary
+===================================================== */
+function getStats(op) {
+  const logs = filterByPeriod(allLogs, currentPeriod).filter(l => l.operator === op);
+  let earned = 0, spent = 0;
+  logs.forEach(l => { const n = Number(l.card_num)||0; if (l.change_type==="增加") earned+=n; else spent+=n; });
+  return { earned, spent };
+}
+
+function renderStats() {
+  const t = getStats("Torie"), j = getStats("Jory");
+  const totalEarned = t.earned + j.earned;
+  const totalSpent = t.spent + j.spent;
+  const net = totalEarned - totalSpent;
+
+  const periodLabels = { today:"今日", week:"本周", month:"本月", all:"累计" };
+  const pLabel = periodLabels[currentPeriod] || "";
+
+  // Summary card
+  document.getElementById("statsSummary").innerHTML = `
+    <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${totalEarned}</div></div>
+    <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${totalSpent}</div></div>
+    <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?'net':'minus'}">${net>=0?'+':''}${net}</div></div>
+  `;
+
+  const max = Math.max(t.earned, t.spent, j.earned, j.spent);
+  const group = (label, key) => {
+    if (max===0) return `<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无${label}记录</div></div>`;
+    return `<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",t[key],max,"torie-bar")}${bar("Jory",j[key],max,"jory-bar")}</div>`;
+  };
+  document.getElementById("statsContent").innerHTML = group("获得","earned") + group("消耗","spent");
+}
+
+function bar(name,val,max,cls) {
+  const w = max===0?0:(val/max)*100;
+  return `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${w}%"></div></div><div class="bar-number">${val}</div></div>`;
+}
+
+/* =====================================================
+   History
+===================================================== */
+function updateHistoryFilterOptions() {
+  const sel = document.getElementById("historyFilter");
+  const months = new Set();
+  allLogs.forEach(l => { const d=new Date(l.created_at); months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`); });
+  const sorted = [...months].sort((a,b)=>b.localeCompare(a));
+  const cur = currentHistoryFilter;
+  sel.innerHTML = '<option value="all">全部</option>';
+  sorted.forEach(k => { const [y,m]=k.split("-"); const o=document.createElement("option"); o.value=k; o.textContent=`${y}年${Number(m)}月`; sel.appendChild(o); });
+  if ([...sel.options].some(o=>o.value===cur)) sel.value=cur; else { currentHistoryFilter="all"; sel.value="all"; }
+}
+
+function getHistoryLogs() {
+  if (currentHistoryFilter==="all") return allLogs;
+  return allLogs.filter(l => { const d=new Date(l.created_at); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter; });
+}
+
+function renderHistory() {
+  const c = document.getElementById("historyList");
+  const logs = getHistoryLogs();
+  if (!logs.length) { c.innerHTML='<div class="empty-history">暂无记录 🍃</div>'; return; }
+  c.innerHTML = logs.map(l => {
+    const d=new Date(l.created_at), time=fmtDate(d), plus=l.change_type==="增加", sym=plus?"+":"−";
+    return `<div class="history-item"><div><div class="history-top"><span class="history-person">${esc(l.operator)}</span><span class="history-reason">${esc(l.reason||"—")}</span></div><div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${plus?'plus':'minus'}">${sym}${Number(l.card_num)}</div><button class="delete-btn" onclick="deleteLog('${l.id}')">删除</button></div></div>`;
+  }).join("");
+}
+
+/* =====================================================
+   SHOP MODULE
+===================================================== */
+function setupAddProduct() {
+  document.getElementById("addProductBtn").addEventListener("click", addProduct);
+}
+
+async function addProduct() {
+  const nameEl = document.getElementById("newProductName");
+  const costEl = document.getElementById("newProductCost");
+  const name = nameEl.value.trim();
+  const cost = parseInt(costEl.value);
+
+  if (!name) { showToast("请输入商品名称", "error"); return; }
+  if (!cost || cost < 1) { showToast("价格至少为 1 张", "error"); return; }
+
+  const btn = document.getElementById("addProductBtn");
+  btn.disabled = true; btn.textContent = "…";
+
+  const { error } = await sb.from("freecard_shop").insert({ name, cost, owner: shopView });
+
+  btn.disabled = false; btn.textContent = "添加";
+  if (error) { showToast("添加失败：" + error.message, "error"); return; }
+
+  nameEl.value = ""; costEl.value = "";
+  showToast("商品已上架 🎉", "success");
+  await loadProducts();
+}
+
+async function deleteProduct(id) {
+  if (!confirm("确定下架此商品？")) return;
+  const { error } = await sb.from("freecard_shop").delete().eq("id", id);
+  if (error) { showToast("删除失败：" + error.message, "error"); return; }
+  showToast("已下架", "success");
+  await loadProducts();
+}
+
+async function editProduct(id, oldName, oldCost) {
+  const newName = prompt("修改商品名称：", oldName);
+  if (newName === null) return;
+  const newCost = prompt("修改价格（张）：", oldCost);
+  if (newCost === null) return;
+  const cost = parseInt(newCost);
+  if (!newName.trim() || !cost || cost < 1) { showToast("输入无效", "error"); return; }
+
+  const { error } = await sb.from("freecard_shop").update({ name: newName.trim(), cost }).eq("id", id);
+  if (error) { showToast("修改失败：" + error.message, "error"); return; }
+  showToast("已更新", "success");
+  await loadProducts();
+}
+
+async function redeemProduct(product) {
+  const balance = calcBalance(product.owner);
+  if (balance < product.cost) { showToast(`${product.owner} 余额不足`, "error"); return; }
+  if (!confirm(`确认花费 ${product.cost} 张自由卡兑换「${product.name}」？`)) return;
+
+  const { error } = await sb.from("freecard_log").insert({
+    operator: product.owner,
+    change_type: "减少",
+    card_num: product.cost,
+    reason: `🛒 兑换：${product.name}`
+  });
+
+  if (error) { showToast("兑换失败：" + error.message, "error"); return; }
+  showToast(`成功兑换「${product.name}」🎁`, "success");
+  await loadLogs();
+}
+
+function renderShop() {
+  const container = document.getElementById("shopList");
+  const products = allProducts.filter(p => p.owner === shopView);
+  const balance = calcBalance(shopView);
+
+  if (!products.length) {
+    container.innerHTML = '<div class="empty-shop">还没有商品，快来添加吧 🛍️</div>';
+    return;
+  }
+
+  container.innerHTML = products.map(p => {
+    const pct = Math.min(100, Math.round((balance / p.cost) * 100));
+    const canRedeem = balance >= p.cost;
+    const diff = p.cost - balance;
+    const barClass = canRedeem ? `shop-bar ${shopView.toLowerCase()} full` : `shop-bar ${shopView.toLowerCase()}`;
+    const progressText = canRedeem
+      ? `<span>✅ 已达成！</span><span>${balance} / ${p.cost} 张</span>`
+      : `<span>${balance} / ${p.cost} 张</span><span>还差 ${diff} 张</span>`;
+
+    return `<div class="shop-item">
+      <div class="shop-item-header">
+        <div class="shop-item-name">${esc(p.name)}</div>
+        <div class="shop-item-cost">${p.cost} 张自由卡</div>
+      </div>
+      <div class="shop-progress-text">${progressText}</div>
+      <div class="shop-bar-track"><div class="${barClass}" style="width:${pct}%"></div></div>
+      <div class="shop-actions">
+        <button class="shop-action-btn btn-redeem" ${canRedeem?'':`disabled`} onclick='redeemProduct(${JSON.stringify(p).replace(/'/g,"&#39;")})'>${canRedeem?"立即兑换":"余额不足"}</button>
+        <button class="shop-action-btn btn-edit" onclick="editProduct('${p.id}','${esc(p.name)}',${p.cost})">编辑</button>
+        <button class="shop-action-btn btn-del" onclick="deleteProduct('${p.id}')">下架</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* =====================================================
+   Add / Delete Log
+===================================================== */
+async function addLog() {
+  const op = document.getElementById("operator").value;
+  const ct = document.getElementById("changeType").value;
+  const reason = document.getElementById("reason").value.trim();
+  const num = Number(document.getElementById("cardNum").value);
+  if (!reason) { showToast("请填写原因","error"); return; }
+  if (!Number.isInteger(num)||num<1||num>10) { showToast("数量必须是 1–10 张","error"); return; }
+  if (ct==="减少" && calcBalance(op)<num) { showToast(`${op} 当前只有 ${calcBalance(op)} 张，不够减`,"error"); return; }
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled=true; btn.textContent="保存中…";
+  const { error } = await sb.from("freecard_log").insert({ operator:op, change_type:ct, card_num:num, reason });
+  btn.disabled=false; btn.textContent="提交记录";
+  if (error) { showToast("保存失败："+error.message,"error"); return; }
+  document.getElementById("reason").value="";
+  showToast("记录成功 🎉","success");
+  await loadLogs();
+}
+
+async function deleteLog(id) {
+  if (!confirm("确定删除这条记录？")) return;
+  const { error } = await sb.from("freecard_log").delete().eq("id",id);
+  if (error) { showToast("删除失败："+error.message,"error"); return; }
+  showToast("已删除","success");
+  await loadLogs();
+}
+
+/* =====================================================
+   Utilities
+===================================================== */
+function fmtDate(d) { const p=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+function esc(v) { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+function showToast(msg, type="success") { const t=document.getElementById("toast"); t.textContent=msg; t.className=`toast ${type} show`; clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>t.classList.remove("show"),2500); }
+</script>
 
 </body>
 </html>
