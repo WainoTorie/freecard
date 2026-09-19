@@ -23,19 +23,57 @@
       --r-sm: 10px;
       --shadow: 0 4px 24px rgba(0,0,0,0.06);
       --font: -apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
+      --blur-val: 20px;
+    }
+
+    /* Dark Mode Overrides */
+    [data-theme="dark"] {
+      --bg: #000000;
+      --card: rgba(28,28,30,0.88);
+      --text-1: #f5f5f7;
+      --text-2: #a1a1a6;
+      --text-3: #636366;
+      --border: rgba(255,255,255,0.08);
+      --shadow: 0 4px 24px rgba(0,0,0,0.3);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg); color: var(--text-1); font-family: var(--font); padding: 20px 16px 120px; min-height: 100vh; line-height: 1.5; }
-    .container { width: min(680px,100%); margin: 0 auto; }
+    body { background: var(--bg); color: var(--text-1); font-family: var(--font); padding: 20px 16px 120px; min-height: 100vh; line-height: 1.5; transition: background .3s, color .3s; }
+    .container { width: min(680px,100%); margin: 0 auto; position: relative; }
+
+    /* Settings Button */
+    .settings-btn { position: absolute; top: 8px; right: 0; width: 40px; height: 40px; border: none; background: var(--card); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all .2s; }
+    .settings-btn:active { transform: scale(0.9); }
+
+    /* Settings Panel */
+    .settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity .25s; }
+    .settings-overlay.show { opacity: 1; pointer-events: auto; }
+    .settings-panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: min(400px, calc(100% - 32px)); background: var(--card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 28px 24px 40px; z-index: 9999; transition: transform .3s cubic-bezier(.22,1,.36,1); border: 1px solid var(--border); box-shadow: 0 -8px 32px rgba(0,0,0,0.12); }
+    .settings-panel.show { transform: translateX(-50%) translateY(0); }
+    .settings-title { font-size: 20px; font-weight: 800; margin-bottom: 24px; text-align: center; }
+    .setting-row { margin-bottom: 22px; }
+    .setting-row:last-child { margin-bottom: 0; }
+    .setting-label { font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .setting-label span:last-child { font-size: 12px; opacity: .7; }
+
+    /* Range Slider */
+    input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--border); outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--torie); cursor: pointer; box-shadow: 0 2px 8px rgba(0,122,255,0.3); }
+
+    /* Toggle Switch */
+    .toggle-wrap { display: flex; align-items: center; justify-content: space-between; }
+    .toggle { position: relative; width: 52px; height: 30px; border-radius: 15px; background: var(--border); cursor: pointer; transition: background .2s; flex-shrink: 0; }
+    .toggle.on { background: var(--green); }
+    .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+    .toggle.on::after { transform: translateX(22px); }
 
     /* Typography */
-    .page-title { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 6px; background: linear-gradient(135deg,#1d1d1f,#4a4a4e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .page-title { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 6px; background: linear-gradient(135deg,var(--text-1),var(--text-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .subtitle { color: var(--text-2); font-size: 15px; margin-bottom: 28px; }
     .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
 
     /* Cards */
-    .card { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .card { background: var(--card); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: background .3s, border-color .3s; }
 
     /* Balances */
     .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -51,21 +89,21 @@
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1/-1; }
     label { font-size: 13px; font-weight: 600; color: var(--text-2); margin-left: 2px; }
-    select,input { width: 100%; height: 48px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r-sm); background: rgba(255,255,255,0.9); color: var(--text-1); font-size: 16px; outline: none; transition: all .2s; appearance: none; }
-    select:focus,input:focus { border-color: var(--torie); box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
-    .submit-btn { width: 100%; height: 50px; margin-top: 18px; border: none; border-radius: var(--r-md); background: var(--text-1); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; transition: all .2s; }
+    select,input:not([type="range"]) { width: 100%; height: 48px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r-sm); background: var(--card); color: var(--text-1); font-size: 16px; outline: none; transition: all .2s; appearance: none; }
+    select:focus,input:not([type="range"]):focus { border-color: var(--torie); box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
+    .submit-btn { width: 100%; height: 50px; margin-top: 18px; border: none; border-radius: var(--r-md); background: var(--text-1); color: var(--bg); font-size: 16px; font-weight: 700; cursor: pointer; transition: all .2s; }
     .submit-btn:hover { opacity: .9; transform: translateY(-1px); }
     .submit-btn:active { transform: scale(0.98); }
     .submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
     /* Period Tabs */
-    .period-tabs { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; padding: 4px; background: rgba(0,0,0,0.04); border-radius: var(--r-md); margin-bottom: 24px; }
+    .period-tabs { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; padding: 4px; background: rgba(128,128,128,0.08); border-radius: var(--r-md); margin-bottom: 24px; }
     .period-tab { height: 38px; border: none; border-radius: 10px; background: transparent; color: var(--text-2); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .2s; }
-    .period-tab.active { background: #fff; color: var(--text-1); font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 
     /* Stats Summary Card */
     .stats-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 24px; }
-    .summary-item { text-align: center; padding: 14px 8px; border-radius: var(--r-md); background: rgba(0,0,0,0.03); }
+    .summary-item { text-align: center; padding: 14px 8px; border-radius: var(--r-md); background: rgba(128,128,128,0.06); }
     .summary-label { font-size: 12px; color: var(--text-2); font-weight: 600; margin-bottom: 4px; }
     .summary-value { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
     .summary-value.plus { color: var(--green); }
@@ -78,7 +116,7 @@
     .stats-label { margin-bottom: 12px; font-size: 15px; font-weight: 700; color: var(--text-2); }
     .bar-row { display: grid; grid-template-columns: 50px 1fr 36px; align-items: center; gap: 10px; margin: 10px 0; }
     .bar-name { font-size: 13px; font-weight: 600; color: var(--text-2); }
-    .bar-track { height: 20px; background: rgba(0,0,0,0.04); border-radius: 10px; overflow: hidden; }
+    .bar-track { height: 20px; background: rgba(128,128,128,0.08); border-radius: 10px; overflow: hidden; }
     .bar { height: 100%; border-radius: 10px; transition: width .5s cubic-bezier(.22,1,.36,1); min-width: 0; }
     .bar.torie-bar { background: linear-gradient(90deg,var(--torie),#5ac8fa); }
     .bar.jory-bar { background: linear-gradient(90deg,var(--jory),#ffd60a); }
@@ -104,10 +142,10 @@
     .empty-history { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
 
     /* ========== SHOP STYLES ========== */
-    .shop-view-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: rgba(0,0,0,0.04); border-radius: var(--r-md); margin-bottom: 20px; }
+    .shop-view-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: rgba(128,128,128,0.08); border-radius: var(--r-md); margin-bottom: 20px; }
     .shop-view-btn { height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 15px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all .2s; }
-    .shop-view-btn.active.torie { background: #fff; color: var(--torie); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .shop-view-btn.active.jory { background: #fff; color: var(--jory); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .shop-view-btn.active.torie { background: var(--card); color: var(--torie); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .shop-view-btn.active.jory { background: var(--card); color: var(--jory); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
 
     .shop-item { padding: 18px 0; border-bottom: 1px solid var(--border); animation: fadeIn .3s ease; }
     .shop-item:last-child { border-bottom: none; }
@@ -115,7 +153,7 @@
     .shop-item-name { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
     .shop-item-cost { font-size: 14px; font-weight: 700; color: var(--text-2); white-space: nowrap; }
     .shop-progress-text { font-size: 13px; color: var(--text-2); margin-bottom: 6px; font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; }
-    .shop-bar-track { height: 14px; background: rgba(0,0,0,0.05); border-radius: 7px; overflow: hidden; }
+    .shop-bar-track { height: 14px; background: rgba(128,128,128,0.08); border-radius: 7px; overflow: hidden; }
     .shop-bar { height: 100%; border-radius: 7px; transition: width .5s cubic-bezier(.22,1,.36,1); }
     .shop-bar.torie { background: linear-gradient(90deg,var(--torie),#5ac8fa); }
     .shop-bar.jory { background: linear-gradient(90deg,var(--jory),#ffd60a); }
@@ -124,13 +162,13 @@
     .shop-action-btn { flex: 1; height: 36px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; }
     .shop-action-btn:active { transform: scale(0.96); }
     .btn-redeem { background: var(--green); color: #fff; }
-    .btn-redeem:disabled { background: rgba(0,0,0,0.08); color: var(--text-3); cursor: not-allowed; }
-    .btn-edit { background: rgba(0,0,0,0.05); color: var(--text-2); }
+    .btn-redeem:disabled { background: rgba(128,128,128,0.12); color: var(--text-3); cursor: not-allowed; }
+    .btn-edit { background: rgba(128,128,128,0.08); color: var(--text-2); }
     .btn-del { background: rgba(255,59,48,0.1); color: var(--red); }
 
     .add-product-form { display: grid; grid-template-columns: 1fr 100px auto; gap: 10px; align-items: end; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
     .add-product-form .form-group { gap: 4px; }
-    .add-btn { height: 48px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; padding: 0 18px; white-space: nowrap; }
+    .add-btn { height: 48px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: var(--bg); font-size: 14px; font-weight: 700; cursor: pointer; padding: 0 18px; white-space: nowrap; }
     .add-btn:active { transform: scale(0.96); }
 
     .empty-shop { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
@@ -141,11 +179,11 @@
     @keyframes pageSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(400px,calc(100% - 32px)); padding: 6px; display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; background: rgba(255,255,255,0.92); border: 1px solid rgba(255,255,255,0.5); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+    .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(400px,calc(100% - 32px)); padding: 6px; display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); transition: background .3s, border-color .3s; }
     .nav-btn { height: 56px; border: 0; border-radius: 18px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; font-weight: 600; transition: all .2s; }
     .nav-btn:active { transform: scale(0.92); }
     .nav-icon { font-size: 22px; line-height: 1; }
-    .nav-btn.active { background: var(--text-1); color: #fff; }
+    .nav-btn.active { background: var(--text-1); color: var(--bg); }
 
     /* Toast */
     .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
@@ -176,7 +214,28 @@
 
 <div class="toast-container"><div id="toast" class="toast"></div></div>
 
+<!-- Settings Overlay & Panel -->
+<div id="settingsOverlay" class="settings-overlay"></div>
+<div id="settingsPanel" class="settings-panel">
+  <div class="settings-title">⚙️ 显示设置</div>
+  
+  <div class="setting-row">
+    <div class="setting-label">毛玻璃强度 <span id="blurValue">20px</span></div>
+    <input type="range" id="blurSlider" min="0" max="30" value="20" />
+  </div>
+  
+  <div class="setting-row">
+    <div class="toggle-wrap">
+      <div class="setting-label" style="margin-bottom:0">深色模式</div>
+      <div id="darkToggle" class="toggle"></div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
+
+  <!-- Settings Button -->
+  <button id="settingsBtn" class="settings-btn" aria-label="设置">⚙️</button>
 
   <!-- ====== 记录页 ====== -->
   <section id="page-record" class="app-page active">
@@ -271,9 +330,56 @@ let currentHistoryFilter = "all";
 let shopView = "Torie";
 
 /* =====================================================
+   Settings / Preferences
+===================================================== */
+function initSettings() {
+  const savedBlur = localStorage.getItem("fc_blur");
+  const savedTheme = localStorage.getItem("fc_theme");
+
+  // Apply blur
+  if (savedBlur !== null) {
+    document.documentElement.style.setProperty("--blur-val", savedBlur + "px");
+    document.getElementById("blurSlider").value = savedBlur;
+    document.getElementById("blurValue").textContent = savedBlur + "px";
+  }
+
+  // Apply theme
+  if (savedTheme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    document.getElementById("darkToggle").classList.add("on");
+  }
+
+  // Blur slider
+  document.getElementById("blurSlider").addEventListener("input", e => {
+    const v = e.target.value;
+    document.documentElement.style.setProperty("--blur-val", v + "px");
+    document.getElementById("blurValue").textContent = v + "px";
+    localStorage.setItem("fc_blur", v);
+  });
+
+  // Dark toggle
+  document.getElementById("darkToggle").addEventListener("click", function() {
+    this.classList.toggle("on");
+    const isDark = this.classList.contains("on");
+    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "");
+    localStorage.setItem("fc_theme", isDark ? "dark" : "light");
+  });
+
+  // Open / Close panel
+  const overlay = document.getElementById("settingsOverlay");
+  const panel = document.getElementById("settingsPanel");
+  const openSettings = () => { overlay.classList.add("show"); panel.classList.add("show"); };
+  const closeSettings = () => { overlay.classList.remove("show"); panel.classList.remove("show"); };
+
+  document.getElementById("settingsBtn").addEventListener("click", openSettings);
+  overlay.addEventListener("click", closeSettings);
+}
+
+/* =====================================================
    Init
 ===================================================== */
 document.addEventListener("DOMContentLoaded", async () => {
+  initSettings();
   initCardOptions();
   setupNav();
   setupPeriodTabs();
@@ -364,7 +470,6 @@ async function loadLogs() {
 async function loadProducts() {
   const { data, error } = await sb.from("freecard_shop").select("*").order("created_at", { ascending: true });
   if (error) {
-    // Table might not exist yet — show helpful message
     console.warn("freecard_shop table not found:", error.message);
     allProducts = [];
     renderShop();
@@ -379,7 +484,7 @@ function refreshAll() {
   updateHistoryFilterOptions();
   renderStats();
   renderHistory();
-  renderShop(); // Re-render shop to update progress bars
+  renderShop();
 }
 
 /* =====================================================
@@ -427,7 +532,6 @@ function renderStats() {
   const periodLabels = { today:"今日", week:"本周", month:"本月", all:"累计" };
   const pLabel = periodLabels[currentPeriod] || "";
 
-  // Summary card
   document.getElementById("statsSummary").innerHTML = `
     <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${totalEarned}</div></div>
     <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${totalSpent}</div></div>
