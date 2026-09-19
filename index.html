@@ -14,7 +14,7 @@
 
     body {
       margin: 0;
-      padding: 24px;
+      padding: 24px 24px 110px;
       background: #f5f5f7;
       color: #1d1d1f;
       font-family:
@@ -206,7 +206,6 @@
 
     /* =========================
        统计图
-       四条柱子共用同一个尺度
     ========================= */
 
     .stats-group {
@@ -325,12 +324,10 @@
       font-weight: 700;
     }
 
-    /* 增加：绿色 */
     .history-change.plus {
       color: #34a853;
     }
 
-    /* 减少：红色 */
     .history-change.minus {
       color: #e53935;
     }
@@ -365,12 +362,102 @@
     }
 
     /* =========================
+       App 页面 / 底部导航
+    ========================= */
+
+    .app-page {
+      display: none;
+      animation: pageIn 0.18s ease;
+    }
+
+    .app-page.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bottom-nav {
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: min(520px, calc(100% - 28px));
+      padding: 7px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(210, 210, 215, 0.72);
+      border-radius: 20px;
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.10),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .nav-btn {
+      min-height: 58px;
+      border: 0;
+      border-radius: 15px;
+      background: transparent;
+      color: #86868b;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-btn:active {
+      transform: scale(0.96);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .nav-btn.active {
+      background: #1d1d1f;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .page-title {
+      margin: 0 0 18px;
+      font-size: 28px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+    }
+
+    /* =========================
        手机
     ========================= */
 
     @media (max-width: 680px) {
       body {
-        padding: 14px;
+        padding: 14px 14px 104px;
       }
 
       .card {
@@ -444,6 +531,25 @@
         grid-template-columns: 48px 1fr 32px;
         gap: 7px;
       }
+
+      .bottom-nav {
+        bottom: 12px;
+        width: calc(100% - 24px);
+        border-radius: 18px;
+      }
+
+      .nav-btn {
+        min-height: 54px;
+        border-radius: 14px;
+      }
+
+      .nav-icon {
+        font-size: 19px;
+      }
+
+      .page-title {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
@@ -452,235 +558,307 @@
 
   <div class="container">
 
-    <h1>一起变好 · 自由卡记录</h1>
-    <div class="subtitle">记录每一次获得，也记录每一次自由</div>
-
-
     <!-- =========================
-         当前余额
+         记录自由卡页面
     ========================= -->
 
-    <div class="card">
+    <section id="page-record" class="app-page active">
 
-      <div class="balances">
-
-        <div class="balance-box">
-          <div class="balance-name">Torie</div>
-
-          <div>
-            <span
-              id="torieBalance"
-              class="balance-number"
-            >0</span>
-
-            <span class="balance-unit">
-              张
-            </span>
-          </div>
-        </div>
-
-
-        <div class="balance-box">
-          <div class="balance-name">Jory</div>
-
-          <div>
-            <span
-              id="joryBalance"
-              class="balance-number"
-            >0</span>
-
-            <span class="balance-unit">
-              张
-            </span>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- =========================
-         新增记录
-    ========================= -->
-
-    <div class="card">
-
-      <h2 class="section-title">
+      <div class="page-title">
         记录自由卡
-      </h2>
+      </div>
 
+      <div class="subtitle">
+        记录每一次获得，也记录每一次自由
+      </div>
 
-      <div class="form-grid">
+      <!-- 当前余额 -->
 
-        <div class="form-group">
+      <div class="card">
 
-          <label for="operator">
-            谁
-          </label>
+        <div class="balances">
 
-          <select id="operator">
-
-            <option value="Torie">
+          <div class="balance-box">
+            <div class="balance-name">
               Torie
-            </option>
+            </div>
 
-            <option value="Jory">
+            <div>
+              <span
+                id="torieBalance"
+                class="balance-number"
+              >0</span>
+
+              <span class="balance-unit">
+                张
+              </span>
+            </div>
+          </div>
+
+
+          <div class="balance-box">
+            <div class="balance-name">
               Jory
-            </option>
+            </div>
 
-          </select>
+            <div>
+              <span
+                id="joryBalance"
+                class="balance-number"
+              >0</span>
 
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="changeType">
-            变化
-          </label>
-
-          <select id="changeType">
-
-            <option value="增加">
-              增加✅
-            </option>
-
-            <option value="减少">
-              减少❌
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-group full">
-
-          <label for="reason">
-            原因
-          </label>
-
-          <input
-            id="reason"
-            type="text"
-            maxlength="100"
-            placeholder="例如：完成英语学习、玩游戏"
-          />
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="cardNum">
-            数量
-          </label>
-
-          <select id="cardNum"></select>
+              <span class="balance-unit">
+                张
+              </span>
+            </div>
+          </div>
 
         </div>
 
       </div>
 
 
-      <button
-        id="submitBtn"
-        class="submit-btn"
-      >
-        提交记录
-      </button>
+      <!-- 新增记录 -->
 
-
-      <div id="status"></div>
-
-    </div>
-
-
-    <!-- =========================
-         统计
-    ========================= -->
-
-    <div class="card">
-
-      <h2 class="section-title">
-        统计
-      </h2>
-
-
-      <div class="period-tabs">
-
-        <button
-          class="period-tab active"
-          data-period="today"
-        >
-          今日
-        </button>
-
-        <button
-          class="period-tab"
-          data-period="week"
-        >
-          本周
-        </button>
-
-        <button
-          class="period-tab"
-          data-period="month"
-        >
-          本月
-        </button>
-
-        <button
-          class="period-tab"
-          data-period="all"
-        >
-          总计
-        </button>
-
-      </div>
-
-
-      <div id="statsContent"></div>
-
-    </div>
-
-
-    <!-- =========================
-         历史流水
-    ========================= -->
-
-    <div class="card">
-
-      <div class="history-header">
+      <div class="card">
 
         <h2 class="section-title">
-          历史流水
+          记录自由卡
         </h2>
 
 
-        <select
-          id="historyFilter"
-          class="history-filter"
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="operator">
+              谁
+            </label>
+
+            <select id="operator">
+
+              <option value="Torie">
+                Torie
+              </option>
+
+              <option value="Jory">
+                Jory
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="changeType">
+              变化
+            </label>
+
+            <select id="changeType">
+
+              <option value="增加">
+                增加✅
+              </option>
+
+              <option value="减少">
+                减少❌
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group full">
+
+            <label for="reason">
+              原因
+            </label>
+
+            <input
+              id="reason"
+              type="text"
+              maxlength="100"
+              placeholder="例如：完成英语学习、玩游戏"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="cardNum">
+              数量
+            </label>
+
+            <select id="cardNum"></select>
+
+          </div>
+
+        </div>
+
+
+        <button
+          id="submitBtn"
+          class="submit-btn"
         >
+          提交记录
+        </button>
 
-          <option value="all">
-            全部
-          </option>
 
-        </select>
+        <div id="status"></div>
 
       </div>
 
+    </section>
 
-      <div
-        id="historyList"
-        class="history-list"
-      ></div>
 
-    </div>
+    <!-- =========================
+         统计页面
+    ========================= -->
+
+    <section id="page-stats" class="app-page">
+
+      <div class="page-title">
+        统计
+      </div>
+
+      <div class="card">
+
+        <h2 class="section-title">
+          统计
+        </h2>
+
+
+        <div class="period-tabs">
+
+          <button
+            class="period-tab active"
+            data-period="today"
+          >
+            今日
+          </button>
+
+          <button
+            class="period-tab"
+            data-period="week"
+          >
+            本周
+          </button>
+
+          <button
+            class="period-tab"
+            data-period="month"
+          >
+            本月
+          </button>
+
+          <button
+            class="period-tab"
+            data-period="all"
+          >
+            总计
+          </button>
+
+        </div>
+
+
+        <div id="statsContent"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         历史流水页面
+    ========================= -->
+
+    <section id="page-history" class="app-page">
+
+      <div class="page-title">
+        历史流水
+      </div>
+
+      <div class="card">
+
+        <div class="history-header">
+
+          <h2 class="section-title">
+            历史流水
+          </h2>
+
+
+          <select
+            id="historyFilter"
+            class="history-filter"
+          >
+
+            <option value="all">
+              全部
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div
+          id="historyList"
+          class="history-list"
+        ></div>
+
+      </div>
+
+    </section>
 
   </div>
+
+
+  <!-- =========================
+       底部 App 导航
+  ========================= -->
+
+  <nav class="bottom-nav" aria-label="页面导航">
+
+    <button
+      class="nav-btn active"
+      data-page="record"
+      type="button"
+      aria-label="记录自由卡"
+      aria-current="page"
+    >
+      <span class="nav-icon">📝</span>
+      <span>记录</span>
+    </button>
+
+
+    <button
+      class="nav-btn"
+      data-page="stats"
+      type="button"
+      aria-label="统计"
+      aria-current="false"
+    >
+      <span class="nav-icon">📊</span>
+      <span>统计</span>
+    </button>
+
+
+    <button
+      class="nav-btn"
+      data-page="history"
+      type="button"
+      aria-label="历史流水"
+      aria-current="false"
+    >
+      <span class="nav-icon">🧾</span>
+      <span>流水</span>
+    </button>
+
+  </nav>
 
 
   <script>
@@ -722,6 +900,69 @@
       () => {
 
         initCardOptions();
+
+
+        /* =========================
+           App 底部导航
+        ========================= */
+
+        document
+          .querySelectorAll(".nav-btn")
+          .forEach(button => {
+
+            button.addEventListener(
+              "click",
+              () => {
+
+                const page =
+                  button.dataset.page;
+
+
+                document
+                  .querySelectorAll(".app-page")
+                  .forEach(section => {
+
+                    section.classList.toggle(
+                      "active",
+                      section.id ===
+                        `page-${page}`
+                    );
+
+                  });
+
+
+                document
+                  .querySelectorAll(".nav-btn")
+                  .forEach(btn => {
+
+                    const isActive =
+                      btn === button;
+
+                    btn.classList.toggle(
+                      "active",
+                      isActive
+                    );
+
+                    btn.setAttribute(
+                      "aria-current",
+                      isActive
+                        ? "page"
+                        : "false"
+                    );
+
+                  });
+
+
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth"
+                });
+
+              }
+            );
+
+          });
+
 
         loadLogs();
 
