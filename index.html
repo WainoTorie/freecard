@@ -29,7 +29,6 @@
     button, input, select { font-family: inherit; }
     .container { width: min(680px, 100%); margin: 0 auto; position: relative; min-width: 0; }
 
-    /* Festival Banner */
     .festival-banner { background: linear-gradient(135deg, rgba(255, 149, 0, 0.15), rgba(0, 122, 255, 0.15)); border: 1px solid rgba(255, 149, 0, 0.2); border-radius: var(--r-lg); padding: 20px 24px; margin-bottom: 16px; text-align: center; animation: fadeIn 0.6s ease, festivalPulse 3s ease-in-out infinite; position: relative; overflow: hidden; }
     .festival-banner::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%); pointer-events: none; }
     .festival-emoji { font-size: 36px; display: block; margin-bottom: 8px; animation: tier1Bounce 0.8s ease; }
@@ -37,7 +36,6 @@
     .festival-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; }
     @keyframes festivalPulse { 0%, 100% { box-shadow: 0 0 8px rgba(255, 149, 0, 0.1); } 50% { box-shadow: 0 0 20px rgba(255, 149, 0, 0.2), 0 0 40px rgba(0, 122, 255, 0.1); } }
 
-    /* Settings */
     .settings-btn { position: absolute; top: 8px; right: 0; width: 40px; height: 40px; border: none; background: var(--card); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
     .settings-btn:active { transform: scale(0.9); }
     .settings-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
@@ -53,13 +51,11 @@
     input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--border); outline: none; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--torie); cursor: pointer; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); }
 
-    /* Common */
     .page-title { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 6px; background: linear-gradient(135deg, var(--text-1), var(--text-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .subtitle { color: var(--text-2); font-size: 15px; margin-bottom: 28px; }
     .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
     .card { background: var(--card); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s; min-width: 0; }
 
-    /* Weekly */
     .weekly-card { background: linear-gradient(135deg, rgba(0, 122, 255, 0.12), rgba(255, 149, 0, 0.12)); border: 1px solid rgba(0, 122, 255, 0.15); position: relative; overflow: hidden; }
     .weekly-card::before { content: ""; position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0, 122, 255, 0.08) 0%, transparent 70%); pointer-events: none; }
     .weekly-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; min-width: 0; }
@@ -72,7 +68,6 @@
     .weekly-text .jory-hl { color: var(--jory); }
     .weekly-text .green-hl { color: var(--green); }
 
-    /* Balance */
     .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .balance-box { text-align: center; padding: 20px 12px; border-radius: var(--r-md); transition: transform 0.2s; }
     .balance-box.torie { background: rgba(0, 122, 255, 0.08); color: var(--torie); }
@@ -81,7 +76,6 @@
     .balance-number { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
     .balance-unit { font-size: 13px; font-weight: 500; opacity: 0.7; margin-left: 2px; }
 
-    /* Forms */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
     .form-group.full { grid-column: 1 / -1; }
@@ -93,7 +87,6 @@
     .submit-btn:active { transform: scale(0.98); }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    /* Stats */
     .period-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px; background: rgba(128, 128, 128, 0.08); border-radius: var(--r-md); margin-bottom: 24px; }
     .period-tab { height: 38px; border: none; border-radius: 10px; background: transparent; color: var(--text-2); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
@@ -116,7 +109,6 @@
     .bar-number { text-align: right; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
     .empty-stats { padding: 20px 0; color: var(--text-3); font-size: 14px; text-align: center; }
 
-    /* History */
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; min-width: 0; }
     .history-header .section-title { margin: 0; min-width: 0; }
     .history-filter { width: auto; min-width: 120px; height: 40px; font-size: 14px; border-radius: var(--r-sm); flex-shrink: 0; }
@@ -135,12 +127,10 @@
     .delete-btn:hover { background: var(--red); color: #fff; }
     .empty-history { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
 
-    /* Bank Segment Switch */
     .bank-segment { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; background: rgba(128, 128, 128, 0.08); border-radius: var(--r-md); margin-bottom: 20px; }
     .bank-segment-btn { height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 14px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all 0.2s; }
     .bank-segment-btn.active { background: var(--card); color: var(--text-1); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
 
-    /* Shop & Lists */
     .shop-view-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: rgba(128, 128, 128, 0.08); border-radius: var(--r-md); margin-bottom: 20px; }
     .shop-view-btn { height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 15px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all 0.2s; }
     .shop-view-btn.active.torie { background: var(--card); color: var(--torie); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
@@ -309,7 +299,6 @@
     <button id="settingsBtn" class="settings-btn" aria-label="设置">⚙️</button>
     <div id="festivalBannerContainer"></div>
 
-    <!-- Tab 1: 首页 -->
     <section id="page-home" class="app-page active">
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
@@ -328,7 +317,6 @@
       </div>
     </section>
 
-    <!-- Tab 2: 银行 -->
     <section id="page-bank" class="app-page">
       <div class="page-title">自由卡银行</div>
       <div class="subtitle">管理你的财富与规则 🏦</div>
@@ -339,7 +327,6 @@
         <button class="bank-segment-btn" data-bank="punish">⚠️ 惩罚</button>
       </div>
 
-      <!-- 子页: 心愿商店 -->
       <div id="bank-shop" class="bank-sub-page active">
         <div class="card">
           <div class="shop-view-switch">
@@ -355,7 +342,6 @@
         </div>
       </div>
 
-      <!-- 子页: 赚取 -->
       <div id="bank-earn" class="bank-sub-page">
         <div class="card calorie-card">
           <h2 class="section-title">🔥 卡路里换算器</h2>
@@ -388,7 +374,6 @@
         </div>
       </div>
 
-      <!-- 子页: 惩罚 -->
       <div id="bank-punish" class="bank-sub-page">
         <div class="card">
           <h2 class="section-title">🚨 违规扣除清单</h2>
@@ -406,7 +391,6 @@
       </div>
     </section>
 
-    <!-- Tab 3: 数据 -->
     <section id="page-data" class="app-page">
       <div class="page-title">数据统计</div>
       <div class="subtitle">看见成长的轨迹 📊</div>
@@ -438,7 +422,6 @@
   </nav>
 
   <script>
-    // ✅ 已修正回正确的 Supabase URL 和 Key
     const SUPABASE_URL = "https://vimaqasjmrocpqyepudw.supabase.co";
     const SUPABASE_KEY = "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -447,6 +430,9 @@
     let currentPeriod = "today", currentHistoryFilter = "all";
     let shopView = "Torie", earnView = "Torie", punishView = "Torie";
     let lastBankTab = localStorage.getItem("fc_last_bank_tab") || "shop";
+
+    // ✅ 类型前缀常量（用于在 name 字段中编码类型，避免 owner 字段触发 RLS）
+    const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
 
     const SPECIAL_DATES = [
       { month: 9, day: 2, emoji: "🎂", title: "Jory 生日快乐！", sub: "愿你的每一天都像今天一样闪闪发光 ✨", tier: 3 },
@@ -519,9 +505,11 @@
 
     function showRedeemCeremony(product,cost) {
       const tier=getRedeemTier(cost), config=TIER_CONFIG[tier], overlay=document.getElementById("redeemOverlay");
+      const displayName = product.name.replace(TYPE_PREFIX.earn,"").replace(TYPE_PREFIX.punish,"");
+      const ownerDisplay = product.owner;
       document.getElementById("redeemEmoji").textContent=config.emoji;
       document.getElementById("redeemTitle").textContent=config.title;
-      document.getElementById("redeemSub").textContent=`${product.owner.replace('_earn','').replace('_punish','')} 兑换了「${product.name}」· ${config.sub}`;
+      document.getElementById("redeemSub").textContent=`${ownerDisplay} 兑换了「${displayName}」· ${config.sub}`;
       overlay.className=`redeem-overlay tier-${tier}`;
       requestAnimationFrame(()=>{overlay.classList.add("show");spawnParticles(tier);});
       const closeBtn=document.getElementById("redeemCloseBtn"); let autoTimer=null;
@@ -668,20 +656,30 @@
       container.querySelectorAll("[data-del-log]").forEach(b=>b.addEventListener("click",()=>deleteLog(b.dataset.delLog)));
     }
 
+    // ✅ 核心修复：通过 name 前缀区分类型，owner 始终保持纯净的 Torie/Jory
+    function classifyProduct(p) {
+      if (p.name.startsWith(TYPE_PREFIX.earn)) return "earn";
+      if (p.name.startsWith(TYPE_PREFIX.punish)) return "punish";
+      return "shop";
+    }
+
+    function getDisplayName(p) {
+      return p.name.replace(TYPE_PREFIX.earn, "").replace(TYPE_PREFIX.punish, "");
+    }
+
     function renderList(containerId, type, view) {
       const container = document.getElementById(containerId);
-      // ✅ 兼容逻辑：如果是商店，同时读取老数据(无后缀)和新数据(_shop后缀)
-      let items;
-      if (type === "shop") {
-        items = allProducts.filter(p => p.owner === view || p.owner === view + "_shop");
-      } else {
-        items = allProducts.filter(p => p.owner === view + "_" + type);
-      }
+      // ✅ 按 owner + 类型前缀双重过滤
+      const items = allProducts.filter(p => p.owner === view && classifyProduct(p) === type);
       
-      if(!items.length) { container.innerHTML = `<div class="empty-shop">还没有${type==='shop'?'商品':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; return; }
+      if(!items.length) { 
+        container.innerHTML = `<div class="empty-shop">还没有${type==='shop'?'商品':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; 
+        return; 
+      }
       const balance = calcBalance(view);
       container.innerHTML = items.map(p => {
         const isPunish = type === "punish", isEarn = type === "earn";
+        const displayName = getDisplayName(p);
         const pct = Math.min(100, Math.round((balance / p.cost) * 100)), canRedeem = balance >= p.cost;
         let itemClass = "shop-item", barExtraClass = "", progressText = "", actionBtn = "";
         if (isPunish) { itemClass += " punish-item"; actionBtn = `<button class="shop-action-btn btn-punish" data-action="punish" data-id="${escAttr(p.id)}">⚠️ 触发扣除</button>`; } 
@@ -694,7 +692,7 @@
           actionBtn = `<button class="shop-action-btn btn-redeem" ${canRedeem?"":"disabled"} data-action="redeem" data-id="${escAttr(p.id)}">${canRedeem?"🎁 立即兑换":"余额不足"}</button>`;
         }
         const barClass = `shop-bar ${view.toLowerCase()}${barExtraClass}`, costClass = isPunish ? "punish" : isEarn ? "earn" : "", costPrefix = isPunish ? "扣除 " : isEarn ? "奖励 " : "";
-        return `<div class="${itemClass}"><div class="shop-item-header"><div class="shop-item-name">${esc(p.name)}</div><div class="shop-item-cost ${costClass}">${costPrefix}${p.cost} 张</div></div>${!isPunish && !isEarn ? `<div class="shop-progress-text">${progressText}</div><div class="shop-bar-track"><div class="${barClass}" style="width:${pct}%"></div></div>` : ''}<div class="shop-actions">${actionBtn}<button class="shop-action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}">编辑</button><button class="shop-action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button></div></div>`;
+        return `<div class="${itemClass}"><div class="shop-item-header"><div class="shop-item-name">${esc(displayName)}</div><div class="shop-item-cost ${costClass}">${costPrefix}${p.cost} 张</div></div>${!isPunish && !isEarn ? `<div class="shop-progress-text">${progressText}</div><div class="shop-bar-track"><div class="${barClass}" style="width:${pct}%"></div></div>` : ''}<div class="shop-actions">${actionBtn}<button class="shop-action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}">编辑</button><button class="shop-action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button></div></div>`;
       }).join("");
       container.querySelectorAll("[data-action]").forEach(b => b.addEventListener("click", () => handleListAction(b.dataset.action, b.dataset.id, type, view)));
     }
@@ -705,23 +703,43 @@
 
     async function handleListAction(action, id, type, view) {
       const p = allProducts.find(x => String(x.id) === String(id)); if(!p) return;
+      const displayName = getDisplayName(p);
       if(action === "del") { if(!confirm("确定下架此项目？")) return; const {error} = await sb.from("freecard_shop").delete().eq("id", id); if(error) return showToast("下架失败", "error"); showToast("已下架", "success"); await loadProducts(); } 
-      else if(action === "edit") { const newName = prompt("修改名称：", p.name); if(newName===null) return; const newCost = prompt("修改数值（张）：", p.cost); if(newCost===null) return; const cost = parseInt(newCost); if(!newName.trim() || !cost || cost<1) return showToast("输入无效", "error"); const {error} = await sb.from("freecard_shop").update({name:newName.trim(), cost}).eq("id", id); if(error) return showToast("修改失败", "error"); showToast("已更新", "success"); await loadProducts(); }
-      else if(action === "redeem") { if(calcBalance(view) < p.cost) return showToast("余额不足", "error"); if(!confirm(`确认花费 ${p.cost} 张兑换「${p.name}」？`)) return; const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${p.name}`}); if(error) return showToast("兑换失败", "error"); showRedeemCeremony(p, p.cost); await loadLogs(); }
-      else if(action === "earn") { const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"增加", card_num:p.cost, reason:`💪 任务：${p.name}`}); if(error) return showToast("领取失败", "error"); showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); }
-      else if(action === "punish") { if(calcBalance(view) < p.cost) { if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return; } else { if(!confirm(`确认扣除 ${p.cost} 张自由卡（${p.name}）？`)) return; } const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${p.name}`}); if(error) return showToast("扣除失败", "error"); showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); }
+      else if(action === "edit") { 
+        const newName = prompt("修改名称：", displayName); if(newName===null) return; 
+        const newCost = prompt("修改数值（张）：", p.cost); if(newCost===null) return; 
+        const cost = parseInt(newCost); if(!newName.trim() || !cost || cost<1) return showToast("输入无效", "error"); 
+        // ✅ 编辑时保留类型前缀
+        const prefix = type === "earn" ? TYPE_PREFIX.earn : type === "punish" ? TYPE_PREFIX.punish : "";
+        const {error} = await sb.from("freecard_shop").update({name: prefix + newName.trim(), cost}).eq("id", id); 
+        if(error) return showToast("修改失败", "error"); showToast("已更新", "success"); await loadProducts(); 
+      }
+      else if(action === "redeem") { if(calcBalance(view) < p.cost) return showToast("余额不足", "error"); if(!confirm(`确认花费 ${p.cost} 张兑换「${displayName}」？`)) return; const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${displayName}`}); if(error) return showToast("兑换失败", "error"); showRedeemCeremony(p, p.cost); await loadLogs(); }
+      else if(action === "earn") { const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"增加", card_num:p.cost, reason:`💪 任务：${displayName}`}); if(error) return showToast("领取失败", "error"); showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); }
+      else if(action === "punish") { if(calcBalance(view) < p.cost) { if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return; } else { if(!confirm(`确认扣除 ${p.cost} 张自由卡（${displayName}）？`)) return; } const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${displayName}`}); if(error) return showToast("扣除失败", "error"); showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); }
     }
 
+    // ✅ 核心修复：添加时 owner 始终为纯净值，类型编码到 name 前缀中
     function setupAdd(type, nameId, costId, btnId, viewGetter) {
       document.getElementById(btnId).addEventListener("click", async () => {
-        const name = document.getElementById(nameId).value.trim(), cost = parseInt(document.getElementById(costId).value);
-        if(!name) return showToast("请输入名称", "error"); if(!cost || cost<1) return showToast("数值至少为 1", "error");
+        const rawName = document.getElementById(nameId).value.trim();
+        const cost = parseInt(document.getElementById(costId).value);
+        if(!rawName) return showToast("请输入名称", "error"); 
+        if(!cost || cost<1) return showToast("数值至少为 1", "error");
+        
         const btn = document.getElementById(btnId); btn.disabled = true; btn.textContent = "...";
-        const suffix = type === "shop" ? "" : `_${type}`;
-        const {error} = await sb.from("freecard_shop").insert({name, cost, owner: viewGetter() + suffix});
+        
+        // ✅ 关键：owner 永远是纯净的 Torie/Jory，类型通过 name 前缀区分
+        const prefix = type === "earn" ? TYPE_PREFIX.earn : type === "punish" ? TYPE_PREFIX.punish : "";
+        const finalName = prefix + rawName;
+        const finalOwner = viewGetter(); // 不再拼接后缀！
+        
+        const {error} = await sb.from("freecard_shop").insert({name: finalName, cost, owner: finalOwner});
         btn.disabled = false; btn.textContent = "添加";
-        if(error) return showToast("添加失败", "error");
-        document.getElementById(nameId).value = ""; document.getElementById(costId).value = ""; showToast("添加成功 🎉", "success"); await loadProducts();
+        if(error) { showToast("添加失败：" + error.message, "error"); return; }
+        
+        document.getElementById(nameId).value = ""; document.getElementById(costId).value = ""; 
+        showToast("添加成功 🎉", "success"); await loadProducts();
       });
     }
 
