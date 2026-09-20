@@ -2,601 +2,2297 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>一起变好 · 自由卡记录</title>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    :root {
-      --bg: #f2f2f7;
-      --card: rgba(255,255,255,0.88);
-      --text-1: #1d1d1f;
-      --text-2: #86868b;
-      --text-3: #aeaeb2;
-      --border: rgba(0,0,0,0.06);
-      --torie: #007aff;
-      --jory: #ff9500;
-      --green: #34c759;
-      --red: #ff3b30;
-      --r-lg: 20px;
-      --r-md: 14px;
-      --r-sm: 10px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.06);
-      --font: -apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
-      --blur-val: 20px;
+    * {
+      box-sizing: border-box;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #000000;
-        --card: rgba(28,28,30,0.88);
-        --text-1: #f5f5f7;
-        --text-2: #a1a1a6;
-        --text-3: #636366;
-        --border: rgba(255,255,255,0.08);
-        --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    body {
+      margin: 0;
+      padding: 24px;
+      padding-bottom: 110px;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "SF Pro Text",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+    }
+
+    .container {
+      width: min(900px, 100%);
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin: 8px 0 28px;
+      text-align: center;
+      color: #86868b;
+      font-size: 14px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    /* =========================
+       余额
+    ========================= */
+
+    .balances {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .balance-box {
+      text-align: center;
+      padding: 18px 10px;
+      border-radius: 16px;
+      background: #f5f5f7;
+    }
+
+    .balance-name {
+      font-size: 15px;
+      color: #6e6e73;
+      margin-bottom: 6px;
+    }
+
+    .balance-number {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .balance-unit {
+      font-size: 14px;
+      color: #86868b;
+      margin-left: 3px;
+    }
+
+    /* =========================
+       标题
+    ========================= */
+
+    .section-title {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 0 0 18px;
+    }
+
+    /* =========================
+       表单
+    ========================= */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      color: #6e6e73;
+    }
+
+    select,
+    input {
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      border: 1px solid #d2d2d7;
+      border-radius: 10px;
+      background: #fff;
+      color: #1d1d1f;
+      font-size: 15px;
+      outline: none;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: #86868b;
+    }
+
+    .submit-btn {
+      width: 100%;
+      height: 46px;
+      margin-top: 16px;
+      border: none;
+      border-radius: 11px;
+      background: #1d1d1f;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      opacity: 0.9;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #status {
+      min-height: 20px;
+      margin-top: 12px;
+      text-align: center;
+      font-size: 13px;
+      color: #6e6e73;
+    }
+
+    /* =========================
+       统计周期
+    ========================= */
+
+    .period-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      padding: 4px;
+      background: #f5f5f7;
+      border-radius: 11px;
+      margin-bottom: 24px;
+    }
+
+    .period-tab {
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #6e6e73;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .period-tab.active {
+      background: white;
+      color: #1d1d1f;
+      font-weight: 600;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    /* =========================
+       统计图
+       四条柱子共用同一个尺度
+    ========================= */
+
+    .stats-group {
+      margin-bottom: 28px;
+    }
+
+    .stats-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .stats-label {
+      margin-bottom: 12px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr) 38px;
+      align-items: center;
+      gap: 10px;
+      margin: 11px 0;
+    }
+
+    .bar-name {
+      font-size: 14px;
+      color: #6e6e73;
+    }
+
+    .bar-track {
+      height: 18px;
+      background: #f0f0f2;
+      border-radius: 6px;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .bar {
+      height: 100%;
+      min-width: 0;
+      border-radius: 6px;
+      background: #1d1d1f;
+      transition: width 0.35s ease;
+    }
+
+    .bar.jory {
+      background: #8e8e93;
+    }
+
+    .bar-number {
+      text-align: right;
+      font-size: 14px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .empty-stats {
+      padding: 12px 0;
+      color: #86868b;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* =========================
+       历史流水
+    ========================= */
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .history-header .section-title {
+      margin: 0;
+    }
+
+    .history-filter {
+      width: auto;
+      min-width: 130px;
+      height: 38px;
+      font-size: 14px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /*
+      这里是本次修改的关键。
+
+      原来：
+      125px 65px 48px 48px 1fr auto
+
+      修改为：
+      125px 65px 48px 48px minmax(0, 1fr) auto
+
+      minmax(0, 1fr) 允许“原因”这一列真正缩小，
+      不会因为文字太长把右边的删除按钮挤出去。
+    */
+    .history-item {
+      display: grid;
+      grid-template-columns:
+        125px
+        65px
+        48px
+        48px
+        minmax(0, 1fr)
+        auto;
+      align-items: start;
+      gap: 10px;
+      padding: 13px 0;
+      border-bottom: 1px solid #eeeef0;
+      font-size: 14px;
+
+      /*
+        防止整个 grid item 因为内部长文本
+        出现横向溢出。
+      */
+      min-width: 0;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-time {
+      color: #86868b;
+      font-variant-numeric: tabular-nums;
+      min-width: 0;
+    }
+
+    .history-person {
+      font-weight: 600;
+      min-width: 0;
+    }
+
+    .history-change {
+      font-size: 18px;
+      font-weight: 700;
+      min-width: 0;
+    }
+
+    /* 增加：绿色 */
+    .history-change.plus {
+      color: #34a853;
+    }
+
+    /* 减少：红色 */
+    .history-change.minus {
+      color: #e53935;
+    }
+
+    .history-number {
+      font-weight: 600;
+      min-width: 0;
+    }
+
+    /*
+      原因文本：
+
+      1. min-width: 0
+         允许 grid 中这一列真正缩小。
+
+      2. white-space: normal
+         明确允许正常换行。
+
+      3. overflow-wrap: anywhere
+         如果出现特别长的连续字符，也可以强制断开。
+
+      4. word-break: break-word
+         兼容普通中英文文本的换行。
+    */
+    .history-reason {
+      min-width: 0;
+      color: #424245;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    /*
+      删除按钮固定在自己的 auto 列，
+      不会被原因文本挤走。
+    */
+    .delete-btn {
+      flex-shrink: 0;
+      border: none;
+      background: transparent;
+      color: #86868b;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 5px 0;
+      white-space: nowrap;
+      min-width: 28px;
+    }
+
+    .delete-btn:hover {
+      color: #1d1d1f;
+    }
+
+    .empty-history {
+      padding: 30px 0 12px;
+      text-align: center;
+      color: #86868b;
+      font-size: 14px;
+    }
+
+    /* =========================
+       App 页面 / 底部导航
+    ========================= */
+
+    .app-page {
+      display: none;
+      animation: pageIn 0.18s ease;
+    }
+
+    .app-page.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg); color: var(--text-1); font-family: var(--font); padding: 20px 16px 120px; min-height: 100vh; line-height: 1.5; transition: background .3s, color .3s; }
-    .container { width: min(680px,100%); margin: 0 auto; position: relative; }
-
-    .settings-btn { position: absolute; top: 8px; right: 0; width: 40px; height: 40px; border: none; background: var(--card); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all .2s; }
-    .settings-btn:active { transform: scale(0.9); }
-
-    .settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity .25s; }
-    .settings-overlay.show { opacity: 1; pointer-events: auto; }
-    .settings-panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: min(400px, calc(100% - 32px)); background: var(--card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 28px 24px 40px; z-index: 9999; transition: transform .3s cubic-bezier(.22,1,.36,1); border: 1px solid var(--border); box-shadow: 0 -8px 32px rgba(0,0,0,0.12); }
-    .settings-panel.show { transform: translateX(-50%) translateY(0); }
-    .settings-title { font-size: 20px; font-weight: 800; margin-bottom: 24px; text-align: center; }
-    .setting-row { margin-bottom: 22px; }
-    .setting-row:last-child { margin-bottom: 0; }
-    .setting-label { font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-    .setting-label span:last-child { font-size: 12px; opacity: .7; }
-    .setting-hint { font-size: 12px; color: var(--text-3); margin-top: 4px; }
-
-    input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--border); outline: none; }
-    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--torie); cursor: pointer; box-shadow: 0 2px 8px rgba(0,122,255,0.3); }
-
-    .page-title { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 6px; background: linear-gradient(135deg,var(--text-1),var(--text-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .subtitle { color: var(--text-2); font-size: 15px; margin-bottom: 28px; }
-    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-
-    .card { background: var(--card); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: background .3s, border-color .3s; }
-
-    .weekly-card { background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(255,149,0,0.12)); border: 1px solid rgba(0,122,255,0.15); position: relative; overflow: hidden; }
-    .weekly-card::before { content: ''; position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,122,255,0.08) 0%, transparent 70%); pointer-events: none; }
-    .weekly-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .weekly-icon { font-size: 24px; }
-    .weekly-title { font-size: 15px; font-weight: 700; color: var(--text-1); }
-    .weekly-date { font-size: 12px; color: var(--text-3); margin-left: auto; }
-    .weekly-text { font-size: 15px; line-height: 1.7; color: var(--text-1); font-weight: 500; }
-    .weekly-text .highlight { font-weight: 800; }
-    .weekly-text .torie-hl { color: var(--torie); }
-    .weekly-text .jory-hl { color: var(--jory); }
-    .weekly-text .green-hl { color: var(--green); }
-
-    .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .balance-box { text-align: center; padding: 20px 12px; border-radius: var(--r-md); transition: transform .2s; }
-    .balance-box.torie { background: rgba(0,122,255,0.08); color: var(--torie); }
-    .balance-box.jory { background: rgba(255,149,0,0.08); color: var(--jory); }
-    .balance-name { font-size: 14px; font-weight: 600; opacity: .8; margin-bottom: 4px; }
-    .balance-number { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
-    .balance-unit { font-size: 13px; font-weight: 500; opacity: .7; margin-left: 2px; }
-
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group.full { grid-column: 1/-1; }
-    label { font-size: 13px; font-weight: 600; color: var(--text-2); margin-left: 2px; }
-    select,input:not([type="range"]) { width: 100%; height: 48px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r-sm); background: var(--card); color: var(--text-1); font-size: 16px; outline: none; transition: all .2s; appearance: none; }
-    select:focus,input:not([type="range"]):focus { border-color: var(--torie); box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
-
-    .submit-btn { width: 100%; height: 50px; margin-top: 18px; border: none; border-radius: var(--r-md); background: var(--text-1); color: var(--bg); font-size: 16px; font-weight: 700; cursor: pointer; transition: all .2s; }
-    .submit-btn:hover { opacity: .9; transform: translateY(-1px); }
-    .submit-btn:active { transform: scale(0.98); }
-    .submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-    .period-tabs { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; padding: 4px; background: rgba(128,128,128,0.08); border-radius: var(--r-md); margin-bottom: 24px; }
-    .period-tab { height: 38px; border: none; border-radius: 10px; background: transparent; color: var(--text-2); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .2s; }
-    .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-
-    .stats-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 24px; }
-    .summary-item { text-align: center; padding: 14px 8px; border-radius: var(--r-md); background: rgba(128,128,128,0.06); }
-    .summary-label { font-size: 12px; color: var(--text-2); font-weight: 600; margin-bottom: 4px; }
-    .summary-value { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
-    .summary-value.plus { color: var(--green); }
-    .summary-value.minus { color: var(--red); }
-    .summary-value.net { color: var(--torie); }
-
-    .stats-group { margin-bottom: 24px; }
-    .stats-group:last-child { margin-bottom: 0; }
-    .stats-label { margin-bottom: 12px; font-size: 15px; font-weight: 700; color: var(--text-2); }
-    .bar-row { display: grid; grid-template-columns: 50px 1fr 36px; align-items: center; gap: 10px; margin: 10px 0; }
-    .bar-name { font-size: 13px; font-weight: 600; color: var(--text-2); }
-    .bar-track { height: 20px; background: rgba(128,128,128,0.08); border-radius: 10px; overflow: hidden; }
-    .bar { height: 100%; border-radius: 10px; transition: width .5s cubic-bezier(.22,1,.36,1); min-width: 0; }
-    .bar.torie-bar { background: linear-gradient(90deg,var(--torie),#5ac8fa); }
-    .bar.jory-bar { background: linear-gradient(90deg,var(--jory),#ffd60a); }
-    .bar-number { text-align: right; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
-    .empty-stats { padding: 20px 0; color: var(--text-3); font-size: 14px; text-align: center; }
-
-    .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
-    .history-header .section-title { margin: 0; }
-    .history-filter { width: auto; min-width: 120px; height: 40px; font-size: 14px; border-radius: var(--r-sm); }
-    .history-item { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 16px 0; border-bottom: 1px solid var(--border); animation: fadeIn .3s ease; }
-    .history-item:last-child { border-bottom: none; }
-    .history-top { display: flex; align-items: baseline; gap: 8px; }
-    .history-person { font-weight: 700; font-size: 15px; }
-    .history-reason { color: var(--text-2); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .history-time { font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; margin-top: 2px; }
-    .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-    .history-change { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
-    .history-change.plus { color: var(--green); }
-    .history-change.minus { color: var(--red); }
-    .delete-btn { border: none; background: rgba(255,59,48,0.1); color: var(--red); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; cursor: pointer; margin-top: 4px; transition: all .2s; }
-    .delete-btn:hover { background: var(--red); color: #fff; }
-    .empty-history { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
-
-    .shop-view-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: rgba(128,128,128,0.08); border-radius: var(--r-md); margin-bottom: 20px; }
-    .shop-view-btn { height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 15px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all .2s; }
-    .shop-view-btn.active.torie { background: var(--card); color: var(--torie); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .shop-view-btn.active.jory { background: var(--card); color: var(--jory); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-
-    @keyframes glowPulseGreen {
-      0%, 100% { box-shadow: 0 0 8px rgba(52,199,89,0.2), 0 0 20px rgba(52,199,89,0.1); }
-      50% { box-shadow: 0 0 16px rgba(52,199,89,0.4), 0 0 40px rgba(52,199,89,0.2); }
-    }
-    @keyframes glowPulseBlue {
-      0%, 100% { box-shadow: 0 0 6px rgba(0,122,255,0.15), 0 0 16px rgba(0,122,255,0.08); }
-      50% { box-shadow: 0 0 12px rgba(0,122,255,0.3), 0 0 30px rgba(0,122,255,0.15); }
-    }
-    @keyframes glowPulseOrange {
-      0%, 100% { box-shadow: 0 0 5px rgba(255,149,0,0.12), 0 0 12px rgba(255,149,0,0.06); }
-      50% { box-shadow: 0 0 10px rgba(255,149,0,0.25), 0 0 24px rgba(255,149,0,0.12); }
-    }
-    @keyframes glowBarShimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
+    .bottom-nav-wrap {
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: min(520px, calc(100% - 28px));
+      padding: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
-    .shop-item { padding: 18px 16px; border-radius: var(--r-md); margin-bottom: 12px; border: 1px solid var(--border); animation: fadeIn .3s ease; transition: all .4s ease; background: transparent; }
-    .shop-item:last-child { margin-bottom: 0; }
-
-    .shop-item.halfway-there { border-color: rgba(255,149,0,0.2); animation: glowPulseOrange 3.5s ease-in-out infinite; }
-    .shop-item.almost-there { border-color: rgba(0,122,255,0.25); animation: glowPulseBlue 2.5s ease-in-out infinite; }
-    .shop-item.ready-to-redeem { border-color: rgba(52,199,89,0.3); animation: glowPulseGreen 2s ease-in-out infinite; }
-
-    .shop-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .shop-item-name { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-    .shop-item-cost { font-size: 14px; font-weight: 700; color: var(--text-2); white-space: nowrap; }
-    .shop-progress-text { font-size: 13px; color: var(--text-2); margin-bottom: 6px; font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; }
-    .shop-bar-track { height: 14px; background: rgba(128,128,128,0.08); border-radius: 7px; overflow: hidden; }
-    .shop-bar { height: 100%; border-radius: 7px; transition: width .5s cubic-bezier(.22,1,.36,1); }
-    .shop-bar.torie { background: linear-gradient(90deg,var(--torie),#5ac8fa); }
-    .shop-bar.jory { background: linear-gradient(90deg,var(--jory),#ffd60a); }
-    .shop-bar.full { background: linear-gradient(90deg,var(--green),#30d158) !important; }
-
-    .shop-bar.shimmer { background-size: 200% 100%; animation: glowBarShimmer 2s linear infinite; }
-    .shop-bar.shimmer.torie { background-image: linear-gradient(90deg, var(--torie), #5ac8fa, #fff, #5ac8fa, var(--torie)); background-size: 200% 100%; }
-    .shop-bar.shimmer.jory { background-image: linear-gradient(90deg, var(--jory), #ffd60a, #fff, #ffd60a, var(--jory)); background-size: 200% 100%; }
-    .shop-bar.shimmer.full { background-image: linear-gradient(90deg, var(--green), #30d158, #fff, #30d158, var(--green)) !important; background-size: 200% 100%; }
-    .shop-bar.shimmer-slow { background-size: 200% 100%; animation: glowBarShimmer 3.5s linear infinite; }
-    .shop-bar.shimmer-slow.torie { background-image: linear-gradient(90deg, var(--torie), #5ac8fa, rgba(255,255,255,0.6), #5ac8fa, var(--torie)); background-size: 200% 100%; }
-    .shop-bar.shimmer-slow.jory { background-image: linear-gradient(90deg, var(--jory), #ffd60a, rgba(255,255,255,0.6), #ffd60a, var(--jory)); background-size: 200% 100%; }
-
-    .shop-actions { display: flex; gap: 8px; margin-top: 10px; }
-    .shop-action-btn { flex: 1; height: 36px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; }
-    .shop-action-btn:active { transform: scale(0.96); }
-    .btn-redeem { background: var(--green); color: #fff; }
-    .btn-redeem:disabled { background: rgba(128,128,128,0.12); color: var(--text-3); cursor: not-allowed; }
-    .btn-edit { background: rgba(128,128,128,0.08); color: var(--text-2); }
-    .btn-del { background: rgba(255,59,48,0.1); color: var(--red); }
-
-    .add-product-form { display: grid; grid-template-columns: 1fr 100px auto; gap: 10px; align-items: end; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
-    .add-product-form .form-group { gap: 4px; }
-    .add-btn { height: 48px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: var(--bg); font-size: 14px; font-weight: 700; cursor: pointer; padding: 0 18px; white-space: nowrap; }
-    .add-btn:active { transform: scale(0.96); }
-
-    .empty-shop { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
-
-    .app-page { display: none; animation: pageSlideIn .25s ease; }
-    .app-page.active { display: block; }
-    @keyframes pageSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(400px,calc(100% - 32px)); padding: 6px; display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); transition: background .3s, border-color .3s; }
-    .nav-btn { height: 56px; border: 0; border-radius: 18px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; font-weight: 600; transition: all .2s; }
-    .nav-btn:active { transform: scale(0.92); }
-    .nav-icon { font-size: 22px; line-height: 1; }
-    .nav-btn.active { background: var(--text-1); color: var(--bg); }
-
-    .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
-    .toast { padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all .3s; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .toast.success { background: var(--green); }
-    .toast.error { background: var(--red); }
-
-    #celebrationCanvas { position: fixed; inset: 0; z-index: 10000; pointer-events: none; width: 100%; height: 100%; }
-
-    .redeem-overlay {
-      position: fixed; inset: 0; z-index: 9999;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      opacity: 0; pointer-events: none; transition: opacity .4s;
+    .bottom-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
     }
-    .redeem-overlay.show { opacity: 1; pointer-events: auto; }
-    .redeem-celebration { text-align: center; color: #fff; transform: scale(0.8); transition: transform .5s cubic-bezier(.22,1,.36,1); }
-    .redeem-overlay.show .redeem-celebration { transform: scale(1); }
-    .redeem-emoji { font-size: 72px; margin-bottom: 16px; display: block; }
-    .redeem-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-    .redeem-sub { font-size: 16px; opacity: .8; margin-bottom: 24px; }
-    .redeem-close-btn {
-      height: 44px; padding: 0 32px; border: none; border-radius: 22px;
-      background: rgba(255,255,255,0.2); color: #fff; font-size: 15px; font-weight: 700;
-      cursor: pointer; backdrop-filter: blur(10px); transition: all .2s;
+
+    .nav-tab {
+      height: 54px;
+      border: none;
+      border-radius: 17px;
+      background: transparent;
+      color: #86868b;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
     }
-    .redeem-close-btn:hover { background: rgba(255,255,255,0.3); }
 
-    .redeem-overlay.tier-1 { background: rgba(0,0,0,0.3); }
-    .redeem-overlay.tier-1 .redeem-emoji { font-size: 56px; animation: tier1Bounce .6s ease; }
-    @keyframes tier1Bounce { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-
-    .redeem-overlay.tier-2 { background: rgba(0,0,0,0.4); }
-    .redeem-overlay.tier-2 .redeem-emoji { font-size: 64px; animation: tier2Pop .8s cubic-bezier(.22,1,.36,1); }
-    @keyframes tier2Pop { 0% { transform: scale(0) rotate(-20deg); } 60% { transform: scale(1.3) rotate(5deg); } 100% { transform: scale(1) rotate(0); } }
-
-    .redeem-overlay.tier-3 { background: rgba(0,0,0,0.5); }
-    .redeem-overlay.tier-3 .redeem-emoji { font-size: 72px; animation: tier3Grand 1s cubic-bezier(.22,1,.36,1); }
-    @keyframes tier3Grand { 0% { transform: scale(0) rotate(-180deg); opacity: 0; } 60% { transform: scale(1.4) rotate(10deg); opacity: 1; } 100% { transform: scale(1) rotate(0); } }
-    .redeem-overlay.tier-3 .redeem-title { font-size: 32px; background: linear-gradient(135deg, #ffd60a, #ff9f0a, #ff375f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-    .redeem-overlay.tier-4 { background: rgba(0,0,0,0.6); }
-    .redeem-overlay.tier-4 .redeem-emoji { font-size: 80px; animation: tier4Epic 1.2s cubic-bezier(.22,1,.36,1); }
-    @keyframes tier4Epic {
-      0% { transform: scale(0) rotate(-360deg); opacity: 0; }
-      50% { transform: scale(1.5) rotate(15deg); opacity: 1; }
-      70% { transform: scale(0.9) rotate(-5deg); }
-      100% { transform: scale(1) rotate(0); }
+    .nav-tab-icon {
+      font-size: 19px;
+      line-height: 1;
     }
-    .redeem-overlay.tier-4 .redeem-title {
-      font-size: 36px;
-      background: linear-gradient(135deg, #ffd60a, #ff9f0a, #ff375f, #bf5af2, #0a84ff);
-      background-size: 300% 300%;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      animation: rainbowShift 3s ease infinite;
-    }
-    @keyframes rainbowShift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
-    @media (max-width:480px) {
-      body { padding: 16px 12px 110px; }
-      .page-title { font-size: 28px; }
-      .card { padding: 20px; border-radius: 18px; }
-      .balance-number { font-size: 30px; }
-      .form-grid { grid-template-columns: 1fr; }
-      .form-group.full { grid-column: auto; }
-      .stats-summary { grid-template-columns: 1fr; gap: 6px; }
-      .summary-item { display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 12px 16px; }
-      .summary-label { margin-bottom: 0; }
-      .add-product-form { grid-template-columns: 1fr 80px; }
-      .add-product-form .form-group:first-child { grid-column: 1/-1; }
-      .add-btn { grid-column: 2; }
-      .bottom-nav { bottom: 12px; border-radius: 20px; }
-      .nav-btn { height: 52px; border-radius: 16px; }
-      .redeem-title { font-size: 24px !important; }
-      .redeem-emoji { font-size: 56px !important; }
+    .nav-tab.active {
+      background: #1d1d1f;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 2px 7px rgba(0, 0, 0, 0.14);
+    }
+
+    .nav-tab:active {
+      transform: scale(0.97);
+    }
+
+    /* =========================
+       手机
+    ========================= */
+
+    @media (max-width: 680px) {
+
+      body {
+        padding: 14px;
+        padding-bottom: 104px;
+      }
+
+      .card {
+        padding: 17px;
+        border-radius: 17px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .history-header {
+        align-items: flex-start;
+      }
+
+      .history-filter {
+        min-width: 120px;
+      }
+
+      /*
+        手机端重新布局：
+
+        第一行：
+        时间                         删除
+
+        第二行：
+        人物    +    数量
+
+        第三行：
+        原因（完整宽度，自然换行）
+      */
+      .history-item {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 5px 10px;
+        padding: 15px 0;
+        min-width: 0;
+      }
+
+      .history-time {
+        grid-column: 1;
+        grid-row: 1;
+        min-width: 0;
+      }
+
+      .history-person {
+        grid-column: 1;
+        grid-row: 2;
+        min-width: 0;
+      }
+
+      .history-change {
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: start;
+      }
+
+      .history-number {
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: end;
+      }
+
+      .history-reason {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        margin-top: 2px;
+        min-width: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .delete-btn {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+      }
+
+      .balance-number {
+        font-size: 30px;
+      }
+
+      .bar-row {
+        grid-template-columns: 48px minmax(0, 1fr) 32px;
+        gap: 7px;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<div class="toast-container"><div id="toast" class="toast"></div></div>
-<canvas id="celebrationCanvas"></canvas>
+  <div class="container">
 
-<div id="redeemOverlay" class="redeem-overlay">
-  <div class="redeem-celebration">
-    <span class="redeem-emoji" id="redeemEmoji"></span>
-    <div class="redeem-title" id="redeemTitle"></div>
-    <div class="redeem-sub" id="redeemSub"></div>
-    <button class="redeem-close-btn" id="redeemCloseBtn">太棒了！</button>
+    <h1>一起变好 · 自由卡记录</h1>
+
+    <div class="subtitle">
+      记录每一次获得，也记录每一次自由
+    </div>
+
+    <main id="appPages">
+
+      <!-- =====================================================
+           记录页面
+      ===================================================== -->
+
+      <section id="page-record" class="app-page active">
+
+        <!-- 当前余额 -->
+
+        <div class="card">
+
+          <div class="balances">
+
+            <div class="balance-box">
+
+              <div class="balance-name">
+                Torie
+              </div>
+
+              <div>
+
+                <span
+                  id="torieBalance"
+                  class="balance-number"
+                >0</span>
+
+                <span class="balance-unit">
+                  张
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="balance-box">
+
+              <div class="balance-name">
+                Jory
+              </div>
+
+              <div>
+
+                <span
+                  id="joryBalance"
+                  class="balance-number"
+                >0</span>
+
+                <span class="balance-unit">
+                  张
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- 新增记录 -->
+
+        <div class="card">
+
+          <h2 class="section-title">
+            记录自由卡
+          </h2>
+
+
+          <div class="form-grid">
+
+            <div class="form-group">
+
+              <label for="operator">
+                谁
+              </label>
+
+              <select id="operator">
+
+                <option value="Torie">
+                  Torie
+                </option>
+
+                <option value="Jory">
+                  Jory
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="changeType">
+                变化
+              </label>
+
+              <select id="changeType">
+
+                <option value="增加">
+                  增加✅
+                </option>
+
+                <option value="减少">
+                  减少❌
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group full">
+
+              <label for="reason">
+                原因
+              </label>
+
+              <input
+                id="reason"
+                type="text"
+                maxlength="100"
+                placeholder="例如：完成英语学习、玩游戏"
+              />
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="cardNum">
+                数量
+              </label>
+
+              <select id="cardNum"></select>
+
+            </div>
+
+          </div>
+
+
+          <button
+            id="submitBtn"
+            class="submit-btn"
+          >
+            提交记录
+          </button>
+
+
+          <div id="status"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           统计页面
+      ===================================================== -->
+
+      <section id="page-stats" class="app-page">
+
+        <div class="card">
+
+          <h2 class="section-title">
+            统计
+          </h2>
+
+
+          <div class="period-tabs">
+
+            <button
+              class="period-tab active"
+              data-period="today"
+            >
+              今日
+            </button>
+
+            <button
+              class="period-tab"
+              data-period="week"
+            >
+              本周
+            </button>
+
+            <button
+              class="period-tab"
+              data-period="month"
+            >
+              本月
+            </button>
+
+            <button
+              class="period-tab"
+              data-period="all"
+            >
+              总计
+            </button>
+
+          </div>
+
+
+          <div id="statsContent"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           历史页面
+      ===================================================== -->
+
+      <section id="page-history" class="app-page">
+
+        <div class="card">
+
+          <div class="history-header">
+
+            <h2 class="section-title">
+              历史流水
+            </h2>
+
+
+            <select
+              id="historyFilter"
+              class="history-filter"
+            >
+
+              <option value="all">
+                全部
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div
+            id="historyList"
+            class="history-list"
+          ></div>
+
+        </div>
+
+      </section>
+
+    </main>
+
   </div>
-</div>
 
-<div id="settingsOverlay" class="settings-overlay"></div>
-<div id="settingsPanel" class="settings-panel">
-  <div class="settings-title">⚙️ 显示设置</div>
-  <div class="setting-row">
-    <div class="setting-label">毛玻璃强度 <span id="blurValue">20px</span></div>
-    <input type="range" id="blurSlider" min="0" max="30" value="20" />
+
+  <!-- =====================================================
+       底部导航
+  ===================================================== -->
+
+  <div class="bottom-nav-wrap">
+
+    <nav
+      class="bottom-nav"
+      aria-label="页面导航"
+    >
+
+      <button
+        class="nav-tab active"
+        type="button"
+        data-page="record"
+      >
+        <span class="nav-tab-icon">
+          📝
+        </span>
+
+        <span>
+          记录自由卡
+        </span>
+      </button>
+
+
+      <button
+        class="nav-tab"
+        type="button"
+        data-page="stats"
+      >
+        <span class="nav-tab-icon">
+          📊
+        </span>
+
+        <span>
+          统计
+        </span>
+      </button>
+
+
+      <button
+        class="nav-tab"
+        type="button"
+        data-page="history"
+      >
+        <span class="nav-tab-icon">
+          📋
+        </span>
+
+        <span>
+          历史流水
+        </span>
+      </button>
+
+    </nav>
+
   </div>
-  <div class="setting-row">
-    <div class="setting-label" style="margin-bottom:0">深色模式</div>
-    <span class="setting-hint">自动跟随系统设置 🌓</span>
-  </div>
-</div>
 
-<div class="container">
 
-  <button id="settingsBtn" class="settings-btn" aria-label="设置">⚙️</button>
+  <script>
 
-  <!-- ====== 记录页 ====== -->
-  <section id="page-record" class="app-page active">
-    <div class="page-title">记录自由卡</div>
-    <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
+    /* =====================================================
+       Supabase
+    ===================================================== */
 
-    <div id="weeklyCard" class="card weekly-card" style="display:none"></div>
+    const SUPABASE_URL =
+      "https://vimaqasjmrocpqyepudw.supabase.co";
 
-    <div class="card">
-      <div class="balances">
-        <div class="balance-box torie"><div class="balance-name">Torie</div><div><span id="torieBalance" class="balance-number">0</span><span class="balance-unit">张</span></div></div>
-        <div class="balance-box jory"><div class="balance-name">Jory</div><div><span id="joryBalance" class="balance-number">0</span><span class="balance-unit">张</span></div></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2 class="section-title">📝 新增记录</h2>
-      <div class="form-grid">
-        <div class="form-group"><label for="operator">谁</label><select id="operator"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
-        <div class="form-group"><label for="changeType">变化</label><select id="changeType"><option value="增加">增加 ✅</option><option value="减少">减少 ❌</option></select></div>
-        <div class="form-group"><label for="cardNum">数量</label><select id="cardNum"></select></div>
-        <div class="form-group full"><label for="reason">原因</label><input id="reason" type="text" maxlength="100" placeholder="例如：完成英语学习、玩游戏" /></div>
-      </div>
-      <button id="submitBtn" class="submit-btn">提交记录</button>
-    </div>
-  </section>
+    const SUPABASE_KEY =
+      "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
 
-  <!-- ====== 商店页 ====== -->
-  <section id="page-shop" class="app-page">
-    <div class="page-title">自由卡商店</div>
-    <div class="subtitle">用努力兑换心愿 🏪</div>
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
 
-    <div class="card">
-      <div class="shop-view-switch">
-        <button class="shop-view-btn active torie" data-view="Torie">👧 Torie 的橱窗</button>
-        <button class="shop-view-btn jory" data-view="Jory">👦 Jory 的橱窗</button>
-      </div>
-      <div id="shopList"></div>
-      <div class="add-product-form">
-        <div class="form-group"><label>商品名称</label><input id="newProductName" type="text" maxlength="30" placeholder="🏨 周末酒店" /></div>
-        <div class="form-group"><label>价格(张)</label><input id="newProductCost" type="number" min="1" max="999" placeholder="100" /></div>
-        <button class="add-btn" id="addProductBtn">添加</button>
-      </div>
-    </div>
-  </section>
 
-  <!-- ====== 数据页 ====== -->
-  <section id="page-data" class="app-page">
-    <div class="page-title">数据统计</div>
-    <div class="subtitle">看见成长的轨迹 📊</div>
+    /* =====================================================
+       状态
+    ===================================================== */
 
-    <div class="card">
-      <h2 class="section-title">📈 统计概览</h2>
-      <div class="period-tabs">
-        <button class="period-tab active" data-period="today">今日</button>
-        <button class="period-tab" data-period="week">本周</button>
-        <button class="period-tab" data-period="month">本月</button>
-        <button class="period-tab" data-period="all">总计</button>
-      </div>
-      <div id="statsSummary" class="stats-summary"></div>
-      <div id="statsContent"></div>
-    </div>
+    let allLogs = [];
 
-    <div class="card">
-      <div class="history-header">
-        <h2 class="section-title">🧾 流水明细</h2>
-        <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
-      </div>
-      <div id="historyList" class="history-list"></div>
-    </div>
-  </section>
+    let currentPeriod = "today";
 
-</div>
+    let currentHistoryFilter = "all";
 
-<nav class="bottom-nav" aria-label="页面导航">
-  <button class="nav-btn active" data-page="record" type="button" aria-label="记录" aria-current="page"><span class="nav-icon">📝</span><span>记录</span></button>
-  <button class="nav-btn" data-page="shop" type="button" aria-label="商店" aria-current="false"><span class="nav-icon">🏪</span><span>商店</span></button>
-  <button class="nav-btn" data-page="data" type="button" aria-label="数据" aria-current="false"><span class="nav-icon">📊</span><span>数据</span></button>
-</nav>
 
-<script>
-const SUPABASE_URL = "https://vimaqasjmrocpqyepudw.supabase.co";
-const SUPABASE_KEY = "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    /* =====================================================
+       初始化
+    ===================================================== */
 
-let allLogs = [];
-let allProducts = [];
-let currentPeriod = "today";
-let currentHistoryFilter = "all";
-let shopView = "Torie";
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
 
-/* =====================================================
-   Weekly Summary
-===================================================== */
-function getStartOfWeekDate() {
-  const d = new Date(); d.setHours(0,0,0,0);
-  const day = d.getDay();
-  d.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
-  return d;
-}
+        initCardOptions();
 
-function generateWeeklySummary() {
-  const weekStart = getStartOfWeekDate();
-  const weekLogs = allLogs.filter(l => new Date(l.created_at) >= weekStart);
-  if (weekLogs.length === 0) return null;
+        loadLogs();
 
-  let tEarned = 0, tSpent = 0, jEarned = 0, jSpent = 0;
-  weekLogs.forEach(l => {
-    const n = Number(l.card_num) || 0;
-    if (l.operator === "Torie") { if (l.change_type === "增加") tEarned += n; else tSpent += n; }
-    else { if (l.change_type === "增加") jEarned += n; else jSpent += n; }
-  });
 
-  const totalEarned = tEarned + jEarned, totalSpent = tSpent + jSpent;
-  let parts = [];
-  const now = new Date();
-  const greeting = now.getDay() === 0 ? "🌅 周日快乐！这是你们的一周小结" : "📬 本周进行中的故事";
-  parts.push(greeting);
+        document
+          .querySelectorAll(".nav-tab")
+          .forEach(tab => {
 
-  if (tEarned > 0 && jEarned > 0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tEarned} 张，<span class="highlight jory-hl">Jory</span> 获得了 ${jEarned} 张`);
-  else if (tEarned > 0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tEarned} 张，继续加油 💪`);
-  else if (jEarned > 0) parts.push(`这周 <span class="highlight jory-hl">Jory</span> 获得了 ${jEarned} 张，势头不错 🔥`);
+            tab.addEventListener(
+              "click",
+              () => {
 
-  if (totalSpent > 0) parts.push(`一起兑换了 <span class="highlight">${totalSpent}</span> 张自由卡的心愿 🎁`);
+                const page =
+                  tab.dataset.page;
 
-  const net = totalEarned - totalSpent;
-  if (net > 0) parts.push(`净攒 <span class="highlight green-hl">${net}</span> 张，离梦想又近了一步 ✨`);
-  else if (net === 0 && totalEarned > 0) parts.push(`赚的和花的一样多，完美的平衡 ⚖️`);
 
-  const closers = ["每一步都算数，一起变好 🌱","你们都在成为更好的自己 💫","平凡日子里的坚持，最了不起 🌟","爱的账户，余额在增长 💕"];
-  parts.push(closers[Math.floor(Math.random() * closers.length)]);
+                document
+                  .querySelectorAll(".nav-tab")
+                  .forEach(btn =>
+                    btn.classList.remove(
+                      "active"
+                    )
+                  );
 
-  const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
-  const fmt = d => `${d.getMonth()+1}/${d.getDate()}`;
-  return { greeting: parts[0], body: parts.slice(1), dateRange: `${fmt(weekStart)} - ${fmt(weekEnd)}` };
-}
 
-function renderWeeklyCard() {
-  const card = document.getElementById("weeklyCard");
-  const summary = generateWeeklySummary();
-  if (!summary) { card.style.display = "none"; return; }
-  card.style.display = "block";
-  card.innerHTML = `<div class="weekly-header"><span class="weekly-icon">💌</span><span class="weekly-title">${summary.greeting}</span><span class="weekly-date">${summary.dateRange}</span></div><div class="weekly-text">${summary.body.join("，")}。</div>`;
-}
+                document
+                  .querySelectorAll(".app-page")
+                  .forEach(section =>
+                    section.classList.remove(
+                      "active"
+                    )
+                  );
 
-/* =====================================================
-   Celebration Effects
-===================================================== */
-const canvas = document.getElementById("celebrationCanvas");
-const ctx = canvas.getContext("2d");
-let particles = [], animFrameId = null;
 
-function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-window.addEventListener("resize", resizeCanvas); resizeCanvas();
+                tab.classList.add(
+                  "active"
+                );
 
-class Particle {
-  constructor(x,y,color,size,vx,vy,gravity,life,shape) {
-    this.x=x;this.y=y;this.color=color;this.size=size;this.vx=vx;this.vy=vy;this.gravity=gravity;
-    this.life=life;this.maxLife=life;this.shape=shape;this.rotation=Math.random()*Math.PI*2;this.rotSpeed=(Math.random()-0.5)*0.2;
-  }
-  update() { this.x+=this.vx;this.y+=this.vy;this.vy+=this.gravity;this.vx*=0.99;this.life--;this.rotation+=this.rotSpeed; }
-  draw(ctx) {
-    const alpha=Math.max(0,this.life/this.maxLife);
-    ctx.save();ctx.globalAlpha=alpha;ctx.translate(this.x,this.y);ctx.rotate(this.rotation);
-    if(this.shape==="circle"){ctx.beginPath();ctx.arc(0,0,this.size,0,Math.PI*2);ctx.fillStyle=this.color;ctx.fill();}
-    else if(this.shape==="rect"){ctx.fillStyle=this.color;ctx.fillRect(-this.size,-this.size*0.4,this.size*2,this.size*0.8);}
-    else if(this.shape==="star"){ctx.beginPath();for(let i=0;i<5;i++){const a=(i*4*Math.PI)/5-Math.PI/2;ctx[i===0?"moveTo":"lineTo"](Math.cos(a)*this.size,Math.sin(a)*this.size);}ctx.closePath();ctx.fillStyle=this.color;ctx.fill();}
-    ctx.restore();
-  }
-}
 
-const C1=["#34c759","#30d158","#5ac8fa","#a2d729"],C2=["#007aff","#5ac8fa","#ffd60a","#ff9500","#34c759","#af52de"],C3=["#ff375f","#ff9f0a","#ffd60a","#30d158","#0a84ff","#bf5af2","#ff6482"],C4=["#ffd60a","#ff9f0a","#ff375f","#bf5af2","#0a84ff","#30d158","#5ac8fa","#ff6482","#ac8e68"];
+                const target =
+                  document.getElementById(
+                    `page-${page}`
+                  );
 
-function spawnParticles(tier) {
-  const cx=canvas.width/2,cy=canvas.height/2;
-  if(tier===1){for(let i=0;i<20;i++){const a=Math.random()*Math.PI*2,s=1+Math.random()*3;particles.push(new Particle(cx,cy,C1[Math.floor(Math.random()*C1.length)],2+Math.random()*3,Math.cos(a)*s,Math.sin(a)*s-1,0.02,50+Math.random()*30,"circle"));}}
-  else if(tier===2){for(let i=0;i<60;i++){particles.push(new Particle(Math.random()*canvas.width,-20-Math.random()*100,C2[Math.floor(Math.random()*C2.length)],3+Math.random()*4,(Math.random()-0.5)*4,2+Math.random()*3,0.05,80+Math.random()*40,Math.random()>0.5?"rect":"circle"));}}
-  else if(tier===3){[{x:cx,y:cy*0.6},{x:cx*0.5,y:cy*0.8},{x:cx*1.5,y:cy*0.7}].forEach(bp=>{for(let i=0;i<40;i++){const a=Math.random()*Math.PI*2,s=2+Math.random()*6;particles.push(new Particle(bp.x,bp.y,C3[Math.floor(Math.random()*C3.length)],2+Math.random()*4,Math.cos(a)*s,Math.sin(a)*s,0.06,60+Math.random()*40,Math.random()>0.3?"circle":"star"));}});for(let i=0;i<40;i++){particles.push(new Particle(Math.random()*canvas.width,-20,C3[Math.floor(Math.random()*C3.length)],3+Math.random()*5,(Math.random()-0.5)*3,1+Math.random()*4,0.04,100+Math.random()*50,"rect"));}}
-  else if(tier===4){for(let b=0;b<5;b++){const bx=canvas.width*(0.2+Math.random()*0.6),by=canvas.height*(0.2+Math.random()*0.4);setTimeout(()=>{for(let i=0;i<50;i++){const a=Math.random()*Math.PI*2,s=3+Math.random()*8;particles.push(new Particle(bx,by,C4[Math.floor(Math.random()*C4.length)],3+Math.random()*5,Math.cos(a)*s,Math.sin(a)*s,0.05,70+Math.random()*50,["circle","star","rect"][Math.floor(Math.random()*3)]));}},b*300);}for(let i=0;i<80;i++){setTimeout(()=>{particles.push(new Particle(Math.random()*canvas.width,-20-Math.random()*60,C4[Math.floor(Math.random()*C4.length)],3+Math.random()*6,(Math.random()-0.5)*5,2+Math.random()*4,0.03,120+Math.random()*60,Math.random()>0.4?"rect":"star"));},Math.random()*1000);}}
-  if(!animFrameId)animateParticles();
-}
 
-function animateParticles() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles=particles.filter(p=>p.life>0);
-  particles.forEach(p=>{p.update();p.draw(ctx);});
-  if(particles.length>0){animFrameId=requestAnimationFrame(animateParticles);}
-  else{animFrameId=null;ctx.clearRect(0,0,canvas.width,canvas.height);}
-}
+                if (target) {
 
-/* =====================================================
-   Redemption Ceremony
-===================================================== */
-function getRedeemTier(cost) { if(cost<=5)return 1;if(cost<=15)return 2;if(cost<=30)return 3;return 4; }
-const TIER_CONFIG = {
-  1:{emoji:"✨",title:"小确幸！",sub:"每一份小奖励都值得被记住",duration:2000},
-  2:{emoji:"🎉",title:"太棒了！",sub:"努力有了回响，继续闪闪发光",duration:3000},
-  3:{emoji:"🎆",title:"了不起的成就！",sub:"坚持的力量，让梦想照进现实",duration:4000},
-  4:{emoji:"👑",title:"史诗级兑换！",sub:"这是属于你们的传奇时刻",duration:5500},
-};
+                  target.classList.add(
+                    "active"
+                  );
 
-function showRedeemCeremony(product,cost) {
-  const tier=getRedeemTier(cost),config=TIER_CONFIG[tier],overlay=document.getElementById("redeemOverlay");
-  document.getElementById("redeemEmoji").textContent=config.emoji;
-  document.getElementById("redeemTitle").textContent=config.title;
-  document.getElementById("redeemSub").textContent=`${product.owner} 兑换了「${product.name}」· ${config.sub}`;
-  overlay.className=`redeem-overlay tier-${tier}`;
-  requestAnimationFrame(()=>{overlay.classList.add("show");spawnParticles(tier);});
-  const closeBtn=document.getElementById("redeemCloseBtn");let autoTimer=null;
-  const closeCeremony=()=>{overlay.classList.remove("show");clearTimeout(autoTimer);closeBtn.removeEventListener("click",closeCeremony);};
-  closeBtn.addEventListener("click",closeCeremony);
-  autoTimer=setTimeout(closeCeremony,config.duration);
-}
+                }
 
-/* =====================================================
-   Settings
-===================================================== */
-function initSettings() {
-  const savedBlur=localStorage.getItem("fc_blur");
-  if(savedBlur!==null){document.documentElement.style.setProperty("--blur-val",savedBlur+"px");document.getElementById("blurSlider").value=savedBlur;document.getElementById("blurValue").textContent=savedBlur+"px";}
-  document.getElementById("blurSlider").addEventListener("input",e=>{const v=e.target.value;document.documentElement.style.setProperty("--blur-val",v+"px");document.getElementById("blurValue").textContent=v+"px";localStorage.setItem("fc_blur",v);});
-  const overlay=document.getElementById("settingsOverlay"),panel=document.getElementById("settingsPanel");
-  const openSettings=()=>{overlay.classList.add("show");panel.classList.add("show");};
-  const closeSettings=()=>{overlay.classList.remove("show");panel.classList.remove("show");};
-  document.getElementById("settingsBtn").addEventListener("click",openSettings);
-  overlay.addEventListener("click",closeSettings);
-}
 
-/* =====================================================
-   Init
-===================================================== */
-document.addEventListener("DOMContentLoaded",async()=>{
-  initSettings();initCardOptions();setupNav();setupPeriodTabs();setupForm();setupHistoryFilter();setupShopViewSwitch();setupAddProduct();
-  await Promise.all([loadLogs(),loadProducts()]);
-  sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
-  sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
-});
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth"
+                });
 
-function setupNav(){document.querySelectorAll(".nav-btn").forEach(btn=>{btn.addEventListener("click",()=>{const page=btn.dataset.page;document.querySelectorAll(".app-page").forEach(s=>s.classList.toggle("active",s.id===`page-${page}`));document.querySelectorAll(".nav-btn").forEach(b=>{const a=b===btn;b.classList.toggle("active",a);b.setAttribute("aria-current",a?"page":"false");});window.scrollTo({top:0,behavior:"smooth"});});});}
-function setupPeriodTabs(){document.querySelectorAll(".period-tab").forEach(btn=>{btn.addEventListener("click",()=>{document.querySelectorAll(".period-tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");currentPeriod=btn.dataset.period;renderStats();});});}
-function setupForm(){document.getElementById("submitBtn").addEventListener("click",addLog);}
-function setupHistoryFilter(){document.getElementById("historyFilter").addEventListener("change",e=>{currentHistoryFilter=e.target.value;renderHistory();});}
-function setupShopViewSwitch(){document.querySelectorAll(".shop-view-btn").forEach(btn=>{btn.addEventListener("click",()=>{shopView=btn.dataset.view;document.querySelectorAll(".shop-view-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderShop();});});}
-function initCardOptions(){const sel=document.getElementById("cardNum");for(let i=1;i<=10;i++){const o=document.createElement("option");o.value=i;o.textContent=`${i} 张`;sel.appendChild(o);}}
+              }
+            );
 
-async function loadLogs(){const{data,error}=await sb.from("freecard_log").select("*").order("created_at",{ascending:false});if(error){showToast("读取记录失败："+error.message,"error");return;}allLogs=data||[];refreshAll();}
-async function loadProducts(){const{data,error}=await sb.from("freecard_shop").select("*").order("created_at",{ascending:true});if(error){console.warn("freecard_shop table not found:",error.message);allProducts=[];renderShop();return;}allProducts=data||[];renderShop();}
-function refreshAll(){updateBalances();updateHistoryFilterOptions();renderStats();renderHistory();renderShop();renderWeeklyCard();}
+          });
 
-function calcBalance(op){return allLogs.filter(l=>l.operator===op).reduce((t,l)=>t+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0);}
-function updateBalances(){document.getElementById("torieBalance").textContent=calcBalance("Torie");document.getElementById("joryBalance").textContent=calcBalance("Jory");}
 
-function getStartOfToday(){const d=new Date();d.setHours(0,0,0,0);return d;}
-function getStartOfWeek(){return getStartOfWeekDate();}
-function getStartOfMonth(){const d=new Date();d.setHours(0,0,0,0);d.setDate(1);return d;}
-function filterByPeriod(logs,period){if(period==="all")return logs;const map={today:getStartOfToday,week:getStartOfWeek,month:getStartOfMonth};return logs.filter(l=>new Date(l.created_at)>=map[period]());}
+        document
+          .querySelectorAll(".period-tab")
+          .forEach(button => {
 
-function getStats(op){const logs=filterByPeriod(allLogs,currentPeriod).filter(l=>l.operator===op);let earned=0,spent=0;logs.forEach(l=>{const n=Number(l.card_num)||0;if(l.change_type==="增加")earned+=n;else spent+=n;});return{earned,spent};}
-function renderStats(){const t=getStats("Torie"),j=getStats("Jory");const totalEarned=t.earned+j.earned,totalSpent=t.spent+j.spent,net=totalEarned-totalSpent;const pLabel={today:"今日",week:"本周",month:"本月",all:"累计"}[currentPeriod]||"";document.getElementById("statsSummary").innerHTML=`<div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${totalEarned}</div></div><div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${totalSpent}</div></div><div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?'net':'minus'}">${net>=0?'+':''}${net}</div></div>`;const max=Math.max(t.earned,t.spent,j.earned,j.spent);const group=(label,key)=>{if(max===0)return`<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无${label}记录</div></div>`;return`<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",t[key],max,"torie-bar")}${bar("Jory",j[key],max,"jory-bar")}</div>`;};document.getElementById("statsContent").innerHTML=group("获得","earned")+group("消耗","spent");}
-function bar(name,val,max,cls){const w=max===0?0:(val/max)*100;return`<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${w}%"></div></div><div class="bar-number">${val}</div></div>`;}
+            button.addEventListener(
+              "click",
+              () => {
 
-function updateHistoryFilterOptions(){const sel=document.getElementById("historyFilter");const months=new Set();allLogs.forEach(l=>{const d=new Date(l.created_at);months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);});const sorted=[...months].sort((a,b)=>b.localeCompare(a));const cur=currentHistoryFilter;sel.innerHTML='<option value="all">全部</option>';sorted.forEach(k=>{const[y,m]=k.split("-");const o=document.createElement("option");o.value=k;o.textContent=`${y}年${Number(m)}月`;sel.appendChild(o);});if([...sel.options].some(o=>o.value===cur))sel.value=cur;else{currentHistoryFilter="all";sel.value="all";}}
-function getHistoryLogs(){if(currentHistoryFilter==="all")return allLogs;return allLogs.filter(l=>{const d=new Date(l.created_at);return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;});}
-function renderHistory(){const c=document.getElementById("historyList");const logs=getHistoryLogs();if(!logs.length){c.innerHTML='<div class="empty-history">暂无记录 🍃</div>';return;}c.innerHTML=logs.map(l=>{const d=new Date(l.created_at),time=fmtDate(d),plus=l.change_type==="增加",sym=plus?"+":"−";return`<div class="history-item"><div><div class="history-top"><span class="history-person">${esc(l.operator)}</span><span class="history-reason">${esc(l.reason||"—")}</span></div><div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${plus?'plus':'minus'}">${sym}${Number(l.card_num)}</div><button class="delete-btn" onclick="deleteLog('${l.id}')">删除</button></div></div>`;}).join("");}
+                document
+                  .querySelectorAll(
+                    ".period-tab"
+                  )
+                  .forEach(btn =>
+                    btn.classList.remove(
+                      "active"
+                    )
+                  );
 
-function setupAddProduct(){document.getElementById("addProductBtn").addEventListener("click",addProduct);}
-async function addProduct(){const nameEl=document.getElementById("newProductName"),costEl=document.getElementById("newProductCost");const name=nameEl.value.trim(),cost=parseInt(costEl.value);if(!name){showToast("请输入商品名称","error");return;}if(!cost||cost<1){showToast("价格至少为 1 张","error");return;}const btn=document.getElementById("addProductBtn");btn.disabled=true;btn.textContent="…";const{error}=await sb.from("freecard_shop").insert({name,cost,owner:shopView});btn.disabled=false;btn.textContent="添加";if(error){showToast("添加失败："+error.message,"error");return;}nameEl.value="";costEl.value="";showToast("商品已上架 🎉","success");await loadProducts();}
-async function deleteProduct(id){if(!confirm("确定下架此商品？"))return;const{error}=await sb.from("freecard_shop").delete().eq("id",id);if(error){showToast("删除失败："+error.message,"error");return;}showToast("已下架","success");await loadProducts();}
-async function editProduct(id,oldName,oldCost){const newName=prompt("修改商品名称：",oldName);if(newName===null)return;const newCost=prompt("修改价格（张）：",oldCost);if(newCost===null)return;const cost=parseInt(newCost);if(!newName.trim()||!cost||cost<1){showToast("输入无效","error");return;}const{error}=await sb.from("freecard_shop").update({name:newName.trim(),cost}).eq("id",id);if(error){showToast("修改失败："+error.message,"error");return;}showToast("已更新","success");await loadProducts();}
-async function redeemProduct(product){const balance=calcBalance(product.owner);if(balance<product.cost){showToast(`${product.owner} 余额不足`,"error");return;}if(!confirm(`确认花费 ${product.cost} 张自由卡兑换「${product.name}」？`))return;const{error}=await sb.from("freecard_log").insert({operator:product.owner,change_type:"减少",card_num:product.cost,reason:`🛒 兑换：${product.name}`});if(error){showToast("兑换失败："+error.message,"error");return;}showRedeemCeremony(product,product.cost);await loadLogs();}
 
-function renderShop(){const container=document.getElementById("shopList");const products=allProducts.filter(p=>p.owner===shopView);const balance=calcBalance(shopView);if(!products.length){container.innerHTML='<div class="empty-shop">还没有商品，快来添加吧 🛍️</div>';return;}container.innerHTML=products.map(p=>{const pct=Math.min(100,Math.round((balance/p.cost)*100));const canRedeem=balance>=p.cost;const diff=p.cost-balance;let itemClass="shop-item",barExtraClass="",progressText="";if(canRedeem){itemClass+=" ready-to-redeem";barExtraClass=" full shimmer";progressText=`<span>✅ 已达成！可以兑换啦</span><span>${balance} / ${p.cost} 张</span>`;}else if(pct>=80){itemClass+=" almost-there";barExtraClass=" shimmer";progressText=`<span>🔥 就差一点了！</span><span>${balance} / ${p.cost} 张</span>`;}else if(pct>=50){itemClass+=" halfway-there";barExtraClass=" shimmer-slow";progressText=`<span>💪 已经过半啦，继续加油</span><span>${balance} / ${p.cost} 张</span>`;}else{progressText=`<span>${balance} / ${p.cost} 张</span><span>还差 ${diff} 张</span>`;}const barClass=`shop-bar ${shopView.toLowerCase()}${barExtraClass}`;return`<div class="${itemClass}"><div class="shop-item-header"><div class="shop-item-name">${esc(p.name)}</div><div class="shop-item-cost">${p.cost} 张自由卡</div></div><div class="shop-progress-text">${progressText}</div><div class="shop-bar-track"><div class="${barClass}" style="width:${pct}%"></div></div><div class="shop-actions"><button class="shop-action-btn btn-redeem" ${canRedeem?'':`disabled`} onclick='redeemProduct(${JSON.stringify(p).replace(/'/g,"&#39;")})'>${canRedeem?"🎁 立即兑换":"余额不足"}</button><button class="shop-action-btn btn-edit" onclick="editProduct('${p.id}','${esc(p.name)}',${p.cost})">编辑</button><button class="shop-action-btn btn-del" onclick="deleteProduct('${p.id}')">下架</button></div></div>`;}).join("");}
+                button.classList.add(
+                  "active"
+                );
 
-async function addLog(){const op=document.getElementById("operator").value;const ct=document.getElementById("changeType").value;const reason=document.getElementById("reason").value.trim();const num=Number(document.getElementById("cardNum").value);if(!reason){showToast("请填写原因","error");return;}if(!Number.isInteger(num)||num<1||num>10){showToast("数量必须是 1–10 张","error");return;}if(ct==="减少"&&calcBalance(op)<num){showToast(`${op} 当前只有 ${calcBalance(op)} 张，不够减`,"error");return;}const btn=document.getElementById("submitBtn");btn.disabled=true;btn.textContent="保存中…";const{error}=await sb.from("freecard_log").insert({operator:op,change_type:ct,card_num:num,reason});btn.disabled=false;btn.textContent="提交记录";if(error){showToast("保存失败："+error.message,"error");return;}document.getElementById("reason").value="";showToast("记录成功 🎉","success");await loadLogs();}
-async function deleteLog(id){if(!confirm("确定删除这条记录？"))return;const{error}=await sb.from("freecard_log").delete().eq("id",id);if(error){showToast("删除失败："+error.message,"error");return;}showToast("已删除","success");await loadLogs();}
 
-function fmtDate(d){const p=n=>String(n).padStart(2,"0");return`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;}
-function esc(v){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
-function showToast(msg,type="success"){const t=document.getElementById("toast");t.textContent=msg;t.className=`toast ${type} show`;clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>t.classList.remove("show"),2500);}
-</script>
+                currentPeriod =
+                  button.dataset.period;
+
+
+                renderStats();
+
+              }
+            );
+
+          });
+
+
+        document
+          .getElementById("submitBtn")
+          .addEventListener(
+            "click",
+            addLog
+          );
+
+
+        document
+          .getElementById(
+            "historyFilter"
+          )
+          .addEventListener(
+            "change",
+            event => {
+
+              currentHistoryFilter =
+                event.target.value;
+
+              renderHistory();
+
+            }
+          );
+
+
+        /* =========================
+           实时同步
+        ========================= */
+
+        supabaseClient
+          .channel(
+            "freecard-realtime"
+          )
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "freecard_log"
+            },
+            () => {
+
+              loadLogs();
+
+            }
+          )
+          .subscribe();
+
+      }
+    );
+
+
+    /* =====================================================
+       数量选项
+    ===================================================== */
+
+    function initCardOptions() {
+
+      const select =
+        document.getElementById(
+          "cardNum"
+        );
+
+
+      for (
+        let i = 1;
+        i <= 10;
+        i++
+      ) {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+
+        option.value = i;
+
+        option.textContent =
+          `${i} 张`;
+
+
+        select.appendChild(
+          option
+        );
+
+      }
+
+    }
+
+
+    /* =====================================================
+       读取全部记录
+    ===================================================== */
+
+    async function loadLogs() {
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from("freecard_log")
+        .select("*")
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
+
+
+      if (error) {
+
+        showStatus(
+          "读取数据失败：" +
+          error.message,
+          true
+        );
+
+        return;
+      }
+
+
+      allLogs = data || [];
+
+      refreshEverything();
+
+    }
+
+
+    /* =====================================================
+       总刷新
+    ===================================================== */
+
+    function refreshEverything() {
+
+      updateBalances();
+
+      updateHistoryFilterOptions();
+
+      renderStats();
+
+      renderHistory();
+
+    }
+
+
+    /* =====================================================
+       余额
+    ===================================================== */
+
+    function calculateBalance(
+      operator
+    ) {
+
+      return allLogs
+        .filter(
+          log =>
+            log.operator === operator
+        )
+        .reduce(
+          (
+            total,
+            log
+          ) => {
+
+            const num =
+              Number(
+                log.card_num
+              ) || 0;
+
+
+            if (
+              log.change_type ===
+              "增加"
+            ) {
+
+              return total + num;
+
+            }
+
+
+            if (
+              log.change_type ===
+              "减少"
+            ) {
+
+              return total - num;
+
+            }
+
+
+            return total;
+
+          },
+          0
+        );
+
+    }
+
+
+    function updateBalances() {
+
+      const torie =
+        calculateBalance(
+          "Torie"
+        );
+
+      const jory =
+        calculateBalance(
+          "Jory"
+        );
+
+
+      document.getElementById(
+        "torieBalance"
+      ).textContent =
+        torie;
+
+
+      document.getElementById(
+        "joryBalance"
+      ).textContent =
+        jory;
+
+    }
+
+
+    /* =====================================================
+       时间
+    ===================================================== */
+
+    function getStartOfToday() {
+
+      const date =
+        new Date();
+
+
+      date.setHours(
+        0,
+        0,
+        0,
+        0
+      );
+
+
+      return date;
+
+    }
+
+
+    function getStartOfWeek() {
+
+      const date =
+        getStartOfToday();
+
+
+      const day =
+        date.getDay();
+
+
+      const diff =
+        day === 0
+          ? 6
+          : day - 1;
+
+
+      date.setDate(
+        date.getDate() - diff
+      );
+
+
+      return date;
+
+    }
+
+
+    function getStartOfMonth() {
+
+      const date =
+        new Date();
+
+
+      date.setHours(
+        0,
+        0,
+        0,
+        0
+      );
+
+
+      date.setDate(1);
+
+
+      return date;
+
+    }
+
+
+    function filterLogsByPeriod(
+      logs,
+      period
+    ) {
+
+      if (
+        period === "all"
+      ) {
+
+        return logs;
+
+      }
+
+
+      let startDate;
+
+
+      if (
+        period === "today"
+      ) {
+
+        startDate =
+          getStartOfToday();
+
+      }
+
+
+      if (
+        period === "week"
+      ) {
+
+        startDate =
+          getStartOfWeek();
+
+      }
+
+
+      if (
+        period === "month"
+      ) {
+
+        startDate =
+          getStartOfMonth();
+
+      }
+
+
+      return logs.filter(
+        log =>
+          new Date(
+            log.created_at
+          ) >= startDate
+      );
+
+    }
+
+
+    /* =====================================================
+       统计
+       四条柱状图使用同一个最大尺度
+    ===================================================== */
+
+    function getStats(
+      operator
+    ) {
+
+      const logs =
+        filterLogsByPeriod(
+          allLogs,
+          currentPeriod
+        ).filter(
+          log =>
+            log.operator === operator
+        );
+
+
+      let earned = 0;
+
+      let spent = 0;
+
+
+      logs.forEach(
+        log => {
+
+          const num =
+            Number(
+              log.card_num
+            ) || 0;
+
+
+          if (
+            log.change_type ===
+            "增加"
+          ) {
+
+            earned += num;
+
+          }
+
+
+          if (
+            log.change_type ===
+            "减少"
+          ) {
+
+            spent += num;
+
+          }
+
+        }
+      );
+
+
+      return {
+        earned,
+        spent
+      };
+
+    }
+
+
+    function renderStats() {
+
+      const torie =
+        getStats("Torie");
+
+      const jory =
+        getStats("Jory");
+
+
+      const commonMax =
+        Math.max(
+          torie.earned,
+          torie.spent,
+          jory.earned,
+          jory.spent
+        );
+
+
+      const html = `
+
+        <div class="stats-group">
+
+          <div class="stats-label">
+            获得
+          </div>
+
+          ${
+            commonMax === 0
+              ? `
+                <div class="empty-stats">
+                  这个时间段还没有获得记录
+                </div>
+              `
+              : `
+
+                ${renderBar(
+                  "Torie",
+                  torie.earned,
+                  commonMax,
+                  false
+                )}
+
+                ${renderBar(
+                  "Jory",
+                  jory.earned,
+                  commonMax,
+                  true
+                )}
+
+              `
+          }
+
+        </div>
+
+
+        <div class="stats-group">
+
+          <div class="stats-label">
+            消耗
+          </div>
+
+          ${
+            commonMax === 0
+              ? `
+                <div class="empty-stats">
+                  这个时间段还没有消耗记录
+                </div>
+              `
+              : `
+
+                ${renderBar(
+                  "Torie",
+                  torie.spent,
+                  commonMax,
+                  false
+                )}
+
+                ${renderBar(
+                  "Jory",
+                  jory.spent,
+                  commonMax,
+                  true
+                )}
+
+              `
+          }
+
+        </div>
+
+      `;
+
+
+      document.getElementById(
+        "statsContent"
+      ).innerHTML =
+        html;
+
+    }
+
+
+    function renderBar(
+      name,
+      value,
+      max,
+      isJory
+    ) {
+
+      const width =
+        max === 0
+          ? 0
+          : (
+              value / max
+            ) * 100;
+
+
+      return `
+
+        <div class="bar-row">
+
+          <div class="bar-name">
+            ${name}
+          </div>
+
+          <div class="bar-track">
+
+            <div
+              class="
+                bar
+                ${isJory ? "jory" : ""}
+              "
+              style="
+                width: ${width}%;
+              "
+            ></div>
+
+          </div>
+
+          <div class="bar-number">
+            ${value}
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+
+    /* =====================================================
+       历史年月筛选
+    ===================================================== */
+
+    function updateHistoryFilterOptions() {
+
+      const select =
+        document.getElementById(
+          "historyFilter"
+        );
+
+
+      const months =
+        new Set();
+
+
+      allLogs.forEach(
+        log => {
+
+          const date =
+            new Date(
+              log.created_at
+            );
+
+
+          const year =
+            date.getFullYear();
+
+
+          const month =
+            String(
+              date.getMonth() + 1
+            ).padStart(
+              2,
+              "0"
+            );
+
+
+          months.add(
+            `${year}-${month}`
+          );
+
+        }
+      );
+
+
+      const sortedMonths =
+        [...months].sort(
+          (a, b) =>
+            b.localeCompare(a)
+        );
+
+
+      const currentValue =
+        currentHistoryFilter;
+
+
+      select.innerHTML =
+        `
+          <option value="all">
+            全部
+          </option>
+        `;
+
+
+      sortedMonths.forEach(
+        key => {
+
+          const [
+            year,
+            month
+          ] =
+            key.split("-");
+
+
+          const option =
+            document.createElement(
+              "option"
+            );
+
+
+          option.value =
+            key;
+
+
+          option.textContent =
+            `${year}年${Number(month)}月`;
+
+
+          select.appendChild(
+            option
+          );
+
+        }
+      );
+
+
+      if (
+        [...select.options].some(
+          option =>
+            option.value ===
+            currentValue
+        )
+      ) {
+
+        select.value =
+          currentValue;
+
+      } else {
+
+        currentHistoryFilter =
+          "all";
+
+        select.value =
+          "all";
+
+      }
+
+    }
+
+
+    /* =====================================================
+       历史流水
+    ===================================================== */
+
+    function getHistoryLogs() {
+
+      if (
+        currentHistoryFilter ===
+        "all"
+      ) {
+
+        return allLogs;
+
+      }
+
+
+      return allLogs.filter(
+        log => {
+
+          const date =
+            new Date(
+              log.created_at
+            );
+
+
+          const year =
+            date.getFullYear();
+
+
+          const month =
+            String(
+              date.getMonth() + 1
+            ).padStart(
+              2,
+              "0"
+            );
+
+
+          return (
+            `${year}-${month}` ===
+            currentHistoryFilter
+          );
+
+        }
+      );
+
+    }
+
+
+    function renderHistory() {
+
+      const container =
+        document.getElementById(
+          "historyList"
+        );
+
+
+      const logs =
+        getHistoryLogs();
+
+
+      if (
+        logs.length === 0
+      ) {
+
+        container.innerHTML = `
+
+          <div class="empty-history">
+            暂无记录
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      container.innerHTML =
+        logs
+          .map(
+            log => {
+
+              const date =
+                new Date(
+                  log.created_at
+                );
+
+
+              const time =
+                formatDateTime(
+                  date
+                );
+
+
+              const isPlus =
+                log.change_type ===
+                "增加";
+
+
+              const symbol =
+                isPlus
+                  ? "+"
+                  : "−";
+
+
+              return `
+
+                <div
+                  class="history-item"
+                >
+
+                  <div
+                    class="history-time"
+                  >
+                    ${time}
+                  </div>
+
+
+                  <div
+                    class="history-person"
+                  >
+                    ${escapeHtml(
+                      log.operator
+                    )}
+                  </div>
+
+
+                  <div
+                    class="
+                      history-change
+                      ${
+                        isPlus
+                          ? "plus"
+                          : "minus"
+                      }
+                    "
+                  >
+                    ${symbol}
+                  </div>
+
+
+                  <div
+                    class="history-number"
+                  >
+                    ${Number(
+                      log.card_num
+                    )}
+                  </div>
+
+
+                  <div
+                    class="history-reason"
+                  >
+                    ${escapeHtml(
+                      log.reason ||
+                      "—"
+                    )}
+                  </div>
+
+
+                  <button
+                    class="delete-btn"
+                    onclick="
+                      deleteLog(
+                        '${log.id}'
+                      )
+                    "
+                  >
+                    删除
+                  </button>
+
+                </div>
+
+              `;
+
+            }
+          )
+          .join("");
+
+    }
+
+
+    /* =====================================================
+       新增记录
+    ===================================================== */
+
+    async function addLog() {
+
+      const operator =
+        document.getElementById(
+          "operator"
+        ).value;
+
+
+      const changeType =
+        document.getElementById(
+          "changeType"
+        ).value;
+
+
+      const reason =
+        document.getElementById(
+          "reason"
+        ).value.trim();
+
+
+      const cardNum =
+        Number(
+          document.getElementById(
+            "cardNum"
+          ).value
+        );
+
+
+      if (!reason) {
+
+        showStatus(
+          "请填写原因",
+          true
+        );
+
+        return;
+
+      }
+
+
+      if (
+        !Number.isInteger(
+          cardNum
+        ) ||
+        cardNum < 1 ||
+        cardNum > 10
+      ) {
+
+        showStatus(
+          "数量必须是 1–10 张",
+          true
+        );
+
+        return;
+
+      }
+
+
+      /* =========================
+         防止余额减少到负数
+      ========================= */
+
+      if (
+        changeType ===
+        "减少"
+      ) {
+
+        const balance =
+          calculateBalance(
+            operator
+          );
+
+
+        if (
+          balance < cardNum
+        ) {
+
+          showStatus(
+            `${operator} 当前只有 ${balance} 张自由卡，不能减少 ${cardNum} 张`,
+            true
+          );
+
+          return;
+
+        }
+
+      }
+
+
+      const button =
+        document.getElementById(
+          "submitBtn"
+        );
+
+
+      button.disabled = true;
+
+      button.textContent =
+        "保存中…";
+
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from(
+            "freecard_log"
+          )
+          .insert({
+            operator,
+            change_type:
+              changeType,
+            card_num:
+              cardNum,
+            reason
+          });
+
+
+      button.disabled = false;
+
+      button.textContent =
+        "提交记录";
+
+
+      if (error) {
+
+        showStatus(
+          "保存失败：" +
+          error.message,
+          true
+        );
+
+        return;
+
+      }
+
+
+      document.getElementById(
+        "reason"
+      ).value = "";
+
+
+      showStatus(
+        "记录成功"
+      );
+
+
+      await loadLogs();
+
+    }
+
+
+    /* =====================================================
+       删除记录
+    ===================================================== */
+
+    async function deleteLog(
+      id
+    ) {
+
+      const confirmed =
+        confirm(
+          "确定要删除这条自由卡记录吗？\n删除后余额和统计会重新计算。"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from(
+            "freecard_log"
+          )
+          .delete()
+          .eq(
+            "id",
+            id
+          );
+
+
+      if (error) {
+
+        showStatus(
+          "删除失败：" +
+          error.message,
+          true
+        );
+
+        return;
+
+      }
+
+
+      showStatus(
+        "记录已删除"
+      );
+
+
+      await loadLogs();
+
+    }
+
+
+    /* =====================================================
+       日期格式
+    ===================================================== */
+
+    function formatDateTime(
+      date
+    ) {
+
+      const year =
+        date.getFullYear();
+
+
+      const month =
+        String(
+          date.getMonth() + 1
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      const day =
+        String(
+          date.getDate()
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      const hours =
+        String(
+          date.getHours()
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      const minutes =
+        String(
+          date.getMinutes()
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+
+    }
+
+
+    /* =====================================================
+       HTML 安全处理
+    ===================================================== */
+
+    function escapeHtml(
+      value
+    ) {
+
+      return String(
+        value
+      )
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
+        .replaceAll(
+          "'",
+          "&#039;"
+        );
+
+    }
+
+
+    /* =====================================================
+       状态提示
+    ===================================================== */
+
+    function showStatus(
+      message,
+      isError = false
+    ) {
+
+      const status =
+        document.getElementById(
+          "status"
+        );
+
+
+      status.textContent =
+        message;
+
+
+      status.style.color =
+        isError
+          ? "#c62828"
+          : "#6e6e73";
+
+
+      clearTimeout(
+        showStatus.timer
+      );
+
+
+      showStatus.timer =
+        setTimeout(
+          () => {
+
+            status.textContent =
+              "";
+
+          },
+          3000
+        );
+
+    }
+
+  </script>
 
 </body>
 </html>
