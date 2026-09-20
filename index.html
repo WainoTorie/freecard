@@ -91,6 +91,59 @@
     }
 
     /* =====================================================
+       ★ Festival Banner (新增)
+    ===================================================== */
+    .festival-banner {
+      background: linear-gradient(135deg, rgba(255, 149, 0, 0.15), rgba(0, 122, 255, 0.15));
+      border: 1px solid rgba(255, 149, 0, 0.2);
+      border-radius: var(--r-lg);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      text-align: center;
+      animation: fadeIn 0.6s ease, festivalPulse 3s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .festival-banner::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .festival-emoji {
+      font-size: 36px;
+      display: block;
+      margin-bottom: 8px;
+      animation: tier1Bounce 0.8s ease;
+    }
+
+    .festival-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, var(--jory), var(--torie));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .festival-sub {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    @keyframes festivalPulse {
+      0%, 100% { box-shadow: 0 0 8px rgba(255, 149, 0, 0.1); }
+      50% { box-shadow: 0 0 20px rgba(255, 149, 0, 0.2), 0 0 40px rgba(0, 122, 255, 0.1); }
+    }
+
+    /* =====================================================
        Settings
     ===================================================== */
 
@@ -621,7 +674,6 @@
 
     /* =====================================================
        ★ History / 流水明细
-       已修复：支持自动换行且不挤压右侧按钮
     ===================================================== */
 
     .history-header {
@@ -656,7 +708,6 @@
       animation: fadeIn 0.3s ease;
       min-width: 0;
       width: 100%;
-      /* ★ 新增：确保右侧按钮始终顶部对齐，不被左侧多行文字拉伸 */
       align-items: start;
     }
 
@@ -687,12 +738,9 @@
     .history-reason {
       color: var(--text-2);
       font-size: 14px;
-
-      /* ★ 修改：允许自动换行，不再截断显示省略号 */
       white-space: normal;
       word-break: break-word;
       line-height: 1.4;
-
       min-width: 0;
       flex: 1;
       display: block;
@@ -711,7 +759,6 @@
       flex-direction: column;
       align-items: flex-end;
       gap: 4px;
-
       flex-shrink: 0;
       min-width: 42px;
       width: auto;
@@ -803,58 +850,23 @@
     ===================================================== */
 
     @keyframes glowPulseGreen {
-      0%,
-      100% {
-        box-shadow:
-          0 0 8px rgba(52, 199, 89, 0.2),
-          0 0 20px rgba(52, 199, 89, 0.1);
-      }
-
-      50% {
-        box-shadow:
-          0 0 16px rgba(52, 199, 89, 0.4),
-          0 0 40px rgba(52, 199, 89, 0.2);
-      }
+      0%, 100% { box-shadow: 0 0 8px rgba(52, 199, 89, 0.2), 0 0 20px rgba(52, 199, 89, 0.1); }
+      50% { box-shadow: 0 0 16px rgba(52, 199, 89, 0.4), 0 0 40px rgba(52, 199, 89, 0.2); }
     }
 
     @keyframes glowPulseBlue {
-      0%,
-      100% {
-        box-shadow:
-          0 0 6px rgba(0, 122, 255, 0.15),
-          0 0 16px rgba(0, 122, 255, 0.08);
-      }
-
-      50% {
-        box-shadow:
-          0 0 12px rgba(0, 122, 255, 0.3),
-          0 0 30px rgba(0, 122, 255, 0.15);
-      }
+      0%, 100% { box-shadow: 0 0 6px rgba(0, 122, 255, 0.15), 0 0 16px rgba(0, 122, 255, 0.08); }
+      50% { box-shadow: 0 0 12px rgba(0, 122, 255, 0.3), 0 0 30px rgba(0, 122, 255, 0.15); }
     }
 
     @keyframes glowPulseOrange {
-      0%,
-      100% {
-        box-shadow:
-          0 0 5px rgba(255, 149, 0, 0.12),
-          0 0 12px rgba(255, 149, 0, 0.06);
-      }
-
-      50% {
-        box-shadow:
-          0 0 10px rgba(255, 149, 0, 0.25),
-          0 0 24px rgba(255, 149, 0, 0.12);
-      }
+      0%, 100% { box-shadow: 0 0 5px rgba(255, 149, 0, 0.12), 0 0 12px rgba(255, 149, 0, 0.06); }
+      50% { box-shadow: 0 0 10px rgba(255, 149, 0, 0.25), 0 0 24px rgba(255, 149, 0, 0.12); }
     }
 
     @keyframes glowBarShimmer {
-      0% {
-        background-position: -200% center;
-      }
-
-      100% {
-        background-position: 200% center;
-      }
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
     }
 
     .shop-item {
@@ -867,24 +879,10 @@
       background: transparent;
     }
 
-    .shop-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .shop-item.halfway-there {
-      border-color: rgba(255, 149, 0, 0.2);
-      animation: glowPulseOrange 3.5s ease-in-out infinite;
-    }
-
-    .shop-item.almost-there {
-      border-color: rgba(0, 122, 255, 0.25);
-      animation: glowPulseBlue 2.5s ease-in-out infinite;
-    }
-
-    .shop-item.ready-to-redeem {
-      border-color: rgba(52, 199, 89, 0.3);
-      animation: glowPulseGreen 2s ease-in-out infinite;
-    }
+    .shop-item:last-child { margin-bottom: 0; }
+    .shop-item.halfway-there { border-color: rgba(255, 149, 0, 0.2); animation: glowPulseOrange 3.5s ease-in-out infinite; }
+    .shop-item.almost-there { border-color: rgba(0, 122, 255, 0.25); animation: glowPulseBlue 2.5s ease-in-out infinite; }
+    .shop-item.ready-to-redeem { border-color: rgba(52, 199, 89, 0.3); animation: glowPulseGreen 2s ease-in-out infinite; }
 
     .shop-item-header {
       display: flex;
@@ -931,115 +929,23 @@
     .shop-bar {
       height: 100%;
       border-radius: 7px;
-      transition:
-        width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .shop-bar.torie {
-      background:
-        linear-gradient(
-          90deg,
-          var(--torie),
-          #5ac8fa
-        );
-    }
+    .shop-bar.torie { background: linear-gradient(90deg, var(--torie), #5ac8fa); }
+    .shop-bar.jory { background: linear-gradient(90deg, var(--jory), #ffd60a); }
+    .shop-bar.full { background: linear-gradient(90deg, var(--green), #30d158) !important; }
 
-    .shop-bar.jory {
-      background:
-        linear-gradient(
-          90deg,
-          var(--jory),
-          #ffd60a
-        );
-    }
+    .shop-bar.shimmer { background-size: 200% 100%; animation: glowBarShimmer 2s linear infinite; }
+    .shop-bar.shimmer.torie { background-image: linear-gradient(90deg, var(--torie), #5ac8fa, #fff, #5ac8fa, var(--torie)); background-size: 200% 100%; }
+    .shop-bar.shimmer.jory { background-image: linear-gradient(90deg, var(--jory), #ffd60a, #fff, #ffd60a, var(--jory)); background-size: 200% 100%; }
+    .shop-bar.shimmer.full { background-image: linear-gradient(90deg, var(--green), #30d158, #fff, #30d158, var(--green)) !important; background-size: 200% 100%; }
 
-    .shop-bar.full {
-      background:
-        linear-gradient(
-          90deg,
-          var(--green),
-          #30d158
-        ) !important;
-    }
+    .shop-bar.shimmer-slow { background-size: 200% 100%; animation: glowBarShimmer 3.5s linear infinite; }
+    .shop-bar.shimmer-slow.torie { background-image: linear-gradient(90deg, var(--torie), #5ac8fa, rgba(255,255,255,0.6), #5ac8fa, var(--torie)); }
+    .shop-bar.shimmer-slow.jory { background-image: linear-gradient(90deg, var(--jory), #ffd60a, rgba(255,255,255,0.6), #ffd60a, var(--jory)); }
 
-    .shop-bar.shimmer {
-      background-size: 200% 100%;
-      animation: glowBarShimmer 2s linear infinite;
-    }
-
-    .shop-bar.shimmer.torie {
-      background-image:
-        linear-gradient(
-          90deg,
-          var(--torie),
-          #5ac8fa,
-          #fff,
-          #5ac8fa,
-          var(--torie)
-        );
-      background-size: 200% 100%;
-    }
-
-    .shop-bar.shimmer.jory {
-      background-image:
-        linear-gradient(
-          90deg,
-          var(--jory),
-          #ffd60a,
-          #fff,
-          #ffd60a,
-          var(--jory)
-        );
-      background-size: 200% 100%;
-    }
-
-    .shop-bar.shimmer.full {
-      background-image:
-        linear-gradient(
-          90deg,
-          var(--green),
-          #30d158,
-          #fff,
-          #30d158,
-          var(--green)
-        ) !important;
-      background-size: 200% 100%;
-    }
-
-    .shop-bar.shimmer-slow {
-      background-size: 200% 100%;
-      animation: glowBarShimmer 3.5s linear infinite;
-    }
-
-    .shop-bar.shimmer-slow.torie {
-      background-image:
-        linear-gradient(
-          90deg,
-          var(--torie),
-          #5ac8fa,
-          rgba(255, 255, 255, 0.6),
-          #5ac8fa,
-          var(--torie)
-        );
-    }
-
-    .shop-bar.shimmer-slow.jory {
-      background-image:
-        linear-gradient(
-          90deg,
-          var(--jory),
-          #ffd60a,
-          rgba(255, 255, 255, 0.6),
-          #ffd60a,
-          var(--jory)
-        );
-    }
-
-    .shop-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
+    .shop-actions { display: flex; gap: 8px; margin-top: 10px; }
 
     .shop-action-btn {
       flex: 1;
@@ -1053,30 +959,11 @@
       min-width: 0;
     }
 
-    .shop-action-btn:active {
-      transform: scale(0.96);
-    }
-
-    .btn-redeem {
-      background: var(--green);
-      color: #fff;
-    }
-
-    .btn-redeem:disabled {
-      background: rgba(128, 128, 128, 0.12);
-      color: var(--text-3);
-      cursor: not-allowed;
-    }
-
-    .btn-edit {
-      background: rgba(128, 128, 128, 0.08);
-      color: var(--text-2);
-    }
-
-    .btn-del {
-      background: rgba(255, 59, 48, 0.1);
-      color: var(--red);
-    }
+    .shop-action-btn:active { transform: scale(0.96); }
+    .btn-redeem { background: var(--green); color: #fff; }
+    .btn-redeem:disabled { background: rgba(128,128,128,0.12); color: var(--text-3); cursor: not-allowed; }
+    .btn-edit { background: rgba(128,128,128,0.08); color: var(--text-2); }
+    .btn-del { background: rgba(255,59,48,0.1); color: var(--red); }
 
     .add-product-form {
       display: grid;
@@ -1088,9 +975,7 @@
       border-top: 1px dashed var(--border);
     }
 
-    .add-product-form .form-group {
-      gap: 4px;
-    }
+    .add-product-form .form-group { gap: 4px; }
 
     .add-btn {
       height: 48px;
@@ -1105,50 +990,25 @@
       white-space: nowrap;
     }
 
-    .add-btn:active {
-      transform: scale(0.96);
-    }
+    .add-btn:active { transform: scale(0.96); }
 
-    .empty-shop {
-      padding: 40px 0;
-      text-align: center;
-      color: var(--text-3);
-      font-size: 14px;
-    }
+    .empty-shop { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
 
     /* =====================================================
        Pages / Navigation
     ===================================================== */
 
-    .app-page {
-      display: none;
-      animation: pageSlideIn 0.25s ease;
-    }
-
-    .app-page.active {
-      display: block;
-    }
+    .app-page { display: none; animation: pageSlideIn 0.25s ease; }
+    .app-page.active { display: block; }
 
     @keyframes pageSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .bottom-nav {
@@ -1165,12 +1025,10 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 22px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
       backdrop-filter: blur(var(--blur-val));
       -webkit-backdrop-filter: blur(var(--blur-val));
-      transition:
-        background 0.3s,
-        border-color 0.3s;
+      transition: background 0.3s, border-color 0.3s;
     }
 
     .nav-btn {
@@ -1190,19 +1048,9 @@
       transition: all 0.2s;
     }
 
-    .nav-btn:active {
-      transform: scale(0.92);
-    }
-
-    .nav-icon {
-      font-size: 22px;
-      line-height: 1;
-    }
-
-    .nav-btn.active {
-      background: var(--text-1);
-      color: var(--bg);
-    }
+    .nav-btn:active { transform: scale(0.92); }
+    .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-btn.active { background: var(--text-1); color: var(--bg); }
 
     /* =====================================================
        Toast
@@ -1227,21 +1075,12 @@
       transform: translateY(-10px);
       transition: all 0.3s;
       white-space: nowrap;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .toast.success {
-      background: var(--green);
-    }
-
-    .toast.error {
-      background: var(--red);
-    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--red); }
 
     /* =====================================================
        Celebration
@@ -1263,7 +1102,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.5);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       opacity: 0;
@@ -1271,48 +1110,27 @@
       transition: opacity 0.4s;
     }
 
-    .redeem-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .redeem-overlay.show { opacity: 1; pointer-events: auto; }
 
     .redeem-celebration {
       text-align: center;
       color: #fff;
       transform: scale(0.8);
-      transition:
-        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
       padding: 20px;
     }
 
-    .redeem-overlay.show .redeem-celebration {
-      transform: scale(1);
-    }
-
-    .redeem-emoji {
-      font-size: 72px;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .redeem-title {
-      font-size: 28px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .redeem-sub {
-      font-size: 16px;
-      opacity: 0.8;
-      margin-bottom: 24px;
-    }
+    .redeem-overlay.show .redeem-celebration { transform: scale(1); }
+    .redeem-emoji { font-size: 72px; margin-bottom: 16px; display: block; }
+    .redeem-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+    .redeem-sub { font-size: 16px; opacity: 0.8; margin-bottom: 24px; }
 
     .redeem-close-btn {
       height: 44px;
       padding: 0 32px;
       border: none;
       border-radius: 22px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.2);
       color: #fff;
       font-size: 15px;
       font-weight: 700;
@@ -1321,286 +1139,64 @@
       transition: all 0.2s;
     }
 
-    .redeem-close-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
+    .redeem-close-btn:hover { background: rgba(255,255,255,0.3); }
 
-    .redeem-overlay.tier-1 {
-      background: rgba(0, 0, 0, 0.3);
-    }
+    .redeem-overlay.tier-1 { background: rgba(0,0,0,0.3); }
+    .redeem-overlay.tier-1 .redeem-emoji { font-size: 56px; animation: tier1Bounce 0.6s ease; }
+    @keyframes tier1Bounce { 0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
 
-    .redeem-overlay.tier-1 .redeem-emoji {
-      font-size: 56px;
-      animation: tier1Bounce 0.6s ease;
-    }
+    .redeem-overlay.tier-2 { background: rgba(0,0,0,0.4); }
+    .redeem-overlay.tier-2 .redeem-emoji { font-size: 64px; animation: tier2Pop 0.8s cubic-bezier(0.22,1,0.36,1); }
+    @keyframes tier2Pop { 0%{transform:scale(0) rotate(-20deg)} 60%{transform:scale(1.3) rotate(5deg)} 100%{transform:scale(1) rotate(0)} }
 
-    @keyframes tier1Bounce {
-      0% {
-        transform: scale(0);
-      }
+    .redeem-overlay.tier-3 { background: rgba(0,0,0,0.5); }
+    .redeem-overlay.tier-3 .redeem-emoji { font-size: 72px; animation: tier3Grand 1s cubic-bezier(0.22,1,0.36,1); }
+    @keyframes tier3Grand { 0%{transform:scale(0) rotate(-180deg);opacity:0} 60%{transform:scale(1.4) rotate(10deg);opacity:1} 100%{transform:scale(1) rotate(0)} }
+    .redeem-overlay.tier-3 .redeem-title { font-size: 32px; background: linear-gradient(135deg,#ffd60a,#ff9f0a,#ff375f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-      50% {
-        transform: scale(1.2);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .redeem-overlay.tier-2 {
-      background: rgba(0, 0, 0, 0.4);
-    }
-
-    .redeem-overlay.tier-2 .redeem-emoji {
-      font-size: 64px;
-      animation:
-        tier2Pop 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    @keyframes tier2Pop {
-      0% {
-        transform: scale(0) rotate(-20deg);
-      }
-
-      60% {
-        transform: scale(1.3) rotate(5deg);
-      }
-
-      100% {
-        transform: scale(1) rotate(0);
-      }
-    }
-
-    .redeem-overlay.tier-3 {
-      background: rgba(0, 0, 0, 0.5);
-    }
-
-    .redeem-overlay.tier-3 .redeem-emoji {
-      font-size: 72px;
-      animation:
-        tier3Grand 1s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    @keyframes tier3Grand {
-      0% {
-        transform: scale(0) rotate(-180deg);
-        opacity: 0;
-      }
-
-      60% {
-        transform: scale(1.4) rotate(10deg);
-        opacity: 1;
-      }
-
-      100% {
-        transform: scale(1) rotate(0);
-      }
-    }
-
-    .redeem-overlay.tier-3 .redeem-title {
-      font-size: 32px;
-      background:
-        linear-gradient(
-          135deg,
-          #ffd60a,
-          #ff9f0a,
-          #ff375f
-        );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .redeem-overlay.tier-4 {
-      background: rgba(0, 0, 0, 0.6);
-    }
-
-    .redeem-overlay.tier-4 .redeem-emoji {
-      font-size: 80px;
-      animation:
-        tier4Epic 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    @keyframes tier4Epic {
-      0% {
-        transform: scale(0) rotate(-360deg);
-        opacity: 0;
-      }
-
-      50% {
-        transform: scale(1.5) rotate(15deg);
-        opacity: 1;
-      }
-
-      70% {
-        transform: scale(0.9) rotate(-5deg);
-      }
-
-      100% {
-        transform: scale(1) rotate(0);
-      }
-    }
-
-    .redeem-overlay.tier-4 .redeem-title {
-      font-size: 36px;
-      background:
-        linear-gradient(
-          135deg,
-          #ffd60a,
-          #ff9f0a,
-          #ff375f,
-          #bf5af2,
-          #0a84ff
-        );
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: rainbowShift 3s ease infinite;
-    }
-
-    @keyframes rainbowShift {
-      0%,
-      100% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-    }
+    .redeem-overlay.tier-4 { background: rgba(0,0,0,0.6); }
+    .redeem-overlay.tier-4 .redeem-emoji { font-size: 80px; animation: tier4Epic 1.2s cubic-bezier(0.22,1,0.36,1); }
+    @keyframes tier4Epic { 0%{transform:scale(0) rotate(-360deg);opacity:0} 50%{transform:scale(1.5) rotate(15deg);opacity:1} 70%{transform:scale(0.9) rotate(-5deg)} 100%{transform:scale(1) rotate(0)} }
+    .redeem-overlay.tier-4 .redeem-title { font-size: 36px; background: linear-gradient(135deg,#ffd60a,#ff9f0a,#ff375f,#bf5af2,#0a84ff); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbowShift 3s ease infinite; }
+    @keyframes rainbowShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
     /* =====================================================
        Mobile
     ===================================================== */
 
     @media (max-width: 480px) {
-      body {
-        padding: 16px 12px 110px;
-      }
-
-      .page-title {
-        font-size: 28px;
-      }
-
-      .card {
-        padding: 20px;
-        border-radius: 18px;
-      }
-
-      .balance-number {
-        font-size: 30px;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-group.full {
-        grid-column: auto;
-      }
-
-      .stats-summary {
-        grid-template-columns: 1fr;
-        gap: 6px;
-      }
-
-      .summary-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        text-align: left;
-        padding: 12px 16px;
-      }
-
-      .summary-label {
-        margin-bottom: 0;
-      }
-
-      .add-product-form {
-        grid-template-columns: 1fr 80px;
-      }
-
-      .add-product-form .form-group:first-child {
-        grid-column: 1 / -1;
-      }
-
-      .add-btn {
-        grid-column: 2;
-      }
-
-      .bottom-nav {
-        bottom: 12px;
-        border-radius: 20px;
-      }
-
-      .nav-btn {
-        height: 52px;
-        border-radius: 16px;
-      }
-
-      .redeem-title {
-        font-size: 24px !important;
-      }
-
-      .redeem-emoji {
-        font-size: 56px !important;
-      }
-
-      .history-item {
-        grid-template-columns: minmax(0, 1fr) auto;
-        column-gap: 8px;
-      }
-
-      .history-person {
-        font-size: 15px;
-      }
-
-      .history-reason {
-        font-size: 14px;
-      }
-
-      .history-right {
-        min-width: 42px;
-      }
-
-      .delete-btn {
-        padding: 4px 9px;
-      }
-
-      .history-filter {
-        min-width: 96px;
-      }
-
-      .history-header {
-        gap: 8px;
-      }
+      body { padding: 16px 12px 110px; }
+      .page-title { font-size: 28px; }
+      .card { padding: 20px; border-radius: 18px; }
+      .balance-number { font-size: 30px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: auto; }
+      .stats-summary { grid-template-columns: 1fr; gap: 6px; }
+      .summary-item { display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 12px 16px; }
+      .summary-label { margin-bottom: 0; }
+      .add-product-form { grid-template-columns: 1fr 80px; }
+      .add-product-form .form-group:first-child { grid-column: 1 / -1; }
+      .add-btn { grid-column: 2; }
+      .bottom-nav { bottom: 12px; border-radius: 20px; }
+      .nav-btn { height: 52px; border-radius: 16px; }
+      .redeem-title { font-size: 24px !important; }
+      .redeem-emoji { font-size: 56px !important; }
+      .history-item { grid-template-columns: minmax(0,1fr) auto; column-gap: 8px; }
+      .history-person { font-size: 15px; }
+      .history-reason { font-size: 14px; }
+      .history-right { min-width: 42px; }
+      .delete-btn { padding: 4px 9px; }
+      .history-filter { min-width: 96px; }
+      .history-header { gap: 8px; }
     }
 
     @media (max-width: 360px) {
-      .card {
-        padding: 16px;
-      }
-
-      .history-item {
-        column-gap: 6px;
-      }
-
-      .history-person {
-        font-size: 14px;
-      }
-
-      .history-reason {
-        font-size: 13px;
-      }
-
-      .history-change {
-        font-size: 18px;
-      }
-
-      .delete-btn {
-        font-size: 11px;
-        padding: 4px 8px;
-      }
+      .card { padding: 16px; }
+      .history-item { column-gap: 6px; }
+      .history-person { font-size: 14px; }
+      .history-reason { font-size: 13px; }
+      .history-change { font-size: 18px; }
+      .delete-btn { font-size: 11px; padding: 4px 8px; }
     }
   </style>
 </head>
@@ -1621,2922 +1217,639 @@
       <span class="redeem-emoji" id="redeemEmoji"></span>
       <div class="redeem-title" id="redeemTitle"></div>
       <div class="redeem-sub" id="redeemSub"></div>
-      <button class="redeem-close-btn" id="redeemCloseBtn">
-        太棒了！
-      </button>
+      <button class="redeem-close-btn" id="redeemCloseBtn">太棒了！</button>
     </div>
   </div>
 
   <!-- Settings -->
   <div id="settingsOverlay" class="settings-overlay"></div>
-
   <div id="settingsPanel" class="settings-panel">
     <div class="settings-title">⚙️ 显示设置</div>
-
     <div class="setting-row">
-      <div class="setting-label">
-        毛玻璃强度
-        <span id="blurValue">20px</span>
-      </div>
-
-      <input
-        type="range"
-        id="blurSlider"
-        min="0"
-        max="30"
-        value="20"
-      />
+      <div class="setting-label">毛玻璃强度 <span id="blurValue">20px</span></div>
+      <input type="range" id="blurSlider" min="0" max="30" value="20" />
     </div>
-
     <div class="setting-row">
-      <div
-        class="setting-label"
-        style="margin-bottom: 0"
-      >
-        深色模式
-      </div>
-
-      <span class="setting-hint">
-        自动跟随系统设置 🌓
-      </span>
+      <div class="setting-label" style="margin-bottom:0">深色模式</div>
+      <span class="setting-hint">自动跟随系统设置 🌓</span>
     </div>
   </div>
 
   <div class="container">
 
     <!-- Settings Button -->
-    <button
-      id="settingsBtn"
-      class="settings-btn"
-      aria-label="设置"
-    >
-      ⚙️
-    </button>
+    <button id="settingsBtn" class="settings-btn" aria-label="设置">⚙️</button>
+
+    <!-- ★ Festival Banner Container (新增) -->
+    <div id="festivalBannerContainer"></div>
 
     <!-- ===================================================
          记录页
     =================================================== -->
-
     <section id="page-record" class="app-page active">
-
       <div class="page-title">记录自由卡</div>
+      <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
 
-      <div class="subtitle">
-        记录每一次获得，也记录每一次自由 ✨
-      </div>
-
-      <div
-        id="weeklyCard"
-        class="card weekly-card"
-        style="display: none"
-      ></div>
+      <div id="weeklyCard" class="card weekly-card" style="display:none"></div>
 
       <!-- Balance -->
       <div class="card">
         <div class="balances">
-
           <div class="balance-box torie">
             <div class="balance-name">Torie</div>
-
-            <div>
-              <span
-                id="torieBalance"
-                class="balance-number"
-              >
-                0
-              </span>
-
-              <span class="balance-unit">
-                张
-              </span>
-            </div>
+            <div><span id="torieBalance" class="balance-number">0</span><span class="balance-unit">张</span></div>
           </div>
-
           <div class="balance-box jory">
             <div class="balance-name">Jory</div>
-
-            <div>
-              <span
-                id="joryBalance"
-                class="balance-number"
-              >
-                0
-              </span>
-
-              <span class="balance-unit">
-                张
-              </span>
-            </div>
+            <div><span id="joryBalance" class="balance-number">0</span><span class="balance-unit">张</span></div>
           </div>
-
         </div>
       </div>
 
       <!-- Add Record -->
       <div class="card">
-
-        <h2 class="section-title">
-          📝 新增记录
-        </h2>
-
+        <h2 class="section-title">📝 新增记录</h2>
         <div class="form-grid">
-
           <div class="form-group">
             <label for="operator">谁</label>
-
             <select id="operator">
               <option value="Torie">Torie</option>
               <option value="Jory">Jory</option>
             </select>
           </div>
-
           <div class="form-group">
             <label for="changeType">变化</label>
-
             <select id="changeType">
               <option value="增加">增加 ✅</option>
               <option value="减少">减少 ❌</option>
             </select>
           </div>
-
           <div class="form-group">
             <label for="cardNum">数量</label>
-
             <select id="cardNum"></select>
           </div>
-
           <div class="form-group full">
             <label for="reason">原因</label>
-
-            <input
-              id="reason"
-              type="text"
-              maxlength="100"
-              placeholder="例如：完成英语学习、玩游戏"
-            />
+            <input id="reason" type="text" maxlength="100" placeholder="例如：完成英语学习、玩游戏" />
           </div>
-
         </div>
-
-        <button
-          id="submitBtn"
-          class="submit-btn"
-        >
-          提交记录
-        </button>
-
+        <button id="submitBtn" class="submit-btn">提交记录</button>
       </div>
     </section>
 
     <!-- ===================================================
          商店页
     =================================================== -->
-
     <section id="page-shop" class="app-page">
-
       <div class="page-title">自由卡商店</div>
-
-      <div class="subtitle">
-        用努力兑换心愿 🏪
-      </div>
-
+      <div class="subtitle">用努力兑换心愿 🏪</div>
       <div class="card">
-
         <div class="shop-view-switch">
-
-          <button
-            class="shop-view-btn active torie"
-            data-view="Torie"
-          >
-            👧 Torie 的橱窗
-          </button>
-
-          <button
-            class="shop-view-btn jory"
-            data-view="Jory"
-          >
-            👦 Jory 的橱窗
-          </button>
-
+          <button class="shop-view-btn active torie" data-view="Torie">👧 Torie 的橱窗</button>
+          <button class="shop-view-btn jory" data-view="Jory">👦 Jory 的橱窗</button>
         </div>
-
         <div id="shopList"></div>
-
         <div class="add-product-form">
-
           <div class="form-group">
             <label>商品名称</label>
-
-            <input
-              id="newProductName"
-              type="text"
-              maxlength="30"
-              placeholder="🏨 周末酒店"
-            />
+            <input id="newProductName" type="text" maxlength="30" placeholder="🏨 周末酒店" />
           </div>
-
           <div class="form-group">
             <label>价格(张)</label>
-
-            <input
-              id="newProductCost"
-              type="number"
-              min="1"
-              max="999"
-              placeholder="100"
-            />
+            <input id="newProductCost" type="number" min="1" max="999" placeholder="100" />
           </div>
-
-          <button
-            class="add-btn"
-            id="addProductBtn"
-          >
-            添加
-          </button>
-
+          <button class="add-btn" id="addProductBtn">添加</button>
         </div>
       </div>
-
     </section>
 
     <!-- ===================================================
          数据页
     =================================================== -->
-
     <section id="page-data" class="app-page">
-
       <div class="page-title">数据统计</div>
-
-      <div class="subtitle">
-        看见成长的轨迹 📊
-      </div>
-
-      <!-- Stats -->
+      <div class="subtitle">看见成长的轨迹 📊</div>
       <div class="card">
-
-        <h2 class="section-title">
-          📈 统计概览
-        </h2>
-
+        <h2 class="section-title">📈 统计概览</h2>
         <div class="period-tabs">
-
-          <button
-            class="period-tab active"
-            data-period="today"
-          >
-            今日
-          </button>
-
-          <button
-            class="period-tab"
-            data-period="week"
-          >
-            本周
-          </button>
-
-          <button
-            class="period-tab"
-            data-period="month"
-          >
-            本月
-          </button>
-
-          <button
-            class="period-tab"
-            data-period="all"
-          >
-            总计
-          </button>
-
+          <button class="period-tab active" data-period="today">今日</button>
+          <button class="period-tab" data-period="week">本周</button>
+          <button class="period-tab" data-period="month">本月</button>
+          <button class="period-tab" data-period="all">总计</button>
         </div>
-
-        <div
-          id="statsSummary"
-          class="stats-summary"
-        ></div>
-
+        <div id="statsSummary" class="stats-summary"></div>
         <div id="statsContent"></div>
-
       </div>
-
-      <!-- History -->
       <div class="card">
-
         <div class="history-header">
-
-          <h2 class="section-title">
-            🧾 流水明细
-          </h2>
-
-          <select
-            id="historyFilter"
-            class="history-filter"
-          >
-            <option value="all">全部</option>
-          </select>
-
+          <h2 class="section-title">🧾 流水明细</h2>
+          <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
         </div>
-
-        <div
-          id="historyList"
-          class="history-list"
-        ></div>
-
+        <div id="historyList" class="history-list"></div>
       </div>
-
     </section>
 
   </div>
 
-  <!-- =====================================================
-       Bottom Navigation
-  ===================================================== -->
-
-  <nav
-    class="bottom-nav"
-    aria-label="页面导航"
-  >
-
-    <button
-      class="nav-btn active"
-      data-page="record"
-      type="button"
-      aria-label="记录"
-      aria-current="page"
-    >
-      <span class="nav-icon">📝</span>
-      <span>记录</span>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" aria-label="页面导航">
+    <button class="nav-btn active" data-page="record" type="button" aria-label="记录" aria-current="page">
+      <span class="nav-icon">📝</span><span>记录</span>
     </button>
-
-    <button
-      class="nav-btn"
-      data-page="shop"
-      type="button"
-      aria-label="商店"
-      aria-current="false"
-    >
-      <span class="nav-icon">🏪</span>
-      <span>商店</span>
+    <button class="nav-btn" data-page="shop" type="button" aria-label="商店" aria-current="false">
+      <span class="nav-icon">🏪</span><span>商店</span>
     </button>
-
-    <button
-      class="nav-btn"
-      data-page="data"
-      type="button"
-      aria-label="数据"
-      aria-current="false"
-    >
-      <span class="nav-icon">📊</span>
-      <span>数据</span>
+    <button class="nav-btn" data-page="data" type="button" aria-label="数据" aria-current="false">
+      <span class="nav-icon">📊</span><span>数据</span>
     </button>
-
   </nav>
 
   <!-- =====================================================
        JavaScript
   ===================================================== -->
-
   <script>
     /* =====================================================
        Supabase
     ===================================================== */
-
-    const SUPABASE_URL =
-      "https://vimaqasjmrocpqyepudw.supabase.co";
-
-    const SUPABASE_KEY =
-      "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
-
-    const sb = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+    const SUPABASE_URL = "https://vimaqasjmrocpqyepudw.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let allLogs = [];
     let allProducts = [];
-
     let currentPeriod = "today";
     let currentHistoryFilter = "all";
     let shopView = "Torie";
 
     /* =====================================================
-       Weekly Summary
+       ★ Special Dates / 节日限定惊喜
     ===================================================== */
+    const SPECIAL_DATES = [
+      {
+        month: 9, day: 2,
+        emoji: "🎂",
+        title: "Jory 生日快乐！",
+        sub: "愿你的每一天都像今天一样闪闪发光 ✨",
+        tier: 3
+      },
+      {
+        month: 11, day: 2,
+        emoji: "💕",
+        title: "纪念日快乐！",
+        sub: "从那天起，每一天都是最好的日子",
+        tier: 4
+      },
+      {
+        month: 11, day: 23,
+        emoji: "🎀",
+        title: "Torie 生日快乐！",
+        sub: "被爱包围的你，值得世间所有美好 🌸",
+        tier: 3
+      }
+    ];
 
-    function getStartOfWeekDate() {
-      const d = new Date();
+    function checkSpecialDate() {
+      const now = new Date();
+      const m = now.getMonth() + 1;
+      const d = now.getDate();
 
-      d.setHours(0, 0, 0, 0);
-
-      const day = d.getDay();
-
-      d.setDate(
-        d.getDate() -
-        (day === 0 ? 6 : day - 1)
+      const match = SPECIAL_DATES.find(
+        (s) => s.month === m && s.day === d
       );
 
+      if (!match) return;
+
+      // 渲染横幅
+      const container = document.getElementById("festivalBannerContainer");
+      container.innerHTML = `
+        <div class="festival-banner">
+          <span class="festival-emoji">${match.emoji}</span>
+          <div class="festival-title">${match.title}</div>
+          <div class="festival-sub">${match.sub}</div>
+        </div>
+      `;
+
+      // 延迟一点播放庆祝动画，避免和页面加载冲突
+      setTimeout(() => {
+        spawnParticles(match.tier);
+      }, 600);
+    }
+
+    /* =====================================================
+       Weekly Summary
+    ===================================================== */
+    function getStartOfWeekDate() {
+      const d = new Date();
+      d.setHours(0,0,0,0);
+      const day = d.getDay();
+      d.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
       return d;
     }
 
     function generateWeeklySummary() {
       const weekStart = getStartOfWeekDate();
+      const weekLogs = allLogs.filter((l) => new Date(l.created_at) >= weekStart);
+      if (weekLogs.length === 0) return null;
 
-      const weekLogs = allLogs.filter(
-        (l) =>
-          new Date(l.created_at) >= weekStart
-      );
-
-      if (weekLogs.length === 0) {
-        return null;
-      }
-
-      let tEarned = 0;
-      let tSpent = 0;
-
-      let jEarned = 0;
-      let jSpent = 0;
-
+      let tEarned=0, tSpent=0, jEarned=0, jSpent=0;
       weekLogs.forEach((l) => {
-        const n =
-          Number(l.card_num) || 0;
-
-        if (l.operator === "Torie") {
-          if (l.change_type === "增加") {
-            tEarned += n;
-          } else {
-            tSpent += n;
-          }
-        } else {
-          if (l.change_type === "增加") {
-            jEarned += n;
-          } else {
-            jSpent += n;
-          }
-        }
+        const n = Number(l.card_num)||0;
+        if(l.operator==="Torie"){ if(l.change_type==="增加") tEarned+=n; else tSpent+=n; }
+        else { if(l.change_type==="增加") jEarned+=n; else jSpent+=n; }
       });
 
-      const totalEarned =
-        tEarned + jEarned;
-
-      const totalSpent =
-        tSpent + jSpent;
-
+      const totalEarned = tEarned+jEarned;
+      const totalSpent = tSpent+jSpent;
       const parts = [];
-
       const now = new Date();
-
-      const greeting =
-        now.getDay() === 0
-          ? "🌅 周日快乐！这是你们的一周小结"
-          : "📬 本周进行中的故事";
-
+      const greeting = now.getDay()===0 ? "🌅 周日快乐！这是你们的一周小结" : "📬 本周进行中的故事";
       parts.push(greeting);
 
-      if (
-        tEarned > 0 &&
-        jEarned > 0
-      ) {
-        parts.push(
-          `这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tEarned} 张，<span class="highlight jory-hl">Jory</span> 获得了 ${jEarned} 张`
-        );
-      } else if (tEarned > 0) {
-        parts.push(
-          `这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tEarned} 张，继续加油 💪`
-        );
-      } else if (jEarned > 0) {
-        parts.push(
-          `这周 <span class="highlight jory-hl">Jory</span> 获得了 ${jEarned} 张，势头不错 🔥`
-        );
-      }
+      if(tEarned>0 && jEarned>0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tEarned} 张，<span class="highlight jory-hl">Jory</span> 获得了 ${jEarned} 张`);
+      else if(tEarned>0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tEarned} 张，继续加油 💪`);
+      else if(jEarned>0) parts.push(`这周 <span class="highlight jory-hl">Jory</span> 获得了 ${jEarned} 张，势头不错 🔥`);
 
-      if (totalSpent > 0) {
-        parts.push(
-          `一起兑换了 <span class="highlight">${totalSpent}</span> 张自由卡的心愿 🎁`
-        );
-      }
+      if(totalSpent>0) parts.push(`一起兑换了 <span class="highlight">${totalSpent}</span> 张自由卡的心愿 🎁`);
 
-      const net =
-        totalEarned - totalSpent;
+      const net = totalEarned - totalSpent;
+      if(net>0) parts.push(`净攒 <span class="highlight green-hl">${net}</span> 张，离梦想又近了一步 ✨`);
+      else if(net===0 && totalEarned>0) parts.push("赚的和花的一样多，完美的平衡 ⚖️");
 
-      if (net > 0) {
-        parts.push(
-          `净攒 <span class="highlight green-hl">${net}</span> 张，离梦想又近了一步 ✨`
-        );
-      } else if (
-        net === 0 &&
-        totalEarned > 0
-      ) {
-        parts.push(
-          "赚的和花的一样多，完美的平衡 ⚖️"
-        );
-      }
+      const closers = ["每一步都算数，一起变好 🌱","你们都在成为更好的自己 💫","平凡日子里的坚持，最了不起 🌟","爱的账户，余额在增长 💕"];
+      parts.push(closers[Math.floor(Math.random()*closers.length)]);
 
-      const closers = [
-        "每一步都算数，一起变好 🌱",
-        "你们都在成为更好的自己 💫",
-        "平凡日子里的坚持，最了不起 🌟",
-        "爱的账户，余额在增长 💕"
-      ];
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate()+6);
+      const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
 
-      parts.push(
-        closers[
-          Math.floor(
-            Math.random() *
-              closers.length
-          )
-        ]
-      );
-
-      const weekEnd =
-        new Date(weekStart);
-
-      weekEnd.setDate(
-        weekEnd.getDate() + 6
-      );
-
-      const fmt = (d) =>
-        `${d.getMonth() + 1}/${d.getDate()}`;
-
-      return {
-        greeting: parts[0],
-        body: parts.slice(1),
-        dateRange:
-          `${fmt(weekStart)} - ${fmt(weekEnd)}`
-      };
+      return { greeting: parts[0], body: parts.slice(1), dateRange: `${fmt(weekStart)} - ${fmt(weekEnd)}` };
     }
 
     function renderWeeklyCard() {
-      const card =
-        document.getElementById(
-          "weeklyCard"
-        );
-
-      const summary =
-        generateWeeklySummary();
-
-      if (!summary) {
-        card.style.display = "none";
-        return;
-      }
-
-      card.style.display = "block";
-
+      const card = document.getElementById("weeklyCard");
+      const summary = generateWeeklySummary();
+      if(!summary){ card.style.display="none"; return; }
+      card.style.display="block";
       card.innerHTML = `
         <div class="weekly-header">
           <span class="weekly-icon">💌</span>
-          <span class="weekly-title">
-            ${summary.greeting}
-          </span>
-          <span class="weekly-date">
-            ${summary.dateRange}
-          </span>
+          <span class="weekly-title">${summary.greeting}</span>
+          <span class="weekly-date">${summary.dateRange}</span>
         </div>
-
-        <div class="weekly-text">
-          ${summary.body.join("，")}。
-        </div>
+        <div class="weekly-text">${summary.body.join("，")}。</div>
       `;
     }
 
     /* =====================================================
        Celebration Effects
     ===================================================== */
-
-    const canvas =
-      document.getElementById(
-        "celebrationCanvas"
-      );
-
-    const ctx =
-      canvas.getContext("2d");
-
+    const canvas = document.getElementById("celebrationCanvas");
+    const ctx = canvas.getContext("2d");
     let particles = [];
     let animFrameId = null;
 
-    function resizeCanvas() {
-      canvas.width =
-        window.innerWidth;
-
-      canvas.height =
-        window.innerHeight;
-    }
-
-    window.addEventListener(
-      "resize",
-      resizeCanvas
-    );
-
+    function resizeCanvas() { canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+    window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
     class Particle {
-      constructor(
-        x,
-        y,
-        color,
-        size,
-        vx,
-        vy,
-        gravity,
-        life,
-        shape
-      ) {
-        this.x = x;
-        this.y = y;
-        this.color = color;
-        this.size = size;
-        this.vx = vx;
-        this.vy = vy;
-        this.gravity = gravity;
-        this.life = life;
-        this.maxLife = life;
-        this.shape = shape;
-        this.rotation =
-          Math.random() *
-          Math.PI *
-          2;
-
-        this.rotSpeed =
-          (Math.random() - 0.5) *
-          0.2;
+      constructor(x,y,color,size,vx,vy,gravity,life,shape) {
+        this.x=x; this.y=y; this.color=color; this.size=size;
+        this.vx=vx; this.vy=vy; this.gravity=gravity;
+        this.life=life; this.maxLife=life; this.shape=shape;
+        this.rotation=Math.random()*Math.PI*2;
+        this.rotSpeed=(Math.random()-0.5)*0.2;
       }
-
       update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        this.vy += this.gravity;
-        this.vx *= 0.99;
-
-        this.life--;
-
-        this.rotation +=
-          this.rotSpeed;
+        this.x+=this.vx; this.y+=this.vy;
+        this.vy+=this.gravity; this.vx*=0.99;
+        this.life--; this.rotation+=this.rotSpeed;
       }
-
       draw(ctx) {
-        const alpha =
-          Math.max(
-            0,
-            this.life /
-              this.maxLife
-          );
-
-        ctx.save();
-
-        ctx.globalAlpha = alpha;
-
-        ctx.translate(
-          this.x,
-          this.y
-        );
-
-        ctx.rotate(
-          this.rotation
-        );
-
-        if (
-          this.shape === "circle"
-        ) {
-          ctx.beginPath();
-
-          ctx.arc(
-            0,
-            0,
-            this.size,
-            0,
-            Math.PI * 2
-          );
-
-          ctx.fillStyle =
-            this.color;
-
-          ctx.fill();
-        }
-
-        else if (
-          this.shape === "rect"
-        ) {
-          ctx.fillStyle =
-            this.color;
-
-          ctx.fillRect(
-            -this.size,
-            -this.size * 0.4,
-            this.size * 2,
-            this.size * 0.8
-          );
-        }
-
-        else if (
-          this.shape === "star"
-        ) {
-          ctx.beginPath();
-
-          for (
-            let i = 0;
-            i < 5;
-            i++
-          ) {
-            const a =
-              (i * 4 * Math.PI) /
-                5 -
-              Math.PI / 2;
-
-            ctx[
-              i === 0
-                ? "moveTo"
-                : "lineTo"
-            ](
-              Math.cos(a) *
-                this.size,
-              Math.sin(a) *
-                this.size
-            );
-          }
-
-          ctx.closePath();
-
-          ctx.fillStyle =
-            this.color;
-
-          ctx.fill();
-        }
-
+        const alpha=Math.max(0,this.life/this.maxLife);
+        ctx.save(); ctx.globalAlpha=alpha;
+        ctx.translate(this.x,this.y); ctx.rotate(this.rotation);
+        if(this.shape==="circle"){ ctx.beginPath(); ctx.arc(0,0,this.size,0,Math.PI*2); ctx.fillStyle=this.color; ctx.fill(); }
+        else if(this.shape==="rect"){ ctx.fillStyle=this.color; ctx.fillRect(-this.size,-this.size*0.4,this.size*2,this.size*0.8); }
+        else if(this.shape==="star"){ ctx.beginPath(); for(let i=0;i<5;i++){const a=(i*4*Math.PI)/5-Math.PI/2; ctx[i===0?"moveTo":"lineTo"](Math.cos(a)*this.size,Math.sin(a)*this.size);} ctx.closePath(); ctx.fillStyle=this.color; ctx.fill(); }
         ctx.restore();
       }
     }
 
-    const C1 = [
-      "#34c759",
-      "#30d158",
-      "#5ac8fa",
-      "#a2d729"
-    ];
-
-    const C2 = [
-      "#007aff",
-      "#5ac8fa",
-      "#ffd60a",
-      "#ff9500",
-      "#34c759",
-      "#af52de"
-    ];
-
-    const C3 = [
-      "#ff375f",
-      "#ff9f0a",
-      "#ffd60a",
-      "#30d158",
-      "#0a84ff",
-      "#bf5af2",
-      "#ff6482"
-    ];
-
-    const C4 = [
-      "#ffd60a",
-      "#ff9f0a",
-      "#ff375f",
-      "#bf5af2",
-      "#0a84ff",
-      "#30d158",
-      "#5ac8fa",
-      "#ff6482",
-      "#ac8e68"
-    ];
+    const C1=["#34c759","#30d158","#5ac8fa","#a2d729"];
+    const C2=["#007aff","#5ac8fa","#ffd60a","#ff9500","#34c759","#af52de"];
+    const C3=["#ff375f","#ff9f0a","#ffd60a","#30d158","#0a84ff","#bf5af2","#ff6482"];
+    const C4=["#ffd60a","#ff9f0a","#ff375f","#bf5af2","#0a84ff","#30d158","#5ac8fa","#ff6482","#ac8e68"];
 
     function spawnParticles(tier) {
-      const cx =
-        canvas.width / 2;
-
-      const cy =
-        canvas.height / 2;
-
-      if (tier === 1) {
-        for (
-          let i = 0;
-          i < 20;
-          i++
-        ) {
-          const a =
-            Math.random() *
-            Math.PI *
-            2;
-
-          const s =
-            1 +
-            Math.random() * 3;
-
-          particles.push(
-            new Particle(
-              cx,
-              cy,
-              C1[
-                Math.floor(
-                  Math.random() *
-                    C1.length
-                )
-              ],
-              2 +
-                Math.random() * 3,
-              Math.cos(a) * s,
-              Math.sin(a) * s - 1,
-              0.02,
-              50 +
-                Math.random() * 30,
-              "circle"
-            )
-          );
-        }
-      }
-
-      else if (tier === 2) {
-        for (
-          let i = 0;
-          i < 60;
-          i++
-        ) {
-          particles.push(
-            new Particle(
-              Math.random() *
-                canvas.width,
-              -20 -
-                Math.random() *
-                  100,
-              C2[
-                Math.floor(
-                  Math.random() *
-                    C2.length
-                )
-              ],
-              3 +
-                Math.random() * 4,
-              (Math.random() -
-                0.5) *
-                4,
-              2 +
-                Math.random() * 3,
-              0.05,
-              80 +
-                Math.random() * 40,
-              Math.random() > 0.5
-                ? "rect"
-                : "circle"
-            )
-          );
-        }
-      }
-
-      else if (tier === 3) {
-        [
-          {
-            x: cx,
-            y: cy * 0.6
-          },
-          {
-            x: cx * 0.5,
-            y: cy * 0.8
-          },
-          {
-            x: cx * 1.5,
-            y: cy * 0.7
-          }
-        ].forEach((bp) => {
-          for (
-            let i = 0;
-            i < 40;
-            i++
-          ) {
-            const a =
-              Math.random() *
-              Math.PI *
-              2;
-
-            const s =
-              2 +
-              Math.random() * 6;
-
-            particles.push(
-              new Particle(
-                bp.x,
-                bp.y,
-                C3[
-                  Math.floor(
-                    Math.random() *
-                      C3.length
-                  )
-                ],
-                2 +
-                  Math.random() * 4,
-                Math.cos(a) * s,
-                Math.sin(a) * s,
-                0.06,
-                60 +
-                  Math.random() * 40,
-                Math.random() > 0.3
-                  ? "circle"
-                  : "star"
-              )
-            );
-          }
-        });
-
-        for (
-          let i = 0;
-          i < 40;
-          i++
-        ) {
-          particles.push(
-            new Particle(
-              Math.random() *
-                canvas.width,
-              -20,
-              C3[
-                Math.floor(
-                  Math.random() *
-                    C3.length
-                )
-              ],
-              3 +
-                Math.random() * 5,
-              (Math.random() -
-                0.5) *
-                3,
-              1 +
-                Math.random() * 4,
-              0.04,
-              100 +
-                Math.random() * 50,
-              "rect"
-            )
-          );
-        }
-      }
-
-      else if (tier === 4) {
-        for (
-          let b = 0;
-          b < 5;
-          b++
-        ) {
-          const bx =
-            canvas.width *
-            (0.2 +
-              Math.random() *
-                0.6);
-
-          const by =
-            canvas.height *
-            (0.2 +
-              Math.random() *
-                0.4);
-
-          setTimeout(() => {
-            for (
-              let i = 0;
-              i < 50;
-              i++
-            ) {
-              const a =
-                Math.random() *
-                Math.PI *
-                2;
-
-              const s =
-                3 +
-                Math.random() * 8;
-
-              particles.push(
-                new Particle(
-                  bx,
-                  by,
-                  C4[
-                    Math.floor(
-                      Math.random() *
-                        C4.length
-                    )
-                  ],
-                  3 +
-                    Math.random() * 5,
-                  Math.cos(a) * s,
-                  Math.sin(a) * s,
-                  0.05,
-                  70 +
-                    Math.random() * 50,
-                  [
-                    "circle",
-                    "star",
-                    "rect"
-                  ][
-                    Math.floor(
-                      Math.random() * 3
-                    )
-                  ]
-                )
-              );
-            }
-          }, b * 300);
-        }
-
-        for (
-          let i = 0;
-          i < 80;
-          i++
-        ) {
-          setTimeout(() => {
-            particles.push(
-              new Particle(
-                Math.random() *
-                  canvas.width,
-                -20 -
-                  Math.random() *
-                    60,
-                C4[
-                  Math.floor(
-                    Math.random() *
-                      C4.length
-                  )
-                ],
-                3 +
-                  Math.random() * 6,
-                (Math.random() -
-                  0.5) *
-                  5,
-                2 +
-                  Math.random() * 4,
-                0.03,
-                120 +
-                  Math.random() * 60,
-                Math.random() > 0.4
-                  ? "rect"
-                  : "star"
-              )
-            );
-          }, Math.random() * 1000);
-        }
-      }
-
-      if (!animFrameId) {
-        animateParticles();
-      }
+      const cx=canvas.width/2, cy=canvas.height/2;
+      if(tier===1){ for(let i=0;i<20;i++){const a=Math.random()*Math.PI*2,s=1+Math.random()*3; particles.push(new Particle(cx,cy,C1[Math.floor(Math.random()*C1.length)],2+Math.random()*3,Math.cos(a)*s,Math.sin(a)*s-1,0.02,50+Math.random()*30,"circle"));}}
+      else if(tier===2){ for(let i=0;i<60;i++){particles.push(new Particle(Math.random()*canvas.width,-20-Math.random()*100,C2[Math.floor(Math.random()*C2.length)],3+Math.random()*4,(Math.random()-0.5)*4,2+Math.random()*3,0.05,80+Math.random()*40,Math.random()>0.5?"rect":"circle"));}}
+      else if(tier===3){ [{x:cx,y:cy*0.6},{x:cx*0.5,y:cy*0.8},{x:cx*1.5,y:cy*0.7}].forEach((bp)=>{for(let i=0;i<40;i++){const a=Math.random()*Math.PI*2,s=2+Math.random()*6; particles.push(new Particle(bp.x,bp.y,C3[Math.floor(Math.random()*C3.length)],2+Math.random()*4,Math.cos(a)*s,Math.sin(a)*s,0.06,60+Math.random()*40,Math.random()>0.3?"circle":"star"));}}); for(let i=0;i<40;i++){particles.push(new Particle(Math.random()*canvas.width,-20,C3[Math.floor(Math.random()*C3.length)],3+Math.random()*5,(Math.random()-0.5)*3,1+Math.random()*4,0.04,100+Math.random()*50,"rect"));}}
+      else if(tier===4){ for(let b=0;b<5;b++){const bx=canvas.width*(0.2+Math.random()*0.6),by=canvas.height*(0.2+Math.random()*0.4); setTimeout(()=>{for(let i=0;i<50;i++){const a=Math.random()*Math.PI*2,s=3+Math.random()*8; particles.push(new Particle(bx,by,C4[Math.floor(Math.random()*C4.length)],3+Math.random()*5,Math.cos(a)*s,Math.sin(a)*s,0.05,70+Math.random()*50,["circle","star","rect"][Math.floor(Math.random()*3)]));}},b*300);} for(let i=0;i<80;i++){setTimeout(()=>{particles.push(new Particle(Math.random()*canvas.width,-20-Math.random()*60,C4[Math.floor(Math.random()*C4.length)],3+Math.random()*6,(Math.random()-0.5)*5,2+Math.random()*4,0.03,120+Math.random()*60,Math.random()>0.4?"rect":"star"));},Math.random()*1000);}}
+      if(!animFrameId) animateParticles();
     }
 
     function animateParticles() {
-      ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-      particles =
-        particles.filter(
-          (p) => p.life > 0
-        );
-
-      particles.forEach((p) => {
-        p.update();
-        p.draw(ctx);
-      });
-
-      if (
-        particles.length > 0
-      ) {
-        animFrameId =
-          requestAnimationFrame(
-            animateParticles
-          );
-      } else {
-        animFrameId = null;
-
-        ctx.clearRect(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-      }
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles=particles.filter((p)=>p.life>0);
+      particles.forEach((p)=>{p.update();p.draw(ctx);});
+      if(particles.length>0) animFrameId=requestAnimationFrame(animateParticles);
+      else { animFrameId=null; ctx.clearRect(0,0,canvas.width,canvas.height); }
     }
 
     /* =====================================================
        Redemption Ceremony
     ===================================================== */
-
-    function getRedeemTier(cost) {
-      if (cost <= 5) return 1;
-      if (cost <= 15) return 2;
-      if (cost <= 30) return 3;
-
-      return 4;
-    }
+    function getRedeemTier(cost) { if(cost<=5)return 1; if(cost<=15)return 2; if(cost<=30)return 3; return 4; }
 
     const TIER_CONFIG = {
-      1: {
-        emoji: "✨",
-        title: "小确幸！",
-        sub: "每一份小奖励都值得被记住",
-        duration: 2000
-      },
-
-      2: {
-        emoji: "🎉",
-        title: "太棒了！",
-        sub: "努力有了回响，继续闪闪发光",
-        duration: 3000
-      },
-
-      3: {
-        emoji: "🎆",
-        title: "了不起的成就！",
-        sub: "坚持的力量，让梦想照进现实",
-        duration: 4000
-      },
-
-      4: {
-        emoji: "👑",
-        title: "史诗级兑换！",
-        sub: "这是属于你们的传奇时刻",
-        duration: 5500
-      }
+      1:{emoji:"✨",title:"小确幸！",sub:"每一份小奖励都值得被记住",duration:2000},
+      2:{emoji:"🎉",title:"太棒了！",sub:"努力有了回响，继续闪闪发光",duration:3000},
+      3:{emoji:"🎆",title:"了不起的成就！",sub:"坚持的力量，让梦想照进现实",duration:4000},
+      4:{emoji:"👑",title:"史诗级兑换！",sub:"这是属于你们的传奇时刻",duration:5500}
     };
 
-    function showRedeemCeremony(
-      product,
-      cost
-    ) {
-      const tier =
-        getRedeemTier(cost);
-
-      const config =
-        TIER_CONFIG[tier];
-
-      const overlay =
-        document.getElementById(
-          "redeemOverlay"
-        );
-
-      document.getElementById(
-        "redeemEmoji"
-      ).textContent =
-        config.emoji;
-
-      document.getElementById(
-        "redeemTitle"
-      ).textContent =
-        config.title;
-
-      document.getElementById(
-        "redeemSub"
-      ).textContent =
-        `${product.owner} 兑换了「${product.name}」· ${config.sub}`;
-
-      overlay.className =
-        `redeem-overlay tier-${tier}`;
-
-      requestAnimationFrame(() => {
-        overlay.classList.add(
-          "show"
-        );
-
-        spawnParticles(tier);
-      });
-
-      const closeBtn =
-        document.getElementById(
-          "redeemCloseBtn"
-        );
-
-      let autoTimer = null;
-
-      const closeCeremony = () => {
-        overlay.classList.remove(
-          "show"
-        );
-
-        clearTimeout(autoTimer);
-
-        closeBtn.removeEventListener(
-          "click",
-          closeCeremony
-        );
-      };
-
-      closeBtn.addEventListener(
-        "click",
-        closeCeremony
-      );
-
-      autoTimer = setTimeout(
-        closeCeremony,
-        config.duration
-      );
+    function showRedeemCeremony(product,cost) {
+      const tier=getRedeemTier(cost), config=TIER_CONFIG[tier];
+      const overlay=document.getElementById("redeemOverlay");
+      document.getElementById("redeemEmoji").textContent=config.emoji;
+      document.getElementById("redeemTitle").textContent=config.title;
+      document.getElementById("redeemSub").textContent=`${product.owner} 兑换了「${product.name}」· ${config.sub}`;
+      overlay.className=`redeem-overlay tier-${tier}`;
+      requestAnimationFrame(()=>{overlay.classList.add("show");spawnParticles(tier);});
+      const closeBtn=document.getElementById("redeemCloseBtn");
+      let autoTimer=null;
+      const closeCeremony=()=>{overlay.classList.remove("show");clearTimeout(autoTimer);closeBtn.removeEventListener("click",closeCeremony);};
+      closeBtn.addEventListener("click",closeCeremony);
+      autoTimer=setTimeout(closeCeremony,config.duration);
     }
 
     /* =====================================================
        Settings
     ===================================================== */
-
     function initSettings() {
-      const savedBlur =
-        localStorage.getItem(
-          "fc_blur"
-        );
-
-      if (savedBlur !== null) {
-        document.documentElement.style.setProperty(
-          "--blur-val",
-          savedBlur + "px"
-        );
-
-        document.getElementById(
-          "blurSlider"
-        ).value = savedBlur;
-
-        document.getElementById(
-          "blurValue"
-        ).textContent =
-          savedBlur + "px";
-      }
-
-      document
-        .getElementById("blurSlider")
-        .addEventListener(
-          "input",
-          (e) => {
-            const v =
-              e.target.value;
-
-            document.documentElement.style.setProperty(
-              "--blur-val",
-              v + "px"
-            );
-
-            document.getElementById(
-              "blurValue"
-            ).textContent =
-              v + "px";
-
-            localStorage.setItem(
-              "fc_blur",
-              v
-            );
-          }
-        );
-
-      const overlay =
-        document.getElementById(
-          "settingsOverlay"
-        );
-
-      const panel =
-        document.getElementById(
-          "settingsPanel"
-        );
-
-      const openSettings = () => {
-        overlay.classList.add(
-          "show"
-        );
-
-        panel.classList.add(
-          "show"
-        );
-      };
-
-      const closeSettings = () => {
-        overlay.classList.remove(
-          "show"
-        );
-
-        panel.classList.remove(
-          "show"
-        );
-      };
-
-      document
-        .getElementById("settingsBtn")
-        .addEventListener(
-          "click",
-          openSettings
-        );
-
-      overlay.addEventListener(
-        "click",
-        closeSettings
-      );
+      const savedBlur=localStorage.getItem("fc_blur");
+      if(savedBlur!==null){document.documentElement.style.setProperty("--blur-val",savedBlur+"px");document.getElementById("blurSlider").value=savedBlur;document.getElementById("blurValue").textContent=savedBlur+"px";}
+      document.getElementById("blurSlider").addEventListener("input",(e)=>{const v=e.target.value;document.documentElement.style.setProperty("--blur-val",v+"px");document.getElementById("blurValue").textContent=v+"px";localStorage.setItem("fc_blur",v);});
+      const overlay=document.getElementById("settingsOverlay"),panel=document.getElementById("settingsPanel");
+      const openSettings=()=>{overlay.classList.add("show");panel.classList.add("show");};
+      const closeSettings=()=>{overlay.classList.remove("show");panel.classList.remove("show");};
+      document.getElementById("settingsBtn").addEventListener("click",openSettings);
+      overlay.addEventListener("click",closeSettings);
     }
 
     /* =====================================================
        Init
     ===================================================== */
+    document.addEventListener("DOMContentLoaded", async () => {
+      initSettings();
+      initCardOptions();
+      setupNav();
+      setupPeriodTabs();
+      setupForm();
+      setupHistoryFilter();
+      setupShopViewSwitch();
+      setupAddProduct();
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      async () => {
-        initSettings();
-        initCardOptions();
-        setupNav();
-        setupPeriodTabs();
-        setupForm();
-        setupHistoryFilter();
-        setupShopViewSwitch();
-        setupAddProduct();
+      // ★ 检查特殊日期
+      checkSpecialDate();
 
-        await Promise.all([
-          loadLogs(),
-          loadProducts()
-        ]);
+      await Promise.all([loadLogs(), loadProducts()]);
 
-        sb
-          .channel("freecard-realtime")
-          .on(
-            "postgres_changes",
-            {
-              event: "*",
-              schema: "public",
-              table: "freecard_log"
-            },
-            () => loadLogs()
-          )
-          .subscribe();
-
-        sb
-          .channel("shop-realtime")
-          .on(
-            "postgres_changes",
-            {
-              event: "*",
-              schema: "public",
-              table: "freecard_shop"
-            },
-            () => loadProducts()
-          )
-          .subscribe();
-      }
-    );
+      sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
+      sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
+    });
 
     /* =====================================================
        Navigation
     ===================================================== */
-
     function setupNav() {
-      document
-        .querySelectorAll(".nav-btn")
-        .forEach((btn) => {
-          btn.addEventListener(
-            "click",
-            () => {
-              const page =
-                btn.dataset.page;
-
-              document
-                .querySelectorAll(
-                  ".app-page"
-                )
-                .forEach((section) => {
-                  section.classList.toggle(
-                    "active",
-                    section.id ===
-                      `page-${page}`
-                  );
-                });
-
-              document
-                .querySelectorAll(
-                  ".nav-btn"
-                )
-                .forEach((b) => {
-                  const active =
-                    b === btn;
-
-                  b.classList.toggle(
-                    "active",
-                    active
-                  );
-
-                  b.setAttribute(
-                    "aria-current",
-                    active
-                      ? "page"
-                      : "false"
-                  );
-                });
-
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-              });
-            }
-          );
+      document.querySelectorAll(".nav-btn").forEach((btn)=>{
+        btn.addEventListener("click",()=>{
+          const page=btn.dataset.page;
+          document.querySelectorAll(".app-page").forEach((s)=>s.classList.toggle("active",s.id===`page-${page}`));
+          document.querySelectorAll(".nav-btn").forEach((b)=>{const active=b===btn;b.classList.toggle("active",active);b.setAttribute("aria-current",active?"page":"false");});
+          window.scrollTo({top:0,behavior:"smooth"});
         });
+      });
     }
-
-    /* =====================================================
-       Period Tabs
-    ===================================================== */
 
     function setupPeriodTabs() {
-      document
-        .querySelectorAll(
-          ".period-tab"
-        )
-        .forEach((btn) => {
-          btn.addEventListener(
-            "click",
-            () => {
-              document
-                .querySelectorAll(
-                  ".period-tab"
-                )
-                .forEach((b) =>
-                  b.classList.remove(
-                    "active"
-                  )
-                );
-
-              btn.classList.add(
-                "active"
-              );
-
-              currentPeriod =
-                btn.dataset.period;
-
-              renderStats();
-            }
-          );
+      document.querySelectorAll(".period-tab").forEach((btn)=>{
+        btn.addEventListener("click",()=>{
+          document.querySelectorAll(".period-tab").forEach((b)=>b.classList.remove("active"));
+          btn.classList.add("active");
+          currentPeriod=btn.dataset.period;
+          renderStats();
         });
+      });
     }
 
-    /* =====================================================
-       Record Form
-    ===================================================== */
-
-    function setupForm() {
-      document
-        .getElementById("submitBtn")
-        .addEventListener(
-          "click",
-          addLog
-        );
-    }
-
-    function setupHistoryFilter() {
-      document
-        .getElementById(
-          "historyFilter"
-        )
-        .addEventListener(
-          "change",
-          (e) => {
-            currentHistoryFilter =
-              e.target.value;
-
-            renderHistory();
-          }
-        );
-    }
-
+    function setupForm() { document.getElementById("submitBtn").addEventListener("click",addLog); }
+    function setupHistoryFilter() { document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();}); }
     function setupShopViewSwitch() {
-      document
-        .querySelectorAll(
-          ".shop-view-btn"
-        )
-        .forEach((btn) => {
-          btn.addEventListener(
-            "click",
-            () => {
-              shopView =
-                btn.dataset.view;
-
-              document
-                .querySelectorAll(
-                  ".shop-view-btn"
-                )
-                .forEach((b) =>
-                  b.classList.remove(
-                    "active"
-                  )
-                );
-
-              btn.classList.add(
-                "active"
-              );
-
-              renderShop();
-            }
-          );
+      document.querySelectorAll(".shop-view-btn").forEach((btn)=>{
+        btn.addEventListener("click",()=>{
+          shopView=btn.dataset.view;
+          document.querySelectorAll(".shop-view-btn").forEach((b)=>b.classList.remove("active"));
+          btn.classList.add("active");
+          renderShop();
         });
+      });
     }
 
     function initCardOptions() {
-      const sel =
-        document.getElementById(
-          "cardNum"
-        );
-
-      for (
-        let i = 1;
-        i <= 10;
-        i++
-      ) {
-        const option =
-          document.createElement(
-            "option"
-          );
-
-        option.value = i;
-        option.textContent =
-          `${i} 张`;
-
-        sel.appendChild(option);
-      }
+      const sel=document.getElementById("cardNum");
+      for(let i=1;i<=10;i++){const o=document.createElement("option");o.value=i;o.textContent=`${i} 张`;sel.appendChild(o);}
     }
 
     /* =====================================================
        Supabase Logs
     ===================================================== */
-
     async function loadLogs() {
-      const {
-        data,
-        error
-      } = await sb
-        .from("freecard_log")
-        .select("*")
-        .order(
-          "created_at",
-          {
-            ascending: false
-          }
-        );
-
-      if (error) {
-        showToast(
-          "读取记录失败：" +
-            error.message,
-          "error"
-        );
-
-        return;
-      }
-
-      allLogs = data || [];
-
+      const {data,error}=await sb.from("freecard_log").select("*").order("created_at",{ascending:false});
+      if(error){showToast("读取记录失败："+error.message,"error");return;}
+      allLogs=data||[];
       refreshAll();
     }
 
     async function loadProducts() {
-      const {
-        data,
-        error
-      } = await sb
-        .from("freecard_shop")
-        .select("*")
-        .order(
-          "created_at",
-          {
-            ascending: true
-          }
-        );
-
-      if (error) {
-        console.warn(
-          "freecard_shop table not found:",
-          error.message
-        );
-
-        allProducts = [];
-
-        renderShop();
-
-        return;
-      }
-
-      allProducts = data || [];
-
+      const {data,error}=await sb.from("freecard_shop").select("*").order("created_at",{ascending:true});
+      if(error){console.warn("freecard_shop table not found:",error.message);allProducts=[];renderShop();return;}
+      allProducts=data||[];
       renderShop();
     }
 
-    function refreshAll() {
-      updateBalances();
-      updateHistoryFilterOptions();
-      renderStats();
-      renderHistory();
-      renderShop();
-      renderWeeklyCard();
-    }
-
-    /* =====================================================
-       Balance
-    ===================================================== */
+    function refreshAll() { updateBalances(); updateHistoryFilterOptions(); renderStats(); renderHistory(); renderShop(); renderWeeklyCard(); }
 
     function calcBalance(op) {
-      return allLogs
-        .filter(
-          (l) =>
-            l.operator === op
-        )
-        .reduce(
-          (total, l) =>
-            total +
-            (l.change_type ===
-            "增加"
-              ? Number(
-                  l.card_num
-                ) || 0
-              : -(
-                  Number(
-                    l.card_num
-                  ) || 0
-                )),
-          0
-        );
+      return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0);
     }
 
     function updateBalances() {
-      document.getElementById(
-        "torieBalance"
-      ).textContent =
-        calcBalance("Torie");
-
-      document.getElementById(
-        "joryBalance"
-      ).textContent =
-        calcBalance("Jory");
+      document.getElementById("torieBalance").textContent=calcBalance("Torie");
+      document.getElementById("joryBalance").textContent=calcBalance("Jory");
     }
 
-    /* =====================================================
-       Date
-    ===================================================== */
+    function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
+    function getStartOfWeek() { return getStartOfWeekDate(); }
+    function getStartOfMonth() { const d=new Date(); d.setHours(0,0,0,0); d.setDate(1); return d; }
 
-    function getStartOfToday() {
-      const d = new Date();
-
-      d.setHours(
-        0,
-        0,
-        0,
-        0
-      );
-
-      return d;
+    function filterByPeriod(logs,period) {
+      if(period==="all") return logs;
+      const map={today:getStartOfToday,week:getStartOfWeek,month:getStartOfMonth};
+      return logs.filter((l)=>new Date(l.created_at)>=map[period]());
     }
-
-    function getStartOfWeek() {
-      return getStartOfWeekDate();
-    }
-
-    function getStartOfMonth() {
-      const d = new Date();
-
-      d.setHours(
-        0,
-        0,
-        0,
-        0
-      );
-
-      d.setDate(1);
-
-      return d;
-    }
-
-    function filterByPeriod(
-      logs,
-      period
-    ) {
-      if (period === "all") {
-        return logs;
-      }
-
-      const map = {
-        today: getStartOfToday,
-        week: getStartOfWeek,
-        month: getStartOfMonth
-      };
-
-      return logs.filter(
-        (l) =>
-          new Date(
-            l.created_at
-          ) >= map[period]()
-      );
-    }
-
-    /* =====================================================
-       Stats
-    ===================================================== */
 
     function getStats(op) {
-      const logs =
-        filterByPeriod(
-          allLogs,
-          currentPeriod
-        ).filter(
-          (l) =>
-            l.operator === op
-        );
-
-      let earned = 0;
-      let spent = 0;
-
-      logs.forEach((l) => {
-        const n =
-          Number(l.card_num) ||
-          0;
-
-        if (
-          l.change_type ===
-          "增加"
-        ) {
-          earned += n;
-        } else {
-          spent += n;
-        }
-      });
-
-      return {
-        earned,
-        spent
-      };
+      const logs=filterByPeriod(allLogs,currentPeriod).filter((l)=>l.operator===op);
+      let earned=0,spent=0;
+      logs.forEach((l)=>{const n=Number(l.card_num)||0;if(l.change_type==="增加")earned+=n;else spent+=n;});
+      return {earned,spent};
     }
 
     function renderStats() {
-      const t =
-        getStats("Torie");
-
-      const j =
-        getStats("Jory");
-
-      const totalEarned =
-        t.earned +
-        j.earned;
-
-      const totalSpent =
-        t.spent +
-        j.spent;
-
-      const net =
-        totalEarned -
-        totalSpent;
-
-      const pLabel = {
-        today: "今日",
-        week: "本周",
-        month: "本月",
-        all: "累计"
-      }[currentPeriod] || "";
-
-      document.getElementById(
-        "statsSummary"
-      ).innerHTML = `
-        <div class="summary-item">
-          <div class="summary-label">
-            ${pLabel}获得
-          </div>
-
-          <div class="summary-value plus">
-            +${totalEarned}
-          </div>
-        </div>
-
-        <div class="summary-item">
-          <div class="summary-label">
-            ${pLabel}使用
-          </div>
-
-          <div class="summary-value minus">
-            −${totalSpent}
-          </div>
-        </div>
-
-        <div class="summary-item">
-          <div class="summary-label">
-            ${pLabel}净积累
-          </div>
-
-          <div
-            class="summary-value ${
-              net >= 0
-                ? "net"
-                : "minus"
-            }"
-          >
-            ${net >= 0 ? "+" : ""}
-            ${net}
-          </div>
-        </div>
+      const t=getStats("Torie"),j=getStats("Jory");
+      const totalEarned=t.earned+j.earned,totalSpent=t.spent+j.spent,net=totalEarned-totalSpent;
+      const pLabel={today:"今日",week:"本周",month:"本月",all:"累计"}[currentPeriod]||"";
+      document.getElementById("statsSummary").innerHTML=`
+        <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${totalEarned}</div></div>
+        <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${totalSpent}</div></div>
+        <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
       `;
-
-      const max =
-        Math.max(
-          t.earned,
-          t.spent,
-          j.earned,
-          j.spent
-        );
-
-      const group = (
-        label,
-        key
-      ) => {
-        if (max === 0) {
-          return `
-            <div class="stats-group">
-              <div class="stats-label">
-                ${label}
-              </div>
-
-              <div class="empty-stats">
-                暂无${label}记录
-              </div>
-            </div>
-          `;
-        }
-
-        return `
-          <div class="stats-group">
-            <div class="stats-label">
-              ${label}
-            </div>
-
-            ${bar(
-              "Torie",
-              t[key],
-              max,
-              "torie-bar"
-            )}
-
-            ${bar(
-              "Jory",
-              j[key],
-              max,
-              "jory-bar"
-            )}
-          </div>
-        `;
+      const max=Math.max(t.earned,t.spent,j.earned,j.spent);
+      const group=(label,key)=>{
+        if(max===0) return `<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无${label}记录</div></div>`;
+        return `<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",t[key],max,"torie-bar")}${bar("Jory",j[key],max,"jory-bar")}</div>`;
       };
-
-      document.getElementById(
-        "statsContent"
-      ).innerHTML =
-        group(
-          "获得",
-          "earned"
-        ) +
-        group(
-          "消耗",
-          "spent"
-        );
+      document.getElementById("statsContent").innerHTML=group("获得","earned")+group("消耗","spent");
     }
 
-    function bar(
-      name,
-      val,
-      max,
-      cls
-    ) {
-      const w =
-        max === 0
-          ? 0
-          : (val / max) * 100;
-
-      return `
-        <div class="bar-row">
-
-          <div class="bar-name">
-            ${name}
-          </div>
-
-          <div class="bar-track">
-            <div
-              class="bar ${cls}"
-              style="width:${w}%"
-            ></div>
-          </div>
-
-          <div class="bar-number">
-            ${val}
-          </div>
-
-        </div>
-      `;
+    function bar(name,val,max,cls) {
+      const w=max===0?0:(val/max)*100;
+      return `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${w}%"></div></div><div class="bar-number">${val}</div></div>`;
     }
-
-    /* =====================================================
-       History Filter
-    ===================================================== */
 
     function updateHistoryFilterOptions() {
-      const select =
-        document.getElementById(
-          "historyFilter"
-        );
-
-      const months =
-        new Set();
-
-      allLogs.forEach((l) => {
-        const d =
-          new Date(
-            l.created_at
-          );
-
-        months.add(
-          `${d.getFullYear()}-${String(
-            d.getMonth() + 1
-          ).padStart(2, "0")}`
-        );
-      });
-
-      const sorted = [
-        ...months
-      ].sort((a, b) =>
-        b.localeCompare(a)
-      );
-
-      const current =
-        currentHistoryFilter;
-
-      select.innerHTML =
-        '<option value="all">全部</option>';
-
-      sorted.forEach((key) => {
-        const [
-          year,
-          month
-        ] = key.split("-");
-
-        const option =
-          document.createElement(
-            "option"
-          );
-
-        option.value = key;
-
-        option.textContent =
-          `${year}年${Number(
-            month
-          )}月`;
-
-        select.appendChild(
-          option
-        );
-      });
-
-      if (
-        [...select.options].some(
-          (o) =>
-            o.value === current
-        )
-      ) {
-        select.value =
-          current;
-      } else {
-        currentHistoryFilter =
-          "all";
-
-        select.value = "all";
-      }
+      const select=document.getElementById("historyFilter");
+      const months=new Set();
+      allLogs.forEach((l)=>{const d=new Date(l.created_at);months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);});
+      const sorted=[...months].sort((a,b)=>b.localeCompare(a));
+      const current=currentHistoryFilter;
+      select.innerHTML='<option value="all">全部</option>';
+      sorted.forEach((key)=>{const[y,m]=key.split("-");const o=document.createElement("option");o.value=key;o.textContent=`${y}年${Number(m)}月`;select.appendChild(o);});
+      if([...select.options].some((o)=>o.value===current))select.value=current;
+      else{currentHistoryFilter="all";select.value="all";}
     }
 
     function getHistoryLogs() {
-      if (
-        currentHistoryFilter ===
-        "all"
-      ) {
-        return allLogs;
-      }
-
-      return allLogs.filter(
-        (l) => {
-          const d =
-            new Date(
-              l.created_at
-            );
-
-          return (
-            `${d.getFullYear()}-${String(
-              d.getMonth() + 1
-            ).padStart(2, "0")}` ===
-            currentHistoryFilter
-          );
-        }
-      );
+      if(currentHistoryFilter==="all") return allLogs;
+      return allLogs.filter((l)=>{const d=new Date(l.created_at);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;});
     }
-
-    /* =====================================================
-       ★ Render History
-    ===================================================== */
 
     function renderHistory() {
-      const container =
-        document.getElementById(
-          "historyList"
-        );
-
-      const logs =
-        getHistoryLogs();
-
-      if (!logs.length) {
-        container.innerHTML = `
-          <div class="empty-history">
-            暂无记录 🍃
-          </div>
-        `;
-
-        return;
-      }
-
-      container.innerHTML =
-        logs
-          .map((l) => {
-            const d =
-              new Date(
-                l.created_at
-              );
-
-            const time =
-              fmtDate(d);
-
-            const plus =
-              l.change_type ===
-              "增加";
-
-            const symbol =
-              plus ? "+" : "−";
-
-            const person =
-              esc(l.operator);
-
-            const reason =
-              esc(
-                l.reason || "—"
-              );
-
-            const id =
-              escAttr(l.id);
-
-            return `
-              <div class="history-item">
-
-                <div>
-
-                  <div class="history-top">
-
-                    <span class="history-person">
-                      ${person}
-                    </span>
-
-                    <span
-                      class="history-reason"
-                      title="${reason}"
-                    >
-                      ${reason}
-                    </span>
-
-                  </div>
-
-                  <div class="history-time">
-                    ${time}
-                  </div>
-
-                </div>
-
-                <div class="history-right">
-
-                  <div
-                    class="history-change ${
-                      plus
-                        ? "plus"
-                        : "minus"
-                    }"
-                  >
-                    ${symbol}${Number(
-                      l.card_num
-                    )}
-                  </div>
-
-                  <button
-                    class="delete-btn"
-                    type="button"
-                    data-delete-id="${id}"
-                  >
-                    删除
-                  </button>
-
-                </div>
-
-              </div>
-            `;
-          })
-          .join("");
-
-      container
-        .querySelectorAll(
-          "[data-delete-id]"
-        )
-        .forEach((button) => {
-          button.addEventListener(
-            "click",
-            () => {
-              deleteLog(
-                button.dataset.deleteId
-              );
-            }
-          );
-        });
+      const container=document.getElementById("historyList");
+      const logs=getHistoryLogs();
+      if(!logs.length){container.innerHTML='<div class="empty-history">暂无记录 🍃</div>';return;}
+      container.innerHTML=logs.map((l)=>{
+        const d=new Date(l.created_at),time=fmtDate(d);
+        const plus=l.change_type==="增加",symbol=plus?"+":"−";
+        const person=esc(l.operator),reason=esc(l.reason||"—"),id=escAttr(l.id);
+        return `<div class="history-item"><div><div class="history-top"><span class="history-person">${person}</span><span class="history-reason" title="${reason}">${reason}</span></div><div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${plus?"plus":"minus"}">${symbol}${Number(l.card_num)}</div><button class="delete-btn" type="button" data-delete-id="${id}">删除</button></div></div>`;
+      }).join("");
+      container.querySelectorAll("[data-delete-id]").forEach((button)=>{button.addEventListener("click",()=>{deleteLog(button.dataset.deleteId);});});
     }
 
-    /* =====================================================
-       Shop
-    ===================================================== */
-
-    function setupAddProduct() {
-      document
-        .getElementById(
-          "addProductBtn"
-        )
-        .addEventListener(
-          "click",
-          addProduct
-        );
-    }
+    function setupAddProduct() { document.getElementById("addProductBtn").addEventListener("click",addProduct); }
 
     async function addProduct() {
-      const nameEl =
-        document.getElementById(
-          "newProductName"
-        );
-
-      const costEl =
-        document.getElementById(
-          "newProductCost"
-        );
-
-      const name =
-        nameEl.value.trim();
-
-      const cost =
-        parseInt(
-          costEl.value
-        );
-
-      if (!name) {
-        showToast(
-          "请输入商品名称",
-          "error"
-        );
-
-        return;
-      }
-
-      if (
-        !cost ||
-        cost < 1
-      ) {
-        showToast(
-          "价格至少为 1 张",
-          "error"
-        );
-
-        return;
-      }
-
-      const btn =
-        document.getElementById(
-          "addProductBtn"
-        );
-
-      btn.disabled = true;
-      btn.textContent = "…";
-
-      const {
-        error
-      } = await sb
-        .from("freecard_shop")
-        .insert({
-          name,
-          cost,
-          owner: shopView
-        });
-
-      btn.disabled = false;
-      btn.textContent = "添加";
-
-      if (error) {
-        showToast(
-          "添加失败：" +
-            error.message,
-          "error"
-        );
-
-        return;
-      }
-
-      nameEl.value = "";
-      costEl.value = "";
-
-      showToast(
-        "商品已上架 🎉",
-        "success"
-      );
-
-      await loadProducts();
+      const nameEl=document.getElementById("newProductName"),costEl=document.getElementById("newProductCost");
+      const name=nameEl.value.trim(),cost=parseInt(costEl.value);
+      if(!name){showToast("请输入商品名称","error");return;}
+      if(!cost||cost<1){showToast("价格至少为 1 张","error");return;}
+      const btn=document.getElementById("addProductBtn");btn.disabled=true;btn.textContent="…";
+      const {error}=await sb.from("freecard_shop").insert({name,cost,owner:shopView});
+      btn.disabled=false;btn.textContent="添加";
+      if(error){showToast("添加失败："+error.message,"error");return;}
+      nameEl.value="";costEl.value="";showToast("商品已上架 🎉","success");await loadProducts();
     }
 
-    async function deleteProduct(
-      id
-    ) {
-      if (
-        !confirm(
-          "确定下架此商品？"
-        )
-      ) {
-        return;
-      }
-
-      const {
-        error
-      } = await sb
-        .from("freecard_shop")
-        .delete()
-        .eq("id", id);
-
-      if (error) {
-        showToast(
-          "删除失败：" +
-            error.message,
-          "error"
-        );
-
-        return;
-      }
-
-      showToast(
-        "已下架",
-        "success"
-      );
-
-      await loadProducts();
+    async function deleteProduct(id) {
+      if(!confirm("确定下架此商品？"))return;
+      const {error}=await sb.from("freecard_shop").delete().eq("id",id);
+      if(error){showToast("删除失败："+error.message,"error");return;}
+      showToast("已下架","success");await loadProducts();
     }
 
-    async function editProduct(
-      id,
-      oldName,
-      oldCost
-    ) {
-      const newName =
-        prompt(
-          "修改商品名称：",
-          oldName
-        );
-
-      if (newName === null) {
-        return;
-      }
-
-      const newCost =
-        prompt(
-          "修改价格（张）：",
-          oldCost
-        );
-
-      if (newCost === null) {
-        return;
-      }
-
-      const cost =
-        parseInt(newCost);
-
-      if (
-        !newName.trim() ||
-        !cost ||
-        cost < 1
-      ) {
-        showToast(
-          "输入无效",
-          "error"
-        );
-
-        return;
-      }
-
-      const {
-        error
-      } = await sb
-        .from("freecard_shop")
-        .update({
-          name: newName.trim(),
-          cost
-        })
-        .eq("id", id);
-
-      if (error) {
-        showToast(
-          "修改失败：" +
-            error.message,
-          "error"
-        );
-
-        return;
-      }
-
-      showToast(
-        "已更新",
-        "success"
-      );
-
-      await loadProducts();
+    async function editProduct(id,oldName,oldCost) {
+      const newName=prompt("修改商品名称：",oldName);if(newName===null)return;
+      const newCost=prompt("修改价格（张）：",oldCost);if(newCost===null)return;
+      const cost=parseInt(newCost);
+      if(!newName.trim()||!cost||cost<1){showToast("输入无效","error");return;}
+      const {error}=await sb.from("freecard_shop").update({name:newName.trim(),cost}).eq("id",id);
+      if(error){showToast("修改失败："+error.message,"error");return;}
+      showToast("已更新","success");await loadProducts();
     }
 
-    async function redeemProduct(
-      product
-    ) {
-      const balance =
-        calcBalance(
-          product.owner
-        );
-
-      if (
-        balance <
-        product.cost
-      ) {
-        showToast(
-          `${product.owner} 余额不足`,
-          "error"
-        );
-
-        return;
-      }
-
-      if (
-        !confirm(
-          `确认花费 ${product.cost} 张自由卡兑换「${product.name}」？`
-        )
-      ) {
-        return;
-      }
-
-      const {
-        error
-      } = await sb
-        .from("freecard_log")
-        .insert({
-          operator:
-            product.owner,
-
-          change_type:
-            "减少",
-
-          card_num:
-            product.cost,
-
-          reason:
-            `🛒 兑换：${product.name}`
-        });
-
-      if (error) {
-        showToast(
-          "兑换失败：" +
-            error.message,
-          "error"
-        );
-
-        return;
-      }
-
-      showRedeemCeremony(
-        product,
-        product.cost
-      );
-
-      await loadLogs();
+    async function redeemProduct(product) {
+      const balance=calcBalance(product.owner);
+      if(balance<product.cost){showToast(`${product.owner} 余额不足`,"error");return;}
+      if(!confirm(`确认花费 ${product.cost} 张自由卡兑换「${product.name}」？`))return;
+      const {error}=await sb.from("freecard_log").insert({operator:product.owner,change_type:"减少",card_num:product.cost,reason:`🛒 兑换：${product.name}`});
+      if(error){showToast("兑换失败："+error.message,"error");return;}
+      showRedeemCeremony(product,product.cost);await loadLogs();
     }
 
     function renderShop() {
-      const container =
-        document.getElementById(
-          "shopList"
-        );
-
-      const products =
-        allProducts.filter(
-          (p) =>
-            p.owner ===
-            shopView
-        );
-
-      const balance =
-        calcBalance(
-          shopView
-        );
-
-      if (!products.length) {
-        container.innerHTML = `
-          <div class="empty-shop">
-            还没有商品，快来添加吧 🛍️
-          </div>
-        `;
-
-        return;
-      }
-
-      container.innerHTML =
-        products
-          .map((p) => {
-            const pct =
-              Math.min(
-                100,
-                Math.round(
-                  (balance /
-                    p.cost) *
-                    100
-                )
-              );
-
-            const canRedeem =
-              balance >=
-              p.cost;
-
-            const diff =
-              p.cost -
-              balance;
-
-            let itemClass =
-              "shop-item";
-
-            let barExtraClass =
-              "";
-
-            let progressText =
-              "";
-
-            if (canRedeem) {
-              itemClass +=
-                " ready-to-redeem";
-
-              barExtraClass =
-                " full shimmer";
-
-              progressText = `
-                <span>
-                  ✅ 已达成！可以兑换啦
-                </span>
-
-                <span>
-                  ${balance} / ${p.cost} 张
-                </span>
-              `;
-            }
-
-            else if (
-              pct >= 80
-            ) {
-              itemClass +=
-                " almost-there";
-
-              barExtraClass =
-                " shimmer";
-
-              progressText = `
-                <span>
-                  🔥 就差一点了！
-                </span>
-
-                <span>
-                  ${balance} / ${p.cost} 张
-                </span>
-              `;
-            }
-
-            else if (
-              pct >= 50
-            ) {
-              itemClass +=
-                " halfway-there";
-
-              barExtraClass =
-                " shimmer-slow";
-
-              progressText = `
-                <span>
-                  💪 已经过半啦，继续加油
-                </span>
-
-                <span>
-                  ${balance} / ${p.cost} 张
-                </span>
-              `;
-            }
-
-            else {
-              progressText = `
-                <span>
-                  ${balance} / ${p.cost} 张
-                </span>
-
-                <span>
-                  还差 ${diff} 张
-                </span>
-              `;
-            }
-
-            const barClass =
-              `shop-bar ${shopView.toLowerCase()}${barExtraClass}`;
-
-            return `
-              <div class="${itemClass}">
-
-                <div class="shop-item-header">
-
-                  <div class="shop-item-name">
-                    ${esc(p.name)}
-                  </div>
-
-                  <div class="shop-item-cost">
-                    ${p.cost} 张自由卡
-                  </div>
-
-                </div>
-
-                <div class="shop-progress-text">
-                  ${progressText}
-                </div>
-
-                <div class="shop-bar-track">
-
-                  <div
-                    class="${barClass}"
-                    style="width:${pct}%"
-                  ></div>
-
-                </div>
-
-                <div class="shop-actions">
-
-                  <button
-                    class="shop-action-btn btn-redeem"
-                    ${
-                      canRedeem
-                        ? ""
-                        : "disabled"
-                    }
-                    data-redeem-id="${escAttr(
-                      p.id
-                    )}"
-                  >
-                    ${
-                      canRedeem
-                        ? "🎁 立即兑换"
-                        : "余额不足"
-                    }
-                  </button>
-
-                  <button
-                    class="shop-action-btn btn-edit"
-                    data-edit-id="${escAttr(
-                      p.id
-                    )}"
-                  >
-                    编辑
-                  </button>
-
-                  <button
-                    class="shop-action-btn btn-del"
-                    data-product-id="${escAttr(
-                      p.id
-                    )}"
-                  >
-                    下架
-                  </button>
-
-                </div>
-
-              </div>
-            `;
-          })
-          .join("");
-
-      container
-        .querySelectorAll(
-          "[data-redeem-id]"
-        )
-        .forEach((button) => {
-          button.addEventListener(
-            "click",
-            () => {
-              const product =
-                allProducts.find(
-                  (p) =>
-                    String(p.id) ===
-                    String(
-                      button.dataset
-                        .redeemId
-                    )
-                );
-
-              if (product) {
-                redeemProduct(
-                  product
-                );
-              }
-            }
-          );
-        });
-
-      container
-        .querySelectorAll(
-          "[data-edit-id]"
-        )
-        .forEach((button) => {
-          button.addEventListener(
-            "click",
-            () => {
-              const product =
-                allProducts.find(
-                  (p) =>
-                    String(p.id) ===
-                    String(
-                      button.dataset
-                        .editId
-                    )
-                );
-
-              if (product) {
-                editProduct(
-                  product.id,
-                  product.name,
-                  product.cost
-                );
-              }
-            }
-          );
-        });
-
-      container
-        .querySelectorAll(
-          "[data-product-id]"
-        )
-        .forEach((button) => {
-          button.addEventListener(
-            "click",
-            () => {
-              deleteProduct(
-                button.dataset
-                  .productId
-              );
-            }
-          );
-        });
+      const container=document.getElementById("shopList");
+      const products=allProducts.filter((p)=>p.owner===shopView);
+      const balance=calcBalance(shopView);
+      if(!products.length){container.innerHTML='<div class="empty-shop">还没有商品，快来添加吧 🛍️</div>';return;}
+      container.innerHTML=products.map((p)=>{
+        const pct=Math.min(100,Math.round((balance/p.cost)*100));
+        const canRedeem=balance>=p.cost,diff=p.cost-balance;
+        let itemClass="shop-item",barExtraClass="",progressText="";
+        if(canRedeem){itemClass+=" ready-to-redeem";barExtraClass=" full shimmer";progressText=`<span>✅ 已达成！可以兑换啦</span><span>${balance} / ${p.cost} 张</span>`;}
+        else if(pct>=80){itemClass+=" almost-there";barExtraClass=" shimmer";progressText=`<span>🔥 就差一点了！</span><span>${balance} / ${p.cost} 张</span>`;}
+        else if(pct>=50){itemClass+=" halfway-there";barExtraClass=" shimmer-slow";progressText=`<span>💪 已经过半啦，继续加油</span><span>${balance} / ${p.cost} 张</span>`;}
+        else{progressText=`<span>${balance} / ${p.cost} 张</span><span>还差 ${diff} 张</span>`;}
+        const barClass=`shop-bar ${shopView.toLowerCase()}${barExtraClass}`;
+        return `<div class="${itemClass}"><div class="shop-item-header"><div class="shop-item-name">${esc(p.name)}</div><div class="shop-item-cost">${p.cost} 张自由卡</div></div><div class="shop-progress-text">${progressText}</div><div class="shop-bar-track"><div class="${barClass}" style="width:${pct}%"></div></div><div class="shop-actions"><button class="shop-action-btn btn-redeem" ${canRedeem?"":"disabled"} data-redeem-id="${escAttr(p.id)}">${canRedeem?"🎁 立即兑换":"余额不足"}</button><button class="shop-action-btn btn-edit" data-edit-id="${escAttr(p.id)}">编辑</button><button class="shop-action-btn btn-del" data-product-id="${escAttr(p.id)}">下架</button></div></div>`;
+      }).join("");
+      container.querySelectorAll("[data-redeem-id]").forEach((b)=>{b.addEventListener("click",()=>{const p=allProducts.find((x)=>String(x.id)===String(b.dataset.redeemId));if(p)redeemProduct(p);});});
+      container.querySelectorAll("[data-edit-id]").forEach((b)=>{b.addEventListener("click",()=>{const p=allProducts.find((x)=>String(x.id)===String(b.dataset.editId));if(p)editProduct(p.id,p.name,p.cost);});});
+      container.querySelectorAll("[data-product-id]").forEach((b)=>{b.addEventListener("click",()=>{deleteProduct(b.dataset.productId);});});
     }
-
-    /* =====================================================
-       Add Log
-    ===================================================== */
 
     async function addLog() {
-      const op =
-        document.getElementById(
-          "operator"
-        ).value;
-
-      const ct =
-        document.getElementById(
-          "changeType"
-        ).value;
-
-      const reason =
-        document.getElementById(
-          "reason"
-        ).value.trim();
-
-      const num =
-        Number(
-          document.getElementById(
-            "cardNum"
-          ).value
-        );
-
-      if (!reason) {
-        showToast(
-          "请填写原因",
-          "error"
-        );
-
-        return;
-      }
-
-      if (
-        !Number.isInteger(num) ||
-        num < 1 ||
-        num > 10
-      ) {
-        showToast(
-          "数量必须是 1–10 张",
-          "error"
-        );
-
-        return;
-      }
-
-      if (
-        ct === "减少" &&
-        calcBalance(op) < num
-      ) {
-        showToast(
-          `${op} 当前只有 ${calcBalance(
-            op
-          )} 张，不够减`,
-          "error"
-        );
-
-        return;
-      }
-
-      const btn =
-        document.getElementById(
-          "submitBtn"
-        );
-
-      btn.disabled = true;
-      btn.textContent =
-        "保存中…";
-
-      const {
-        error
-      } = await sb
-        .from("freecard_log")
-        .insert({
-          operator: op,
-          change_type: ct,
-          card_num: num,
-          reason
-        });
-
-      btn.disabled = false;
-      btn.textContent =
-        "提交记录";
-
-      if (error) {
-        showToast(
-          "保存失败：" +
-            error.message,
-          "error"
-        );
-
-        return;
-      }
-
-      document.getElementById(
-        "reason"
-      ).value = "";
-
-      showToast(
-        "记录成功 🎉",
-        "success"
-      );
-
-      await loadLogs();
+      const op=document.getElementById("operator").value,ct=document.getElementById("changeType").value;
+      const reason=document.getElementById("reason").value.trim();
+      const num=Number(document.getElementById("cardNum").value);
+      if(!reason){showToast("请填写原因","error");return;}
+      if(!Number.isInteger(num)||num<1||num>10){showToast("数量必须是 1–10 张","error");return;}
+      if(ct==="减少"&&calcBalance(op)<num){showToast(`${op} 当前只有 ${calcBalance(op)} 张，不够减`,"error");return;}
+      const btn=document.getElementById("submitBtn");btn.disabled=true;btn.textContent="保存中…";
+      const {error}=await sb.from("freecard_log").insert({operator:op,change_type:ct,card_num:num,reason});
+      btn.disabled=false;btn.textContent="提交记录";
+      if(error){showToast("保存失败："+error.message,"error");return;}
+      document.getElementById("reason").value="";showToast("记录成功 🎉","success");await loadLogs();
     }
 
-    /* =====================================================
-       Delete Log
-    ===================================================== */
-
-    async function deleteLog(
-      id
-    ) {
-      if (
-        !confirm(
-          "确定删除这条记录？"
-        )
-      ) {
-        return;
-      }
-
-      const {
-        error
-      } = await sb
-        .from("freecard_log")
-        .delete()
-        .eq("id", id);
-
-      if (error) {
-        showToast(
-          "删除失败：" +
-            error.message,
-          "error"
-        );
-
-        return;
-      }
-
-      showToast(
-        "已删除",
-        "success"
-      );
-
-      await loadLogs();
+    async function deleteLog(id) {
+      if(!confirm("确定删除这条记录？"))return;
+      const {error}=await sb.from("freecard_log").delete().eq("id",id);
+      if(error){showToast("删除失败："+error.message,"error");return;}
+      showToast("已删除","success");await loadLogs();
     }
 
-    /* =====================================================
-       Utility
-    ===================================================== */
+    function fmtDate(d) { const p=(n)=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+    function esc(v) { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+    function escAttr(v) { return String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#039;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-    function fmtDate(d) {
-      const p = (n) =>
-        String(n).padStart(
-          2,
-          "0"
-        );
-
-      return `${d.getFullYear()}-${p(
-        d.getMonth() + 1
-      )}-${p(
-        d.getDate()
-      )} ${p(
-        d.getHours()
-      )}:${p(
-        d.getMinutes()
-      )}`;
-    }
-
-    function esc(value) {
-      return String(value)
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
-    }
-
-    function escAttr(value) {
-      return String(value)
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        );
-    }
-
-    /* =====================================================
-       Toast
-    ===================================================== */
-
-    function showToast(
-      msg,
-      type = "success"
-    ) {
-      const toast =
-        document.getElementById(
-          "toast"
-        );
-
-      toast.textContent = msg;
-
-      toast.className =
-        `toast ${type} show`;
-
-      clearTimeout(
-        showToast.timer
-      );
-
-      showToast.timer =
-        setTimeout(() => {
-          toast.classList.remove(
-            "show"
-          );
-        }, 2500);
+    function showToast(msg,type="success") {
+      const toast=document.getElementById("toast");toast.textContent=msg;toast.className=`toast ${type} show`;
+      clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>{toast.classList.remove("show");},2500);
     }
   </script>
 </body>
