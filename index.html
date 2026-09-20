@@ -156,8 +156,6 @@
     .shop-item.halfway-there { border-color: rgba(255, 149, 0, 0.2); animation: glowPulseOrange 3.5s ease-in-out infinite; }
     .shop-item.almost-there { border-color: rgba(0, 122, 255, 0.25); animation: glowPulseBlue 2.5s ease-in-out infinite; }
     .shop-item.ready-to-redeem { border-color: rgba(52, 199, 89, 0.3); animation: glowPulseGreen 2s ease-in-out infinite; }
-    
-    /* Punish item specific */
     .shop-item.punish-item { border-color: rgba(255, 59, 48, 0.15); }
     .shop-item.punish-item:hover { border-color: rgba(255, 59, 48, 0.3); }
 
@@ -197,11 +195,9 @@
     .add-btn:active { transform: scale(0.96); }
     .empty-shop { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
 
-    /* Calorie Converter */
     .calorie-card { background: linear-gradient(135deg, rgba(52, 199, 89, 0.08), rgba(0, 122, 255, 0.08)); border: 1px solid rgba(52, 199, 89, 0.15); }
     .calorie-result { text-align: center; padding: 12px; background: rgba(255,255,255,0.5); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 16px; }
 
-    /* Pages / Navigation */
     .app-page { display: none; animation: pageSlideIn 0.25s ease; }
     .app-page.active { display: block; }
     .bank-sub-page { display: none; animation: fadeIn 0.2s ease; }
@@ -209,6 +205,7 @@
 
     @keyframes pageSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes tier1Bounce { 0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
 
     .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(400px, calc(100% - 32px)); padding: 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); transition: background 0.3s, border-color 0.3s; }
     .nav-btn { height: 56px; border: 0; border-radius: 18px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; font-weight: 600; transition: all 0.2s; }
@@ -216,14 +213,12 @@
     .nav-icon { font-size: 22px; line-height: 1; }
     .nav-btn.active { background: var(--text-1); color: var(--bg); }
 
-    /* Toast */
     .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
     .toast { padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all 0.3s; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { background: var(--green); }
     .toast.error { background: var(--red); }
 
-    /* Celebration */
     #celebrationCanvas { position: fixed; inset: 0; z-index: 10000; pointer-events: none; width: 100%; height: 100%; }
     .redeem-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
     .redeem-overlay.show { opacity: 1; pointer-events: auto; }
@@ -236,7 +231,6 @@
     .redeem-close-btn:hover { background: rgba(255,255,255,0.3); }
     .redeem-overlay.tier-1 { background: rgba(0,0,0,0.3); }
     .redeem-overlay.tier-1 .redeem-emoji { font-size: 56px; animation: tier1Bounce 0.6s ease; }
-    @keyframes tier1Bounce { 0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
     .redeem-overlay.tier-2 { background: rgba(0,0,0,0.4); }
     .redeem-overlay.tier-2 .redeem-emoji { font-size: 64px; animation: tier2Pop 0.8s cubic-bezier(0.22,1,0.36,1); }
     @keyframes tier2Pop { 0%{transform:scale(0) rotate(-20deg)} 60%{transform:scale(1.3) rotate(5deg)} 100%{transform:scale(1) rotate(0)} }
@@ -250,7 +244,6 @@
     .redeem-overlay.tier-4 .redeem-title { font-size: 36px; background: linear-gradient(135deg,#ffd60a,#ff9f0a,#ff375f,#bf5af2,#0a84ff); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbowShift 3s ease infinite; }
     @keyframes rainbowShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
-    /* Mobile */
     @media (max-width: 480px) {
       body { padding: 16px 12px 110px; }
       .page-title { font-size: 28px; }
@@ -445,15 +438,14 @@
   </nav>
 
   <script>
-    const SUPABASE_URL = "https://vimaqakjmrocpqyepudw.supabase.co";
+    // ✅ 已修正回正确的 Supabase URL 和 Key
+    const SUPABASE_URL = "https://vimaqasjmrocpqyepudw.supabase.co";
     const SUPABASE_KEY = "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let allLogs = [], allProducts = [];
     let currentPeriod = "today", currentHistoryFilter = "all";
     let shopView = "Torie", earnView = "Torie", punishView = "Torie";
-
-    // 智能默认页记忆
     let lastBankTab = localStorage.getItem("fc_last_bank_tab") || "shop";
 
     const SPECIAL_DATES = [
@@ -580,14 +572,8 @@
     }
 
     function setupBankSegment() {
-      // 恢复上次记忆
-      document.querySelectorAll(".bank-segment-btn").forEach(b => {
-        b.classList.toggle("active", b.dataset.bank === lastBankTab);
-      });
-      document.querySelectorAll(".bank-sub-page").forEach(p => {
-        p.classList.toggle("active", p.id === `bank-${lastBankTab}`);
-      });
-
+      document.querySelectorAll(".bank-segment-btn").forEach(b => b.classList.toggle("active", b.dataset.bank === lastBankTab));
+      document.querySelectorAll(".bank-sub-page").forEach(p => p.classList.toggle("active", p.id === `bank-${lastBankTab}`));
       document.querySelectorAll(".bank-segment-btn").forEach((btn)=>{
         btn.addEventListener("click",()=>{
           const tab = btn.dataset.bank;
@@ -610,77 +596,26 @@
     }
 
     function setupHistoryFilter() { document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();}); }
-    
-    function setupShopViewSwitch() {
-      document.querySelectorAll("[data-view]").forEach((btn)=>{
-        btn.addEventListener("click",()=>{
-          shopView=btn.dataset.view;
-          document.querySelectorAll("[data-view]").forEach((b)=>b.classList.remove("active"));
-          btn.classList.add("active"); renderShop();
-        });
-      });
-    }
-
-    function setupEarnViewSwitch() {
-      document.querySelectorAll("[data-earn-view]").forEach((btn)=>{
-        btn.addEventListener("click",()=>{
-          earnView=btn.dataset.earnView;
-          document.querySelectorAll("[data-earn-view]").forEach((b)=>b.classList.remove("active"));
-          btn.classList.add("active"); renderEarnList();
-        });
-      });
-    }
-
-    function setupPunishViewSwitch() {
-      document.querySelectorAll("[data-punish-view]").forEach((btn)=>{
-        btn.addEventListener("click",()=>{
-          punishView=btn.dataset.punishView;
-          document.querySelectorAll("[data-punish-view]").forEach((b)=>b.classList.remove("active"));
-          btn.classList.add("active"); renderPunishList();
-        });
-      });
-    }
+    function setupShopViewSwitch() { document.querySelectorAll("[data-view]").forEach((btn)=>{ btn.addEventListener("click",()=>{ shopView=btn.dataset.view; document.querySelectorAll("[data-view]").forEach((b)=>b.classList.remove("active")); btn.classList.add("active"); renderShop(); }); }); }
+    function setupEarnViewSwitch() { document.querySelectorAll("[data-earn-view]").forEach((btn)=>{ btn.addEventListener("click",()=>{ earnView=btn.dataset.earnView; document.querySelectorAll("[data-earn-view]").forEach((b)=>b.classList.remove("active")); btn.classList.add("active"); renderEarnList(); }); }); }
+    function setupPunishViewSwitch() { document.querySelectorAll("[data-punish-view]").forEach((btn)=>{ btn.addEventListener("click",()=>{ punishView=btn.dataset.punishView; document.querySelectorAll("[data-punish-view]").forEach((b)=>b.classList.remove("active")); btn.classList.add("active"); renderPunishList(); }); }); }
 
     function setupCalorieConverter() {
-      const input = document.getElementById("calInput");
-      const person = document.getElementById("calPerson");
-      const result = document.getElementById("calResult");
-      const btn = document.getElementById("calSubmitBtn");
-
+      const input = document.getElementById("calInput"), person = document.getElementById("calPerson"), result = document.getElementById("calResult"), btn = document.getElementById("calSubmitBtn");
       const calc = () => {
-        const cal = parseInt(input.value) || 0;
-        const ratio = person.value === "Torie" ? 200 : 100;
-        const cards = Math.floor(cal / ratio);
-        if(cal > 0) {
-          result.style.display = "block";
-          result.textContent = `可兑换 ${cards} 张自由卡 (向下取整)`;
-          btn.disabled = cards <= 0;
-        } else {
-          result.style.display = "none";
-          btn.disabled = true;
-        }
+        const cal = parseInt(input.value) || 0, ratio = person.value === "Torie" ? 200 : 100, cards = Math.floor(cal / ratio);
+        if(cal > 0) { result.style.display = "block"; result.textContent = `可兑换 ${cards} 张自由卡 (向下取整)`; btn.disabled = cards <= 0; } 
+        else { result.style.display = "none"; btn.disabled = true; }
       };
-
-      input.addEventListener("input", calc);
-      person.addEventListener("change", calc);
-
+      input.addEventListener("input", calc); person.addEventListener("change", calc);
       btn.addEventListener("click", async () => {
-        const cal = parseInt(input.value) || 0;
-        const ratio = person.value === "Torie" ? 200 : 100;
-        const cards = Math.floor(cal / ratio);
+        const cal = parseInt(input.value) || 0, ratio = person.value === "Torie" ? 200 : 100, cards = Math.floor(cal / ratio);
         if(cards <= 0) return;
-
         btn.disabled = true; btn.textContent = "入账中...";
-        const {error} = await sb.from("freecard_log").insert({
-          operator: person.value, change_type: "增加", card_num: cards, reason: `🔥 运动消耗 ${cal} 大卡`
-        });
+        const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: cards, reason: `🔥 运动消耗 ${cal} 大卡` });
         btn.disabled = false; btn.textContent = "一键入账";
         if(error) { showToast("入账失败："+error.message, "error"); return; }
-        
-        showToast(`成功入账 ${cards} 张！太棒了`, "success");
-        spawnParticles(1); // 小撒花
-        input.value = ""; result.style.display = "none"; btn.disabled = true;
-        await loadLogs();
+        showToast(`成功入账 ${cards} 张！太棒了`, "success"); spawnParticles(1); input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
       });
     }
 
@@ -697,10 +632,8 @@
     }
 
     function refreshAll() { updateBalances(); updateHistoryFilterOptions(); renderStats(); renderHistory(); renderWeeklyCard(); }
-
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
     function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
-
     function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
     function getStartOfMonth() { const d=new Date(); d.setHours(0,0,0,0); d.setDate(1); return d; }
     function filterByPeriod(logs,period) { if(period==="all") return logs; const map={today:getStartOfToday,week:getStartOfWeekDate,month:getStartOfMonth}; return logs.filter((l)=>new Date(l.created_at)>=map[period]()); }
@@ -708,11 +641,9 @@
     function renderStats() {
       const t=filterByPeriod(allLogs,currentPeriod).filter(l=>l.operator==="Torie").reduce((a,l)=>{const n=Number(l.card_num)||0; l.change_type==="增加"?a.e+=n:a.s+=n; return a;},{e:0,s:0});
       const j=filterByPeriod(allLogs,currentPeriod).filter(l=>l.operator==="Jory").reduce((a,l)=>{const n=Number(l.card_num)||0; l.change_type==="增加"?a.e+=n:a.s+=n; return a;},{e:0,s:0});
-      const totalE=t.e+j.e, totalS=t.s+j.s, net=totalE-totalS;
-      const pLabel={today:"今日",week:"本周",month:"本月",all:"累计"}[currentPeriod];
+      const totalE=t.e+j.e, totalS=t.s+j.s, net=totalE-totalS, pLabel={today:"今日",week:"本周",month:"本月",all:"累计"}[currentPeriod];
       document.getElementById("statsSummary").innerHTML=`<div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${totalE}</div></div><div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${totalS}</div></div><div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>`;
-      const max=Math.max(t.e,t.s,j.e,j.s);
-      const group=(label,ek,sk)=>{ if(max===0) return `<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无记录</div></div>`; return `<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",t[ek],max,"torie-bar")}${bar("Jory",j[ek],max,"jory-bar")}</div>`; };
+      const max=Math.max(t.e,t.s,j.e,j.s), group=(label,ek,sk)=>{ if(max===0) return `<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无记录</div></div>`; return `<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",t[ek],max,"torie-bar")}${bar("Jory",j[ek],max,"jory-bar")}</div>`; };
       document.getElementById("statsContent").innerHTML=group("获得","e","s")+group("消耗","s","e");
     }
     function bar(name,val,max,cls) { return `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${max===0?0:(val/max)*100}%"></div></div><div class="bar-number">${val}</div></div>`; }
@@ -737,59 +668,35 @@
       container.querySelectorAll("[data-del-log]").forEach(b=>b.addEventListener("click",()=>deleteLog(b.dataset.delLog)));
     }
 
-    // --- Shop / Earn / Punish Rendering & Actions ---
-    
     function renderList(containerId, type, view) {
       const container = document.getElementById(containerId);
-      const suffix = type === "shop" ? "" : `_${type}`;
-      const ownerKey = view + suffix;
-      const items = allProducts.filter(p => p.owner === ownerKey);
+      // ✅ 兼容逻辑：如果是商店，同时读取老数据(无后缀)和新数据(_shop后缀)
+      let items;
+      if (type === "shop") {
+        items = allProducts.filter(p => p.owner === view || p.owner === view + "_shop");
+      } else {
+        items = allProducts.filter(p => p.owner === view + "_" + type);
+      }
       
       if(!items.length) { container.innerHTML = `<div class="empty-shop">还没有${type==='shop'?'商品':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; return; }
-
       const balance = calcBalance(view);
       container.innerHTML = items.map(p => {
-        const isPunish = type === "punish";
-        const isEarn = type === "earn";
-        const pct = Math.min(100, Math.round((balance / p.cost) * 100));
-        const canRedeem = balance >= p.cost;
-        
+        const isPunish = type === "punish", isEarn = type === "earn";
+        const pct = Math.min(100, Math.round((balance / p.cost) * 100)), canRedeem = balance >= p.cost;
         let itemClass = "shop-item", barExtraClass = "", progressText = "", actionBtn = "";
-        
-        if (isPunish) {
-          itemClass += " punish-item";
-          actionBtn = `<button class="shop-action-btn btn-punish" data-action="punish" data-id="${escAttr(p.id)}">⚠️ 触发扣除</button>`;
-        } else if (isEarn) {
-          actionBtn = `<button class="shop-action-btn btn-earn" data-action="earn" data-id="${escAttr(p.id)}">✅ 完成领取</button>`;
-        } else {
+        if (isPunish) { itemClass += " punish-item"; actionBtn = `<button class="shop-action-btn btn-punish" data-action="punish" data-id="${escAttr(p.id)}">⚠️ 触发扣除</button>`; } 
+        else if (isEarn) { actionBtn = `<button class="shop-action-btn btn-earn" data-action="earn" data-id="${escAttr(p.id)}">✅ 完成领取</button>`; } 
+        else {
           if(canRedeem){itemClass+=" ready-to-redeem";barExtraClass=" full shimmer";progressText=`<span>✅ 已达成！</span><span>${balance} / ${p.cost} 张</span>`;}
           else if(pct>=80){itemClass+=" almost-there";barExtraClass=" shimmer";progressText=`<span>🔥 就差一点了！</span><span>${balance} / ${p.cost} 张</span>`;}
           else if(pct>=50){itemClass+=" halfway-there";barExtraClass=" shimmer-slow";progressText=`<span>💪 已经过半啦</span><span>${balance} / ${p.cost} 张</span>`;}
           else{progressText=`<span>${balance} / ${p.cost} 张</span><span>还差 ${p.cost-balance} 张</span>`;}
           actionBtn = `<button class="shop-action-btn btn-redeem" ${canRedeem?"":"disabled"} data-action="redeem" data-id="${escAttr(p.id)}">${canRedeem?"🎁 立即兑换":"余额不足"}</button>`;
         }
-
-        const barClass = `shop-bar ${view.toLowerCase()}${barExtraClass}`;
-        const costClass = isPunish ? "punish" : isEarn ? "earn" : "";
-        const costPrefix = isPunish ? "扣除 " : isEarn ? "奖励 " : "";
-
-        return `<div class="${itemClass}">
-          <div class="shop-item-header">
-            <div class="shop-item-name">${esc(p.name)}</div>
-            <div class="shop-item-cost ${costClass}">${costPrefix}${p.cost} 张</div>
-          </div>
-          ${!isPunish && !isEarn ? `<div class="shop-progress-text">${progressText}</div><div class="shop-bar-track"><div class="${barClass}" style="width:${pct}%"></div></div>` : ''}
-          <div class="shop-actions">
-            ${actionBtn}
-            <button class="shop-action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}">编辑</button>
-            <button class="shop-action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button>
-          </div>
-        </div>`;
+        const barClass = `shop-bar ${view.toLowerCase()}${barExtraClass}`, costClass = isPunish ? "punish" : isEarn ? "earn" : "", costPrefix = isPunish ? "扣除 " : isEarn ? "奖励 " : "";
+        return `<div class="${itemClass}"><div class="shop-item-header"><div class="shop-item-name">${esc(p.name)}</div><div class="shop-item-cost ${costClass}">${costPrefix}${p.cost} 张</div></div>${!isPunish && !isEarn ? `<div class="shop-progress-text">${progressText}</div><div class="shop-bar-track"><div class="${barClass}" style="width:${pct}%"></div></div>` : ''}<div class="shop-actions">${actionBtn}<button class="shop-action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}">编辑</button><button class="shop-action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button></div></div>`;
       }).join("");
-
-      container.querySelectorAll("[data-action]").forEach(b => {
-        b.addEventListener("click", () => handleListAction(b.dataset.action, b.dataset.id, type, view));
-      });
+      container.querySelectorAll("[data-action]").forEach(b => b.addEventListener("click", () => handleListAction(b.dataset.action, b.dataset.id, type, view)));
     }
 
     function renderShop() { renderList("shopList", "shop", shopView); }
@@ -797,67 +704,24 @@
     function renderPunishList() { renderList("punishList", "punish", punishView); }
 
     async function handleListAction(action, id, type, view) {
-      const p = allProducts.find(x => String(x.id) === String(id));
-      if(!p) return;
-
-      if(action === "del") {
-        if(!confirm("确定下架此项目？")) return;
-        const {error} = await sb.from("freecard_shop").delete().eq("id", id);
-        if(error) return showToast("下架失败", "error");
-        showToast("已下架", "success"); await loadProducts();
-      } 
-      else if(action === "edit") {
-        const newName = prompt("修改名称：", p.name); if(newName===null) return;
-        const newCost = prompt("修改数值（张）：", p.cost); if(newCost===null) return;
-        const cost = parseInt(newCost);
-        if(!newName.trim() || !cost || cost<1) return showToast("输入无效", "error");
-        const {error} = await sb.from("freecard_shop").update({name:newName.trim(), cost}).eq("id", id);
-        if(error) return showToast("修改失败", "error");
-        showToast("已更新", "success"); await loadProducts();
-      }
-      else if(action === "redeem") {
-        if(calcBalance(view) < p.cost) return showToast("余额不足", "error");
-        if(!confirm(`确认花费 ${p.cost} 张兑换「${p.name}」？`)) return;
-        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${p.name}`});
-        if(error) return showToast("兑换失败", "error");
-        showRedeemCeremony(p, p.cost); await loadLogs();
-      }
-      else if(action === "earn") {
-        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"增加", card_num:p.cost, reason:`💪 任务：${p.name}`});
-        if(error) return showToast("领取失败", "error");
-        showToast(`成功领取 ${p.cost} 张！`, "success");
-        spawnParticles(1); await loadLogs();
-      }
-      else if(action === "punish") {
-        if(calcBalance(view) < p.cost) {
-          if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return;
-        } else {
-          if(!confirm(`确认扣除 ${p.cost} 张自由卡（${p.name}）？`)) return;
-        }
-        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${p.name}`});
-        if(error) return showToast("扣除失败", "error");
-        // 惩罚专属反馈：无撒花，仅红色 Toast + 震动
-        showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error");
-        if(navigator.vibrate) navigator.vibrate(200);
-        await loadLogs();
-      }
+      const p = allProducts.find(x => String(x.id) === String(id)); if(!p) return;
+      if(action === "del") { if(!confirm("确定下架此项目？")) return; const {error} = await sb.from("freecard_shop").delete().eq("id", id); if(error) return showToast("下架失败", "error"); showToast("已下架", "success"); await loadProducts(); } 
+      else if(action === "edit") { const newName = prompt("修改名称：", p.name); if(newName===null) return; const newCost = prompt("修改数值（张）：", p.cost); if(newCost===null) return; const cost = parseInt(newCost); if(!newName.trim() || !cost || cost<1) return showToast("输入无效", "error"); const {error} = await sb.from("freecard_shop").update({name:newName.trim(), cost}).eq("id", id); if(error) return showToast("修改失败", "error"); showToast("已更新", "success"); await loadProducts(); }
+      else if(action === "redeem") { if(calcBalance(view) < p.cost) return showToast("余额不足", "error"); if(!confirm(`确认花费 ${p.cost} 张兑换「${p.name}」？`)) return; const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${p.name}`}); if(error) return showToast("兑换失败", "error"); showRedeemCeremony(p, p.cost); await loadLogs(); }
+      else if(action === "earn") { const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"增加", card_num:p.cost, reason:`💪 任务：${p.name}`}); if(error) return showToast("领取失败", "error"); showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); }
+      else if(action === "punish") { if(calcBalance(view) < p.cost) { if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return; } else { if(!confirm(`确认扣除 ${p.cost} 张自由卡（${p.name}）？`)) return; } const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${p.name}`}); if(error) return showToast("扣除失败", "error"); showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); }
     }
 
     function setupAdd(type, nameId, costId, btnId, viewGetter) {
       document.getElementById(btnId).addEventListener("click", async () => {
-        const name = document.getElementById(nameId).value.trim();
-        const cost = parseInt(document.getElementById(costId).value);
-        if(!name) return showToast("请输入名称", "error");
-        if(!cost || cost<1) return showToast("数值至少为 1", "error");
-        
+        const name = document.getElementById(nameId).value.trim(), cost = parseInt(document.getElementById(costId).value);
+        if(!name) return showToast("请输入名称", "error"); if(!cost || cost<1) return showToast("数值至少为 1", "error");
         const btn = document.getElementById(btnId); btn.disabled = true; btn.textContent = "...";
         const suffix = type === "shop" ? "" : `_${type}`;
         const {error} = await sb.from("freecard_shop").insert({name, cost, owner: viewGetter() + suffix});
         btn.disabled = false; btn.textContent = "添加";
         if(error) return showToast("添加失败", "error");
-        
-        document.getElementById(nameId).value = ""; document.getElementById(costId).value = "";
-        showToast("添加成功 🎉", "success"); await loadProducts();
+        document.getElementById(nameId).value = ""; document.getElementById(costId).value = ""; showToast("添加成功 🎉", "success"); await loadProducts();
       });
     }
 
@@ -865,13 +729,7 @@
     function setupAddEarn() { setupAdd("earn", "newEarnName", "newEarnCost", "addEarnBtn", () => earnView); }
     function setupAddPunish() { setupAdd("punish", "newPunishName", "newPunishCost", "addPunishBtn", () => punishView); }
 
-    async function deleteLog(id) {
-      if(!confirm("确定删除这条记录？")) return;
-      const {error} = await sb.from("freecard_log").delete().eq("id", id);
-      if(error) return showToast("删除失败", "error");
-      showToast("已删除", "success"); await loadLogs();
-    }
-
+    async function deleteLog(id) { if(!confirm("确定删除这条记录？")) return; const {error} = await sb.from("freecard_log").delete().eq("id", id); if(error) return showToast("删除失败", "error"); showToast("已删除", "success"); await loadLogs(); }
     function fmtDate(d) { const p=(n)=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; }
     function esc(v) { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
     function escAttr(v) { return String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#039;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
