@@ -319,7 +319,7 @@
 
     <section id="page-bank" class="app-page">
       <div class="page-title">自由卡银行</div>
-      <div class="subtitle">管理你的财富与规则 🏦</div>
+      <div class="subtitle">属于你们的小小约定 💕</div>
       
       <div class="bank-segment">
         <button class="bank-segment-btn active" data-bank="shop">💰 心愿商店</button>
@@ -330,12 +330,12 @@
       <div id="bank-shop" class="bank-sub-page active">
         <div class="card">
           <div class="shop-view-switch">
-            <button class="shop-view-btn active torie" data-view="Torie">👧 Torie 的橱窗</button>
-            <button class="shop-view-btn jory" data-view="Jory">👦 Jory 的橱窗</button>
+            <button class="shop-view-btn active torie" data-view="Torie">🐻 Torie 的橱窗</button>
+            <button class="shop-view-btn jory" data-view="Jory">🐰 Jory 的橱窗</button>
           </div>
           <div id="shopList"></div>
           <div class="add-product-form">
-            <div class="form-group"><label>商品名称</label><input id="newProductName" type="text" maxlength="30" placeholder="🏨 周末酒店" /></div>
+            <div class="form-group"><label>心愿名称</label><input id="newProductName" type="text" maxlength="30" placeholder="🏨 周末酒店" /></div>
             <div class="form-group"><label>价格(张)</label><input id="newProductCost" type="number" min="1" max="999" placeholder="100" /></div>
             <button class="add-btn" id="addProductBtn">添加</button>
           </div>
@@ -360,10 +360,10 @@
         </div>
 
         <div class="card">
-          <h2 class="section-title">💪 固定任务橱窗</h2>
+          <h2 class="section-title">💪 任务橱窗</h2>
           <div class="shop-view-switch">
-            <button class="shop-view-btn active torie" data-earn-view="Torie">👧 Torie</button>
-            <button class="shop-view-btn jory" data-earn-view="Jory">👦 Jory</button>
+            <button class="shop-view-btn active torie" data-earn-view="Torie">🐻 Torie</button>
+            <button class="shop-view-btn jory" data-earn-view="Jory">🐰 Jory</button>
           </div>
           <div id="earnList"></div>
           <div class="add-product-form">
@@ -376,10 +376,10 @@
 
       <div id="bank-punish" class="bank-sub-page">
         <div class="card">
-          <h2 class="section-title">🚨 违规扣除清单</h2>
+          <h2 class="section-title">🚨 惩罚清单</h2>
           <div class="shop-view-switch">
-            <button class="shop-view-btn active torie" data-punish-view="Torie">👧 Torie</button>
-            <button class="shop-view-btn jory" data-punish-view="Jory">👦 Jory</button>
+            <button class="shop-view-btn active torie" data-punish-view="Torie">🐻 Torie</button>
+            <button class="shop-view-btn jory" data-punish-view="Jory">🐰 Jory</button>
           </div>
           <div id="punishList"></div>
           <div class="add-product-form">
@@ -431,7 +431,6 @@
     let shopView = "Torie", earnView = "Torie", punishView = "Torie";
     let lastBankTab = localStorage.getItem("fc_last_bank_tab") || "shop";
 
-    // ✅ 类型前缀常量（用于在 name 字段中编码类型，避免 owner 字段触发 RLS）
     const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
 
     const SPECIAL_DATES = [
@@ -656,7 +655,6 @@
       container.querySelectorAll("[data-del-log]").forEach(b=>b.addEventListener("click",()=>deleteLog(b.dataset.delLog)));
     }
 
-    // ✅ 核心修复：通过 name 前缀区分类型，owner 始终保持纯净的 Torie/Jory
     function classifyProduct(p) {
       if (p.name.startsWith(TYPE_PREFIX.earn)) return "earn";
       if (p.name.startsWith(TYPE_PREFIX.punish)) return "punish";
@@ -669,11 +667,10 @@
 
     function renderList(containerId, type, view) {
       const container = document.getElementById(containerId);
-      // ✅ 按 owner + 类型前缀双重过滤
       const items = allProducts.filter(p => p.owner === view && classifyProduct(p) === type);
       
       if(!items.length) { 
-        container.innerHTML = `<div class="empty-shop">还没有${type==='shop'?'商品':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; 
+        container.innerHTML = `<div class="empty-shop">还没有${type==='shop'?'心愿':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; 
         return; 
       }
       const balance = calcBalance(view);
@@ -709,7 +706,6 @@
         const newName = prompt("修改名称：", displayName); if(newName===null) return; 
         const newCost = prompt("修改数值（张）：", p.cost); if(newCost===null) return; 
         const cost = parseInt(newCost); if(!newName.trim() || !cost || cost<1) return showToast("输入无效", "error"); 
-        // ✅ 编辑时保留类型前缀
         const prefix = type === "earn" ? TYPE_PREFIX.earn : type === "punish" ? TYPE_PREFIX.punish : "";
         const {error} = await sb.from("freecard_shop").update({name: prefix + newName.trim(), cost}).eq("id", id); 
         if(error) return showToast("修改失败", "error"); showToast("已更新", "success"); await loadProducts(); 
@@ -719,7 +715,6 @@
       else if(action === "punish") { if(calcBalance(view) < p.cost) { if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return; } else { if(!confirm(`确认扣除 ${p.cost} 张自由卡（${displayName}）？`)) return; } const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${displayName}`}); if(error) return showToast("扣除失败", "error"); showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); }
     }
 
-    // ✅ 核心修复：添加时 owner 始终为纯净值，类型编码到 name 前缀中
     function setupAdd(type, nameId, costId, btnId, viewGetter) {
       document.getElementById(btnId).addEventListener("click", async () => {
         const rawName = document.getElementById(nameId).value.trim();
@@ -729,10 +724,9 @@
         
         const btn = document.getElementById(btnId); btn.disabled = true; btn.textContent = "...";
         
-        // ✅ 关键：owner 永远是纯净的 Torie/Jory，类型通过 name 前缀区分
         const prefix = type === "earn" ? TYPE_PREFIX.earn : type === "punish" ? TYPE_PREFIX.punish : "";
         const finalName = prefix + rawName;
-        const finalOwner = viewGetter(); // 不再拼接后缀！
+        const finalOwner = viewGetter();
         
         const {error} = await sb.from("freecard_shop").insert({name: finalName, cost, owner: finalOwner});
         btn.disabled = false; btn.textContent = "添加";
