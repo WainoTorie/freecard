@@ -68,6 +68,9 @@
     .weekly-text .jory-hl { color: var(--jory); }
     .weekly-text .green-hl { color: var(--green); }
 
+    .trend-card { background: linear-gradient(135deg, rgba(52, 199, 89, 0.10), rgba(0, 122, 255, 0.10)); border: 1px solid rgba(52, 199, 89, 0.15); position: relative; overflow: hidden; }
+    .trend-card::before { content: ""; position: absolute; top: -50%; left: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(52, 199, 89, 0.08) 0%, transparent 70%); pointer-events: none; }
+
     .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .balance-box { text-align: center; padding: 20px 12px; border-radius: var(--r-md); transition: transform 0.2s; }
     .balance-box.torie { background: rgba(0, 122, 255, 0.08); color: var(--torie); }
@@ -303,6 +306,7 @@
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
       <div id="weeklyCard" class="card weekly-card" style="display:none"></div>
+      <div id="trendCard" class="card trend-card" style="display:none"></div>
       <div class="card">
         <div class="balances">
           <div class="balance-box torie">
@@ -439,6 +443,137 @@
       { month: 11, day: 23, emoji: "🎀", title: "Torie 生日快乐！", sub: "被爱包围的你，值得世间所有美好 🌸", tier: 3 }
     ];
 
+    // ========== 语库 ==========
+    const GREETINGS_SUNDAY = [
+      "🌅 周日快乐！这是你们的一周小结",
+      "🌇 周末愉快！来看看这周的收获吧",
+      "🛋️ 周日时光～一周的故事都在这里",
+      "🌙 又到周日啦，回顾一下这周的精彩",
+      "☕ 悠闲周日，翻翻你们的成长日记",
+      "🎵 周日好心情！这周你们都很棒",
+      "🌻 温暖的周日，温暖的一周回顾"
+    ];
+    const GREETINGS_WEEKDAY = [
+      "📬 本周进行中的故事",
+      "🚀 这周正在发生的美好",
+      "📝 本周进度条加载中…",
+      "🌱 这周的种子正在发芽",
+      "💫 本周进行时，继续加油",
+      "🎯 这周的目标正在靠近",
+      "🌈 本周的精彩片段",
+      "✏️ 这周写到一半的故事"
+    ];
+
+    const ENCOURAGEMENTS = [
+      "每一步都算数，一起变好 🌱",
+      "你们都在成为更好的自己 💫",
+      "平凡日子里的坚持，最了不起 🌟",
+      "爱的账户，余额在增长 💕",
+      "小小的积累，终会变成大大的惊喜 🎁",
+      "今天的努力，是明天兑换幸福的底气 💪",
+      "两个人一起走，路再远也不觉得长 🫶",
+      "每一次记录，都是对生活的认真告白 📖",
+      "不慌不忙，你们正在自己的节奏里发光 ✨",
+      "攒下的不只是卡片，更是彼此的用心 💗",
+      "比昨天好一点，就是最棒的进步 📈",
+      "有目标的日子，连空气都是甜的 🍬",
+      "互相陪伴着成长，这件事本身就很珍贵 🤝",
+      "别急，花会在合适的时候开 🌸",
+      "你们的默契，藏在每一笔记录里 📊",
+      "把日子过成诗，把坚持变成习惯 🎶",
+      "今天也是为梦想添砖加瓦的一天 🧱",
+      "一起努力的模样，真的好看得不行 😍",
+      "慢慢来，比较快；一起走，比较远 🐢",
+      "这张小小的卡片，装着大大大的爱 💌"
+    ];
+
+    // Torie 个人分析语库
+    const TORIE_ADVICE_HIGH_EARN = [
+      "🦊 Torie 这周赚得超猛！保持这个势头，心愿近在咫尺 🔥",
+      "🦊 Torie 简直是本周MVP！攒卡速度让人佩服 💪",
+      "🦊 Torie 火力全开！离想要的东西又近了一大步 ✨",
+      "🦊 Torie 这周表现亮眼，继续保持这份冲劲 🚀",
+      "🦊 Torie 太拼了！这份努力一定会换来甜蜜的回报 🎯"
+    ];
+    const TORIE_ADVICE_LOW_EARN = [
+      "🦊 Torie 这周有点安静哦，下周试试多完成几个任务？💪",
+      "🦊 Torie 蓄力中没关系，调整好节奏再出发 🌱",
+      "🦊 Torie 别灰心，哪怕一小步也是在前进 🐾",
+      "🦊 Torie 休息一下也好，充完电会更厉害 ⚡",
+      "🦊 Torie 慢慢来不着急，稳扎稳打也是一种实力 🎯"
+    ];
+    const TORIE_ADVICE_HIGH_SPEND = [
+      "🦊 Torie 这周花了不少呢，享受成果的同时记得继续攒哦 💰",
+      "🦊 Torie 兑换快乐很值得！不过也要注意收支平衡呀 ⚖️",
+      "🦊 Torie 花钱大方说明赚得也有底气，继续保持 👍"
+    ];
+    const TORIE_ADVICE_NORMAL = [
+      "🦊 Torie 节奏稳稳的，这种状态刚刚好 🎵",
+      "🦊 Torie 不急不躁，按自己的步调走就对了 🌿",
+      "🦊 Torie 稳中有进，这就是最好的状态 📊"
+    ];
+
+    // Jory 个人分析语库
+    const JORY_ADVICE_HIGH_EARN = [
+      "🐰 Jory 这周太厉害了！攒卡小能手实锤 🏆",
+      "🐰 Jory 表现超棒！每一张卡都是努力的证明 💖",
+      "🐰 Jory 势头强劲！照这样下去很快就能兑换心愿 🌟",
+      "🐰 Jory 这周闪闪发光！继续保持这份热情 🔥",
+      "🐰 Jory 简直是效率担当！为你鼓掌 👏"
+    ];
+    const JORY_ADVICE_LOW_EARN = [
+      "🐰 Jory 这周稍微慢了一点，没关系的，调整一下就好 🌸",
+      "🐰 Jory 休息是为了走更远的路，下周再发力 💫",
+      "🐰 Jory 别给自己太大压力，一点点来也很棒 🐾",
+      "🐰 Jory 蓄力期也很重要，相信自己 💪",
+      "🐰 Jory 就算走得慢，方向对了就不怕远 🌈"
+    ];
+    const JORY_ADVICE_HIGH_SPEND = [
+      "🐰 Jory 这周兑换了不少快乐！花的值才是最重要的 🎁",
+      "🐰 Jory 会赚也会花，这才是自由卡的正确用法 💕",
+      "🐰 Jory 享受生活很棒！记得也要继续补充弹药哦 🔋"
+    ];
+    const JORY_ADVICE_NORMAL = [
+      "🐰 Jory 稳稳的节奏，看着就让人安心 🌿",
+      "🐰 Jory 不疾不徐，这种从容特别迷人 🎵",
+      "🐰 Jory 一步一个脚印，踏实又可爱 🐰"
+    ];
+
+    // 两人总数据分析语库
+    const COUPLE_ADVICE_BOTH_ACTIVE = [
+      "两个人都在积极行动，这就是最好的双向奔赴 💑",
+      "你们俩这周都很给力！一起变好的感觉真好 🫶",
+      "双剑合璧！两个人的努力让爱的账户越来越充实 💰",
+      "看到你们都在认真对待，真的觉得很美好 🌟",
+      "并肩作战的感觉，比什么都珍贵 🤝"
+    ];
+    const COUPLE_ADVICE_ONE_ACTIVE = [
+      "一个人领跑也没关系，另一个人在蓄力呢 🔄",
+      "轮流发力也是一种默契，你们配合得很好 👫",
+      "有人冲锋有人守后方，这就是搭档的意义 🛡️",
+      "节奏不同但目标一致，这就够了 💕",
+      "不用同时冲刺，互相补位就是最好的团队 🧩"
+    ];
+    const COUPLE_ADVICE_NET_POSITIVE = [
+      "净积累为正！你们的梦想基金在稳步增长 📈",
+      "攒的比花的多，离大目标又近了一步 🎯",
+      "盈余的感觉真棒！继续保持这个好习惯 💪",
+      "爱的储蓄罐越来越沉了，幸福也在加码 ⚖️"
+    ];
+    const COUPLE_ADVICE_NET_ZERO = [
+      "收支完美平衡！赚的和花的一样多，刚刚好 ⚖️",
+      "既能享受当下又在持续努力，完美的状态 🎵",
+      "不亏不赚也是一种智慧，生活就该这样松弛 🌿"
+    ];
+    const COUPLE_ADVICE_NET_NEGATIVE = [
+      "这周花得多了一些，不过兑换的快乐也是真实的呀 🎁",
+      "偶尔透支没关系，下周一起补回来就好 💪",
+      "花钱的时候开心了吗？开心了就值得 💕",
+      "适当放松也是必要的，调整好再继续攒 🌱"
+    ];
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
     function checkSpecialDate() {
       const now = new Date(), m = now.getMonth() + 1, d = now.getDate();
       const match = SPECIAL_DATES.find((s) => s.month === m && s.day === d);
@@ -449,25 +584,127 @@
 
     function getStartOfWeekDate() { const d = new Date(); d.setHours(0,0,0,0); const day = d.getDay(); d.setDate(d.getDate() - (day === 0 ? 6 : day - 1)); return d; }
 
+    // ========== 每周小结（仅周日 18:00-24:00 显示）==========
     function generateWeeklySummary() {
+      const now = new Date();
+      const isSunday = now.getDay() === 0;
+      const hour = now.getHours();
+      if (!isSunday || hour < 18) return null;
+
       const weekStart = getStartOfWeekDate();
       const weekLogs = allLogs.filter((l) => new Date(l.created_at) >= weekStart);
       if (weekLogs.length === 0) return null;
+
       let tE=0, tS=0, jE=0, jS=0;
-      weekLogs.forEach((l) => { const n = Number(l.card_num)||0; if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; } else { if(l.change_type==="增加") jE+=n; else jS+=n; } });
-      const parts = []; const now = new Date();
-      parts.push(now.getDay()===0 ? "🌅 周日快乐！这是你们的一周小结" : "📬 本周进行中的故事");
+      weekLogs.forEach((l) => {
+        const n = Number(l.card_num)||0;
+        if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; }
+        else { if(l.change_type==="增加") jE+=n; else jS+=n; }
+      });
+
+      const parts = [];
+      parts.push(pick(GREETINGS_SUNDAY));
+
+      // 获得情况
       if(tE>0 && jE>0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tE} 张，<span class="highlight jory-hl">Jory</span> 获得了 ${jE} 张`);
-      else if(tE>0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tE} 张，继续加油 💪`);
-      else if(jE>0) parts.push(`这周 <span class="highlight jory-hl">Jory</span> 获得了 ${jE} 张，势头不错 🔥`);
-      if(tS+jS>0) parts.push(`一起兑换了 <span class="highlight">${tS+jS}</span> 张自由卡的心愿 🎁`);
+      else if(tE>0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tE} 张`);
+      else if(jE>0) parts.push(`这周 <span class="highlight jory-hl">Jory</span> 获得了 ${jE} 张`);
+
+      // 花费情况
+      if(tS+jS>0) parts.push(`一起花掉了 <span class="highlight">${tS+jS}</span> 张自由卡 🎁`);
+
+      // 净积累
       const net = (tE+jE) - (tS+jS);
-      if(net>0) parts.push(`净攒 <span class="highlight green-hl">${net}</span> 张，离梦想又近了一步 ✨`);
-      else if(net===0 && (tE+jE)>0) parts.push("赚的和花的一样多，完美的平衡 ⚖️");
-      parts.push(["每一步都算数，一起变好 🌱","你们都在成为更好的自己 💫","平凡日子里的坚持，最了不起 🌟","爱的账户，余额在增长 💕"][Math.floor(Math.random()*4)]);
+      if(net>0) parts.push(`净攒 <span class="highlight green-hl">${net}</span> 张 ✨`);
+      else if(net===0 && (tE+jE)>0) parts.push("收支完美平衡 ⚖️");
+
+      // Torie 个人分析
+      if(tE >= 10) parts.push(pick(TORIE_ADVICE_HIGH_EARN));
+      else if(tE > 0 && tE < 5) parts.push(pick(TORIE_ADVICE_LOW_EARN));
+      else if(tE === 0 && (tS > 0 || jE > 0)) parts.push(pick(TORIE_ADVICE_LOW_EARN));
+      if(tS > tE && tS > 0) parts.push(pick(TORIE_ADVICE_HIGH_SPEND));
+      else if(tE >= 5 && tE < 10) parts.push(pick(TORIE_ADVICE_NORMAL));
+
+      // Jory 个人分析
+      if(jE >= 10) parts.push(pick(JORY_ADVICE_HIGH_EARN));
+      else if(jE > 0 && jE < 5) parts.push(pick(JORY_ADVICE_LOW_EARN));
+      else if(jE === 0 && (jS > 0 || tE > 0)) parts.push(pick(JORY_ADVICE_LOW_EARN));
+      if(jS > jE && jS > 0) parts.push(pick(JORY_ADVICE_HIGH_SPEND));
+      else if(jE >= 5 && jE < 10) parts.push(pick(JORY_ADVICE_NORMAL));
+
+      // 两人总分析
+      if(tE > 0 && jE > 0) parts.push(pick(COUPLE_ADVICE_BOTH_ACTIVE));
+      else if(tE > 0 || jE > 0) parts.push(pick(COUPLE_ADVICE_ONE_ACTIVE));
+      if(net > 0) parts.push(pick(COUPLE_ADVICE_NET_POSITIVE));
+      else if(net === 0 && (tE+jE) > 0) parts.push(pick(COUPLE_ADVICE_NET_ZERO));
+      else if(net < 0) parts.push(pick(COUPLE_ADVICE_NET_NEGATIVE));
+
+      parts.push(pick(ENCOURAGEMENTS));
+
       const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate()+6);
       const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
       return { greeting: parts[0], body: parts.slice(1), dateRange: `${fmt(weekStart)} - ${fmt(weekEnd)}` };
+    }
+
+    // ========== 近三天趋势（始终显示，只要有数据）==========
+    function generateRecentTrend() {
+      const now = new Date();
+      const threeDaysAgo = new Date(now);
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 2);
+      threeDaysAgo.setHours(0,0,0,0);
+
+      const recentLogs = allLogs.filter((l) => new Date(l.created_at) >= threeDaysAgo);
+      if (recentLogs.length === 0) return null;
+
+      let tE=0, tS=0, jE=0, jS=0;
+      recentLogs.forEach((l) => {
+        const n = Number(l.card_num)||0;
+        if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; }
+        else { if(l.change_type==="增加") jE+=n; else jS+=n; }
+      });
+
+      const parts = [];
+      const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
+      const todayStr = fmt(now);
+      const startStr = fmt(threeDaysAgo);
+      const dateRange = startStr === todayStr ? todayStr : `${startStr} - ${todayStr}`;
+
+      parts.push(`📊 近三天动态（${dateRange}）`);
+
+      // 数据概览
+      if(tE>0 && jE>0) parts.push(`<span class="highlight torie-hl">Torie</span> +${tE}，<span class="highlight jory-hl">Jory</span> +${jE}`);
+      else if(tE>0) parts.push(`<span class="highlight torie-hl">Torie</span> 获得了 ${tE} 张`);
+      else if(jE>0) parts.push(`<span class="highlight jory-hl">Jory</span> 获得了 ${jE} 张`);
+      if(tS+jS>0) parts.push(`花掉了 ${tS+jS} 张`);
+
+      const net = (tE+jE) - (tS+jS);
+      if(net>0) parts.push(`净增 <span class="highlight green-hl">${net}</span> 张`);
+      else if(net<0) parts.push(`净减 ${Math.abs(net)} 张`);
+
+      // Torie 近三天分析
+      if(tE >= 6) parts.push(pick(TORIE_ADVICE_HIGH_EARN));
+      else if(tE > 0 && tE < 3) parts.push(pick(TORIE_ADVICE_LOW_EARN));
+      else if(tE === 0 && recentLogs.some(l=>l.operator==="Jory")) parts.push("🦊 Torie 这几天还在蓄力，期待你的爆发 🔋");
+      if(tS > tE && tS > 0) parts.push(pick(TORIE_ADVICE_HIGH_SPEND));
+      else if(tE >= 3 && tE < 6) parts.push(pick(TORIE_ADVICE_NORMAL));
+
+      // Jory 近三天分析
+      if(jE >= 6) parts.push(pick(JORY_ADVICE_HIGH_EARN));
+      else if(jE > 0 && jE < 3) parts.push(pick(JORY_ADVICE_LOW_EARN));
+      else if(jE === 0 && recentLogs.some(l=>l.operator==="Torie")) parts.push("🐰 Jory 这几天在积蓄能量，下次一定更精彩 🌟");
+      if(jS > jE && jS > 0) parts.push(pick(JORY_ADVICE_HIGH_SPEND));
+      else if(jE >= 3 && jE < 6) parts.push(pick(JORY_ADVICE_NORMAL));
+
+      // 两人总分析
+      if(tE > 0 && jE > 0) parts.push(pick(COUPLE_ADVICE_BOTH_ACTIVE));
+      else if(tE > 0 || jE > 0) parts.push(pick(COUPLE_ADVICE_ONE_ACTIVE));
+      if(net > 3) parts.push(pick(COUPLE_ADVICE_NET_POSITIVE));
+      else if(net === 0 && (tE+jE) > 0) parts.push(pick(COUPLE_ADVICE_NET_ZERO));
+      else if(net < 0) parts.push(pick(COUPLE_ADVICE_NET_NEGATIVE));
+
+      parts.push(pick(ENCOURAGEMENTS));
+
+      return { greeting: parts[0], body: parts.slice(1), dateRange };
     }
 
     function renderWeeklyCard() {
@@ -475,6 +712,13 @@
       if(!summary){ card.style.display="none"; return; }
       card.style.display="block";
       card.innerHTML = `<div class="weekly-header"><span class="weekly-icon">💌</span><span class="weekly-title">${summary.greeting}</span><span class="weekly-date">${summary.dateRange}</span></div><div class="weekly-text">${summary.body.join("，")}。</div>`;
+    }
+
+    function renderTrendCard() {
+      const card = document.getElementById("trendCard"), trend = generateRecentTrend();
+      if(!trend){ card.style.display="none"; return; }
+      card.style.display="block";
+      card.innerHTML = `<div class="weekly-header"><span class="weekly-icon">📊</span><span class="weekly-title">${trend.greeting}</span></div><div class="weekly-text">${trend.body.join("，")}。</div>`;
     }
 
     const canvas = document.getElementById("celebrationCanvas"), ctx = canvas.getContext("2d");
@@ -618,7 +862,7 @@
       allProducts=data||[]; renderShop(); renderEarnList(); renderPunishList();
     }
 
-    function refreshAll() { updateBalances(); updateHistoryFilterOptions(); renderStats(); renderHistory(); renderWeeklyCard(); }
+    function refreshAll() { updateBalances(); updateHistoryFilterOptions(); renderStats(); renderHistory(); renderWeeklyCard(); renderTrendCard(); }
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
     function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
     function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
