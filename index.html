@@ -29,13 +29,11 @@
     button, input, select { font-family: inherit; }
     .container { width: min(680px, 100%); margin: 0 auto; position: relative; min-width: 0; }
 
-    /* Festival Banner */
     .festival-banner { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden; }
     .festival-emoji { font-size: 32px; display: block; margin-bottom: 8px; }
     .festival-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-1); }
     .festival-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; }
 
-    /* Settings */
     .settings-btn { position: absolute; top: 8px; right: 0; width: 36px; height: 36px; border: none; background: var(--card); border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
     .settings-btn:active { transform: scale(0.9); }
     .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
@@ -48,13 +46,11 @@
     input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--torie); cursor: pointer; }
 
-    /* Typography & Cards */
     .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; color: var(--text-1); }
     .subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 24px; }
     .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
     .card { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); min-width: 0; }
 
-    /* Spirits System (SVG Pets) */
     .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer; }
     .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.04; pointer-events: none; transition: background 0.3s; }
@@ -65,7 +61,6 @@
     .pet-container { height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; }
     .pet-svg { width: 64px; height: 64px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
     
-    /* Pet Animations */
     .state-amazing .pet-svg { animation: petBounce 1s ease-in-out infinite; }
     .state-good .pet-svg { animation: petSway 2.5s ease-in-out infinite; }
     .state-low .pet-svg { transform: translateY(8px) scale(0.9); opacity: 0.8; }
@@ -80,14 +75,13 @@
     @keyframes petBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
     @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-15px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
 
-    /* Pet Elements Transitions */
     .pet-svg * { transition: all 0.4s ease; }
     
-    /* FIXED: Precise transform-origin for bunny ears at head connection point */
-    .bunny-ear-l { transform-origin: 40px 42px; }
-    .bunny-ear-r { transform-origin: 60px 42px; }
-    .ear-down.bunny-ear-l { transform: rotate(25deg) translateY(2px); }
-    .ear-down.bunny-ear-r { transform: rotate(-25deg) translateY(2px); }
+    /* FIXED: Larger rounder ears with precise transform-origin at head connection */
+    .bunny-ear-l { transform-origin: 38px 44px; }
+    .bunny-ear-r { transform-origin: 62px 44px; }
+    .ear-down.bunny-ear-l { transform: rotate(30deg) translateY(3px); }
+    .ear-down.bunny-ear-r { transform: rotate(-30deg) translateY(3px); }
     
     .sweat { opacity: 0; transform: translateY(-5px); transition: all 0.3s; }
     .state-warning .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
@@ -96,7 +90,6 @@
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
 
-    /* Weekly & Trend Cards */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
     .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     .summary-icon { font-size: 20px; }
@@ -109,7 +102,6 @@
     .summary-text .green-hl { color: var(--green); }
     .summary-text .red-hl { color: var(--red); }
 
-    /* Balances */
     .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .balance-box { text-align: center; padding: 16px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); }
     .balance-box.torie { border-color: rgba(0, 122, 255, 0.2); }
@@ -120,7 +112,6 @@
     .balance-box.jory .balance-number { color: var(--jory); }
     .balance-unit { font-size: 12px; font-weight: 500; color: var(--text-3); margin-left: 2px; }
 
-    /* Forms */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .form-group.full { grid-column: 1 / -1; }
@@ -132,14 +123,12 @@
     .submit-btn:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
     .submit-btn.danger { background: var(--red); }
 
-    /* Segmented Controls (Apple Style) */
     .segment { display: grid; gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
     .segment-3 { grid-template-columns: repeat(3, 1fr); }
     .segment-2 { grid-template-columns: repeat(2, 1fr); }
     .seg-btn { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .seg-btn.active { background: var(--card); color: var(--text-1); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 
-    /* Stats & History */
     .period-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
     .period-tab { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
@@ -178,7 +167,6 @@
     .delete-btn:hover { opacity: 1; }
     .empty-history { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
 
-    /* Shop / Earn / Punish Lists (Apple Style) */
     .list-item { padding: 16px 0; border-bottom: 1px solid var(--separator); display: flex; flex-direction: column; gap: 10px; }
     .list-item:last-child { border-bottom: none; }
     .list-item-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -211,13 +199,11 @@
     .add-btn:active { transform: scale(0.96); }
     .empty-list { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
 
-    /* Converter Card */
     .converter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .converter-result { text-align: center; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 15px; }
     .converter-result.danger { color: var(--red); }
     .ratio-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-2); padding: 4px; }
 
-    /* App Pages & Nav */
     .app-page { display: none; animation: fadeIn 0.2s ease; }
     .app-page.active { display: block; }
     .bank-sub-page { display: none; animation: fadeIn 0.2s ease; }
@@ -230,7 +216,6 @@
     .nav-icon { font-size: 20px; line-height: 1; }
     .nav-btn.active { background: var(--text-1); color: var(--bg); }
 
-    /* Toast & Modals */
     .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
     .toast { padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all 0.3s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .toast.show { opacity: 1; transform: translateY(0); }
@@ -285,7 +270,6 @@
   <div class="toast-container"><div id="toast" class="toast"></div></div>
   <canvas id="celebrationCanvas"></canvas>
   
-  <!-- Redeem Ceremony Overlay -->
   <div id="redeemOverlay" class="redeem-overlay">
     <div class="redeem-celebration">
       <span class="redeem-emoji" id="redeemEmoji"></span>
@@ -295,7 +279,6 @@
     </div>
   </div>
 
-  <!-- Calorie Ratio Modal -->
   <div id="calRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;">⚙️ 卡路里换算设置</div>
@@ -326,7 +309,6 @@
     </div>
   </div>
 
-  <!-- Late Ratio Modal -->
   <div id="lateRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;">⚙️ 迟到惩罚设置</div>
@@ -346,7 +328,6 @@
     </div>
   </div>
 
-  <!-- Settings Panel -->
   <div id="settingsOverlay" class="overlay"></div>
   <div id="settingsPanel" class="panel">
     <div class="panel-title">⚙️ 显示设置</div>
@@ -364,16 +345,13 @@
     <button id="settingsBtn" class="settings-btn" aria-label="设置">⚙️</button>
     <div id="festivalBannerContainer"></div>
 
-    <!-- HOME PAGE -->
     <section id="page-home" class="app-page active">
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
       
-      <!-- 1. 动态小结 -->
       <div id="weeklyCard" class="card summary-card" style="display:none"></div>
       <div id="trendCard" class="card summary-card" style="display:none"></div>
       
-      <!-- 2. 自由卡余额 -->
       <div class="card">
         <div class="balances">
           <div class="balance-box torie">
@@ -387,7 +365,6 @@
         </div>
       </div>
 
-      <!-- 3. 宠物系统 -->
       <div class="spirits-container">
         <div class="spirit-card torie state-normal" id="spiritTorie">
           <div class="pet-container">
@@ -413,41 +390,41 @@
 
         <div class="spirit-card jory state-normal" id="spiritJory">
           <div class="pet-container">
-            <!-- FIXED MOCHI BUNNY: Symmetric ears with correct transform-origin -->
+            <!-- REDESIGNED: Larger, rounder, petal-shaped ears -->
             <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <!-- Mochi Body -->
-              <ellipse cx="50" cy="62" rx="28" ry="24" fill="var(--card)" />
+              <ellipse cx="50" cy="65" rx="26" ry="22" fill="var(--card)" />
               
-              <!-- Left Ear (symmetric, origin at base: 40,42) -->
-              <path class="bunny-ear-l" d="M36 42 C32 18, 44 14, 44 42" fill="var(--card)" />
-              <path class="bunny-ear-l" d="M38 38 C36 24, 42 22, 42 38" stroke="var(--red)" stroke-width="1.5" opacity="0.4" fill="none" />
+              <!-- Left Ear: Large, soft, petal-shaped (origin at base 38,44) -->
+              <path class="bunny-ear-l" d="M34 44 C26 28, 24 10, 34 6 C44 2, 48 22, 42 44" fill="var(--card)" />
+              <path class="bunny-ear-l" d="M36 40 C32 28, 31 16, 36 12 C41 8, 43 22, 40 40" stroke="var(--red)" stroke-width="1.5" opacity="0.35" fill="none" />
               
-              <!-- Right Ear (symmetric, origin at base: 60,42) -->
-              <path class="bunny-ear-r" d="M64 42 C68 18, 56 14, 56 42" fill="var(--card)" />
-              <path class="bunny-ear-r" d="M62 38 C64 24, 58 22, 58 38" stroke="var(--red)" stroke-width="1.5" opacity="0.4" fill="none" />
+              <!-- Right Ear: Mirror symmetric (origin at base 62,44) -->
+              <path class="bunny-ear-r" d="M66 44 C74 28, 76 10, 66 6 C56 2, 52 22, 58 44" fill="var(--card)" />
+              <path class="bunny-ear-r" d="M64 40 C68 28, 69 16, 64 12 C59 8, 57 22, 60 40" stroke="var(--red)" stroke-width="1.5" opacity="0.35" fill="none" />
               
               <!-- Bean Eyes (Normal) -->
-              <ellipse class="bean-eye" cx="40" cy="58" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
-              <ellipse class="bean-eye" cx="60" cy="58" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
+              <ellipse class="bean-eye" cx="40" cy="62" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
+              <ellipse class="bean-eye" cx="60" cy="62" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
               
               <!-- Happy Closed Eyes -->
-              <path class="happy-eye" d="M37 58 Q40 55 43 58" style="display:none" />
-              <path class="happy-eye" d="M57 58 Q60 55 63 58" style="display:none" />
+              <path class="happy-eye" d="M37 62 Q40 59 43 62" style="display:none" />
+              <path class="happy-eye" d="M57 62 Q60 59 63 62" style="display:none" />
               
               <!-- Tiny Nose + Mouth -->
-              <circle cx="50" cy="64" r="1.5" fill="var(--red)" stroke="none" opacity="0.6" />
-              <path d="M47 67 Q50 69 53 67" stroke-width="1.5" />
+              <circle cx="50" cy="68" r="1.5" fill="var(--red)" stroke="none" opacity="0.6" />
+              <path d="M47 71 Q50 73 53 71" stroke-width="1.5" />
               
               <!-- Cheek Blush -->
-              <circle cx="32" cy="64" r="4" fill="var(--red)" opacity="0.12" stroke="none" />
-              <circle cx="68" cy="64" r="4" fill="var(--red)" opacity="0.12" stroke="none" />
+              <circle cx="32" cy="68" r="4.5" fill="var(--red)" opacity="0.12" stroke="none" />
+              <circle cx="68" cy="68" r="4.5" fill="var(--red)" opacity="0.12" stroke="none" />
               
               <!-- Little Paws -->
-              <ellipse cx="38" cy="82" rx="6" ry="4" fill="var(--card)" />
-              <ellipse cx="62" cy="82" rx="6" ry="4" fill="var(--card)" />
+              <ellipse cx="38" cy="84" rx="6" ry="3.5" fill="var(--card)" />
+              <ellipse cx="62" cy="84" rx="6" ry="3.5" fill="var(--card)" />
               
               <!-- Sweat Drop -->
-              <path class="sweat" d="M72 38 C72 38, 76 42, 76 46 C76 48.5, 72 48.5, 72 46 C72 42, 72 38, 72 38 Z" fill="var(--torie)" stroke="none" />
+              <path class="sweat" d="M74 36 C74 36, 78 40, 78 44 C78 46.5, 74 46.5, 74 44 C74 40, 74 36, 74 36 Z" fill="var(--torie)" stroke="none" />
             </svg>
           </div>
           <div class="spirit-name">Jory</div>
@@ -456,7 +433,6 @@
       </div>
     </section>
 
-    <!-- BANK PAGE -->
     <section id="page-bank" class="app-page">
       <div class="page-title">自由卡银行</div>
       <div class="subtitle">属于你们的小小约定 💕</div>
@@ -553,7 +529,6 @@
       </div>
     </section>
 
-    <!-- DATA PAGE -->
     <section id="page-data" class="app-page">
       <div class="page-title">数据统计</div>
       <div class="subtitle">看见成长的轨迹 📊</div>
@@ -594,7 +569,6 @@
     let shopView = "Torie", earnView = "Torie", punishView = "Torie";
     let lastBankTab = localStorage.getItem("fc_last_bank_tab") || "shop";
 
-    // Ratios
     let calRatios = {
       torieX: parseInt(localStorage.getItem("fc_cal_torie_x")) || 200,
       torieY: parseInt(localStorage.getItem("fc_cal_torie_y")) || 1,
@@ -611,30 +585,10 @@
       { month: 11, day: 23, emoji: "🎀", title: "Torie 生日快乐！", sub: "被爱包围的你，值得世间所有美好 🌸", tier: 3 }
     ];
 
-    const PRAISE = [
-      "两个人都在闪闪发光，离大心愿又近了一步！🌟",
-      "双剑合璧！你们的努力让爱的账户越来越充实 💰",
-      "这周表现太棒了，每一张卡都是坚持的证明 🏆",
-      "并肩作战的感觉，比什么都珍贵，继续保持 🤝"
-    ];
-    const ENCOURAGE = [
-      "按自己的节奏慢慢来，每一张卡都算数 🌱",
-      "不慌不忙，你们正在自己的节奏里发光 ✨",
-      "平凡日子里的坚持，最了不起 🌿",
-      "攒下的不只是卡片，更是彼此的用心 💗"
-    ];
-    const URGE = [
-      "这周稍微有点安静哦，下周要不要一起冲个任务？👀",
-      "一个人领跑也没关系，另一个人在蓄力呢 🔄",
-      "别灰心，哪怕一小步也是在前进，加油 🐾",
-      "休息好了就出发吧，下周期待你们的爆发 🔋"
-    ];
-    const WARN = [
-      "这周花得有点猛啦，小心透支，下周赶紧补回来！⚠️",
-      "偶尔透支没关系，但下周要一起努力填坑哦 💪",
-      "花钱的时候开心了吗？开心了就值得，但下次注意 🎁",
-      "入不敷出了哦，快踩踩刹车，多赚点卡吧 🛑"
-    ];
+    const PRAISE = ["两个人都在闪闪发光，离大心愿又近了一步！🌟","双剑合璧！你们的努力让爱的账户越来越充实 💰","这周表现太棒了，每一张卡都是坚持的证明 🏆","并肩作战的感觉，比什么都珍贵，继续保持 🤝"];
+    const ENCOURAGE = ["按自己的节奏慢慢来，每一张卡都算数 🌱","不慌不忙，你们正在自己的节奏里发光 ✨","平凡日子里的坚持，最了不起 🌿","攒下的不只是卡片，更是彼此的用心 💗"];
+    const URGE = ["这周稍微有点安静哦，下周要不要一起冲个任务？👀","一个人领跑也没关系，另一个人在蓄力呢 🔄","别灰心，哪怕一小步也是在前进，加油 🐾","休息好了就出发吧，下周期待你们的爆发 🔋"];
+    const WARN = ["这周花得有点猛啦，小心透支，下周赶紧补回来！⚠️","偶尔透支没关系，但下周要一起努力填坑哦 💪","花钱的时候开心了吗？开心了就值得，但下次注意 🎁","入不敷出了哦，快踩踩刹车，多赚点卡吧 🛑"];
 
     const SPIRIT_STATES = {
       amazing: { texts: ["今天超神了！", "状态爆棚！", "闪闪发光中~", "简直太强啦！", "为你骄傲！"] },
@@ -646,34 +600,27 @@
 
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-    // ========== 宠物系统 ==========
     function updatePetState(person, state) {
       const card = document.getElementById(`spirit${person}`);
       card.className = `spirit-card ${person.toLowerCase()} state-${state}`;
-      
       const svg = document.getElementById(`svg${person}`);
       
       if (person === "Torie") {
         const pupils = svg.querySelectorAll('.pupil');
         const starEyes = svg.querySelectorAll('.star-eye');
-        
         pupils.forEach(p => p.style.display = '');
         starEyes.forEach(p => p.style.display = 'none');
-        
         if (state === 'amazing') {
           pupils.forEach(p => p.style.display = 'none');
           starEyes.forEach(p => p.style.display = '');
         }
       } else {
-        // Bunny logic (FIXED ear classes)
         const beanEyes = svg.querySelectorAll('.bean-eye');
         const happyEyes = svg.querySelectorAll('.happy-eye');
         const ears = svg.querySelectorAll('.bunny-ear-l, .bunny-ear-r');
-        
         beanEyes.forEach(e => e.style.display = '');
         happyEyes.forEach(e => e.style.display = 'none');
         ears.forEach(e => e.classList.remove('ear-down'));
-        
         if (state === 'amazing' || state === 'good') {
           beanEyes.forEach(e => e.style.display = 'none');
           happyEyes.forEach(e => e.style.display = '');
@@ -692,9 +639,7 @@
     function updateSpirits() {
       const todayStart = new Date();
       todayStart.setHours(0,0,0,0);
-      
       const todayLogs = allLogs.filter(l => new Date(l.created_at) >= todayStart);
-      
       ["Torie", "Jory"].forEach(person => {
         const personLogs = todayLogs.filter(l => l.operator === person);
         let earned = 0, spent = 0;
@@ -703,17 +648,14 @@
           if(l.change_type === "增加") earned += n;
           else spent += n;
         });
-        
         const balance = calcBalance(person);
         const net = earned - spent;
-        
         let state;
         if (balance < 0) state = "warning";
         else if (earned >= 10 || net >= 5) state = "amazing";
         else if (earned >= 3 || net > 0) state = "good";
         else if (spent > earned && spent > 0) state = "low";
         else state = "normal";
-        
         updatePetState(person, state);
       });
     }
