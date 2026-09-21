@@ -77,11 +77,11 @@
 
     .pet-svg * { transition: all 0.4s ease; }
     
-    /* FIXED: Larger rounder ears with precise transform-origin at head connection */
-    .bunny-ear-l { transform-origin: 38px 44px; }
-    .bunny-ear-r { transform-origin: 62px 44px; }
-    .ear-down.bunny-ear-l { transform: rotate(30deg) translateY(3px); }
-    .ear-down.bunny-ear-r { transform: rotate(-30deg) translateY(3px); }
+    /* Wider ears: origin matches new wider base */
+    .bunny-ear-l { transform-origin: 34px 44px; }
+    .bunny-ear-r { transform-origin: 66px 44px; }
+    .ear-down.bunny-ear-l { transform: rotate(12deg) translateY(3px); }
+    .ear-down.bunny-ear-r { transform: rotate(-12deg) translateY(3px); }
     
     .sweat { opacity: 0; transform: translateY(-5px); transition: all 0.3s; }
     .state-warning .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
@@ -390,18 +390,18 @@
 
         <div class="spirit-card jory state-normal" id="spiritJory">
           <div class="pet-container">
-            <!-- REDESIGNED: Larger, rounder, petal-shaped ears -->
+            <!-- WIDER ears: plump oval petal shape, splaying outward -->
             <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <!-- Mochi Body -->
               <ellipse cx="50" cy="65" rx="26" ry="22" fill="var(--card)" />
               
-              <!-- Left Ear: Large, soft, petal-shaped (origin at base 38,44) -->
-              <path class="bunny-ear-l" d="M34 44 C26 28, 24 10, 34 6 C44 2, 48 22, 42 44" fill="var(--card)" />
-              <path class="bunny-ear-l" d="M36 40 C32 28, 31 16, 36 12 C41 8, 43 22, 40 40" stroke="var(--red)" stroke-width="1.5" opacity="0.35" fill="none" />
+              <!-- Left Ear: wide oval, base 28-40, tip at x=18, curves outward left -->
+              <path class="bunny-ear-l" d="M28 44 C18 32, 8 16, 14 6 C20 -2, 36 14, 40 44" fill="var(--card)" />
+              <path class="bunny-ear-l" d="M30 40 C24 30, 18 18, 22 10 C26 4, 34 20, 36 40" stroke="var(--red)" stroke-width="1.5" opacity="0.35" fill="none" />
               
-              <!-- Right Ear: Mirror symmetric (origin at base 62,44) -->
-              <path class="bunny-ear-r" d="M66 44 C74 28, 76 10, 66 6 C56 2, 52 22, 58 44" fill="var(--card)" />
-              <path class="bunny-ear-r" d="M64 40 C68 28, 69 16, 64 12 C59 8, 57 22, 60 40" stroke="var(--red)" stroke-width="1.5" opacity="0.35" fill="none" />
+              <!-- Right Ear: mirror symmetric, base 60-72, tip at x=82 -->
+              <path class="bunny-ear-r" d="M72 44 C82 32, 92 16, 86 6 C80 -2, 64 14, 60 44" fill="var(--card)" />
+              <path class="bunny-ear-r" d="M70 40 C76 30, 82 18, 78 10 C74 4, 66 20, 64 40" stroke="var(--red)" stroke-width="1.5" opacity="0.35" fill="none" />
               
               <!-- Bean Eyes (Normal) -->
               <ellipse class="bean-eye" cx="40" cy="62" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
