@@ -7,20 +7,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #f2f2f7; --card: rgba(255, 255, 255, 0.88);
+      --bg: #f2f2f7; --card: #ffffff; --card-trans: rgba(255, 255, 255, 0.88);
       --text-1: #1d1d1f; --text-2: #86868b; --text-3: #aeaeb2;
-      --border: rgba(0, 0, 0, 0.06);
+      --border: rgba(0, 0, 0, 0.06); --separator: rgba(0,0,0,0.08);
       --torie: #007aff; --jory: #ff9500; --green: #34c759; --red: #ff3b30;
-      --r-lg: 20px; --r-md: 14px; --r-sm: 10px;
-      --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      --r-lg: 16px; --r-md: 12px; --r-sm: 8px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-      --blur-val: 20px;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #000000; --card: rgba(28, 28, 30, 0.88);
+        --bg: #000000; --card: #1c1c1e; --card-trans: rgba(28, 28, 30, 0.88);
         --text-1: #f5f5f7; --text-2: #a1a1a6; --text-3: #636366;
-        --border: rgba(255, 255, 255, 0.08); --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        --border: rgba(255, 255, 255, 0.08); --separator: rgba(255,255,255,0.1);
+        --shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
       }
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -29,246 +29,209 @@
     button, input, select { font-family: inherit; }
     .container { width: min(680px, 100%); margin: 0 auto; position: relative; min-width: 0; }
 
-    .festival-banner { background: linear-gradient(135deg, rgba(255, 149, 0, 0.15), rgba(0, 122, 255, 0.15)); border: 1px solid rgba(255, 149, 0, 0.2); border-radius: var(--r-lg); padding: 20px 24px; margin-bottom: 16px; text-align: center; animation: fadeIn 0.6s ease, festivalPulse 3s ease-in-out infinite; position: relative; overflow: hidden; }
-    .festival-banner::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%); pointer-events: none; }
-    .festival-emoji { font-size: 36px; display: block; margin-bottom: 8px; animation: tier1Bounce 0.8s ease; }
-    .festival-title { font-size: 18px; font-weight: 800; margin-bottom: 4px; background: linear-gradient(135deg, var(--jory), var(--torie)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    /* Festival Banner */
+    .festival-banner { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden; }
+    .festival-emoji { font-size: 32px; display: block; margin-bottom: 8px; }
+    .festival-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-1); }
     .festival-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; }
-    @keyframes festivalPulse { 0%, 100% { box-shadow: 0 0 8px rgba(255, 149, 0, 0.1); } 50% { box-shadow: 0 0 20px rgba(255, 149, 0, 0.2), 0 0 40px rgba(0, 122, 255, 0.1); } }
 
-    .settings-btn { position: absolute; top: 8px; right: 0; width: 40px; height: 40px; border: none; background: var(--card); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
+    /* Settings */
+    .settings-btn { position: absolute; top: 8px; right: 0; width: 36px; height: 36px; border: none; background: var(--card); border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
     .settings-btn:active { transform: scale(0.9); }
-    .settings-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
-    .settings-overlay.show { opacity: 1; pointer-events: auto; }
-    .settings-panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: min(400px, calc(100% - 32px)); background: var(--card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 28px 24px 40px; z-index: 9999; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); border: 1px solid var(--border); box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12); }
-    .settings-panel.show { transform: translateX(-50%) translateY(0); }
-    .settings-title { font-size: 20px; font-weight: 800; margin-bottom: 24px; text-align: center; }
-    .setting-row { margin-bottom: 22px; }
-    .setting-row:last-child { margin-bottom: 0; }
-    .setting-label { font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-    .setting-label span:last-child { font-size: 12px; opacity: 0.7; }
-    .setting-hint { font-size: 12px; color: var(--text-3); margin-top: 4px; }
-    input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--border); outline: none; }
-    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--torie); cursor: pointer; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); }
+    .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+    .overlay.show { opacity: 1; pointer-events: auto; }
+    .panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: min(400px, calc(100% - 32px)); background: var(--card); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 24px 20px 40px; z-index: 9999; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); border: 1px solid var(--border); box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12); }
+    .panel.show { transform: translateX(-50%) translateY(0); }
+    .panel-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; text-align: center; }
+    .setting-row { margin-bottom: 20px; }
+    .setting-label { font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; display: flex; justify-content: space-between; }
+    input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--torie); cursor: pointer; }
 
-    .page-title { font-size: 32px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 6px; background: linear-gradient(135deg, var(--text-1), var(--text-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .subtitle { color: var(--text-2); font-size: 15px; margin-bottom: 28px; }
-    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .card { background: var(--card); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); border-radius: var(--r-lg); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s; min-width: 0; }
+    /* Typography & Cards */
+    .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; color: var(--text-1); }
+    .subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 24px; }
+    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
+    .card { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); min-width: 0; }
 
-    .weekly-card { background: linear-gradient(135deg, rgba(0, 122, 255, 0.12), rgba(255, 149, 0, 0.12)); border: 1px solid rgba(0, 122, 255, 0.15); position: relative; overflow: hidden; }
-    .weekly-card::before { content: ""; position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0, 122, 255, 0.08) 0%, transparent 70%); pointer-events: none; }
-    .weekly-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; min-width: 0; }
-    .weekly-icon { font-size: 24px; flex-shrink: 0; }
-    .weekly-title { font-size: 15px; font-weight: 700; color: var(--text-1); min-width: 0; }
-    .weekly-date { font-size: 12px; color: var(--text-3); margin-left: auto; flex-shrink: 0; }
-    .weekly-text { font-size: 15px; line-height: 1.7; color: var(--text-1); font-weight: 500; }
-    .weekly-text .highlight { font-weight: 800; }
-    .weekly-text .torie-hl { color: var(--torie); }
-    .weekly-text .jory-hl { color: var(--jory); }
-    .weekly-text .green-hl { color: var(--green); }
+    /* Weekly & Trend Cards */
+    .summary-card { background: var(--card); border: 1px solid var(--border); }
+    .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .summary-icon { font-size: 20px; }
+    .summary-title { font-size: 15px; font-weight: 700; color: var(--text-1); flex: 1; }
+    .summary-date { font-size: 12px; color: var(--text-3); }
+    .summary-text { font-size: 14px; line-height: 1.6; color: var(--text-2); }
+    .summary-text .hl { font-weight: 700; color: var(--text-1); }
+    .summary-text .torie-hl { color: var(--torie); }
+    .summary-text .jory-hl { color: var(--jory); }
+    .summary-text .green-hl { color: var(--green); }
+    .summary-text .red-hl { color: var(--red); }
 
-    .trend-card { background: linear-gradient(135deg, rgba(52, 199, 89, 0.10), rgba(0, 122, 255, 0.10)); border: 1px solid rgba(52, 199, 89, 0.15); position: relative; overflow: hidden; }
-    .trend-card::before { content: ""; position: absolute; top: -50%; left: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(52, 199, 89, 0.08) 0%, transparent 70%); pointer-events: none; }
-
+    /* Balances */
     .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .balance-box { text-align: center; padding: 20px 12px; border-radius: var(--r-md); transition: transform 0.2s; }
-    .balance-box.torie { background: rgba(0, 122, 255, 0.08); color: var(--torie); }
-    .balance-box.jory { background: rgba(255, 149, 0, 0.08); color: var(--jory); }
-    .balance-name { font-size: 14px; font-weight: 600; opacity: 0.8; margin-bottom: 4px; }
-    .balance-number { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
-    .balance-unit { font-size: 13px; font-weight: 500; opacity: 0.7; margin-left: 2px; }
+    .balance-box { text-align: center; padding: 16px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); }
+    .balance-box.torie { border-color: rgba(0, 122, 255, 0.2); }
+    .balance-box.jory { border-color: rgba(255, 149, 0, 0.2); }
+    .balance-name { font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 4px; }
+    .balance-number { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+    .balance-box.torie .balance-number { color: var(--torie); }
+    .balance-box.jory .balance-number { color: var(--jory); }
+    .balance-unit { font-size: 12px; font-weight: 500; color: var(--text-3); margin-left: 2px; }
 
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    /* Forms */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .form-group.full { grid-column: 1 / -1; }
-    label { font-size: 13px; font-weight: 600; color: var(--text-2); margin-left: 2px; }
-    select, input:not([type="range"]) { width: 100%; height: 48px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: var(--r-sm); background: var(--card); color: var(--text-1); font-size: 16px; outline: none; transition: all 0.2s; appearance: none; min-width: 0; }
-    select:focus, input:not([type="range"]):focus { border-color: var(--torie); box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15); }
-    .submit-btn { width: 100%; height: 50px; margin-top: 18px; border: none; border-radius: var(--r-md); background: var(--text-1); color: var(--bg); font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-    .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .submit-btn:active { transform: scale(0.98); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    label { font-size: 12px; font-weight: 600; color: var(--text-2); margin-left: 2px; }
+    select, input:not([type="range"]) { width: 100%; height: 44px; padding: 0 12px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg); color: var(--text-1); font-size: 15px; outline: none; transition: all 0.2s; appearance: none; min-width: 0; }
+    select:focus, input:not([type="range"]):focus { border-color: var(--torie); }
+    .submit-btn { width: 100%; height: 44px; margin-top: 16px; border: none; border-radius: var(--r-md); background: var(--torie); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .submit-btn:active { transform: scale(0.98); opacity: 0.9; }
+    .submit-btn:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
 
-    .period-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px; background: rgba(128, 128, 128, 0.08); border-radius: var(--r-md); margin-bottom: 24px; }
-    .period-tab { height: 38px; border: none; border-radius: 10px; background: transparent; color: var(--text-2); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-    .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
-    .stats-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px; }
-    .summary-item { text-align: center; padding: 14px 8px; border-radius: var(--r-md); background: rgba(128, 128, 128, 0.06); }
-    .summary-label { font-size: 12px; color: var(--text-2); font-weight: 600; margin-bottom: 4px; }
-    .summary-value { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    /* Segmented Controls (Apple Style) */
+    .segment { display: grid; gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
+    .segment-3 { grid-template-columns: repeat(3, 1fr); }
+    .segment-2 { grid-template-columns: repeat(2, 1fr); }
+    .seg-btn { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .seg-btn.active { background: var(--card); color: var(--text-1); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+    /* Stats & History */
+    .period-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
+    .period-tab { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .stats-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+    .summary-item { text-align: center; padding: 12px 8px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); }
+    .summary-label { font-size: 11px; color: var(--text-2); font-weight: 600; margin-bottom: 2px; }
+    .summary-value { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
     .summary-value.plus { color: var(--green); }
     .summary-value.minus { color: var(--red); }
     .summary-value.net { color: var(--torie); }
-    .stats-group { margin-bottom: 24px; }
-    .stats-group:last-child { margin-bottom: 0; }
-    .stats-label { margin-bottom: 12px; font-size: 15px; font-weight: 700; color: var(--text-2); }
-    .bar-row { display: grid; grid-template-columns: 50px minmax(0, 1fr) 36px; align-items: center; gap: 10px; margin: 10px 0; min-width: 0; }
-    .bar-name { font-size: 13px; font-weight: 600; color: var(--text-2); }
-    .bar-track { height: 20px; background: rgba(128, 128, 128, 0.08); border-radius: 10px; overflow: hidden; min-width: 0; }
-    .bar { height: 100%; border-radius: 10px; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 0; }
-    .bar.torie-bar { background: linear-gradient(90deg, var(--torie), #5ac8fa); }
-    .bar.jory-bar { background: linear-gradient(90deg, var(--jory), #ffd60a); }
-    .bar-number { text-align: right; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
-    .empty-stats { padding: 20px 0; color: var(--text-3); font-size: 14px; text-align: center; }
+    .stats-group { margin-bottom: 20px; }
+    .stats-label { margin-bottom: 10px; font-size: 14px; font-weight: 700; color: var(--text-2); }
+    .bar-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) 32px; align-items: center; gap: 8px; margin: 8px 0; min-width: 0; }
+    .bar-name { font-size: 12px; font-weight: 600; color: var(--text-2); }
+    .bar-track { height: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; min-width: 0; }
+    .bar { height: 100%; border-radius: 5px; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 0; }
+    .bar.torie-bar { background: var(--torie); }
+    .bar.jory-bar { background: var(--jory); }
+    .bar-number { text-align: right; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-1); }
+    .empty-stats { padding: 16px 0; color: var(--text-3); font-size: 13px; text-align: center; }
 
-    .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; min-width: 0; }
-    .history-header .section-title { margin: 0; min-width: 0; }
-    .history-filter { width: auto; min-width: 120px; height: 40px; font-size: 14px; border-radius: var(--r-sm); flex-shrink: 0; }
-    .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 16px 0; border-bottom: 1px solid var(--border); animation: fadeIn 0.3s ease; min-width: 0; width: 100%; align-items: start; }
+    .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
+    .history-header .section-title { margin: 0; }
+    .history-filter { width: auto; min-width: 100px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
+    .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; }
     .history-item:last-child { border-bottom: none; }
-    .history-item > div:first-child { min-width: 0; width: 100%; }
-    .history-top { display: flex; align-items: baseline; gap: 8px; min-width: 0; width: 100%; }
-    .history-person { font-weight: 700; font-size: 15px; flex-shrink: 0; white-space: nowrap; }
-    .history-reason { color: var(--text-2); font-size: 14px; white-space: normal; word-break: break-word; line-height: 1.4; min-width: 0; flex: 1; display: block; }
-    .history-time { font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; margin-top: 2px; white-space: nowrap; }
-    .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; min-width: 42px; width: auto; }
-    .history-change { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
+    .history-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; width: 100%; }
+    .history-person { font-weight: 700; font-size: 14px; flex-shrink: 0; white-space: nowrap; }
+    .history-reason { color: var(--text-2); font-size: 13px; white-space: normal; word-break: break-word; line-height: 1.4; min-width: 0; flex: 1; display: block; }
+    .history-time { font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; margin-top: 2px; white-space: nowrap; }
+    .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; min-width: 40px; width: auto; }
+    .history-change { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
     .history-change.plus { color: var(--green); }
     .history-change.minus { color: var(--red); }
-    .delete-btn { border: none; background: rgba(255, 59, 48, 0.1); color: var(--red); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; cursor: pointer; margin-top: 4px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
-    .delete-btn:hover { background: var(--red); color: #fff; }
-    .empty-history { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
+    .delete-btn { border: none; background: transparent; color: var(--red); font-size: 11px; font-weight: 600; padding: 2px 0; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; opacity: 0.7; }
+    .delete-btn:hover { opacity: 1; }
+    .empty-history { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
 
-    .bank-segment { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; background: rgba(128, 128, 128, 0.08); border-radius: var(--r-md); margin-bottom: 20px; }
-    .bank-segment-btn { height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 14px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all 0.2s; }
-    .bank-segment-btn.active { background: var(--card); color: var(--text-1); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
-
-    .shop-view-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: rgba(128, 128, 128, 0.08); border-radius: var(--r-md); margin-bottom: 20px; }
-    .shop-view-btn { height: 40px; border: none; border-radius: 10px; background: transparent; font-size: 15px; font-weight: 600; color: var(--text-2); cursor: pointer; transition: all 0.2s; }
-    .shop-view-btn.active.torie { background: var(--card); color: var(--torie); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
-    .shop-view-btn.active.jory { background: var(--card); color: var(--jory); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
-
-    @keyframes glowPulseGreen { 0%, 100% { box-shadow: 0 0 8px rgba(52, 199, 89, 0.2), 0 0 20px rgba(52, 199, 89, 0.1); } 50% { box-shadow: 0 0 16px rgba(52, 199, 89, 0.4), 0 0 40px rgba(52, 199, 89, 0.2); } }
-    @keyframes glowPulseBlue { 0%, 100% { box-shadow: 0 0 6px rgba(0, 122, 255, 0.15), 0 0 16px rgba(0, 122, 255, 0.08); } 50% { box-shadow: 0 0 12px rgba(0, 122, 255, 0.3), 0 0 30px rgba(0, 122, 255, 0.15); } }
-    @keyframes glowPulseOrange { 0%, 100% { box-shadow: 0 0 5px rgba(255, 149, 0, 0.12), 0 0 12px rgba(255, 149, 0, 0.06); } 50% { box-shadow: 0 0 10px rgba(255, 149, 0, 0.25), 0 0 24px rgba(255, 149, 0, 0.12); } }
-    @keyframes glowBarShimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-
-    .shop-item { padding: 18px 16px; border-radius: var(--r-md); margin-bottom: 12px; border: 1px solid var(--border); animation: fadeIn 0.3s ease; transition: all 0.4s ease; background: transparent; }
-    .shop-item:last-child { margin-bottom: 0; }
-    .shop-item.halfway-there { border-color: rgba(255, 149, 0, 0.2); animation: glowPulseOrange 3.5s ease-in-out infinite; }
-    .shop-item.almost-there { border-color: rgba(0, 122, 255, 0.25); animation: glowPulseBlue 2.5s ease-in-out infinite; }
-    .shop-item.ready-to-redeem { border-color: rgba(52, 199, 89, 0.3); animation: glowPulseGreen 2s ease-in-out infinite; }
-    .shop-item.punish-item { border-color: rgba(255, 59, 48, 0.15); }
-    .shop-item.punish-item:hover { border-color: rgba(255, 59, 48, 0.3); }
-
-    .shop-item-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
-    .shop-item-name { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 6px; min-width: 0; }
-    .shop-item-cost { font-size: 14px; font-weight: 700; color: var(--text-2); white-space: nowrap; flex-shrink: 0; }
-    .shop-item-cost.punish { color: var(--red); }
-    .shop-item-cost.earn { color: var(--green); }
+    /* Shop / Earn / Punish Lists (Apple Style) */
+    .list-item { padding: 16px 0; border-bottom: 1px solid var(--separator); display: flex; flex-direction: column; gap: 10px; }
+    .list-item:last-child { border-bottom: none; }
+    .list-item-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .list-item-name { font-size: 15px; font-weight: 600; color: var(--text-1); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .list-item-cost { font-size: 14px; font-weight: 700; color: var(--text-2); white-space: nowrap; flex-shrink: 0; }
+    .list-item-cost.punish { color: var(--red); }
+    .list-item-cost.earn { color: var(--green); }
     
-    .shop-progress-text { font-size: 13px; color: var(--text-2); margin-bottom: 6px; font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; gap: 8px; }
-    .shop-bar-track { height: 14px; background: rgba(128, 128, 128, 0.08); border-radius: 7px; overflow: hidden; }
-    .shop-bar { height: 100%; border-radius: 7px; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
-    .shop-bar.torie { background: linear-gradient(90deg, var(--torie), #5ac8fa); }
-    .shop-bar.jory { background: linear-gradient(90deg, var(--jory), #ffd60a); }
-    .shop-bar.full { background: linear-gradient(90deg, var(--green), #30d158) !important; }
-    .shop-bar.shimmer { background-size: 200% 100%; animation: glowBarShimmer 2s linear infinite; }
-    .shop-bar.shimmer.torie { background-image: linear-gradient(90deg, var(--torie), #5ac8fa, #fff, #5ac8fa, var(--torie)); background-size: 200% 100%; }
-    .shop-bar.shimmer.jory { background-image: linear-gradient(90deg, var(--jory), #ffd60a, #fff, #ffd60a, var(--jory)); background-size: 200% 100%; }
-    .shop-bar.shimmer.full { background-image: linear-gradient(90deg, var(--green), #30d158, #fff, #30d158, var(--green)) !important; background-size: 200% 100%; }
-    .shop-bar.shimmer-slow { background-size: 200% 100%; animation: glowBarShimmer 3.5s linear infinite; }
-    .shop-bar.shimmer-slow.torie { background-image: linear-gradient(90deg, var(--torie), #5ac8fa, rgba(255,255,255,0.6), #5ac8fa, var(--torie)); }
-    .shop-bar.shimmer-slow.jory { background-image: linear-gradient(90deg, var(--jory), #ffd60a, rgba(255,255,255,0.6), #ffd60a, var(--jory)); }
+    .progress-wrap { display: flex; flex-direction: column; gap: 4px; }
+    .progress-text { font-size: 12px; color: var(--text-3); display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+    .progress-bar-track { height: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+    .progress-bar.torie { background: var(--torie); }
+    .progress-bar.jory { background: var(--jory); }
+    .progress-bar.full { background: var(--green); }
 
-    .shop-actions { display: flex; gap: 8px; margin-top: 10px; }
-    .shop-action-btn { flex: 1; height: 36px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; min-width: 0; }
-    .shop-action-btn:active { transform: scale(0.96); }
+    .list-actions { display: flex; gap: 8px; }
+    .action-btn { flex: 1; height: 32px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; min-width: 0; }
+    .action-btn:active { transform: scale(0.96); }
     .btn-redeem { background: var(--green); color: #fff; }
-    .btn-redeem:disabled { background: rgba(128,128,128,0.12); color: var(--text-3); cursor: not-allowed; }
+    .btn-redeem:disabled { background: var(--bg); color: var(--text-3); border: 1px solid var(--border); cursor: not-allowed; }
     .btn-earn { background: var(--torie); color: #fff; }
     .btn-punish { background: var(--red); color: #fff; }
-    .btn-edit { background: rgba(128,128,128,0.08); color: var(--text-2); }
-    .btn-del { background: rgba(255,59,48,0.1); color: var(--red); }
+    .btn-edit { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
+    .btn-del { background: var(--bg); color: var(--red); border: 1px solid var(--border); }
 
-    .add-product-form { display: grid; grid-template-columns: 1fr 100px auto; gap: 10px; align-items: end; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
-    .add-product-form .form-group { gap: 4px; }
-    .add-btn { height: 48px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: var(--bg); font-size: 14px; font-weight: 700; cursor: pointer; padding: 0 18px; white-space: nowrap; }
+    .add-form { display: grid; grid-template-columns: 1fr 80px auto; gap: 8px; align-items: end; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
+    .add-form .form-group { gap: 2px; }
+    .add-btn { height: 44px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: var(--bg); font-size: 13px; font-weight: 700; cursor: pointer; padding: 0 16px; white-space: nowrap; }
     .add-btn:active { transform: scale(0.96); }
-    .empty-shop { padding: 40px 0; text-align: center; color: var(--text-3); font-size: 14px; }
+    .empty-list { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
 
-    .calorie-card { background: linear-gradient(135deg, rgba(52, 199, 89, 0.08), rgba(0, 122, 255, 0.08)); border: 1px solid rgba(52, 199, 89, 0.15); }
-    .calorie-result { text-align: center; padding: 12px; background: rgba(255,255,255,0.5); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 16px; }
+    /* Converter Card */
+    .converter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .converter-result { text-align: center; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 15px; }
+    .ratio-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-2); padding: 4px; }
 
-    .app-page { display: none; animation: pageSlideIn 0.25s ease; }
+    /* App Pages & Nav */
+    .app-page { display: none; animation: fadeIn 0.2s ease; }
     .app-page.active { display: block; }
     .bank-sub-page { display: none; animation: fadeIn 0.2s ease; }
     .bank-sub-page.active { display: block; }
-
-    @keyframes pageSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes tier1Bounce { 0%{transform:scale(0)} 50%{transform:scale(1.2)} 100%{transform:scale(1)} }
 
-    .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(400px, calc(100% - 32px)); padding: 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); backdrop-filter: blur(var(--blur-val)); -webkit-backdrop-filter: blur(var(--blur-val)); transition: background 0.3s, border-color 0.3s; }
-    .nav-btn { height: 56px; border: 0; border-radius: 18px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; font-weight: 600; transition: all 0.2s; }
+    .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(380px, calc(100% - 32px)); padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--card-trans); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .nav-btn { height: 52px; border: 0; border-radius: 16px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 600; transition: all 0.2s; }
     .nav-btn:active { transform: scale(0.92); }
-    .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-icon { font-size: 20px; line-height: 1; }
     .nav-btn.active { background: var(--text-1); color: var(--bg); }
 
+    /* Toast & Modals */
     .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
-    .toast { padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all 0.3s; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    .toast { padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all 0.3s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { background: var(--green); }
     .toast.error { background: var(--red); }
 
     #celebrationCanvas { position: fixed; inset: 0; z-index: 10000; pointer-events: none; width: 100%; height: 100%; }
+    
+    .modal-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .modal-overlay.show { opacity: 1; pointer-events: auto; }
+    .modal-box { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(320px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); text-align: center; }
+    .modal-overlay.show .modal-box { transform: scale(1); }
+    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+    .modal-input { width: 100%; height: 48px; text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .modal-hint { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 8px; }
+    .modal-btn { flex: 1; height: 40px; border: none; border-radius: var(--r-sm); font-size: 14px; font-weight: 600; cursor: pointer; }
+    .modal-btn.cancel { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
+    .modal-btn.confirm { background: var(--red); color: #fff; }
+    .modal-btn.confirm.green { background: var(--green); }
+
     .redeem-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
     .redeem-overlay.show { opacity: 1; pointer-events: auto; }
     .redeem-celebration { text-align: center; color: #fff; transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.22,1,0.36,1); padding: 20px; }
     .redeem-overlay.show .redeem-celebration { transform: scale(1); }
-    .redeem-emoji { font-size: 72px; margin-bottom: 16px; display: block; }
-    .redeem-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-    .redeem-sub { font-size: 16px; opacity: 0.8; margin-bottom: 24px; }
-    .redeem-close-btn { height: 44px; padding: 0 32px; border: none; border-radius: 22px; background: rgba(255,255,255,0.2); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s; }
-    .redeem-close-btn:hover { background: rgba(255,255,255,0.3); }
-    .redeem-overlay.tier-1 { background: rgba(0,0,0,0.3); }
-    .redeem-overlay.tier-1 .redeem-emoji { font-size: 56px; animation: tier1Bounce 0.6s ease; }
-    .redeem-overlay.tier-2 { background: rgba(0,0,0,0.4); }
-    .redeem-overlay.tier-2 .redeem-emoji { font-size: 64px; animation: tier2Pop 0.8s cubic-bezier(0.22,1,0.36,1); }
-    @keyframes tier2Pop { 0%{transform:scale(0) rotate(-20deg)} 60%{transform:scale(1.3) rotate(5deg)} 100%{transform:scale(1) rotate(0)} }
-    .redeem-overlay.tier-3 { background: rgba(0,0,0,0.5); }
-    .redeem-overlay.tier-3 .redeem-emoji { font-size: 72px; animation: tier3Grand 1s cubic-bezier(0.22,1,0.36,1); }
-    @keyframes tier3Grand { 0%{transform:scale(0) rotate(-180deg);opacity:0} 60%{transform:scale(1.4) rotate(10deg);opacity:1} 100%{transform:scale(1) rotate(0)} }
-    .redeem-overlay.tier-3 .redeem-title { font-size: 32px; background: linear-gradient(135deg,#ffd60a,#ff9f0a,#ff375f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .redeem-overlay.tier-4 { background: rgba(0,0,0,0.6); }
-    .redeem-overlay.tier-4 .redeem-emoji { font-size: 80px; animation: tier4Epic 1.2s cubic-bezier(0.22,1,0.36,1); }
-    @keyframes tier4Epic { 0%{transform:scale(0) rotate(-360deg);opacity:0} 50%{transform:scale(1.5) rotate(15deg);opacity:1} 70%{transform:scale(0.9) rotate(-5deg)} 100%{transform:scale(1) rotate(0)} }
-    .redeem-overlay.tier-4 .redeem-title { font-size: 36px; background: linear-gradient(135deg,#ffd60a,#ff9f0a,#ff375f,#bf5af2,#0a84ff); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbowShift 3s ease infinite; }
-    @keyframes rainbowShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    .redeem-emoji { font-size: 64px; margin-bottom: 16px; display: block; }
+    .redeem-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .redeem-sub { font-size: 14px; opacity: 0.8; margin-bottom: 24px; }
+    .redeem-close-btn { height: 40px; padding: 0 28px; border: none; border-radius: 20px; background: rgba(255,255,255,0.2); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s; }
 
     @media (max-width: 480px) {
       body { padding: 16px 12px 110px; }
-      .page-title { font-size: 28px; }
-      .card { padding: 20px; border-radius: 18px; }
-      .balance-number { font-size: 30px; }
+      .page-title { font-size: 24px; }
+      .card { padding: 16px; }
+      .balance-number { font-size: 28px; }
       .form-grid { grid-template-columns: 1fr; }
       .form-group.full { grid-column: auto; }
       .stats-summary { grid-template-columns: 1fr; gap: 6px; }
-      .summary-item { display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 12px 16px; }
+      .summary-item { display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 10px 14px; }
       .summary-label { margin-bottom: 0; }
-      .add-product-form { grid-template-columns: 1fr 80px; }
-      .add-product-form .form-group:first-child { grid-column: 1 / -1; }
+      .add-form { grid-template-columns: 1fr 70px; }
+      .add-form .form-group:first-child { grid-column: 1 / -1; }
       .add-btn { grid-column: 2; }
-      .bottom-nav { bottom: 12px; border-radius: 20px; }
-      .nav-btn { height: 52px; border-radius: 16px; }
-      .redeem-title { font-size: 24px !important; }
-      .redeem-emoji { font-size: 56px !important; }
-      .history-item { grid-template-columns: minmax(0,1fr) auto; column-gap: 8px; }
-      .history-person { font-size: 15px; }
-      .history-reason { font-size: 14px; }
-      .history-right { min-width: 42px; }
-      .delete-btn { padding: 4px 9px; }
-      .history-filter { min-width: 96px; }
-      .history-header { gap: 8px; }
-    }
-    @media (max-width: 360px) {
-      .card { padding: 16px; }
-      .history-item { column-gap: 6px; }
-      .history-person { font-size: 14px; }
-      .history-reason { font-size: 13px; }
-      .history-change { font-size: 18px; }
-      .delete-btn { font-size: 11px; padding: 4px 8px; }
+      .bottom-nav { bottom: 12px; border-radius: 18px; }
+      .nav-btn { height: 48px; border-radius: 14px; }
     }
   </style>
 </head>
@@ -276,6 +239,8 @@
 
   <div class="toast-container"><div id="toast" class="toast"></div></div>
   <canvas id="celebrationCanvas"></canvas>
+  
+  <!-- Redeem Ceremony Overlay -->
   <div id="redeemOverlay" class="redeem-overlay">
     <div class="redeem-celebration">
       <span class="redeem-emoji" id="redeemEmoji"></span>
@@ -285,16 +250,63 @@
     </div>
   </div>
 
-  <div id="settingsOverlay" class="settings-overlay"></div>
-  <div id="settingsPanel" class="settings-panel">
-    <div class="settings-title">⚙️ 显示设置</div>
+  <!-- Late Punishment Modal -->
+  <div id="lateModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">⏰ 迟到了多久？</div>
+      <input type="number" id="lateMinutesInput" class="modal-input" min="1" placeholder="0" />
+      <div class="modal-hint" id="lateModalHint">将扣除 0 张自由卡</div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="lateModalCancel">取消</button>
+        <button class="modal-btn confirm" id="lateModalConfirm">确认扣除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ratio Settings Modal -->
+  <div id="ratioModal" class="modal-overlay">
+    <div class="modal-box" style="text-align: left;">
+      <div class="modal-title" style="text-align: center;">⚙️ 换算比例设置</div>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label>🦊 Torie 运动比例</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="number" id="ratioTorie" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">大卡 = 1 张</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label>🐰 Jory 运动比例</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="number" id="ratioJory" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">大卡 = 1 张</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>⏰ 迟到惩罚比例</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 13px; color: var(--text-2);">每</span>
+          <input type="number" id="ratioLate" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">分钟 = 扣 1 张</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="ratioModalCancel">取消</button>
+        <button class="modal-btn confirm green" id="ratioModalSave">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div id="settingsOverlay" class="overlay"></div>
+  <div id="settingsPanel" class="panel">
+    <div class="panel-title">⚙️ 显示设置</div>
     <div class="setting-row">
       <div class="setting-label">毛玻璃强度 <span id="blurValue">20px</span></div>
       <input type="range" id="blurSlider" min="0" max="30" value="20" />
     </div>
     <div class="setting-row">
       <div class="setting-label" style="margin-bottom:0">深色模式</div>
-      <span class="setting-hint">自动跟随系统设置 🌓</span>
+      <span style="font-size: 12px; color: var(--text-3);">自动跟随系统 🌓</span>
     </div>
   </div>
 
@@ -302,11 +314,12 @@
     <button id="settingsBtn" class="settings-btn" aria-label="设置">⚙️</button>
     <div id="festivalBannerContainer"></div>
 
+    <!-- HOME PAGE -->
     <section id="page-home" class="app-page active">
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
-      <div id="weeklyCard" class="card weekly-card" style="display:none"></div>
-      <div id="trendCard" class="card trend-card" style="display:none"></div>
+      <div id="weeklyCard" class="card summary-card" style="display:none"></div>
+      <div id="trendCard" class="card summary-card" style="display:none"></div>
       <div class="card">
         <div class="balances">
           <div class="balance-box torie">
@@ -321,58 +334,62 @@
       </div>
     </section>
 
+    <!-- BANK PAGE -->
     <section id="page-bank" class="app-page">
       <div class="page-title">自由卡银行</div>
       <div class="subtitle">属于你们的小小约定 💕</div>
       
-      <div class="bank-segment">
-        <button class="bank-segment-btn active" data-bank="shop">💰 心愿商店</button>
-        <button class="bank-segment-btn" data-bank="earn">🔥 赚取</button>
-        <button class="bank-segment-btn" data-bank="punish">⚠️ 惩罚</button>
+      <div class="segment segment-3">
+        <button class="seg-btn active" data-bank="shop">💰 心愿</button>
+        <button class="seg-btn" data-bank="earn">🔥 赚取</button>
+        <button class="seg-btn" data-bank="punish">⚠️ 惩罚</button>
       </div>
 
       <div id="bank-shop" class="bank-sub-page active">
         <div class="card">
-          <div class="shop-view-switch">
-            <button class="shop-view-btn active torie" data-view="Torie">🦊 Torie 的橱窗</button>
-            <button class="shop-view-btn jory" data-view="Jory">🐰 Jory 的橱窗</button>
+          <div class="segment segment-2" style="margin-bottom: 16px;">
+            <button class="seg-btn active" data-view="Torie">🦊 Torie</button>
+            <button class="seg-btn" data-view="Jory">🐰 Jory</button>
           </div>
           <div id="shopList"></div>
-          <div class="add-product-form">
-            <div class="form-group"><label>心愿名称</label><input id="newProductName" type="text" maxlength="30" placeholder="🏨 周末酒店" /></div>
-            <div class="form-group"><label>价格(张)</label><input id="newProductCost" type="number" min="1" max="999" placeholder="100" /></div>
+          <div class="add-form">
+            <div class="form-group"><label>心愿名称</label><input id="newProductName" type="text" maxlength="30" placeholder="周末酒店" /></div>
+            <div class="form-group"><label>价格</label><input id="newProductCost" type="number" min="1" max="999" placeholder="100" /></div>
             <button class="add-btn" id="addProductBtn">添加</button>
           </div>
         </div>
       </div>
 
       <div id="bank-earn" class="bank-sub-page">
-        <div class="card calorie-card">
-          <h2 class="section-title">🔥 卡路里换算器</h2>
+        <div class="card">
+          <div class="converter-header">
+            <h2 class="section-title" style="margin:0">🔥 卡路里换算</h2>
+            <button class="ratio-btn" id="openRatioBtn">⚙️</button>
+          </div>
           <div class="form-grid">
             <div class="form-group">
               <label for="calPerson">谁</label>
-              <select id="calPerson"><option value="Torie">Torie (200卡=1张)</option><option value="Jory">Jory (100卡=1张)</option></select>
+              <select id="calPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
             </div>
             <div class="form-group">
               <label for="calInput">消耗大卡</label>
-              <input id="calInput" type="number" min="0" placeholder="例如: 350" />
+              <input id="calInput" type="number" min="0" placeholder="350" />
             </div>
           </div>
-          <div id="calResult" class="calorie-result" style="display:none"></div>
+          <div id="calResult" class="converter-result" style="display:none"></div>
           <button id="calSubmitBtn" class="submit-btn" disabled>一键入账</button>
         </div>
 
         <div class="card">
           <h2 class="section-title">💪 任务橱窗</h2>
-          <div class="shop-view-switch">
-            <button class="shop-view-btn active torie" data-earn-view="Torie">🦊 Torie</button>
-            <button class="shop-view-btn jory" data-earn-view="Jory">🐰 Jory</button>
+          <div class="segment segment-2" style="margin-bottom: 16px;">
+            <button class="seg-btn active" data-earn-view="Torie">🦊 Torie</button>
+            <button class="seg-btn" data-earn-view="Jory">🐰 Jory</button>
           </div>
           <div id="earnList"></div>
-          <div class="add-product-form">
-            <div class="form-group"><label>任务名称</label><input id="newEarnName" type="text" maxlength="30" placeholder="📖 阅读30分钟" /></div>
-            <div class="form-group"><label>奖励(张)</label><input id="newEarnCost" type="number" min="1" max="99" placeholder="2" /></div>
+          <div class="add-form">
+            <div class="form-group"><label>任务名称</label><input id="newEarnName" type="text" maxlength="30" placeholder="阅读30分钟" /></div>
+            <div class="form-group"><label>奖励</label><input id="newEarnCost" type="number" min="1" max="99" placeholder="2" /></div>
             <button class="add-btn" id="addEarnBtn">添加</button>
           </div>
         </div>
@@ -381,20 +398,21 @@
       <div id="bank-punish" class="bank-sub-page">
         <div class="card">
           <h2 class="section-title">🚨 惩罚清单</h2>
-          <div class="shop-view-switch">
-            <button class="shop-view-btn active torie" data-punish-view="Torie">🦊 Torie</button>
-            <button class="shop-view-btn jory" data-punish-view="Jory">🐰 Jory</button>
+          <div class="segment segment-2" style="margin-bottom: 16px;">
+            <button class="seg-btn active" data-punish-view="Torie">🦊 Torie</button>
+            <button class="seg-btn" data-punish-view="Jory">🐰 Jory</button>
           </div>
           <div id="punishList"></div>
-          <div class="add-product-form">
-            <div class="form-group"><label>惩罚项目</label><input id="newPunishName" type="text" maxlength="30" placeholder="⏰ 迟到" /></div>
-            <div class="form-group"><label>扣除(张)</label><input id="newPunishCost" type="number" min="1" max="99" placeholder="1" /></div>
+          <div class="add-form">
+            <div class="form-group"><label>惩罚项目</label><input id="newPunishName" type="text" maxlength="30" placeholder="迟到" /></div>
+            <div class="form-group"><label>扣除</label><input id="newPunishCost" type="number" min="1" max="99" placeholder="1" /></div>
             <button class="add-btn" id="addPunishBtn">添加</button>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- DATA PAGE -->
     <section id="page-data" class="app-page">
       <div class="page-title">数据统计</div>
       <div class="subtitle">看见成长的轨迹 📊</div>
@@ -435,6 +453,13 @@
     let shopView = "Torie", earnView = "Torie", punishView = "Torie";
     let lastBankTab = localStorage.getItem("fc_last_bank_tab") || "shop";
 
+    // Ratios
+    let ratios = {
+      torie: parseInt(localStorage.getItem("fc_ratio_torie")) || 200,
+      jory: parseInt(localStorage.getItem("fc_ratio_jory")) || 100,
+      late: parseInt(localStorage.getItem("fc_ratio_late")) || 10
+    };
+
     const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
 
     const SPECIAL_DATES = [
@@ -443,133 +468,30 @@
       { month: 11, day: 23, emoji: "🎀", title: "Torie 生日快乐！", sub: "被爱包围的你，值得世间所有美好 🌸", tier: 3 }
     ];
 
-    // ========== 语库 ==========
-    const GREETINGS_SUNDAY = [
-      "🌅 周日快乐！这是你们的一周小结",
-      "🌇 周末愉快！来看看这周的收获吧",
-      "🛋️ 周日时光～一周的故事都在这里",
-      "🌙 又到周日啦，回顾一下这周的精彩",
-      "☕ 悠闲周日，翻翻你们的成长日记",
-      "🎵 周日好心情！这周你们都很棒",
-      "🌻 温暖的周日，温暖的一周回顾"
+    // ========== 极简语库 ==========
+    const PRAISE = [
+      "两个人都在闪闪发光，离大心愿又近了一步！🌟",
+      "双剑合璧！你们的努力让爱的账户越来越充实 💰",
+      "这周表现太棒了，每一张卡都是坚持的证明 🏆",
+      "并肩作战的感觉，比什么都珍贵，继续保持 🤝"
     ];
-    const GREETINGS_WEEKDAY = [
-      "📬 本周进行中的故事",
-      "🚀 这周正在发生的美好",
-      "📝 本周进度条加载中…",
-      "🌱 这周的种子正在发芽",
-      "💫 本周进行时，继续加油",
-      "🎯 这周的目标正在靠近",
-      "🌈 本周的精彩片段",
-      "✏️ 这周写到一半的故事"
-    ];
-
-    const ENCOURAGEMENTS = [
-      "每一步都算数，一起变好 🌱",
-      "你们都在成为更好的自己 💫",
-      "平凡日子里的坚持，最了不起 🌟",
-      "爱的账户，余额在增长 💕",
-      "小小的积累，终会变成大大的惊喜 🎁",
-      "今天的努力，是明天兑换幸福的底气 💪",
-      "两个人一起走，路再远也不觉得长 🫶",
-      "每一次记录，都是对生活的认真告白 📖",
+    const ENCOURAGE = [
+      "按自己的节奏慢慢来，每一张卡都算数 🌱",
       "不慌不忙，你们正在自己的节奏里发光 ✨",
-      "攒下的不只是卡片，更是彼此的用心 💗",
-      "比昨天好一点，就是最棒的进步 📈",
-      "有目标的日子，连空气都是甜的 🍬",
-      "互相陪伴着成长，这件事本身就很珍贵 🤝",
-      "别急，花会在合适的时候开 🌸",
-      "你们的默契，藏在每一笔记录里 📊",
-      "把日子过成诗，把坚持变成习惯 🎶",
-      "今天也是为梦想添砖加瓦的一天 🧱",
-      "一起努力的模样，真的好看得不行 😍",
-      "慢慢来，比较快；一起走，比较远 🐢",
-      "这张小小的卡片，装着大大大的爱 💌"
+      "平凡日子里的坚持，最了不起 🌿",
+      "攒下的不只是卡片，更是彼此的用心 💗"
     ];
-
-    // Torie 个人分析语库
-    const TORIE_ADVICE_HIGH_EARN = [
-      "🦊 Torie 这周赚得超猛！保持这个势头，心愿近在咫尺 🔥",
-      "🦊 Torie 简直是本周MVP！攒卡速度让人佩服 💪",
-      "🦊 Torie 火力全开！离想要的东西又近了一大步 ✨",
-      "🦊 Torie 这周表现亮眼，继续保持这份冲劲 🚀",
-      "🦊 Torie 太拼了！这份努力一定会换来甜蜜的回报 🎯"
-    ];
-    const TORIE_ADVICE_LOW_EARN = [
-      "🦊 Torie 这周有点安静哦，下周试试多完成几个任务？💪",
-      "🦊 Torie 蓄力中没关系，调整好节奏再出发 🌱",
-      "🦊 Torie 别灰心，哪怕一小步也是在前进 🐾",
-      "🦊 Torie 休息一下也好，充完电会更厉害 ⚡",
-      "🦊 Torie 慢慢来不着急，稳扎稳打也是一种实力 🎯"
-    ];
-    const TORIE_ADVICE_HIGH_SPEND = [
-      "🦊 Torie 这周花了不少呢，享受成果的同时记得继续攒哦 💰",
-      "🦊 Torie 兑换快乐很值得！不过也要注意收支平衡呀 ⚖️",
-      "🦊 Torie 花钱大方说明赚得也有底气，继续保持 👍"
-    ];
-    const TORIE_ADVICE_NORMAL = [
-      "🦊 Torie 节奏稳稳的，这种状态刚刚好 🎵",
-      "🦊 Torie 不急不躁，按自己的步调走就对了 🌿",
-      "🦊 Torie 稳中有进，这就是最好的状态 📊"
-    ];
-
-    // Jory 个人分析语库
-    const JORY_ADVICE_HIGH_EARN = [
-      "🐰 Jory 这周太厉害了！攒卡小能手实锤 🏆",
-      "🐰 Jory 表现超棒！每一张卡都是努力的证明 💖",
-      "🐰 Jory 势头强劲！照这样下去很快就能兑换心愿 🌟",
-      "🐰 Jory 这周闪闪发光！继续保持这份热情 🔥",
-      "🐰 Jory 简直是效率担当！为你鼓掌 👏"
-    ];
-    const JORY_ADVICE_LOW_EARN = [
-      "🐰 Jory 这周稍微慢了一点，没关系的，调整一下就好 🌸",
-      "🐰 Jory 休息是为了走更远的路，下周再发力 💫",
-      "🐰 Jory 别给自己太大压力，一点点来也很棒 🐾",
-      "🐰 Jory 蓄力期也很重要，相信自己 💪",
-      "🐰 Jory 就算走得慢，方向对了就不怕远 🌈"
-    ];
-    const JORY_ADVICE_HIGH_SPEND = [
-      "🐰 Jory 这周兑换了不少快乐！花的值才是最重要的 🎁",
-      "🐰 Jory 会赚也会花，这才是自由卡的正确用法 💕",
-      "🐰 Jory 享受生活很棒！记得也要继续补充弹药哦 🔋"
-    ];
-    const JORY_ADVICE_NORMAL = [
-      "🐰 Jory 稳稳的节奏，看着就让人安心 🌿",
-      "🐰 Jory 不疾不徐，这种从容特别迷人 🎵",
-      "🐰 Jory 一步一个脚印，踏实又可爱 🐰"
-    ];
-
-    // 两人总数据分析语库
-    const COUPLE_ADVICE_BOTH_ACTIVE = [
-      "两个人都在积极行动，这就是最好的双向奔赴 💑",
-      "你们俩这周都很给力！一起变好的感觉真好 🫶",
-      "双剑合璧！两个人的努力让爱的账户越来越充实 💰",
-      "看到你们都在认真对待，真的觉得很美好 🌟",
-      "并肩作战的感觉，比什么都珍贵 🤝"
-    ];
-    const COUPLE_ADVICE_ONE_ACTIVE = [
+    const URGE = [
+      "这周稍微有点安静哦，下周要不要一起冲个任务？👀",
       "一个人领跑也没关系，另一个人在蓄力呢 🔄",
-      "轮流发力也是一种默契，你们配合得很好 👫",
-      "有人冲锋有人守后方，这就是搭档的意义 🛡️",
-      "节奏不同但目标一致，这就够了 💕",
-      "不用同时冲刺，互相补位就是最好的团队 🧩"
+      "别灰心，哪怕一小步也是在前进，加油 🐾",
+      "休息好了就出发吧，下周期待你们的爆发 🔋"
     ];
-    const COUPLE_ADVICE_NET_POSITIVE = [
-      "净积累为正！你们的梦想基金在稳步增长 📈",
-      "攒的比花的多，离大目标又近了一步 🎯",
-      "盈余的感觉真棒！继续保持这个好习惯 💪",
-      "爱的储蓄罐越来越沉了，幸福也在加码 ⚖️"
-    ];
-    const COUPLE_ADVICE_NET_ZERO = [
-      "收支完美平衡！赚的和花的一样多，刚刚好 ⚖️",
-      "既能享受当下又在持续努力，完美的状态 🎵",
-      "不亏不赚也是一种智慧，生活就该这样松弛 🌿"
-    ];
-    const COUPLE_ADVICE_NET_NEGATIVE = [
-      "这周花得多了一些，不过兑换的快乐也是真实的呀 🎁",
-      "偶尔透支没关系，下周一起补回来就好 💪",
-      "花钱的时候开心了吗？开心了就值得 💕",
-      "适当放松也是必要的，调整好再继续攒 🌱"
+    const WARN = [
+      "这周花得有点猛啦，小心透支，下周赶紧补回来！⚠️",
+      "偶尔透支没关系，但下周要一起努力填坑哦 💪",
+      "花钱的时候开心了吗？开心了就值得，但下次注意 🎁",
+      "入不敷出了哦，快踩踩刹车，多赚点卡吧 🛑"
     ];
 
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -584,7 +506,18 @@
 
     function getStartOfWeekDate() { const d = new Date(); d.setHours(0,0,0,0); const day = d.getDay(); d.setDate(d.getDate() - (day === 0 ? 6 : day - 1)); return d; }
 
-    // ========== 每周小结（仅周日 18:00-24:00 显示）==========
+    // ========== 核心数据 + 1句灵魂点评 ==========
+    function getSoulComment(tE, jE, tS, jS) {
+      const net = (tE + jE) - (tS + jS);
+      const bothActive = tE > 0 && jE > 0;
+      
+      if (net < 0) return pick(WARN);
+      if (tE + jE === 0) return pick(URGE);
+      if (!bothActive && (tE + jE) < 5) return pick(URGE);
+      if (net >= 10 || (bothActive && net > 0)) return pick(PRAISE);
+      return pick(ENCOURAGE);
+    }
+
     function generateWeeklySummary() {
       const now = new Date();
       const isSunday = now.getDay() === 0;
@@ -602,51 +535,24 @@
         else { if(l.change_type==="增加") jE+=n; else jS+=n; }
       });
 
-      const parts = [];
-      parts.push(pick(GREETINGS_SUNDAY));
-
-      // 获得情况
-      if(tE>0 && jE>0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tE} 张，<span class="highlight jory-hl">Jory</span> 获得了 ${jE} 张`);
-      else if(tE>0) parts.push(`这周 <span class="highlight torie-hl">Torie</span> 获得了 ${tE} 张`);
-      else if(jE>0) parts.push(`这周 <span class="highlight jory-hl">Jory</span> 获得了 ${jE} 张`);
-
-      // 花费情况
-      if(tS+jS>0) parts.push(`一起花掉了 <span class="highlight">${tS+jS}</span> 张自由卡 🎁`);
-
-      // 净积累
-      const net = (tE+jE) - (tS+jS);
-      if(net>0) parts.push(`净攒 <span class="highlight green-hl">${net}</span> 张 ✨`);
-      else if(net===0 && (tE+jE)>0) parts.push("收支完美平衡 ⚖️");
-
-      // Torie 个人分析
-      if(tE >= 10) parts.push(pick(TORIE_ADVICE_HIGH_EARN));
-      else if(tE > 0 && tE < 5) parts.push(pick(TORIE_ADVICE_LOW_EARN));
-      else if(tE === 0 && (tS > 0 || jE > 0)) parts.push(pick(TORIE_ADVICE_LOW_EARN));
-      if(tS > tE && tS > 0) parts.push(pick(TORIE_ADVICE_HIGH_SPEND));
-      else if(tE >= 5 && tE < 10) parts.push(pick(TORIE_ADVICE_NORMAL));
-
-      // Jory 个人分析
-      if(jE >= 10) parts.push(pick(JORY_ADVICE_HIGH_EARN));
-      else if(jE > 0 && jE < 5) parts.push(pick(JORY_ADVICE_LOW_EARN));
-      else if(jE === 0 && (jS > 0 || tE > 0)) parts.push(pick(JORY_ADVICE_LOW_EARN));
-      if(jS > jE && jS > 0) parts.push(pick(JORY_ADVICE_HIGH_SPEND));
-      else if(jE >= 5 && jE < 10) parts.push(pick(JORY_ADVICE_NORMAL));
-
-      // 两人总分析
-      if(tE > 0 && jE > 0) parts.push(pick(COUPLE_ADVICE_BOTH_ACTIVE));
-      else if(tE > 0 || jE > 0) parts.push(pick(COUPLE_ADVICE_ONE_ACTIVE));
-      if(net > 0) parts.push(pick(COUPLE_ADVICE_NET_POSITIVE));
-      else if(net === 0 && (tE+jE) > 0) parts.push(pick(COUPLE_ADVICE_NET_ZERO));
-      else if(net < 0) parts.push(pick(COUPLE_ADVICE_NET_NEGATIVE));
-
-      parts.push(pick(ENCOURAGEMENTS));
-
       const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate()+6);
       const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
-      return { greeting: parts[0], body: parts.slice(1), dateRange: `${fmt(weekStart)} - ${fmt(weekEnd)}` };
+      const dateRange = `${fmt(weekStart)} - ${fmt(weekEnd)}`;
+
+      let dataStr = "这周 ";
+      if(tE>0 && jE>0) dataStr += `<span class="torie-hl">Torie</span> +${tE}，<span class="jory-hl">Jory</span> +${jE}`;
+      else if(tE>0) dataStr += `<span class="torie-hl">Torie</span> +${tE}`;
+      else if(jE>0) dataStr += `<span class="jory-hl">Jory</span> +${jE}`;
+      else dataStr += "暂无获得";
+      
+      if(tS+jS>0) dataStr += `，花费 <span class="red-hl">${tS+jS}</span>`;
+      const net = (tE+jE) - (tS+jS);
+      if(net!==0) dataStr += `，净积累 <span class="${net>0?'green-hl':'red-hl'}">${net>0?'+':''}${net}</span>`;
+      dataStr += "。";
+
+      return { title: "💌 一周小结", body: dataStr + getSoulComment(tE, jE, tS, jS), dateRange };
     }
 
-    // ========== 近三天趋势（始终显示，只要有数据）==========
     function generateRecentTrend() {
       const now = new Date();
       const threeDaysAgo = new Date(now);
@@ -663,64 +569,40 @@
         else { if(l.change_type==="增加") jE+=n; else jS+=n; }
       });
 
-      const parts = [];
       const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
       const todayStr = fmt(now);
       const startStr = fmt(threeDaysAgo);
       const dateRange = startStr === todayStr ? todayStr : `${startStr} - ${todayStr}`;
 
-      parts.push(`📊 近三天动态（${dateRange}）`);
-
-      // 数据概览
-      if(tE>0 && jE>0) parts.push(`<span class="highlight torie-hl">Torie</span> +${tE}，<span class="highlight jory-hl">Jory</span> +${jE}`);
-      else if(tE>0) parts.push(`<span class="highlight torie-hl">Torie</span> 获得了 ${tE} 张`);
-      else if(jE>0) parts.push(`<span class="highlight jory-hl">Jory</span> 获得了 ${jE} 张`);
-      if(tS+jS>0) parts.push(`花掉了 ${tS+jS} 张`);
-
+      let dataStr = "近三天 ";
+      if(tE>0 && jE>0) dataStr += `<span class="torie-hl">Torie</span> +${tE}，<span class="jory-hl">Jory</span> +${jE}`;
+      else if(tE>0) dataStr += `<span class="torie-hl">Torie</span> +${tE}`;
+      else if(jE>0) dataStr += `<span class="jory-hl">Jory</span> +${jE}`;
+      else dataStr += "暂无获得";
+      
+      if(tS+jS>0) dataStr += `，花费 <span class="red-hl">${tS+jS}</span>`;
       const net = (tE+jE) - (tS+jS);
-      if(net>0) parts.push(`净增 <span class="highlight green-hl">${net}</span> 张`);
-      else if(net<0) parts.push(`净减 ${Math.abs(net)} 张`);
+      if(net!==0) dataStr += `，净积累 <span class="${net>0?'green-hl':'red-hl'}">${net>0?'+':''}${net}</span>`;
+      dataStr += "。";
 
-      // Torie 近三天分析
-      if(tE >= 6) parts.push(pick(TORIE_ADVICE_HIGH_EARN));
-      else if(tE > 0 && tE < 3) parts.push(pick(TORIE_ADVICE_LOW_EARN));
-      else if(tE === 0 && recentLogs.some(l=>l.operator==="Jory")) parts.push("🦊 Torie 这几天还在蓄力，期待你的爆发 🔋");
-      if(tS > tE && tS > 0) parts.push(pick(TORIE_ADVICE_HIGH_SPEND));
-      else if(tE >= 3 && tE < 6) parts.push(pick(TORIE_ADVICE_NORMAL));
-
-      // Jory 近三天分析
-      if(jE >= 6) parts.push(pick(JORY_ADVICE_HIGH_EARN));
-      else if(jE > 0 && jE < 3) parts.push(pick(JORY_ADVICE_LOW_EARN));
-      else if(jE === 0 && recentLogs.some(l=>l.operator==="Torie")) parts.push("🐰 Jory 这几天在积蓄能量，下次一定更精彩 🌟");
-      if(jS > jE && jS > 0) parts.push(pick(JORY_ADVICE_HIGH_SPEND));
-      else if(jE >= 3 && jE < 6) parts.push(pick(JORY_ADVICE_NORMAL));
-
-      // 两人总分析
-      if(tE > 0 && jE > 0) parts.push(pick(COUPLE_ADVICE_BOTH_ACTIVE));
-      else if(tE > 0 || jE > 0) parts.push(pick(COUPLE_ADVICE_ONE_ACTIVE));
-      if(net > 3) parts.push(pick(COUPLE_ADVICE_NET_POSITIVE));
-      else if(net === 0 && (tE+jE) > 0) parts.push(pick(COUPLE_ADVICE_NET_ZERO));
-      else if(net < 0) parts.push(pick(COUPLE_ADVICE_NET_NEGATIVE));
-
-      parts.push(pick(ENCOURAGEMENTS));
-
-      return { greeting: parts[0], body: parts.slice(1), dateRange };
+      return { title: "📊 近三天动态", body: dataStr + getSoulComment(tE, jE, tS, jS), dateRange };
     }
 
     function renderWeeklyCard() {
       const card = document.getElementById("weeklyCard"), summary = generateWeeklySummary();
       if(!summary){ card.style.display="none"; return; }
       card.style.display="block";
-      card.innerHTML = `<div class="weekly-header"><span class="weekly-icon">💌</span><span class="weekly-title">${summary.greeting}</span><span class="weekly-date">${summary.dateRange}</span></div><div class="weekly-text">${summary.body.join("，")}。</div>`;
+      card.innerHTML = `<div class="summary-header"><span class="summary-icon">💌</span><span class="summary-title">${summary.title}</span><span class="summary-date">${summary.dateRange}</span></div><div class="summary-text">${summary.body}</div>`;
     }
 
     function renderTrendCard() {
       const card = document.getElementById("trendCard"), trend = generateRecentTrend();
       if(!trend){ card.style.display="none"; return; }
       card.style.display="block";
-      card.innerHTML = `<div class="weekly-header"><span class="weekly-icon">📊</span><span class="weekly-title">${trend.greeting}</span></div><div class="weekly-text">${trend.body.join("，")}。</div>`;
+      card.innerHTML = `<div class="summary-header"><span class="summary-icon">📊</span><span class="summary-title">${trend.title}</span></div><div class="summary-text">${trend.body}</div>`;
     }
 
+    // ========== Particles ==========
     const canvas = document.getElementById("celebrationCanvas"), ctx = canvas.getContext("2d");
     let particles = [], animFrameId = null;
     function resizeCanvas() { canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
@@ -749,28 +631,96 @@
     function showRedeemCeremony(product,cost) {
       const tier=getRedeemTier(cost), config=TIER_CONFIG[tier], overlay=document.getElementById("redeemOverlay");
       const displayName = product.name.replace(TYPE_PREFIX.earn,"").replace(TYPE_PREFIX.punish,"");
-      const ownerDisplay = product.owner;
       document.getElementById("redeemEmoji").textContent=config.emoji;
       document.getElementById("redeemTitle").textContent=config.title;
-      document.getElementById("redeemSub").textContent=`${ownerDisplay} 兑换了「${displayName}」· ${config.sub}`;
-      overlay.className=`redeem-overlay tier-${tier}`;
+      document.getElementById("redeemSub").textContent=`${product.owner} 兑换了「${displayName}」· ${config.sub}`;
+      overlay.className=`redeem-overlay`;
       requestAnimationFrame(()=>{overlay.classList.add("show");spawnParticles(tier);});
       const closeBtn=document.getElementById("redeemCloseBtn"); let autoTimer=null;
       const closeCeremony=()=>{overlay.classList.remove("show");clearTimeout(autoTimer);closeBtn.removeEventListener("click",closeCeremony);};
       closeBtn.addEventListener("click",closeCeremony); autoTimer=setTimeout(closeCeremony,config.duration);
     }
 
+    // ========== Settings & Modals ==========
     function initSettings() {
       const savedBlur=localStorage.getItem("fc_blur");
       if(savedBlur!==null){document.documentElement.style.setProperty("--blur-val",savedBlur+"px");document.getElementById("blurSlider").value=savedBlur;document.getElementById("blurValue").textContent=savedBlur+"px";}
       document.getElementById("blurSlider").addEventListener("input",(e)=>{const v=e.target.value;document.documentElement.style.setProperty("--blur-val",v+"px");document.getElementById("blurValue").textContent=v+"px";localStorage.setItem("fc_blur",v);});
+      
       const overlay=document.getElementById("settingsOverlay"),panel=document.getElementById("settingsPanel");
       document.getElementById("settingsBtn").addEventListener("click",()=>{overlay.classList.add("show");panel.classList.add("show");});
       overlay.addEventListener("click",()=>{overlay.classList.remove("show");panel.classList.remove("show");});
     }
 
+    function initRatioModal() {
+      const modal = document.getElementById("ratioModal");
+      document.getElementById("openRatioBtn").addEventListener("click", () => {
+        document.getElementById("ratioTorie").value = ratios.torie;
+        document.getElementById("ratioJory").value = ratios.jory;
+        document.getElementById("ratioLate").value = ratios.late;
+        modal.classList.add("show");
+      });
+      document.getElementById("ratioModalCancel").addEventListener("click", () => modal.classList.remove("show"));
+      document.getElementById("ratioModalSave").addEventListener("click", () => {
+        const t = parseInt(document.getElementById("ratioTorie").value) || 200;
+        const j = parseInt(document.getElementById("ratioJory").value) || 100;
+        const l = parseInt(document.getElementById("ratioLate").value) || 10;
+        ratios = { torie: t, jory: j, late: l };
+        localStorage.setItem("fc_ratio_torie", t);
+        localStorage.setItem("fc_ratio_jory", j);
+        localStorage.setItem("fc_ratio_late", l);
+        modal.classList.remove("show");
+        showToast("比例已保存", "success");
+        calcCalorie();
+      });
+    }
+
+    let currentLatePunishItem = null;
+    function initLateModal() {
+      const modal = document.getElementById("lateModal");
+      const input = document.getElementById("lateMinutesInput");
+      const hint = document.getElementById("lateModalHint");
+      
+      input.addEventListener("input", () => {
+        const mins = parseInt(input.value) || 0;
+        const cost = Math.floor(mins / ratios.late);
+        hint.textContent = `将扣除 ${cost} 张自由卡 (每${ratios.late}分钟扣1张)`;
+      });
+
+      document.getElementById("lateModalCancel").addEventListener("click", () => {
+        modal.classList.remove("show");
+        currentLatePunishItem = null;
+      });
+
+      document.getElementById("lateModalConfirm").addEventListener("click", async () => {
+        if(!currentLatePunishItem) return;
+        const mins = parseInt(input.value) || 0;
+        const cost = Math.floor(mins / ratios.late);
+        if(cost <= 0) { showToast("时间太短，不够扣哦", "error"); return; }
+        
+        const displayName = getDisplayName(currentLatePunishItem);
+        const {error} = await sb.from("freecard_log").insert({
+          operator: currentLatePunishItem.owner, 
+          change_type: "减少", 
+          card_num: cost, 
+          reason: `⚠️ 惩罚：${displayName} ${mins}分钟`
+        });
+        
+        modal.classList.remove("show");
+        currentLatePunishItem = null;
+        
+        if(error) return showToast("扣除失败", "error");
+        showToast(`已扣除 ${cost} 张，下次注意哦`, "error");
+        if(navigator.vibrate) navigator.vibrate(200);
+        await loadLogs();
+      });
+    }
+
+    // ========== Navigation & Setup ==========
     document.addEventListener("DOMContentLoaded", async () => {
       initSettings();
+      initRatioModal();
+      initLateModal();
       setupNav();
       setupBankSegment();
       setupPeriodTabs();
@@ -803,14 +753,14 @@
     }
 
     function setupBankSegment() {
-      document.querySelectorAll(".bank-segment-btn").forEach(b => b.classList.toggle("active", b.dataset.bank === lastBankTab));
+      document.querySelectorAll(".bank-segment-btn, .seg-btn[data-bank]").forEach(b => b.classList.toggle("active", b.dataset.bank === lastBankTab));
       document.querySelectorAll(".bank-sub-page").forEach(p => p.classList.toggle("active", p.id === `bank-${lastBankTab}`));
-      document.querySelectorAll(".bank-segment-btn").forEach((btn)=>{
+      document.querySelectorAll(".seg-btn[data-bank]").forEach((btn)=>{
         btn.addEventListener("click",()=>{
           const tab = btn.dataset.bank;
           lastBankTab = tab;
           localStorage.setItem("fc_last_bank_tab", tab);
-          document.querySelectorAll(".bank-segment-btn").forEach((b)=>b.classList.remove("active"));
+          document.querySelectorAll(".seg-btn[data-bank]").forEach((b)=>b.classList.remove("active"));
           btn.classList.add("active");
           document.querySelectorAll(".bank-sub-page").forEach((p)=>p.classList.toggle("active", p.id === `bank-${tab}`));
         });
@@ -827,29 +777,49 @@
     }
 
     function setupHistoryFilter() { document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();}); }
-    function setupShopViewSwitch() { document.querySelectorAll("[data-view]").forEach((btn)=>{ btn.addEventListener("click",()=>{ shopView=btn.dataset.view; document.querySelectorAll("[data-view]").forEach((b)=>b.classList.remove("active")); btn.classList.add("active"); renderShop(); }); }); }
-    function setupEarnViewSwitch() { document.querySelectorAll("[data-earn-view]").forEach((btn)=>{ btn.addEventListener("click",()=>{ earnView=btn.dataset.earnView; document.querySelectorAll("[data-earn-view]").forEach((b)=>b.classList.remove("active")); btn.classList.add("active"); renderEarnList(); }); }); }
-    function setupPunishViewSwitch() { document.querySelectorAll("[data-punish-view]").forEach((btn)=>{ btn.addEventListener("click",()=>{ punishView=btn.dataset.punishView; document.querySelectorAll("[data-punish-view]").forEach((b)=>b.classList.remove("active")); btn.classList.add("active"); renderPunishList(); }); }); }
+    
+    function setupViewSwitch(selector, getter, setter, renderFn) {
+      document.querySelectorAll(selector).forEach((btn)=>{
+        btn.addEventListener("click",()=>{
+          setter(btn.dataset.view || btn.dataset.earnView || btn.dataset.punishView);
+          document.querySelectorAll(selector).forEach((b)=>b.classList.remove("active"));
+          btn.classList.add("active");
+          renderFn();
+        });
+      });
+    }
+    function setupShopViewSwitch() { setupViewSwitch("[data-view]", ()=>shopView, (v)=>shopView=v, renderShop); }
+    function setupEarnViewSwitch() { setupViewSwitch("[data-earn-view]", ()=>earnView, (v)=>earnView=v, renderEarnList); }
+    function setupPunishViewSwitch() { setupViewSwitch("[data-punish-view]", ()=>punishView, (v)=>punishView=v, renderPunishList); }
 
     function setupCalorieConverter() {
       const input = document.getElementById("calInput"), person = document.getElementById("calPerson"), result = document.getElementById("calResult"), btn = document.getElementById("calSubmitBtn");
-      const calc = () => {
-        const cal = parseInt(input.value) || 0, ratio = person.value === "Torie" ? 200 : 100, cards = Math.floor(cal / ratio);
-        if(cal > 0) { result.style.display = "block"; result.textContent = `可兑换 ${cards} 张自由卡 (向下取整)`; btn.disabled = cards <= 0; } 
+      
+      window.calcCalorie = () => {
+        const cal = parseInt(input.value) || 0;
+        const ratio = person.value === "Torie" ? ratios.torie : ratios.jory;
+        const cards = Math.floor(cal / ratio);
+        if(cal > 0) { result.style.display = "block"; result.textContent = `可兑换 ${cards} 张自由卡 (${ratio}大卡=1张)`; btn.disabled = cards <= 0; } 
         else { result.style.display = "none"; btn.disabled = true; }
       };
-      input.addEventListener("input", calc); person.addEventListener("change", calc);
+      
+      input.addEventListener("input", calcCalorie); 
+      person.addEventListener("change", calcCalorie);
+      
       btn.addEventListener("click", async () => {
-        const cal = parseInt(input.value) || 0, ratio = person.value === "Torie" ? 200 : 100, cards = Math.floor(cal / ratio);
+        const cal = parseInt(input.value) || 0;
+        const ratio = person.value === "Torie" ? ratios.torie : ratios.jory;
+        const cards = Math.floor(cal / ratio);
         if(cards <= 0) return;
         btn.disabled = true; btn.textContent = "入账中...";
         const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: cards, reason: `🔥 运动消耗 ${cal} 大卡` });
         btn.disabled = false; btn.textContent = "一键入账";
         if(error) { showToast("入账失败："+error.message, "error"); return; }
-        showToast(`成功入账 ${cards} 张！太棒了`, "success"); spawnParticles(1); input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
+        showToast(`成功入账 ${cards} 张！`, "success"); spawnParticles(1); input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
       });
     }
 
+    // ========== Data & Rendering ==========
     async function loadLogs() {
       const {data,error}=await sb.from("freecard_log").select("*").order("created_at",{ascending:false});
       if(error){showToast("读取记录失败："+error.message,"error");return;}
@@ -911,30 +881,68 @@
 
     function renderList(containerId, type, view) {
       const container = document.getElementById(containerId);
-      const items = allProducts.filter(p => p.owner === view && classifyProduct(p) === type);
+      let items = allProducts.filter(p => p.owner === view && classifyProduct(p) === type);
+      
+      // 排序逻辑
+      const balance = calcBalance(view);
+      if(type === "shop") {
+        items.sort((a, b) => {
+          const aReady = balance >= a.cost ? 1 : 0;
+          const bReady = balance >= b.cost ? 1 : 0;
+          if(aReady !== bReady) return bReady - aReady;
+          return (balance / a.cost) - (balance / b.cost); // 进度降序 (这里写反了，应该是 b/a - a/b)
+        });
+        items.sort((a, b) => {
+          const aReady = balance >= a.cost ? 1 : 0;
+          const bReady = balance >= b.cost ? 1 : 0;
+          if(aReady !== bReady) return bReady - aReady; // 达标在前
+          return (balance / b.cost) - (balance / a.cost); // 进度高在前
+        });
+      } else if(type === "earn") {
+        items.sort((a, b) => b.cost - a.cost); // 奖励降序
+      } else if(type === "punish") {
+        items.sort((a, b) => a.cost - b.cost); // 扣除升序
+      }
       
       if(!items.length) { 
-        container.innerHTML = `<div class="empty-shop">还没有${type==='shop'?'心愿':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; 
+        container.innerHTML = `<div class="empty-list">还没有${type==='shop'?'心愿':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; 
         return; 
       }
-      const balance = calcBalance(view);
+      
       container.innerHTML = items.map(p => {
         const isPunish = type === "punish", isEarn = type === "earn";
         const displayName = getDisplayName(p);
         const pct = Math.min(100, Math.round((balance / p.cost) * 100)), canRedeem = balance >= p.cost;
-        let itemClass = "shop-item", barExtraClass = "", progressText = "", actionBtn = "";
-        if (isPunish) { itemClass += " punish-item"; actionBtn = `<button class="shop-action-btn btn-punish" data-action="punish" data-id="${escAttr(p.id)}">⚠️ 触发扣除</button>`; } 
-        else if (isEarn) { actionBtn = `<button class="shop-action-btn btn-earn" data-action="earn" data-id="${escAttr(p.id)}">✅ 完成领取</button>`; } 
-        else {
-          if(canRedeem){itemClass+=" ready-to-redeem";barExtraClass=" full shimmer";progressText=`<span>✅ 已达成！</span><span>${balance} / ${p.cost} 张</span>`;}
-          else if(pct>=80){itemClass+=" almost-there";barExtraClass=" shimmer";progressText=`<span>🔥 就差一点了！</span><span>${balance} / ${p.cost} 张</span>`;}
-          else if(pct>=50){itemClass+=" halfway-there";barExtraClass=" shimmer-slow";progressText=`<span>💪 已经过半啦</span><span>${balance} / ${p.cost} 张</span>`;}
-          else{progressText=`<span>${balance} / ${p.cost} 张</span><span>还差 ${p.cost-balance} 张</span>`;}
-          actionBtn = `<button class="shop-action-btn btn-redeem" ${canRedeem?"":"disabled"} data-action="redeem" data-id="${escAttr(p.id)}">${canRedeem?"🎁 立即兑换":"余额不足"}</button>`;
+        let progressHTML = "", actionBtn = "";
+        
+        if (isPunish) { 
+          actionBtn = `<button class="action-btn btn-punish" data-action="punish" data-id="${escAttr(p.id)}">⚠️ 触发扣除</button>`; 
+        } else if (isEarn) { 
+          actionBtn = `<button class="action-btn btn-earn" data-action="earn" data-id="${escAttr(p.id)}">✅ 完成领取</button>`; 
+        } else {
+          const barClass = canRedeem ? "full" : view.toLowerCase();
+          const pText = canRedeem ? `<span style="color:var(--green)">✅ 已达成！</span><span>${balance} / ${p.cost}</span>` : `<span>${balance} / ${p.cost}</span><span>差 ${p.cost-balance}</span>`;
+          progressHTML = `<div class="progress-wrap"><div class="progress-text">${pText}</div><div class="progress-bar-track"><div class="progress-bar ${barClass}" style="width:${pct}%"></div></div></div>`;
+          actionBtn = `<button class="action-btn btn-redeem" ${canRedeem?"":"disabled"} data-action="redeem" data-id="${escAttr(p.id)}">${canRedeem?"🎁 兑换":"余额不足"}</button>`;
         }
-        const barClass = `shop-bar ${view.toLowerCase()}${barExtraClass}`, costClass = isPunish ? "punish" : isEarn ? "earn" : "", costPrefix = isPunish ? "扣除 " : isEarn ? "奖励 " : "";
-        return `<div class="${itemClass}"><div class="shop-item-header"><div class="shop-item-name">${esc(displayName)}</div><div class="shop-item-cost ${costClass}">${costPrefix}${p.cost} 张</div></div>${!isPunish && !isEarn ? `<div class="shop-progress-text">${progressText}</div><div class="shop-bar-track"><div class="${barClass}" style="width:${pct}%"></div></div>` : ''}<div class="shop-actions">${actionBtn}<button class="shop-action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}">编辑</button><button class="shop-action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button></div></div>`;
+        
+        const costClass = isPunish ? "punish" : isEarn ? "earn" : "";
+        const costPrefix = isPunish ? "扣除 " : isEarn ? "奖励 " : "";
+        
+        return `<div class="list-item">
+          <div class="list-item-header">
+            <div class="list-item-name">${esc(displayName)}</div>
+            <div class="list-item-cost ${costClass}">${costPrefix}${p.cost} 张</div>
+          </div>
+          ${progressHTML}
+          <div class="list-actions">
+            ${actionBtn}
+            <button class="action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}">编辑</button>
+            <button class="action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button>
+          </div>
+        </div>`;
       }).join("");
+      
       container.querySelectorAll("[data-action]").forEach(b => b.addEventListener("click", () => handleListAction(b.dataset.action, b.dataset.id, type, view)));
     }
 
@@ -945,7 +953,13 @@
     async function handleListAction(action, id, type, view) {
       const p = allProducts.find(x => String(x.id) === String(id)); if(!p) return;
       const displayName = getDisplayName(p);
-      if(action === "del") { if(!confirm("确定下架此项目？")) return; const {error} = await sb.from("freecard_shop").delete().eq("id", id); if(error) return showToast("下架失败", "error"); showToast("已下架", "success"); await loadProducts(); } 
+      
+      if(action === "del") { 
+        if(!confirm("确定下架此项目？")) return; 
+        const {error} = await sb.from("freecard_shop").delete().eq("id", id); 
+        if(error) return showToast("下架失败", "error"); 
+        showToast("已下架", "success"); await loadProducts(); 
+      } 
       else if(action === "edit") { 
         const newName = prompt("修改名称：", displayName); if(newName===null) return; 
         const newCost = prompt("修改数值（张）：", p.cost); if(newCost===null) return; 
@@ -954,9 +968,38 @@
         const {error} = await sb.from("freecard_shop").update({name: prefix + newName.trim(), cost}).eq("id", id); 
         if(error) return showToast("修改失败", "error"); showToast("已更新", "success"); await loadProducts(); 
       }
-      else if(action === "redeem") { if(calcBalance(view) < p.cost) return showToast("余额不足", "error"); if(!confirm(`确认花费 ${p.cost} 张兑换「${displayName}」？`)) return; const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${displayName}`}); if(error) return showToast("兑换失败", "error"); showRedeemCeremony(p, p.cost); await loadLogs(); }
-      else if(action === "earn") { const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"增加", card_num:p.cost, reason:`💪 任务：${displayName}`}); if(error) return showToast("领取失败", "error"); showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); }
-      else if(action === "punish") { if(calcBalance(view) < p.cost) { if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return; } else { if(!confirm(`确认扣除 ${p.cost} 张自由卡（${displayName}）？`)) return; } const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${displayName}`}); if(error) return showToast("扣除失败", "error"); showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); }
+      else if(action === "redeem") { 
+        if(calcBalance(view) < p.cost) return showToast("余额不足", "error"); 
+        if(!confirm(`确认花费 ${p.cost} 张兑换「${displayName}」？`)) return; 
+        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${displayName}`}); 
+        if(error) return showToast("兑换失败", "error"); 
+        showRedeemCeremony(p, p.cost); await loadLogs(); 
+      }
+      else if(action === "earn") { 
+        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"增加", card_num:p.cost, reason:`💪 任务：${displayName}`}); 
+        if(error) return showToast("领取失败", "error"); 
+        showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); 
+      }
+      else if(action === "punish") { 
+        // 迟到特殊处理
+        if(displayName.includes("迟到")) {
+          currentLatePunishItem = p;
+          document.getElementById("lateMinutesInput").value = "";
+          document.getElementById("lateModalHint").textContent = `将扣除 0 张自由卡 (每${ratios.late}分钟扣1张)`;
+          document.getElementById("lateModal").classList.add("show");
+          return;
+        }
+
+        if(calcBalance(view) < p.cost) { 
+          if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return; 
+        } else { 
+          if(!confirm(`确认扣除 ${p.cost} 张自由卡（${displayName}）？`)) return; 
+        } 
+        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${displayName}`}); 
+        if(error) return showToast("扣除失败", "error"); 
+        showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); 
+        if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); 
+      }
     }
 
     function setupAdd(type, nameId, costId, btnId, viewGetter) {
@@ -967,7 +1010,6 @@
         if(!cost || cost<1) return showToast("数值至少为 1", "error");
         
         const btn = document.getElementById(btnId); btn.disabled = true; btn.textContent = "...";
-        
         const prefix = type === "earn" ? TYPE_PREFIX.earn : type === "punish" ? TYPE_PREFIX.punish : "";
         const finalName = prefix + rawName;
         const finalOwner = viewGetter();
