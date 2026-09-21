@@ -54,16 +54,41 @@
     .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
     .card { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); min-width: 0; }
 
-    /* Spirits System */
+    /* Spirits System (SVG Pets) */
     .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; }
-    .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.06; pointer-events: none; transition: background 0.3s; }
+    .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer; }
+    .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.04; pointer-events: none; transition: background 0.3s; }
     .spirit-card.torie::before { background: var(--torie); }
     .spirit-card.jory::before { background: var(--jory); }
-    .spirit-emoji { font-size: 36px; display: block; margin-bottom: 6px; animation: spiritBounce 2s ease-in-out infinite; }
+    .spirit-card:active { transform: scale(0.96); }
+    
+    .pet-container { height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; }
+    .pet-svg { width: 64px; height: 64px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    
+    /* Pet Animations */
+    .state-amazing .pet-svg { animation: petBounce 1s ease-in-out infinite; }
+    .state-good .pet-svg { animation: petSway 2.5s ease-in-out infinite; }
+    .state-low .pet-svg { transform: translateY(8px) scale(0.9); opacity: 0.8; }
+    .state-warning .pet-svg { animation: petShake 0.4s ease-in-out infinite; }
+    .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
+    
+    .pet-clicked { animation: petJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
+    
+    @keyframes petBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes petSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+    @keyframes petShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+    @keyframes petBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+    @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-15px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
+
+    /* Pet Elements Transitions */
+    .pet-svg * { transition: all 0.4s ease; }
+    .ear-down { transform-origin: center bottom; transform: rotate(25deg) translateY(4px); }
+    .sweat { opacity: 0; transform: translateY(-5px); transition: all 0.3s; }
+    .state-warning .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
+    @keyframes sweatDrop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
+
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
-    @keyframes spiritBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 
     /* Weekly & Trend Cards */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
@@ -213,11 +238,12 @@
     .modal-box { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(320px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); text-align: center; }
     .modal-overlay.show .modal-box { transform: scale(1); }
     .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
-    .modal-actions { display: flex; gap: 8px; }
+    .modal-actions { display: flex; gap: 8px; margin-top: 20px; }
     .modal-btn { flex: 1; height: 40px; border: none; border-radius: var(--r-sm); font-size: 14px; font-weight: 600; cursor: pointer; }
     .modal-btn.cancel { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
     .modal-btn.confirm { background: var(--red); color: #fff; }
     .modal-btn.confirm.green { background: var(--green); }
+    .modal-hint { font-size: 12px; color: var(--text-3); margin-top: 4px; }
 
     .redeem-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
     .redeem-overlay.show { opacity: 1; pointer-events: auto; }
@@ -243,7 +269,7 @@
       .add-btn { grid-column: 2; }
       .bottom-nav { bottom: 12px; border-radius: 18px; }
       .nav-btn { height: 48px; border-radius: 14px; }
-      .spirit-emoji { font-size: 32px; }
+      .pet-svg { width: 56px; height: 56px; }
       .spirit-status { font-size: 12px; }
     }
   </style>
@@ -263,35 +289,53 @@
     </div>
   </div>
 
-  <!-- Ratio Settings Modal -->
-  <div id="ratioModal" class="modal-overlay">
+  <!-- Calorie Ratio Modal -->
+  <div id="calRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
-      <div class="modal-title" style="text-align: center;">⚙️ 换算比例设置</div>
-      <div class="form-group" style="margin-bottom: 12px;">
-        <label>🦊 Torie 运动比例</label>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <input type="number" id="ratioTorie" min="1" style="flex: 1;" />
-          <span style="font-size: 13px; color: var(--text-2);">大卡 = 1 张</span>
-        </div>
-      </div>
-      <div class="form-group" style="margin-bottom: 12px;">
-        <label>🐰 Jory 运动比例</label>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <input type="number" id="ratioJory" min="1" style="flex: 1;" />
-          <span style="font-size: 13px; color: var(--text-2);">大卡 = 1 张</span>
-        </div>
-      </div>
-      <div class="form-group" style="margin-bottom: 20px;">
-        <label>⏰ 迟到惩罚比例</label>
+      <div class="modal-title" style="text-align: center;">⚙️ 卡路里换算设置</div>
+      <div class="form-group" style="margin-bottom: 16px;">
+        <label>🦉 Torie 的比例</label>
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 13px; color: var(--text-2);">每</span>
-          <input type="number" id="ratioLate" min="1" style="flex: 1;" />
-          <span style="font-size: 13px; color: var(--text-2);">分钟 = 扣 1 张</span>
+          <input type="number" id="calRatioTorieX" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">大卡 =</span>
+          <input type="number" id="calRatioTorieY" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">张</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>🐰 Jory 的比例</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 13px; color: var(--text-2);">每</span>
+          <input type="number" id="calRatioJoryX" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">大卡 =</span>
+          <input type="number" id="calRatioJoryY" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">张</span>
         </div>
       </div>
       <div class="modal-actions">
-        <button class="modal-btn cancel" id="ratioModalCancel">取消</button>
-        <button class="modal-btn confirm green" id="ratioModalSave">保存</button>
+        <button class="modal-btn cancel" id="calRatioCancel">取消</button>
+        <button class="modal-btn confirm green" id="calRatioSave">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Late Ratio Modal -->
+  <div id="lateRatioModal" class="modal-overlay">
+    <div class="modal-box" style="text-align: left;">
+      <div class="modal-title" style="text-align: center;">⚙️ 迟到惩罚设置</div>
+      <div class="form-group" style="margin-bottom: 16px;">
+        <label>⏰ 惩罚档位（按档累计）</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 13px; color: var(--text-2);">每</span>
+          <input type="number" id="lateRatioTier" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">分钟 = 扣 1 张</span>
+        </div>
+        <div class="modal-hint">例：设为5，则迟到5分钟扣1张，6分钟扣2张</div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="lateRatioCancel">取消</button>
+        <button class="modal-btn confirm green" id="lateRatioSave">保存</button>
       </div>
     </div>
   </div>
@@ -319,22 +363,11 @@
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
       
-      <!-- Spirits System -->
-      <div class="spirits-container">
-        <div class="spirit-card torie" id="spiritTorie">
-          <span class="spirit-emoji" id="spiritTorieEmoji">🦊</span>
-          <div class="spirit-name">Torie 的精灵</div>
-          <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
-        </div>
-        <div class="spirit-card jory" id="spiritJory">
-          <span class="spirit-emoji" id="spiritJoryEmoji">🐰</span>
-          <div class="spirit-name">Jory 的精灵</div>
-          <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
-        </div>
-      </div>
-
+      <!-- 1. 动态小结 -->
       <div id="weeklyCard" class="card summary-card" style="display:none"></div>
       <div id="trendCard" class="card summary-card" style="display:none"></div>
+      
+      <!-- 2. 自由卡余额 -->
       <div class="card">
         <div class="balances">
           <div class="balance-box torie">
@@ -345,6 +378,70 @@
             <div class="balance-name">Jory</div>
             <div><span id="joryBalance" class="balance-number">0</span><span class="balance-unit">张</span></div>
           </div>
+        </div>
+      </div>
+
+      <!-- 3. 宠物系统 -->
+      <div class="spirits-container">
+        <div class="spirit-card torie state-normal" id="spiritTorie">
+          <div class="pet-container">
+            <svg class="pet-svg" id="svgTorie" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Owl Body -->
+              <path d="M25 45 C25 20, 75 20, 75 45 C75 75, 65 90, 50 90 C35 90, 25 75, 25 45 Z" fill="var(--card)" />
+              <!-- Ears -->
+              <path d="M25 35 L20 20 L35 28" />
+              <path d="M75 35 L80 20 L65 28" />
+              <!-- Eyes Base -->
+              <circle cx="38" cy="45" r="10" fill="var(--bg)" />
+              <circle cx="62" cy="45" r="10" fill="var(--bg)" />
+              <!-- Pupils (Normal) -->
+              <circle class="pupil" cx="38" cy="45" r="4" fill="currentColor" stroke="none" />
+              <circle class="pupil" cx="62" cy="45" r="4" fill="currentColor" stroke="none" />
+              <!-- Star Eyes (Amazing) -->
+              <path class="star-eye" d="M38 40 L40 44 L44 45 L40 46 L38 50 L36 46 L32 45 L36 44 Z" fill="currentColor" stroke="none" style="display:none" />
+              <path class="star-eye" d="M62 40 L64 44 L68 45 L64 46 L62 50 L60 46 L56 45 L60 44 Z" fill="currentColor" stroke="none" style="display:none" />
+              <!-- Beak -->
+              <path d="M50 52 L46 58 L54 58 Z" fill="var(--jory)" stroke="var(--jory)" />
+              <!-- Wings -->
+              <path d="M25 55 C15 60, 15 75, 25 80" />
+              <path d="M75 55 C85 60, 85 75, 75 80" />
+              <!-- Sweat -->
+              <path class="sweat" d="M75 25 C75 25, 80 30, 80 35 C80 38, 75 38, 75 35 C75 30, 75 25, 75 25 Z" fill="var(--torie)" stroke="none" />
+            </svg>
+          </div>
+          <div class="spirit-name">Torie</div>
+          <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
+        </div>
+
+        <div class="spirit-card jory state-normal" id="spiritJory">
+          <div class="pet-container">
+            <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Rabbit Body -->
+              <path d="M30 50 C30 30, 70 30, 70 50 C70 80, 60 90, 50 90 C40 90, 30 80, 30 50 Z" fill="var(--card)" />
+              <!-- Ears -->
+              <path class="ear-l" d="M38 35 C35 10, 45 5, 45 30" />
+              <path class="ear-r" d="M62 35 C65 10, 55 5, 55 30" />
+              <!-- Inner Ears -->
+              <path class="ear-l" d="M40 30 C38 15, 43 12, 43 28" stroke="var(--red)" stroke-width="2" />
+              <path class="ear-r" d="M60 30 C62 15, 57 12, 57 28" stroke="var(--red)" stroke-width="2" />
+              <!-- Eyes -->
+              <circle cx="42" cy="55" r="3" fill="currentColor" stroke="none" />
+              <circle cx="58" cy="55" r="3" fill="currentColor" stroke="none" />
+              <!-- Happy Eyes -->
+              <path class="happy-eye" d="M39 55 Q42 52 45 55" style="display:none" />
+              <path class="happy-eye" d="M55 55 Q58 52 61 55" style="display:none" />
+              <!-- Nose & Mouth -->
+              <path d="M50 62 L48 65 L52 65 Z" fill="var(--red)" stroke="none" />
+              <path d="M50 65 L50 68 M48 68 Q50 70 52 68" />
+              <!-- Cheeks -->
+              <circle cx="35" cy="62" r="4" fill="var(--red)" opacity="0.2" stroke="none" />
+              <circle cx="65" cy="62" r="4" fill="var(--red)" opacity="0.2" stroke="none" />
+              <!-- Sweat -->
+              <path class="sweat" d="M70 35 C70 35, 75 40, 75 45 C75 48, 70 48, 70 45 C70 40, 70 35, 70 35 Z" fill="var(--torie)" stroke="none" />
+            </svg>
+          </div>
+          <div class="spirit-name">Jory</div>
+          <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
         </div>
       </div>
     </section>
@@ -363,7 +460,7 @@
       <div id="bank-shop" class="bank-sub-page active">
         <div class="card">
           <div class="segment segment-2" style="margin-bottom: 16px;">
-            <button class="seg-btn active" data-view="Torie">🦊 Torie</button>
+            <button class="seg-btn active" data-view="Torie">🦉 Torie</button>
             <button class="seg-btn" data-view="Jory">🐰 Jory</button>
           </div>
           <div id="shopList"></div>
@@ -376,11 +473,10 @@
       </div>
 
       <div id="bank-earn" class="bank-sub-page">
-        <!-- 任务橱窗在上 -->
         <div class="card">
           <h2 class="section-title">💪 任务橱窗</h2>
           <div class="segment segment-2" style="margin-bottom: 16px;">
-            <button class="seg-btn active" data-earn-view="Torie">🦊 Torie</button>
+            <button class="seg-btn active" data-earn-view="Torie">🦉 Torie</button>
             <button class="seg-btn" data-earn-view="Jory">🐰 Jory</button>
           </div>
           <div id="earnList"></div>
@@ -391,11 +487,10 @@
           </div>
         </div>
 
-        <!-- 卡路里换算器在下 -->
         <div class="card">
           <div class="converter-header">
             <h2 class="section-title" style="margin:0">🔥 卡路里换算</h2>
-            <button class="ratio-btn" id="openRatioBtn">⚙️</button>
+            <button class="ratio-btn" id="openCalRatioBtn">⚙️</button>
           </div>
           <div class="form-grid">
             <div class="form-group">
@@ -413,11 +508,10 @@
       </div>
 
       <div id="bank-punish" class="bank-sub-page">
-        <!-- 惩罚清单在上 -->
         <div class="card">
           <h2 class="section-title">🚨 惩罚清单</h2>
           <div class="segment segment-2" style="margin-bottom: 16px;">
-            <button class="seg-btn active" data-punish-view="Torie">🦊 Torie</button>
+            <button class="seg-btn active" data-punish-view="Torie">🦉 Torie</button>
             <button class="seg-btn" data-punish-view="Jory">🐰 Jory</button>
           </div>
           <div id="punishList"></div>
@@ -428,11 +522,10 @@
           </div>
         </div>
 
-        <!-- 迟到换算器在下 -->
         <div class="card">
           <div class="converter-header">
             <h2 class="section-title" style="margin:0">⏰ 迟到换算</h2>
-            <button class="ratio-btn" id="openRatioBtn2">⚙️</button>
+            <button class="ratio-btn" id="openLateRatioBtn">⚙️</button>
           </div>
           <div class="form-grid">
             <div class="form-group">
@@ -492,11 +585,13 @@
     let lastBankTab = localStorage.getItem("fc_last_bank_tab") || "shop";
 
     // Ratios
-    let ratios = {
-      torie: parseInt(localStorage.getItem("fc_ratio_torie")) || 200,
-      jory: parseInt(localStorage.getItem("fc_ratio_jory")) || 100,
-      late: parseInt(localStorage.getItem("fc_ratio_late")) || 10
+    let calRatios = {
+      torieX: parseInt(localStorage.getItem("fc_cal_torie_x")) || 200,
+      torieY: parseInt(localStorage.getItem("fc_cal_torie_y")) || 1,
+      joryX: parseInt(localStorage.getItem("fc_cal_jory_x")) || 100,
+      joryY: parseInt(localStorage.getItem("fc_cal_jory_y")) || 1
     };
+    let lateTier = parseInt(localStorage.getItem("fc_late_tier")) || 5;
 
     const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
 
@@ -532,33 +627,51 @@
       "入不敷出了哦，快踩踩刹车，多赚点卡吧 🛑"
     ];
 
-    // ========== 精灵状态语库 ==========
     const SPIRIT_STATES = {
-      amazing: {
-        emojis: ["🤩", "🔥", "✨", "💪", "🎉"],
-        texts: ["今天超神了！", "状态爆棚！", "闪闪发光中~", "简直太强啦！", "为你骄傲！"]
-      },
-      good: {
-        emojis: ["😊", "🌟", "💖", "🌈", "👍"],
-        texts: ["今天很棒哦~", "稳稳的幸福", "继续加油呀！", "心情美美哒", "表现不错呢！"]
-      },
-      normal: {
-        emojis: ["😌", "🍃", "☕", "🌤️", "🐾"],
-        texts: ["平静的一天~", "在蓄力中...", "慢慢来也好", "休息一下下", "稳扎稳打中"]
-      },
-      low: {
-        emojis: ["😴", "🥺", "🔋", "🌧️", "💤"],
-        texts: ["今天有点累...", "需要充充电", "明天会更好", "抱抱你~", "没关系，歇歇吧"]
-      },
-      warning: {
-        emojis: ["😰", "⚠️", "📉", "😅", "🆘"],
-        texts: ["余额告急！", "要注意啦！", "快赚点卡吧", "透支警告！", "该努力咯~"]
-      }
+      amazing: { texts: ["今天超神了！", "状态爆棚！", "闪闪发光中~", "简直太强啦！", "为你骄傲！"] },
+      good: { texts: ["今天很棒哦~", "稳稳的幸福", "继续加油呀！", "心情美美哒", "表现不错呢！"] },
+      normal: { texts: ["平静的一天~", "在蓄力中...", "慢慢来也好", "休息一下下", "稳扎稳打中"] },
+      low: { texts: ["今天有点累...", "需要充充电", "明天会更好", "抱抱你~", "没关系，歇歇吧"] },
+      warning: { texts: ["余额告急！", "要注意啦！", "快赚点卡吧", "透支警告！", "该努力咯~"] }
     };
 
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-    // ========== 精灵系统 ==========
+    // ========== 宠物系统 ==========
+    function updatePetState(person, state) {
+      const card = document.getElementById(`spirit${person}`);
+      card.className = `spirit-card ${person.toLowerCase()} state-${state}`;
+      
+      const svg = document.getElementById(`svg${person}`);
+      const pupils = svg.querySelectorAll('.pupil');
+      const starEyes = svg.querySelectorAll('.star-eye');
+      const happyEyes = svg.querySelectorAll('.happy-eye');
+      const normalEyes = svg.querySelectorAll('circle[cx]'); // Base eye circles
+      
+      // Reset all
+      pupils.forEach(p => p.style.display = '');
+      starEyes.forEach(p => p.style.display = 'none');
+      happyEyes.forEach(p => p.style.display = 'none');
+      svg.querySelectorAll('.ear-l, .ear-r').forEach(e => e.classList.remove('ear-down'));
+
+      if (state === 'amazing') {
+        pupils.forEach(p => p.style.display = 'none');
+        starEyes.forEach(p => p.style.display = '');
+        happyEyes.forEach(p => p.style.display = '');
+      } else if (state === 'good') {
+        happyEyes.forEach(p => p.style.display = '');
+      } else if (state === 'low') {
+        svg.querySelectorAll('.ear-l, .ear-r').forEach(e => e.classList.add('ear-down'));
+      }
+      
+      // Update Text
+      const config = SPIRIT_STATES[state];
+      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+      const seed = todayStart.getDate() + person.length;
+      const textIdx = (seed + 1) % config.texts.length;
+      document.getElementById(`spirit${person}Status`).textContent = config.texts[textIdx];
+    }
+
     function updateSpirits() {
       const todayStart = new Date();
       todayStart.setHours(0,0,0,0);
@@ -584,17 +697,33 @@
         else if (spent > earned && spent > 0) state = "low";
         else state = "normal";
         
-        const config = SPIRIT_STATES[state];
-        const emojiEl = document.getElementById(`spirit${person}Emoji`);
-        const statusEl = document.getElementById(`spirit${person}Status`);
-        
-        // 使用种子随机保证同一天同一状态不频繁变化
-        const seed = todayStart.getDate() + person.length;
-        const emojiIdx = seed % config.emojis.length;
-        const textIdx = (seed + 1) % config.texts.length;
-        
-        emojiEl.textContent = config.emojis[emojiIdx];
-        statusEl.textContent = config.texts[textIdx];
+        updatePetState(person, state);
+      });
+    }
+
+    function initPetInteractions() {
+      document.getElementById('spiritTorie').addEventListener('click', () => {
+        const svg = document.getElementById('svgTorie');
+        svg.classList.add('pet-clicked');
+        // Blink effect
+        const pupils = svg.querySelectorAll('.pupil');
+        pupils.forEach(p => p.setAttribute('ry', '1'));
+        setTimeout(() => {
+          pupils.forEach(p => p.setAttribute('ry', '4'));
+          svg.classList.remove('pet-clicked');
+        }, 400);
+      });
+
+      document.getElementById('spiritJory').addEventListener('click', () => {
+        const svg = document.getElementById('svgJory');
+        svg.classList.add('pet-clicked');
+        // Ears jump up
+        const ears = svg.querySelectorAll('.ear-l, .ear-r');
+        ears.forEach(e => { e.style.transform = 'scaleY(1.2)'; });
+        setTimeout(() => {
+          ears.forEach(e => { e.style.transform = ''; });
+          svg.classList.remove('pet-clicked');
+        }, 400);
       });
     }
 
@@ -608,7 +737,6 @@
 
     function getStartOfWeekDate() { const d = new Date(); d.setHours(0,0,0,0); const day = d.getDay(); d.setDate(d.getDate() - (day === 0 ? 6 : day - 1)); return d; }
 
-    // ========== 核心数据 + 1句灵魂点评 ==========
     function getSoulComment(tE, jE, tS, jS) {
       const net = (tE + jE) - (tS + jS);
       const bothActive = tE > 0 && jE > 0;
@@ -754,31 +882,45 @@
       overlay.addEventListener("click",()=>{overlay.classList.remove("show");panel.classList.remove("show");});
     }
 
-    function initRatioModal() {
-      const modal = document.getElementById("ratioModal");
-      const openBtns = [document.getElementById("openRatioBtn"), document.getElementById("openRatioBtn2")];
-      
-      openBtns.forEach(btn => {
-        if(btn) btn.addEventListener("click", () => {
-          document.getElementById("ratioTorie").value = ratios.torie;
-          document.getElementById("ratioJory").value = ratios.jory;
-          document.getElementById("ratioLate").value = ratios.late;
-          modal.classList.add("show");
-        });
+    function initRatioModals() {
+      // Calorie Ratio
+      const calModal = document.getElementById("calRatioModal");
+      document.getElementById("openCalRatioBtn").addEventListener("click", () => {
+        document.getElementById("calRatioTorieX").value = calRatios.torieX;
+        document.getElementById("calRatioTorieY").value = calRatios.torieY;
+        document.getElementById("calRatioJoryX").value = calRatios.joryX;
+        document.getElementById("calRatioJoryY").value = calRatios.joryY;
+        calModal.classList.add("show");
       });
-      
-      document.getElementById("ratioModalCancel").addEventListener("click", () => modal.classList.remove("show"));
-      document.getElementById("ratioModalSave").addEventListener("click", () => {
-        const t = parseInt(document.getElementById("ratioTorie").value) || 200;
-        const j = parseInt(document.getElementById("ratioJory").value) || 100;
-        const l = parseInt(document.getElementById("ratioLate").value) || 10;
-        ratios = { torie: t, jory: j, late: l };
-        localStorage.setItem("fc_ratio_torie", t);
-        localStorage.setItem("fc_ratio_jory", j);
-        localStorage.setItem("fc_ratio_late", l);
-        modal.classList.remove("show");
+      document.getElementById("calRatioCancel").addEventListener("click", () => calModal.classList.remove("show"));
+      document.getElementById("calRatioSave").addEventListener("click", () => {
+        calRatios = {
+          torieX: parseInt(document.getElementById("calRatioTorieX").value) || 200,
+          torieY: parseInt(document.getElementById("calRatioTorieY").value) || 1,
+          joryX: parseInt(document.getElementById("calRatioJoryX").value) || 100,
+          joryY: parseInt(document.getElementById("calRatioJoryY").value) || 1
+        };
+        localStorage.setItem("fc_cal_torie_x", calRatios.torieX);
+        localStorage.setItem("fc_cal_torie_y", calRatios.torieY);
+        localStorage.setItem("fc_cal_jory_x", calRatios.joryX);
+        localStorage.setItem("fc_cal_jory_y", calRatios.joryY);
+        calModal.classList.remove("show");
         showToast("比例已保存", "success");
         calcCalorie();
+      });
+
+      // Late Ratio
+      const lateModal = document.getElementById("lateRatioModal");
+      document.getElementById("openLateRatioBtn").addEventListener("click", () => {
+        document.getElementById("lateRatioTier").value = lateTier;
+        lateModal.classList.add("show");
+      });
+      document.getElementById("lateRatioCancel").addEventListener("click", () => lateModal.classList.remove("show"));
+      document.getElementById("lateRatioSave").addEventListener("click", () => {
+        lateTier = parseInt(document.getElementById("lateRatioTier").value) || 5;
+        localStorage.setItem("fc_late_tier", lateTier);
+        lateModal.classList.remove("show");
+        showToast("档位已保存", "success");
         calcLate();
       });
     }
@@ -786,7 +928,8 @@
     // ========== Navigation & Setup ==========
     document.addEventListener("DOMContentLoaded", async () => {
       initSettings();
-      initRatioModal();
+      initRatioModals();
+      initPetInteractions();
       setupNav();
       setupBankSegment();
       setupPeriodTabs();
@@ -864,9 +1007,10 @@
       
       window.calcCalorie = () => {
         const cal = parseInt(input.value) || 0;
-        const ratio = person.value === "Torie" ? ratios.torie : ratios.jory;
-        const cards = Math.floor(cal / ratio);
-        if(cal > 0) { result.style.display = "block"; result.textContent = `可兑换 ${cards} 张自由卡 (${ratio}大卡=1张)`; btn.disabled = cards <= 0; } 
+        const x = person.value === "Torie" ? calRatios.torieX : calRatios.joryX;
+        const y = person.value === "Torie" ? calRatios.torieY : calRatios.joryY;
+        const cards = Math.floor((cal / x) * y);
+        if(cal > 0) { result.style.display = "block"; result.textContent = `可兑换 ${cards} 张自由卡 (每${x}大卡=${y}张)`; btn.disabled = cards <= 0; } 
         else { result.style.display = "none"; btn.disabled = true; }
       };
       
@@ -875,8 +1019,9 @@
       
       btn.addEventListener("click", async () => {
         const cal = parseInt(input.value) || 0;
-        const ratio = person.value === "Torie" ? ratios.torie : ratios.jory;
-        const cards = Math.floor(cal / ratio);
+        const x = person.value === "Torie" ? calRatios.torieX : calRatios.joryX;
+        const y = person.value === "Torie" ? calRatios.torieY : calRatios.joryY;
+        const cards = Math.floor((cal / x) * y);
         if(cards <= 0) return;
         btn.disabled = true; btn.textContent = "入账中...";
         const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: cards, reason: `🔥 运动消耗 ${cal} 大卡` });
@@ -891,8 +1036,8 @@
       
       window.calcLate = () => {
         const mins = parseInt(input.value) || 0;
-        const cards = Math.floor(mins / ratios.late);
-        if(mins > 0) { result.style.display = "block"; result.textContent = `将扣除 ${cards} 张自由卡 (每${ratios.late}分钟扣1张)`; btn.disabled = cards <= 0; } 
+        const cards = Math.ceil(mins / lateTier);
+        if(mins > 0) { result.style.display = "block"; result.textContent = `将扣除 ${cards} 张自由卡 (每${lateTier}分钟扣1张)`; btn.disabled = cards <= 0; } 
         else { result.style.display = "none"; btn.disabled = true; }
       };
       
@@ -901,7 +1046,7 @@
       
       btn.addEventListener("click", async () => {
         const mins = parseInt(input.value) || 0;
-        const cards = Math.floor(mins / ratios.late);
+        const cards = Math.ceil(mins / lateTier);
         if(cards <= 0) return;
         btn.disabled = true; btn.textContent = "扣除中...";
         const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "减少", card_num: cards, reason: `⏰ 迟到 ${mins} 分钟` });
@@ -977,7 +1122,6 @@
       const container = document.getElementById(containerId);
       let items = allProducts.filter(p => p.owner === view && classifyProduct(p) === type);
       
-      // 排序逻辑
       const balance = calcBalance(view);
       if(type === "shop") {
         items.sort((a, b) => {
