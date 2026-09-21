@@ -415,29 +415,41 @@
 
         <div class="spirit-card jory state-normal" id="spiritJory">
           <div class="pet-container">
-            <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <!-- Rabbit Body -->
-              <path d="M30 50 C30 30, 70 30, 70 50 C70 80, 60 90, 50 90 C40 90, 30 80, 30 50 Z" fill="var(--card)" />
-              <!-- Ears -->
-              <path class="ear-l" d="M38 35 C35 10, 45 5, 45 30" />
-              <path class="ear-r" d="M62 35 C65 10, 55 5, 55 30" />
-              <!-- Inner Ears -->
-              <path class="ear-l" d="M40 30 C38 15, 43 12, 43 28" stroke="var(--red)" stroke-width="2" />
-              <path class="ear-r" d="M60 30 C62 15, 57 12, 57 28" stroke="var(--red)" stroke-width="2" />
-              <!-- Eyes -->
-              <circle cx="42" cy="55" r="3" fill="currentColor" stroke="none" />
-              <circle cx="58" cy="55" r="3" fill="currentColor" stroke="none" />
-              <!-- Happy Eyes -->
-              <path class="happy-eye" d="M39 55 Q42 52 45 55" style="display:none" />
-              <path class="happy-eye" d="M55 55 Q58 52 61 55" style="display:none" />
-              <!-- Nose & Mouth -->
-              <path d="M50 62 L48 65 L52 65 Z" fill="var(--red)" stroke="none" />
-              <path d="M50 65 L50 68 M48 68 Q50 70 52 68" />
-              <!-- Cheeks -->
-              <circle cx="35" cy="62" r="4" fill="var(--red)" opacity="0.2" stroke="none" />
-              <circle cx="65" cy="62" r="4" fill="var(--red)" opacity="0.2" stroke="none" />
-              <!-- Sweat -->
-              <path class="sweat" d="M70 35 C70 35, 75 40, 75 45 C75 48, 70 48, 70 45 C70 40, 70 35, 70 35 Z" fill="var(--torie)" stroke="none" />
+            <!-- NEW MOCHI BUNNY STYLE -->
+            <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Mochi Body (no neck, blob shape) -->
+              <ellipse cx="50" cy="62" rx="28" ry="24" fill="var(--card)" />
+              
+              <!-- Soft Round Ears -->
+              <path class="ear-l" d="M34 42 C28 18, 42 14, 44 38" fill="var(--card)" />
+              <path class="ear-r" d="M66 42 C72 18, 58 14, 56 38" fill="var(--card)" />
+              
+              <!-- Inner Ear Blush -->
+              <path class="ear-l" d="M36 38 C33 24, 41 22, 42 36" stroke="var(--red)" stroke-width="1.5" opacity="0.4" />
+              <path class="ear-r" d="M64 38 C67 24, 59 22, 58 36" stroke="var(--red)" stroke-width="1.5" opacity="0.4" />
+              
+              <!-- Bean Eyes (Normal) -->
+              <ellipse class="bean-eye" cx="40" cy="58" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
+              <ellipse class="bean-eye" cx="60" cy="58" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
+              
+              <!-- Happy Closed Eyes -->
+              <path class="happy-eye" d="M37 58 Q40 55 43 58" style="display:none" />
+              <path class="happy-eye" d="M57 58 Q60 55 63 58" style="display:none" />
+              
+              <!-- Tiny Nose + Mouth -->
+              <circle cx="50" cy="64" r="1.5" fill="var(--red)" stroke="none" opacity="0.6" />
+              <path d="M47 67 Q50 69 53 67" stroke-width="1.5" />
+              
+              <!-- Cheek Blush -->
+              <circle cx="32" cy="64" r="4" fill="var(--red)" opacity="0.12" stroke="none" />
+              <circle cx="68" cy="64" r="4" fill="var(--red)" opacity="0.12" stroke="none" />
+              
+              <!-- Little Paws -->
+              <ellipse cx="38" cy="82" rx="6" ry="4" fill="var(--card)" />
+              <ellipse cx="62" cy="82" rx="6" ry="4" fill="var(--card)" />
+              
+              <!-- Sweat Drop -->
+              <path class="sweat" d="M72 38 C72 38, 76 42, 76 46 C76 48.5, 72 48.5, 72 46 C72 42, 72 38, 72 38 Z" fill="var(--torie)" stroke="none" />
             </svg>
           </div>
           <div class="spirit-name">Jory</div>
@@ -643,25 +655,40 @@
       card.className = `spirit-card ${person.toLowerCase()} state-${state}`;
       
       const svg = document.getElementById(`svg${person}`);
-      const pupils = svg.querySelectorAll('.pupil');
-      const starEyes = svg.querySelectorAll('.star-eye');
-      const happyEyes = svg.querySelectorAll('.happy-eye');
-      const normalEyes = svg.querySelectorAll('circle[cx]'); // Base eye circles
       
-      // Reset all
-      pupils.forEach(p => p.style.display = '');
-      starEyes.forEach(p => p.style.display = 'none');
-      happyEyes.forEach(p => p.style.display = 'none');
-      svg.querySelectorAll('.ear-l, .ear-r').forEach(e => e.classList.remove('ear-down'));
-
-      if (state === 'amazing') {
-        pupils.forEach(p => p.style.display = 'none');
-        starEyes.forEach(p => p.style.display = '');
-        happyEyes.forEach(p => p.style.display = '');
-      } else if (state === 'good') {
-        happyEyes.forEach(p => p.style.display = '');
-      } else if (state === 'low') {
-        svg.querySelectorAll('.ear-l, .ear-r').forEach(e => e.classList.add('ear-down'));
+      if (person === "Torie") {
+        // Owl logic
+        const pupils = svg.querySelectorAll('.pupil');
+        const starEyes = svg.querySelectorAll('.star-eye');
+        const happyEyes = svg.querySelectorAll('.happy-eye');
+        
+        pupils.forEach(p => p.style.display = '');
+        starEyes.forEach(p => p.style.display = 'none');
+        
+        if (state === 'amazing') {
+          pupils.forEach(p => p.style.display = 'none');
+          starEyes.forEach(p => p.style.display = '');
+        } else if (state === 'good') {
+          // Owl doesn't have happy-eye paths in current SVG, keep pupils
+        } else if (state === 'low') {
+          // Owl low state handled by CSS transform
+        }
+      } else {
+        // Bunny logic (NEW MOCHI STYLE)
+        const beanEyes = svg.querySelectorAll('.bean-eye');
+        const happyEyes = svg.querySelectorAll('.happy-eye');
+        const ears = svg.querySelectorAll('.ear-l, .ear-r');
+        
+        beanEyes.forEach(e => e.style.display = '');
+        happyEyes.forEach(e => e.style.display = 'none');
+        ears.forEach(e => e.classList.remove('ear-down'));
+        
+        if (state === 'amazing' || state === 'good') {
+          beanEyes.forEach(e => e.style.display = 'none');
+          happyEyes.forEach(e => e.style.display = '');
+        } else if (state === 'low') {
+          ears.forEach(e => e.classList.add('ear-down'));
+        }
       }
       
       // Update Text
@@ -702,29 +729,48 @@
     }
 
     function initPetInteractions() {
+      // Owl click: blink + tilt
       document.getElementById('spiritTorie').addEventListener('click', () => {
         const svg = document.getElementById('svgTorie');
         svg.classList.add('pet-clicked');
-        // Blink effect
         const pupils = svg.querySelectorAll('.pupil');
-        pupils.forEach(p => p.setAttribute('ry', '1'));
+        pupils.forEach(p => { p.setAttribute('ry', '1'); p.setAttribute('rx', '4'); });
         setTimeout(() => {
-          pupils.forEach(p => p.setAttribute('ry', '4'));
+          pupils.forEach(p => { p.setAttribute('ry', '4'); p.setAttribute('rx', '4'); });
           svg.classList.remove('pet-clicked');
         }, 400);
       });
 
+      // Bunny click: duang squish effect
       document.getElementById('spiritJory').addEventListener('click', () => {
         const svg = document.getElementById('svgJory');
         svg.classList.add('pet-clicked');
-        // Ears jump up
-        const ears = svg.querySelectorAll('.ear-l, .ear-r');
-        ears.forEach(e => { e.style.transform = 'scaleY(1.2)'; });
+        // Squish animation via inline keyframe override
+        svg.style.animation = 'none';
+        svg.offsetHeight; // trigger reflow
+        svg.style.animation = 'mochiSquish 0.5s ease forwards';
         setTimeout(() => {
-          ears.forEach(e => { e.style.transform = ''; });
+          svg.style.animation = '';
           svg.classList.remove('pet-clicked');
-        }, 400);
+        }, 500);
       });
+      
+      // Inject mochi squish keyframes dynamically
+      if (!document.getElementById('mochi-style')) {
+        const style = document.createElement('style');
+        style.id = 'mochi-style';
+        style.textContent = `
+          @keyframes mochiSquish {
+            0% { transform: scale(1, 1) translateY(0); }
+            20% { transform: scale(1.15, 0.85) translateY(4px); }
+            40% { transform: scale(0.9, 1.1) translateY(-8px); }
+            60% { transform: scale(1.05, 0.95) translateY(2px); }
+            80% { transform: scale(0.98, 1.02) translateY(-1px); }
+            100% { transform: scale(1, 1) translateY(0); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
     }
 
     function checkSpecialDate() {
