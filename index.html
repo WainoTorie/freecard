@@ -54,6 +54,17 @@
     .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
     .card { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); min-width: 0; }
 
+    /* Spirits System */
+    .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; }
+    .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.06; pointer-events: none; transition: background 0.3s; }
+    .spirit-card.torie::before { background: var(--torie); }
+    .spirit-card.jory::before { background: var(--jory); }
+    .spirit-emoji { font-size: 36px; display: block; margin-bottom: 6px; animation: spiritBounce 2s ease-in-out infinite; }
+    .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
+    @keyframes spiritBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
     /* Weekly & Trend Cards */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
     .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
@@ -88,6 +99,7 @@
     .submit-btn { width: 100%; height: 44px; margin-top: 16px; border: none; border-radius: var(--r-md); background: var(--torie); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .submit-btn:active { transform: scale(0.98); opacity: 0.9; }
     .submit-btn:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
+    .submit-btn.danger { background: var(--red); }
 
     /* Segmented Controls (Apple Style) */
     .segment { display: grid; gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
@@ -171,6 +183,7 @@
     /* Converter Card */
     .converter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .converter-result { text-align: center; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 15px; }
+    .converter-result.danger { color: var(--red); }
     .ratio-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-2); padding: 4px; }
 
     /* App Pages & Nav */
@@ -200,8 +213,6 @@
     .modal-box { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(320px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); text-align: center; }
     .modal-overlay.show .modal-box { transform: scale(1); }
     .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
-    .modal-input { width: 100%; height: 48px; text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-    .modal-hint { font-size: 13px; color: var(--text-2); margin-bottom: 20px; }
     .modal-actions { display: flex; gap: 8px; }
     .modal-btn { flex: 1; height: 40px; border: none; border-radius: var(--r-sm); font-size: 14px; font-weight: 600; cursor: pointer; }
     .modal-btn.cancel { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
@@ -232,6 +243,8 @@
       .add-btn { grid-column: 2; }
       .bottom-nav { bottom: 12px; border-radius: 18px; }
       .nav-btn { height: 48px; border-radius: 14px; }
+      .spirit-emoji { font-size: 32px; }
+      .spirit-status { font-size: 12px; }
     }
   </style>
 </head>
@@ -247,19 +260,6 @@
       <div class="redeem-title" id="redeemTitle"></div>
       <div class="redeem-sub" id="redeemSub"></div>
       <button class="redeem-close-btn" id="redeemCloseBtn">太棒了！</button>
-    </div>
-  </div>
-
-  <!-- Late Punishment Modal -->
-  <div id="lateModal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-title">⏰ 迟到了多久？</div>
-      <input type="number" id="lateMinutesInput" class="modal-input" min="1" placeholder="0" />
-      <div class="modal-hint" id="lateModalHint">将扣除 0 张自由卡</div>
-      <div class="modal-actions">
-        <button class="modal-btn cancel" id="lateModalCancel">取消</button>
-        <button class="modal-btn confirm" id="lateModalConfirm">确认扣除</button>
-      </div>
     </div>
   </div>
 
@@ -318,6 +318,21 @@
     <section id="page-home" class="app-page active">
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
+      
+      <!-- Spirits System -->
+      <div class="spirits-container">
+        <div class="spirit-card torie" id="spiritTorie">
+          <span class="spirit-emoji" id="spiritTorieEmoji">🦊</span>
+          <div class="spirit-name">Torie 的精灵</div>
+          <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
+        </div>
+        <div class="spirit-card jory" id="spiritJory">
+          <span class="spirit-emoji" id="spiritJoryEmoji">🐰</span>
+          <div class="spirit-name">Jory 的精灵</div>
+          <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
+        </div>
+      </div>
+
       <div id="weeklyCard" class="card summary-card" style="display:none"></div>
       <div id="trendCard" class="card summary-card" style="display:none"></div>
       <div class="card">
@@ -361,6 +376,22 @@
       </div>
 
       <div id="bank-earn" class="bank-sub-page">
+        <!-- 任务橱窗在上 -->
+        <div class="card">
+          <h2 class="section-title">💪 任务橱窗</h2>
+          <div class="segment segment-2" style="margin-bottom: 16px;">
+            <button class="seg-btn active" data-earn-view="Torie">🦊 Torie</button>
+            <button class="seg-btn" data-earn-view="Jory">🐰 Jory</button>
+          </div>
+          <div id="earnList"></div>
+          <div class="add-form">
+            <div class="form-group"><label>任务名称</label><input id="newEarnName" type="text" maxlength="30" placeholder="阅读30分钟" /></div>
+            <div class="form-group"><label>奖励</label><input id="newEarnCost" type="number" min="1" max="99" placeholder="2" /></div>
+            <button class="add-btn" id="addEarnBtn">添加</button>
+          </div>
+        </div>
+
+        <!-- 卡路里换算器在下 -->
         <div class="card">
           <div class="converter-header">
             <h2 class="section-title" style="margin:0">🔥 卡路里换算</h2>
@@ -379,23 +410,10 @@
           <div id="calResult" class="converter-result" style="display:none"></div>
           <button id="calSubmitBtn" class="submit-btn" disabled>一键入账</button>
         </div>
-
-        <div class="card">
-          <h2 class="section-title">💪 任务橱窗</h2>
-          <div class="segment segment-2" style="margin-bottom: 16px;">
-            <button class="seg-btn active" data-earn-view="Torie">🦊 Torie</button>
-            <button class="seg-btn" data-earn-view="Jory">🐰 Jory</button>
-          </div>
-          <div id="earnList"></div>
-          <div class="add-form">
-            <div class="form-group"><label>任务名称</label><input id="newEarnName" type="text" maxlength="30" placeholder="阅读30分钟" /></div>
-            <div class="form-group"><label>奖励</label><input id="newEarnCost" type="number" min="1" max="99" placeholder="2" /></div>
-            <button class="add-btn" id="addEarnBtn">添加</button>
-          </div>
-        </div>
       </div>
 
       <div id="bank-punish" class="bank-sub-page">
+        <!-- 惩罚清单在上 -->
         <div class="card">
           <h2 class="section-title">🚨 惩罚清单</h2>
           <div class="segment segment-2" style="margin-bottom: 16px;">
@@ -408,6 +426,26 @@
             <div class="form-group"><label>扣除</label><input id="newPunishCost" type="number" min="1" max="99" placeholder="1" /></div>
             <button class="add-btn" id="addPunishBtn">添加</button>
           </div>
+        </div>
+
+        <!-- 迟到换算器在下 -->
+        <div class="card">
+          <div class="converter-header">
+            <h2 class="section-title" style="margin:0">⏰ 迟到换算</h2>
+            <button class="ratio-btn" id="openRatioBtn2">⚙️</button>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="latePerson">谁迟到了</label>
+              <select id="latePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+            </div>
+            <div class="form-group">
+              <label for="lateInput">迟到分钟数</label>
+              <input id="lateInput" type="number" min="0" placeholder="15" />
+            </div>
+          </div>
+          <div id="lateResult" class="converter-result danger" style="display:none"></div>
+          <button id="lateSubmitBtn" class="submit-btn danger" disabled>确认扣除</button>
         </div>
       </div>
     </section>
@@ -494,7 +532,71 @@
       "入不敷出了哦，快踩踩刹车，多赚点卡吧 🛑"
     ];
 
+    // ========== 精灵状态语库 ==========
+    const SPIRIT_STATES = {
+      amazing: {
+        emojis: ["🤩", "🔥", "✨", "💪", "🎉"],
+        texts: ["今天超神了！", "状态爆棚！", "闪闪发光中~", "简直太强啦！", "为你骄傲！"]
+      },
+      good: {
+        emojis: ["😊", "🌟", "💖", "🌈", "👍"],
+        texts: ["今天很棒哦~", "稳稳的幸福", "继续加油呀！", "心情美美哒", "表现不错呢！"]
+      },
+      normal: {
+        emojis: ["😌", "🍃", "☕", "🌤️", "🐾"],
+        texts: ["平静的一天~", "在蓄力中...", "慢慢来也好", "休息一下下", "稳扎稳打中"]
+      },
+      low: {
+        emojis: ["😴", "🥺", "🔋", "🌧️", "💤"],
+        texts: ["今天有点累...", "需要充充电", "明天会更好", "抱抱你~", "没关系，歇歇吧"]
+      },
+      warning: {
+        emojis: ["😰", "⚠️", "📉", "😅", "🆘"],
+        texts: ["余额告急！", "要注意啦！", "快赚点卡吧", "透支警告！", "该努力咯~"]
+      }
+    };
+
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    // ========== 精灵系统 ==========
+    function updateSpirits() {
+      const todayStart = new Date();
+      todayStart.setHours(0,0,0,0);
+      
+      const todayLogs = allLogs.filter(l => new Date(l.created_at) >= todayStart);
+      
+      ["Torie", "Jory"].forEach(person => {
+        const personLogs = todayLogs.filter(l => l.operator === person);
+        let earned = 0, spent = 0;
+        personLogs.forEach(l => {
+          const n = Number(l.card_num) || 0;
+          if(l.change_type === "增加") earned += n;
+          else spent += n;
+        });
+        
+        const balance = calcBalance(person);
+        const net = earned - spent;
+        
+        let state;
+        if (balance < 0) state = "warning";
+        else if (earned >= 10 || net >= 5) state = "amazing";
+        else if (earned >= 3 || net > 0) state = "good";
+        else if (spent > earned && spent > 0) state = "low";
+        else state = "normal";
+        
+        const config = SPIRIT_STATES[state];
+        const emojiEl = document.getElementById(`spirit${person}Emoji`);
+        const statusEl = document.getElementById(`spirit${person}Status`);
+        
+        // 使用种子随机保证同一天同一状态不频繁变化
+        const seed = todayStart.getDate() + person.length;
+        const emojiIdx = seed % config.emojis.length;
+        const textIdx = (seed + 1) % config.texts.length;
+        
+        emojiEl.textContent = config.emojis[emojiIdx];
+        statusEl.textContent = config.texts[textIdx];
+      });
+    }
 
     function checkSpecialDate() {
       const now = new Date(), m = now.getMonth() + 1, d = now.getDate();
@@ -654,12 +756,17 @@
 
     function initRatioModal() {
       const modal = document.getElementById("ratioModal");
-      document.getElementById("openRatioBtn").addEventListener("click", () => {
-        document.getElementById("ratioTorie").value = ratios.torie;
-        document.getElementById("ratioJory").value = ratios.jory;
-        document.getElementById("ratioLate").value = ratios.late;
-        modal.classList.add("show");
+      const openBtns = [document.getElementById("openRatioBtn"), document.getElementById("openRatioBtn2")];
+      
+      openBtns.forEach(btn => {
+        if(btn) btn.addEventListener("click", () => {
+          document.getElementById("ratioTorie").value = ratios.torie;
+          document.getElementById("ratioJory").value = ratios.jory;
+          document.getElementById("ratioLate").value = ratios.late;
+          modal.classList.add("show");
+        });
       });
+      
       document.getElementById("ratioModalCancel").addEventListener("click", () => modal.classList.remove("show"));
       document.getElementById("ratioModalSave").addEventListener("click", () => {
         const t = parseInt(document.getElementById("ratioTorie").value) || 200;
@@ -672,47 +779,7 @@
         modal.classList.remove("show");
         showToast("比例已保存", "success");
         calcCalorie();
-      });
-    }
-
-    let currentLatePunishItem = null;
-    function initLateModal() {
-      const modal = document.getElementById("lateModal");
-      const input = document.getElementById("lateMinutesInput");
-      const hint = document.getElementById("lateModalHint");
-      
-      input.addEventListener("input", () => {
-        const mins = parseInt(input.value) || 0;
-        const cost = Math.floor(mins / ratios.late);
-        hint.textContent = `将扣除 ${cost} 张自由卡 (每${ratios.late}分钟扣1张)`;
-      });
-
-      document.getElementById("lateModalCancel").addEventListener("click", () => {
-        modal.classList.remove("show");
-        currentLatePunishItem = null;
-      });
-
-      document.getElementById("lateModalConfirm").addEventListener("click", async () => {
-        if(!currentLatePunishItem) return;
-        const mins = parseInt(input.value) || 0;
-        const cost = Math.floor(mins / ratios.late);
-        if(cost <= 0) { showToast("时间太短，不够扣哦", "error"); return; }
-        
-        const displayName = getDisplayName(currentLatePunishItem);
-        const {error} = await sb.from("freecard_log").insert({
-          operator: currentLatePunishItem.owner, 
-          change_type: "减少", 
-          card_num: cost, 
-          reason: `⚠️ 惩罚：${displayName} ${mins}分钟`
-        });
-        
-        modal.classList.remove("show");
-        currentLatePunishItem = null;
-        
-        if(error) return showToast("扣除失败", "error");
-        showToast(`已扣除 ${cost} 张，下次注意哦`, "error");
-        if(navigator.vibrate) navigator.vibrate(200);
-        await loadLogs();
+        calcLate();
       });
     }
 
@@ -720,7 +787,6 @@
     document.addEventListener("DOMContentLoaded", async () => {
       initSettings();
       initRatioModal();
-      initLateModal();
       setupNav();
       setupBankSegment();
       setupPeriodTabs();
@@ -732,6 +798,7 @@
       setupAddEarn();
       setupAddPunish();
       setupCalorieConverter();
+      setupLateConverter();
       checkSpecialDate();
 
       await loadLogs();
@@ -753,7 +820,7 @@
     }
 
     function setupBankSegment() {
-      document.querySelectorAll(".bank-segment-btn, .seg-btn[data-bank]").forEach(b => b.classList.toggle("active", b.dataset.bank === lastBankTab));
+      document.querySelectorAll(".seg-btn[data-bank]").forEach(b => b.classList.toggle("active", b.dataset.bank === lastBankTab));
       document.querySelectorAll(".bank-sub-page").forEach(p => p.classList.toggle("active", p.id === `bank-${lastBankTab}`));
       document.querySelectorAll(".seg-btn[data-bank]").forEach((btn)=>{
         btn.addEventListener("click",()=>{
@@ -819,6 +886,33 @@
       });
     }
 
+    function setupLateConverter() {
+      const input = document.getElementById("lateInput"), person = document.getElementById("latePerson"), result = document.getElementById("lateResult"), btn = document.getElementById("lateSubmitBtn");
+      
+      window.calcLate = () => {
+        const mins = parseInt(input.value) || 0;
+        const cards = Math.floor(mins / ratios.late);
+        if(mins > 0) { result.style.display = "block"; result.textContent = `将扣除 ${cards} 张自由卡 (每${ratios.late}分钟扣1张)`; btn.disabled = cards <= 0; } 
+        else { result.style.display = "none"; btn.disabled = true; }
+      };
+      
+      input.addEventListener("input", calcLate); 
+      person.addEventListener("change", calcLate);
+      
+      btn.addEventListener("click", async () => {
+        const mins = parseInt(input.value) || 0;
+        const cards = Math.floor(mins / ratios.late);
+        if(cards <= 0) return;
+        btn.disabled = true; btn.textContent = "扣除中...";
+        const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "减少", card_num: cards, reason: `⏰ 迟到 ${mins} 分钟` });
+        btn.disabled = false; btn.textContent = "确认扣除";
+        if(error) { showToast("扣除失败："+error.message, "error"); return; }
+        showToast(`已扣除 ${cards} 张，下次注意哦`, "error");
+        if(navigator.vibrate) navigator.vibrate(200);
+        input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
+      });
+    }
+
     // ========== Data & Rendering ==========
     async function loadLogs() {
       const {data,error}=await sb.from("freecard_log").select("*").order("created_at",{ascending:false});
@@ -832,7 +926,7 @@
       allProducts=data||[]; renderShop(); renderEarnList(); renderPunishList();
     }
 
-    function refreshAll() { updateBalances(); updateHistoryFilterOptions(); renderStats(); renderHistory(); renderWeeklyCard(); renderTrendCard(); }
+    function refreshAll() { updateBalances(); updateSpirits(); updateHistoryFilterOptions(); renderStats(); renderHistory(); renderWeeklyCard(); renderTrendCard(); }
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
     function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
     function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
@@ -890,18 +984,12 @@
           const aReady = balance >= a.cost ? 1 : 0;
           const bReady = balance >= b.cost ? 1 : 0;
           if(aReady !== bReady) return bReady - aReady;
-          return (balance / a.cost) - (balance / b.cost); // 进度降序 (这里写反了，应该是 b/a - a/b)
-        });
-        items.sort((a, b) => {
-          const aReady = balance >= a.cost ? 1 : 0;
-          const bReady = balance >= b.cost ? 1 : 0;
-          if(aReady !== bReady) return bReady - aReady; // 达标在前
-          return (balance / b.cost) - (balance / a.cost); // 进度高在前
+          return (balance / b.cost) - (balance / a.cost);
         });
       } else if(type === "earn") {
-        items.sort((a, b) => b.cost - a.cost); // 奖励降序
+        items.sort((a, b) => b.cost - a.cost);
       } else if(type === "punish") {
-        items.sort((a, b) => a.cost - b.cost); // 扣除升序
+        items.sort((a, b) => a.cost - b.cost);
       }
       
       if(!items.length) { 
@@ -981,15 +1069,6 @@
         showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); 
       }
       else if(action === "punish") { 
-        // 迟到特殊处理
-        if(displayName.includes("迟到")) {
-          currentLatePunishItem = p;
-          document.getElementById("lateMinutesInput").value = "";
-          document.getElementById("lateModalHint").textContent = `将扣除 0 张自由卡 (每${ratios.late}分钟扣1张)`;
-          document.getElementById("lateModal").classList.add("show");
-          return;
-        }
-
         if(calcBalance(view) < p.cost) { 
           if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return; 
         } else { 
