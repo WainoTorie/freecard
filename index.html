@@ -109,9 +109,9 @@
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
 
-    /* Digestion Bar (simplified - just the bar) */
+    /* Digestion Bar (Modified: Thinner & Subtle) */
     .digestion-wrap { margin-bottom: 8px; }
-    .digestion-track { height: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+    .digestion-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; opacity: 0.8; }
     .digestion-bar { height: 100%; border-radius: 2px; transition: width 0.6s ease, background 0.6s ease; }
     .digestion-bar.full { background: var(--green); }
     .digestion-bar.mid { background: var(--jory); }
@@ -215,6 +215,15 @@
     .bar.jory-bar { background: var(--jory); }
     .bar-number { text-align: right; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-1); }
     .empty-stats { padding: 16px 0; color: var(--text-3); font-size: 13px; text-align: center; }
+
+    /* Balance Scale Chart for Individual Perspective */
+    .scale-chart { display: flex; align-items: center; height: 32px; margin: 16px 0 8px; position: relative; }
+    .scale-bar { height: 100%; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 2px; }
+    .scale-bar.spend { background: var(--red); border-radius: 6px 0 0 6px; opacity: 0.8; }
+    .scale-bar.earn { background: var(--green); border-radius: 0 6px 6px 0; opacity: 0.8; }
+    .scale-center { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--text-3); transform: translateX(-50%); z-index: 2; opacity: 0.5; }
+    .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); font-weight: 600; margin-top: 4px; }
+    .scale-net { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; padding: 6px; border-radius: var(--r-sm); background: var(--bg); border: 1px solid var(--border); }
 
     /* History */
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
@@ -404,10 +413,10 @@
     </div>
   </div>
 
-  <!-- Feed Modal (NEW) -->
+  <!-- Feed Modal -->
   <div id="feedModal" class="feed-modal-overlay">
     <div class="feed-modal-box">
-      <div class="feed-modal-title" id="feedModalTitle">🍖 喂食精灵</div>
+      <div class="feed-modal-title" id="feedModalTitle">🍖 喂食</div>
       <div class="feed-rule-hint">第1张 +60%，第2张 +30%，第3张 +10%</div>
       <div class="feed-modal-select-row">
         <label>喂几张</label>
@@ -445,17 +454,18 @@
     </div>
   </div>
 
-  <!-- Calorie Ratio Modal -->
-  <div id="calRatioModal" class="modal-overlay">
+  <!-- Universal Converter Ratio Modal (NEW: Supports all types) -->
+  <div id="converterRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
-      <div class="modal-title" style="text-align: center;">⚙️ 卡路里换算设置</div>
+      <div class="modal-title" style="text-align: center;" id="ratioModalTitle">⚙️ 换算比例设置</div>
       <div class="form-group" style="margin-bottom: 16px;">
         <label>🦉 Torie 的比例</label>
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 13px; color: var(--text-2);">每</span>
-          <input type="number" id="calRatioTorieX" min="1" style="flex: 1;" />
-          <span style="font-size: 13px; color: var(--text-2);">大卡 =</span>
-          <input type="number" id="calRatioTorieY" min="1" style="flex: 1;" />
+          <input type="number" id="ratioTorieX" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);" id="ratioUnitLabel">大卡</span>
+          <span style="font-size: 13px; color: var(--text-2);">=</span>
+          <input type="number" id="ratioTorieY" min="1" style="flex: 1;" />
           <span style="font-size: 13px; color: var(--text-2);">张</span>
         </div>
       </div>
@@ -463,15 +473,16 @@
         <label>🐰 Jory 的比例</label>
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 13px; color: var(--text-2);">每</span>
-          <input type="number" id="calRatioJoryX" min="1" style="flex: 1;" />
-          <span style="font-size: 13px; color: var(--text-2);">大卡 =</span>
-          <input type="number" id="calRatioJoryY" min="1" style="flex: 1;" />
+          <input type="number" id="ratioJoryX" min="1" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);" id="ratioUnitLabel2">大卡</span>
+          <span style="font-size: 13px; color: var(--text-2);">=</span>
+          <input type="number" id="ratioJoryY" min="1" style="flex: 1;" />
           <span style="font-size: 13px; color: var(--text-2);">张</span>
         </div>
       </div>
       <div class="modal-actions">
-        <button class="modal-btn cancel" id="calRatioCancel">取消</button>
-        <button class="modal-btn confirm green" id="calRatioSave">保存</button>
+        <button class="modal-btn cancel" id="ratioCancel">取消</button>
+        <button class="modal-btn confirm green" id="ratioSave">保存</button>
       </div>
     </div>
   </div>
@@ -496,7 +507,7 @@
     </div>
   </div>
 
-  <!-- Settings Panel (with Recharge moved in) -->
+  <!-- Settings Panel -->
   <div id="settingsOverlay" class="overlay"></div>
   <div id="settingsPanel" class="panel">
     <div class="panel-title">⚙️ 设置</div>
@@ -509,7 +520,7 @@
       <span style="font-size: 12px; color: var(--text-3);">自动跟随系统 🌓</span>
     </div>
 
-    <!-- Recharge moved here -->
+    <!-- Recharge -->
     <div class="settings-recharge">
       <h3>💰 充值自由卡</h3>
       <div class="recharge-rate">汇率：<span>10¥</span> = 1 张自由卡（充入小荷包）</div>
@@ -556,11 +567,9 @@
       <div class="spirits-container">
         <!-- Torie Pet -->
         <div class="spirit-card torie state-normal" id="spiritTorie">
-          <!-- 1. Digestion bar (just the bar, no text) -->
           <div class="digestion-wrap">
             <div class="digestion-track"><div class="digestion-bar full" id="torieDigestBar" style="width:100%"></div></div>
           </div>
-          <!-- 2. Pet SVG -->
           <div class="pet-container">
             <svg class="pet-svg" id="svgTorie" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
               <path d="M25 45 C25 20, 75 20, 75 45 C75 75, 65 90, 50 90 C35 90, 25 75, 25 45 Z" fill="var(--card)" />
@@ -583,20 +592,16 @@
               <text class="zzz" x="72" y="22" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
             </svg>
           </div>
-          <!-- 3. Pet feedback -->
           <div class="spirit-name">Torie</div>
           <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
-          <!-- 4. Feed button -->
-          <button class="feed-btn" id="feedTorieBtn">🍖 喂食精灵</button>
+          <button class="feed-btn" id="feedTorieBtn">🍖 喂食</button>
         </div>
 
         <!-- Jory Pet -->
         <div class="spirit-card jory state-normal" id="spiritJory">
-          <!-- 1. Digestion bar -->
           <div class="digestion-wrap">
             <div class="digestion-track"><div class="digestion-bar full" id="joryDigestBar" style="width:100%"></div></div>
           </div>
-          <!-- 2. Pet SVG -->
           <div class="pet-container">
             <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <ellipse cx="50" cy="65" rx="26" ry="22" fill="var(--card)" />
@@ -622,11 +627,9 @@
               <text class="zzz" x="72" y="36" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
             </svg>
           </div>
-          <!-- 3. Pet feedback -->
           <div class="spirit-name">Jory</div>
           <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
-          <!-- 4. Feed button -->
-          <button class="feed-btn" id="feedJoryBtn">🥕 喂食精灵</button>
+          <button class="feed-btn" id="feedJoryBtn">🥕 喂食</button>
         </div>
       </div>
     </section>
@@ -636,7 +639,7 @@
       <div class="page-title">自由卡银行</div>
       <div class="subtitle">属于你们的小小约定 💕</div>
 
-      <!-- STEP 1: Choose Person (with SVG pets) -->
+      <!-- STEP 1: Choose Person -->
       <div id="bankStep1" class="bank-step active">
         <div class="person-selector">
           <div class="person-select-card torie-card" id="bankPickTorie">
@@ -721,7 +724,7 @@
           <div class="card">
             <div class="converter-header">
               <h2 class="section-title" style="margin:0">🔥 通用换算器</h2>
-              <button class="ratio-btn" id="openCalRatioBtn">⚙️</button>
+              <button class="ratio-btn" id="openConverterRatioBtn">⚙️</button>
             </div>
             <div class="converter-type-grid" id="converterTypeGrid">
               <button class="converter-type-btn active" data-ctype="calorie"><span class="ctb-emoji">🔥</span>卡路里</button>
@@ -779,19 +782,17 @@
       </div>
     </section>
 
-    <!-- ==================== DATA PAGE (REDESIGNED) ==================== -->
+    <!-- ==================== DATA PAGE ==================== -->
     <section id="page-data" class="app-page">
       <div class="page-title">数据统计</div>
       <div class="subtitle">看见成长的轨迹 📊</div>
       <div class="card">
         <h2 class="section-title">📈 统计概览</h2>
-        <!-- Perspective tabs: Torie / Jory / Together -->
         <div class="perspective-tabs">
           <button class="perspective-tab active" data-perspective="torie"><span class="pt-emoji">🦉</span> Torie</button>
           <button class="perspective-tab" data-perspective="jory"><span class="pt-emoji">🐰</span> Jory</button>
           <button class="perspective-tab" data-perspective="together"><span class="pt-emoji">💑</span> Together</button>
         </div>
-        <!-- Period tabs -->
         <div class="period-tabs">
           <button class="period-tab active" data-period="today">今日</button>
           <button class="period-tab" data-period="week">本周</button>
@@ -826,16 +827,29 @@
 
     let allLogs = [], allProducts = [];
     let currentPeriod = "today", currentHistoryFilter = "all";
-    let currentPerspective = "torie"; // NEW: stats perspective
+    let currentPerspective = "torie";
     let bankPerson = "";
     let bankSection = "";
 
-    let calRatios = {
-      torieX: parseInt(localStorage.getItem("fc_cal_torie_x")) || 200,
-      torieY: parseInt(localStorage.getItem("fc_cal_torie_y")) || 1,
-      joryX: parseInt(localStorage.getItem("fc_cal_jory_x")) || 100,
-      joryY: parseInt(localStorage.getItem("fc_cal_jory_y")) || 1
+    // Default ratios for all converter types
+    const DEFAULT_RATIOS = {
+      calorie: { torieX: 200, torieY: 1, joryX: 100, joryY: 1 },
+      momo: { torieX: 100, torieY: 2, joryX: 100, joryY: 2 },
+      pushup: { torieX: 15, torieY: 1, joryX: 15, joryY: 1 },
+      pullup: { torieX: 9, torieY: 1, joryX: 9, joryY: 1 },
+      situp: { torieX: 30, torieY: 1, joryX: 30, joryY: 1 },
+      dip: { torieX: 5, torieY: 1, joryX: 5, joryY: 1 }
     };
+
+    // Load ratios from localStorage or use defaults
+    function loadRatios() {
+      const saved = localStorage.getItem("fc_converter_ratios");
+      if (saved) {
+        try { return JSON.parse(saved); } catch(e) {}
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_RATIOS));
+    }
+    let converterRatios = loadRatios();
     let lateTier = parseInt(localStorage.getItem("fc_late_tier")) || 5;
 
     const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
@@ -867,48 +881,7 @@
 
     /* ==================== DIGESTION SYSTEM ==================== */
     const DIGEST_DURATION_MS = 24 * 60 * 60 * 1000;
-
-    // Feed increments: 1st=60%, 2nd=30%, 3rd=10%
     const FEED_INCREMENTS = [60, 30, 10];
-
-    function getLastFeedTime(person) {
-      return parseInt(localStorage.getItem(`fc_feed_${person.toLowerCase()}`)) || 0;
-    }
-    function setLastFeedTime(person, time) {
-      localStorage.setItem(`fc_feed_${person.toLowerCase()}`, time.toString());
-    }
-
-    // Get digest pct based purely on time since last "reset"
-    function getDigestPct(person) {
-      const lastReset = parseInt(localStorage.getItem(`fc_feed_reset_${person.toLowerCase()}`)) || 0;
-      if (!lastReset) return 100;
-      const elapsed = Date.now() - lastReset;
-      const pct = Math.max(0, 100 - (elapsed / DIGEST_DURATION_MS) * 100);
-      return Math.round(pct);
-    }
-
-    // Get the "bonus" fullness from feeding (stored separately)
-    function getFeedBonus(person) {
-      return parseFloat(localStorage.getItem(`fc_feed_bonus_${person.toLowerCase()}`)) || 0;
-    }
-    function setFeedBonus(person, val) {
-      localStorage.setItem(`fc_feed_bonus_${person.toLowerCase()}`, val.toString());
-    }
-
-    // Effective fullness = time-decay of (base + bonus)
-    // Simpler approach: store a "virtual start time" that represents when 100% would have been
-    // Actually, let's use a simpler model:
-    // We store: lastFeedTime and feedBonusPct
-    // Effective pct = min(100, timeDecayPct + feedBonus)
-    // where timeDecayPct decays from 100 over 24h since last reset
-    // Actually, simplest: just store a single "fullness" value and a timestamp
-    // On read: fullness - (elapsed/24h)*100
-    // On feed: fullness = min(100, current + increment), reset timer
-
-    // Let me use the cleanest approach:
-    // Store fc_fullness_{person} = the fullness % at time fc_fullness_time_{person}
-    // On read: currentFullness = stored - (elapsed / 24h) * 100, clamped to [0,100]
-    // On feed: currentFullness = min(100, currentFullness + increment), save with now()
 
     function getFullnessData(person) {
       const stored = parseFloat(localStorage.getItem(`fc_fullness_${person.toLowerCase()}`));
@@ -1076,14 +1049,14 @@
       });
     }
 
-    /* ==================== FEED PET (REDESIGNED with modal) ==================== */
+    /* ==================== FEED PET ==================== */
     let feedTargetPerson = "";
 
     function openFeedModal(person) {
       feedTargetPerson = person;
       const modal = document.getElementById("feedModal");
       const emoji = person === "Torie" ? "🦉" : "🐰";
-      document.getElementById("feedModalTitle").textContent = `${emoji} 喂食 ${person} 的精灵`;
+      document.getElementById("feedModalTitle").textContent = `${emoji} 喂食 ${person}`;
       document.getElementById("feedCountSelect").value = "1";
       updateFeedPreview();
       modal.classList.add("show");
@@ -1108,7 +1081,6 @@
       bar.style.width = resultPct + "%";
       bar.style.background = resultPct > 60 ? "var(--green)" : resultPct > 25 ? "var(--jory)" : "var(--red)";
       
-      // Disable confirm if balance insufficient
       const balance = calcBalance(feedTargetPerson);
       const btn = document.getElementById("feedConfirmBtn");
       if (balance < count) {
@@ -1131,19 +1103,17 @@
 
       const { resultPct } = calcFeedPreview(feedTargetPerson, count);
 
-      // Insert log
       const foodEmoji = feedTargetPerson === "Torie" ? "🍖" : "🥕";
       const { error } = await sb.from("freecard_log").insert({
-        operator: feedTargetPerson, change_type: "减少", card_num: count, reason: `${foodEmoji} 喂食精灵（${count}张）`
+        operator: feedTargetPerson, change_type: "减少", card_num: count, reason: `${foodEmoji} 喂食（${count}张）`
       });
       if (error) { showToast("喂食失败：" + error.message, "error"); return; }
 
-      // Update fullness
       setFullnessData(feedTargetPerson, resultPct);
 
       trackEvent(feedTargetPerson, 'feed');
       closeFeedModal();
-      showToast(`${feedTargetPerson} 的精灵吃得好开心！🥰`, "success");
+      showToast(`${feedTargetPerson} 吃得好开心！🥰`, "success");
       spawnParticles(1);
       updateDigestionUI(feedTargetPerson);
       updateSpirits();
@@ -1154,7 +1124,6 @@
       document.getElementById("feedCountSelect").addEventListener("change", updateFeedPreview);
       document.getElementById("feedCancelBtn").addEventListener("click", closeFeedModal);
       document.getElementById("feedConfirmBtn").addEventListener("click", confirmFeed);
-      // Close on overlay click
       document.getElementById("feedModal").addEventListener("click", (e) => {
         if (e.target === document.getElementById("feedModal")) closeFeedModal();
       });
@@ -1337,32 +1306,39 @@
       overlay.addEventListener("click",()=>{overlay.classList.remove("show");panel.classList.remove("show");});
     }
 
+    /* ==================== RATIO MODALS (Universal + Late) ==================== */
     function initRatioModals() {
-      const calModal = document.getElementById("calRatioModal");
-      document.getElementById("openCalRatioBtn").addEventListener("click", () => {
-        document.getElementById("calRatioTorieX").value = calRatios.torieX;
-        document.getElementById("calRatioTorieY").value = calRatios.torieY;
-        document.getElementById("calRatioJoryX").value = calRatios.joryX;
-        document.getElementById("calRatioJoryY").value = calRatios.joryY;
-        calModal.classList.add("show");
+      // Universal Converter Ratio Modal
+      const ratioModal = document.getElementById("converterRatioModal");
+      document.getElementById("openConverterRatioBtn").addEventListener("click", () => {
+        const config = CONVERTER_TYPES[currentConverterType];
+        const ratios = converterRatios[currentConverterType] || DEFAULT_RATIOS[currentConverterType];
+        
+        document.getElementById("ratioModalTitle").textContent = `⚙️ ${config.label}换算设置`;
+        document.getElementById("ratioUnitLabel").textContent = config.unit;
+        document.getElementById("ratioUnitLabel2").textContent = config.unit;
+        document.getElementById("ratioTorieX").value = ratios.torieX;
+        document.getElementById("ratioTorieY").value = ratios.torieY;
+        document.getElementById("ratioJoryX").value = ratios.joryX;
+        document.getElementById("ratioJoryY").value = ratios.joryY;
+        ratioModal.classList.add("show");
       });
-      document.getElementById("calRatioCancel").addEventListener("click", () => calModal.classList.remove("show"));
-      document.getElementById("calRatioSave").addEventListener("click", () => {
-        calRatios = {
-          torieX: parseInt(document.getElementById("calRatioTorieX").value) || 200,
-          torieY: parseInt(document.getElementById("calRatioTorieY").value) || 1,
-          joryX: parseInt(document.getElementById("calRatioJoryX").value) || 100,
-          joryY: parseInt(document.getElementById("calRatioJoryY").value) || 1
+      document.getElementById("ratioCancel").addEventListener("click", () => ratioModal.classList.remove("show"));
+      document.getElementById("ratioSave").addEventListener("click", () => {
+        const type = currentConverterType;
+        converterRatios[type] = {
+          torieX: parseInt(document.getElementById("ratioTorieX").value) || DEFAULT_RATIOS[type].torieX,
+          torieY: parseInt(document.getElementById("ratioTorieY").value) || DEFAULT_RATIOS[type].torieY,
+          joryX: parseInt(document.getElementById("ratioJoryX").value) || DEFAULT_RATIOS[type].joryX,
+          joryY: parseInt(document.getElementById("ratioJoryY").value) || DEFAULT_RATIOS[type].joryY
         };
-        localStorage.setItem("fc_cal_torie_x", calRatios.torieX);
-        localStorage.setItem("fc_cal_torie_y", calRatios.torieY);
-        localStorage.setItem("fc_cal_jory_x", calRatios.joryX);
-        localStorage.setItem("fc_cal_jory_y", calRatios.joryY);
-        calModal.classList.remove("show");
+        localStorage.setItem("fc_converter_ratios", JSON.stringify(converterRatios));
+        ratioModal.classList.remove("show");
         showToast("比例已保存", "success");
         calcConverter();
       });
 
+      // Late Ratio Modal
       const lateModal = document.getElementById("lateRatioModal");
       document.getElementById("openLateRatioBtn").addEventListener("click", () => {
         document.getElementById("lateRatioTier").value = lateTier;
@@ -1395,7 +1371,7 @@
       if (bankPerson) applyBgTint(bankPerson);
     });
 
-    /* ==================== BANK NAVIGATION (ALWAYS RESET TO STEP 1) ==================== */
+    /* ==================== BANK NAVIGATION ==================== */
     function showBankStep(step) {
       document.querySelectorAll(".bank-step").forEach(s => s.classList.remove("active"));
       const el = document.getElementById(`bankStep${step}`);
@@ -1439,7 +1415,6 @@
       bankPerson = "";
       bankSection = "";
       applyBgTint("");
-      // Update balance displays
       document.getElementById("bankTorieBal").textContent = calcBalance("Torie");
       document.getElementById("bankJoryBal").textContent = calcBalance("Jory");
       showBankStep(1);
@@ -1470,7 +1445,6 @@
           document.querySelectorAll(".nav-btn").forEach((b)=>{const active=b===btn;b.classList.toggle("active",active);});
           window.scrollTo({top:0,behavior:"smooth"});
           if (page === "bank") {
-            // REQUIREMENT 4: Always reset to step 1 when clicking bank tab
             resetBankToStep1();
           }
           if (page !== "bank") {
@@ -1480,7 +1454,7 @@
       });
     }
 
-    /* ==================== STATS (REDESIGNED with perspective) ==================== */
+    /* ==================== STATS (Redesigned with Balance Scale) ==================== */
     function setupPeriodTabs() {
       document.querySelectorAll(".period-tab").forEach((btn)=>{
         btn.addEventListener("click",()=>{
@@ -1516,30 +1490,45 @@
         else { if(l.change_type==="增加") jE+=n; else jS+=n; }
       });
 
-      if (currentPerspective === "torie") {
-        // Show only Torie's data
-        const net = tE - tS;
+      if (currentPerspective === "torie" || currentPerspective === "jory") {
+        const isTorie = currentPerspective === "torie";
+        const earn = isTorie ? tE : jE;
+        const spend = isTorie ? tS : jS;
+        const net = earn - spend;
+        const emoji = isTorie ? "🦉" : "🐰";
+        const name = isTorie ? "Torie" : "Jory";
+        const color = isTorie ? "var(--torie)" : "var(--jory)";
+
         document.getElementById("statsSummary").innerHTML = `
-          <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${tE}</div></div>
-          <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${tS}</div></div>
+          <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${earn}</div></div>
+          <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${spend}</div></div>
           <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
         `;
-        const max = Math.max(tE, tS, 1);
+
+        // Balance Scale Visualization
+        const total = earn + spend;
+        const spendPct = total > 0 ? (spend / total) * 100 : 50;
+        const earnPct = total > 0 ? (earn / total) * 100 : 50;
+        const netColor = net >= 0 ? "var(--green)" : "var(--red)";
+        const netSign = net >= 0 ? "+" : "";
+        const verdict = net > 0 ? "赚得更多 💪" : net < 0 ? "花得更多 💸" : "收支平衡 ⚖️";
+
         document.getElementById("statsContent").innerHTML = `
-          <div class="stats-group"><div class="stats-label">🦉 Torie 获得</div>${bar("Torie",tE,max,"torie-bar")}</div>
-          <div class="stats-group"><div class="stats-label">🦉 Torie 消耗</div>${bar("Torie",tS,max,"torie-bar")}</div>
-        `;
-      } else if (currentPerspective === "jory") {
-        const net = jE - jS;
-        document.getElementById("statsSummary").innerHTML = `
-          <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${jE}</div></div>
-          <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${jS}</div></div>
-          <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
-        `;
-        const max = Math.max(jE, jS, 1);
-        document.getElementById("statsContent").innerHTML = `
-          <div class="stats-group"><div class="stats-label">🐰 Jory 获得</div>${bar("Jory",jE,max,"jory-bar")}</div>
-          <div class="stats-group"><div class="stats-label">🐰 Jory 消耗</div>${bar("Jory",jS,max,"jory-bar")}</div>
+          <div class="stats-group">
+            <div class="stats-label">${emoji} ${name} ${pLabel}收支对比</div>
+            <div class="scale-chart">
+              <div class="scale-center"></div>
+              <div class="scale-bar spend" style="width:${spendPct}%"></div>
+              <div class="scale-bar earn" style="width:${earnPct}%"></div>
+            </div>
+            <div class="scale-labels">
+              <span style="color:var(--red)">消耗 ${spend}</span>
+              <span style="color:var(--green)">获得 ${earn}</span>
+            </div>
+            <div class="scale-net" style="color:${netColor}">
+              净积累 ${netSign}${net} · ${verdict}
+            </div>
+          </div>
         `;
       } else {
         // Together
@@ -1550,7 +1539,7 @@
           <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
         `;
         const max = Math.max(tE, tS, jE, jS, 1);
-        const group = (label, ek, sk) => {
+        const group = (label) => {
           if (max === 0) return `<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无记录</div></div>`;
           return `<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",tE, max,"torie-bar")}${bar("Jory",jE, max,"jory-bar")}</div>`;
         };
@@ -1558,7 +1547,7 @@
           if (max === 0) return `<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无记录</div></div>`;
           return `<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",tS,max,"torie-bar")}${bar("Jory",jS,max,"jory-bar")}</div>`;
         };
-        document.getElementById("statsContent").innerHTML = group("获得","e","s") + groupSpend("消耗");
+        document.getElementById("statsContent").innerHTML = group("获得") + groupSpend("消耗");
       }
     }
 
@@ -1718,35 +1707,23 @@
 
     /* ==================== UNIVERSAL CONVERTER ==================== */
     const CONVERTER_TYPES = {
-      calorie: { emoji: "🔥", label: "卡路里", inputLabel: "消耗大卡", placeholder: "350", unit: "大卡", calc: (val, person) => {
-        const x = person === "Torie" ? calRatios.torieX : calRatios.joryX;
-        const y = person === "Torie" ? calRatios.torieY : calRatios.joryY;
-        const cards = Math.floor((val / x) * y);
-        return { cards, desc: `每${x}大卡 = ${y}张` };
-      }, reasonPrefix: "🔥 运动消耗", inputUnit: "大卡" },
-      momo: { emoji: "📖", label: "墨墨背单词", inputLabel: "单词数（复习+新学）", placeholder: "100", unit: "个", calc: (val) => {
-        const cards = Math.floor(val / 100) * 2;
-        return { cards, desc: "每100个单词 = 2张" };
-      }, reasonPrefix: "📖 背单词", inputUnit: "个" },
-      pushup: { emoji: "💪", label: "俯卧撑", inputLabel: "俯卧撑个数", placeholder: "15", unit: "个", calc: (val) => {
-        const cards = Math.floor(val / 15);
-        return { cards, desc: "每15个 = 1张" };
-      }, reasonPrefix: "💪 俯卧撑", inputUnit: "个" },
-      pullup: { emoji: "🏋️", label: "引体向上", inputLabel: "引体向上个数", placeholder: "9", unit: "个", calc: (val) => {
-        const cards = Math.floor(val / 9);
-        return { cards, desc: "每9个 = 1张" };
-      }, reasonPrefix: "🏋️ 引体向上", inputUnit: "个" },
-      situp: { emoji: "🤸", label: "仰卧起坐", inputLabel: "仰卧起坐个数", placeholder: "30", unit: "个", calc: (val) => {
-        const cards = Math.floor(val / 30);
-        return { cards, desc: "每30个 = 1张" };
-      }, reasonPrefix: "🤸 仰卧起坐", inputUnit: "个" },
-      dip: { emoji: "🤾", label: "撑双杠", inputLabel: "撑双杠个数", placeholder: "5", unit: "个", calc: (val) => {
-        const cards = Math.floor(val / 5);
-        return { cards, desc: "每5个 = 1张" };
-      }, reasonPrefix: "🤾 撑双杠", inputUnit: "个" }
+      calorie: { emoji: "🔥", label: "卡路里", inputLabel: "消耗大卡", placeholder: "350", unit: "大卡", reasonPrefix: "🔥 运动消耗", inputUnit: "大卡" },
+      momo: { emoji: "📖", label: "墨墨背单词", inputLabel: "单词数（复习+新学）", placeholder: "100", unit: "个", reasonPrefix: "📖 背单词", inputUnit: "个" },
+      pushup: { emoji: "💪", label: "俯卧撑", inputLabel: "俯卧撑个数", placeholder: "15", unit: "个", reasonPrefix: "💪 俯卧撑", inputUnit: "个" },
+      pullup: { emoji: "🏋️", label: "引体向上", inputLabel: "引体向上个数", placeholder: "9", unit: "个", reasonPrefix: "🏋️ 引体向上", inputUnit: "个" },
+      situp: { emoji: "🤸", label: "仰卧起坐", inputLabel: "仰卧起坐个数", placeholder: "30", unit: "个", reasonPrefix: "🤸 仰卧起坐", inputUnit: "个" },
+      dip: { emoji: "🤾", label: "撑双杠", inputLabel: "撑双杠个数", placeholder: "5", unit: "个", reasonPrefix: "🤾 撑双杠", inputUnit: "个" }
     };
 
     let currentConverterType = "calorie";
+
+    function getConverterCards(type, val, person) {
+      const ratios = converterRatios[type] || DEFAULT_RATIOS[type];
+      const x = person === "Torie" ? ratios.torieX : ratios.joryX;
+      const y = person === "Torie" ? ratios.torieY : ratios.joryY;
+      const cards = Math.floor((val / x) * y);
+      return { cards, desc: `每${x}${CONVERTER_TYPES[type].unit} = ${y}张` };
+    }
 
     function setupUniversalConverter() {
       const grid = document.getElementById("converterTypeGrid");
@@ -1767,14 +1744,13 @@
           input.value = "";
           result.style.display = "none";
           btn.disabled = true;
-          document.getElementById("openCalRatioBtn").style.display = currentConverterType === "calorie" ? "" : "none";
         });
       });
 
       window.calcConverter = () => {
         const val = parseInt(input.value) || 0;
         const config = CONVERTER_TYPES[currentConverterType];
-        const { cards, desc } = config.calc(val, person.value);
+        const { cards, desc } = getConverterCards(currentConverterType, val, person.value);
         if (val > 0) {
           result.style.display = "block";
           result.textContent = `可兑换 ${cards} 张自由卡（${desc}）`;
@@ -1791,7 +1767,7 @@
       btn.addEventListener("click", async () => {
         const val = parseInt(input.value) || 0;
         const config = CONVERTER_TYPES[currentConverterType];
-        const { cards } = config.calc(val, person.value);
+        const { cards } = getConverterCards(currentConverterType, val, person.value);
         if (cards <= 0) return;
 
         btn.disabled = true; btn.textContent = "入账中...";
@@ -1838,7 +1814,7 @@
       });
     }
 
-    /* ==================== RECHARGE (in Settings now) ==================== */
+    /* ==================== RECHARGE ==================== */
     function setupRecharge() {
       const input = document.getElementById("rechargeAmount");
       const person = document.getElementById("rechargePerson");
