@@ -7,17 +7,18 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #f2f2f7; --card: #ffffff; --card-trans: rgba(255, 255, 255, 0.88);
+      --bg: #f2f2f7; --bg-tint: #f2f2f7; --card: #ffffff; --card-trans: rgba(255, 255, 255, 0.88);
       --text-1: #1d1d1f; --text-2: #86868b; --text-3: #aeaeb2;
       --border: rgba(0, 0, 0, 0.06); --separator: rgba(0,0,0,0.08);
       --torie: #007aff; --jory: #ff9500; --green: #34c759; --red: #ff3b30;
       --r-lg: 16px; --r-md: 12px; --r-sm: 8px;
       --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      --accent: var(--torie);
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #000000; --card: #1c1c1e; --card-trans: rgba(28, 28, 30, 0.88);
+        --bg: #000000; --bg-tint: #000000; --card: #1c1c1e; --card-trans: rgba(28, 28, 30, 0.88);
         --text-1: #f5f5f7; --text-2: #a1a1a6; --text-3: #636366;
         --border: rgba(255, 255, 255, 0.08); --separator: rgba(255,255,255,0.1);
         --shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
@@ -25,15 +26,17 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
-    body { background: var(--bg); color: var(--text-1); font-family: var(--font); padding: 20px 16px 120px; min-height: 100vh; line-height: 1.5; transition: background 0.3s, color 0.3s; }
+    body { background: var(--bg-tint); color: var(--text-1); font-family: var(--font); padding: 20px 16px 120px; min-height: 100vh; line-height: 1.5; transition: background 0.5s, color 0.3s; }
     button, input, select { font-family: inherit; }
     .container { width: min(680px, 100%); margin: 0 auto; position: relative; min-width: 0; }
 
+    /* Festival Banner */
     .festival-banner { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden; }
     .festival-emoji { font-size: 32px; display: block; margin-bottom: 8px; }
     .festival-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-1); }
     .festival-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; }
 
+    /* Settings */
     .settings-btn { position: absolute; top: 8px; right: 0; width: 36px; height: 36px; border: none; background: var(--card); border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
     .settings-btn:active { transform: scale(0.9); }
     .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
@@ -46,11 +49,13 @@
     input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--torie); cursor: pointer; }
 
+    /* Common */
     .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; color: var(--text-1); }
     .subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 24px; }
     .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
     .card { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); min-width: 0; }
 
+    /* Spirits / Pets */
     .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer; }
     .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.04; pointer-events: none; transition: background 0.3s; }
@@ -62,10 +67,14 @@
     .pet-svg { width: 64px; height: 64px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
     
     .state-amazing .pet-svg { animation: petBounce 1s ease-in-out infinite; }
+    .state-happy .pet-svg { animation: petSway 2s ease-in-out infinite; }
     .state-good .pet-svg { animation: petSway 2.5s ease-in-out infinite; }
     .state-low .pet-svg { transform: translateY(8px) scale(0.9); opacity: 0.8; }
     .state-warning .pet-svg { animation: petShake 0.4s ease-in-out infinite; }
     .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
+    .state-hungry .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.7; transform: scale(0.92); }
+    .state-starving .pet-svg { animation: petShake 0.6s ease-in-out infinite; opacity: 0.5; transform: scale(0.85); }
+    .state-sleepy .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.8; }
     
     .pet-clicked { animation: petJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
     
@@ -76,20 +85,36 @@
     @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-15px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
 
     .pet-svg * { transition: all 0.4s ease; }
-    
-    /* Wider ears: origin matches new wider base */
     .bunny-ear-l { transform-origin: 34px 44px; }
     .bunny-ear-r { transform-origin: 66px 44px; }
     .ear-down.bunny-ear-l { transform: rotate(12deg) translateY(3px); }
     .ear-down.bunny-ear-r { transform: rotate(-12deg) translateY(3px); }
     
     .sweat { opacity: 0; transform: translateY(-5px); transition: all 0.3s; }
-    .state-warning .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
+    .state-warning .sweat, .state-starving .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
     @keyframes sweatDrop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
+
+    .zzz { opacity: 0; transition: all 0.3s; }
+    .state-sleepy .zzz { opacity: 1; animation: zzzFloat 2s ease-in-out infinite; }
+    @keyframes zzzFloat { 0%,100% { transform: translateY(0); opacity: 0.7; } 50% { transform: translateY(-6px); opacity: 1; } }
 
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
 
+    /* Digestion Bar */
+    .digestion-wrap { margin-top: 8px; display: flex; flex-direction: column; gap: 3px; }
+    .digestion-label { font-size: 10px; color: var(--text-3); display: flex; justify-content: space-between; font-weight: 600; }
+    .digestion-track { height: 5px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+    .digestion-bar { height: 100%; border-radius: 2px; transition: width 0.6s ease, background 0.6s ease; }
+    .digestion-bar.full { background: var(--green); }
+    .digestion-bar.mid { background: var(--jory); }
+    .digestion-bar.low { background: var(--red); }
+
+    .feed-btn { margin-top: 6px; width: 100%; height: 28px; border: none; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: var(--green); color: #fff; }
+    .feed-btn:active { transform: scale(0.95); }
+    .feed-btn:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
+
+    /* Summary */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
     .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     .summary-icon { font-size: 20px; }
@@ -102,6 +127,7 @@
     .summary-text .green-hl { color: var(--green); }
     .summary-text .red-hl { color: var(--red); }
 
+    /* Balances */
     .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .balance-box { text-align: center; padding: 16px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); }
     .balance-box.torie { border-color: rgba(0, 122, 255, 0.2); }
@@ -112,6 +138,7 @@
     .balance-box.jory .balance-number { color: var(--jory); }
     .balance-unit { font-size: 12px; font-weight: 500; color: var(--text-3); margin-left: 2px; }
 
+    /* Forms */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .form-group.full { grid-column: 1 / -1; }
@@ -122,13 +149,16 @@
     .submit-btn:active { transform: scale(0.98); opacity: 0.9; }
     .submit-btn:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
     .submit-btn.danger { background: var(--red); }
+    .submit-btn.green { background: var(--green); }
 
+    /* Segments */
     .segment { display: grid; gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
     .segment-3 { grid-template-columns: repeat(3, 1fr); }
     .segment-2 { grid-template-columns: repeat(2, 1fr); }
     .seg-btn { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .seg-btn.active { background: var(--card); color: var(--text-1); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 
+    /* Stats */
     .period-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
     .period-tab { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
@@ -150,6 +180,7 @@
     .bar-number { text-align: right; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-1); }
     .empty-stats { padding: 16px 0; color: var(--text-3); font-size: 13px; text-align: center; }
 
+    /* History */
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
     .history-header .section-title { margin: 0; }
     .history-filter { width: auto; min-width: 100px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
@@ -167,6 +198,7 @@
     .delete-btn:hover { opacity: 1; }
     .empty-history { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
 
+    /* Shop / Earn / Punish list items */
     .list-item { padding: 16px 0; border-bottom: 1px solid var(--separator); display: flex; flex-direction: column; gap: 10px; }
     .list-item:last-child { border-bottom: none; }
     .list-item-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -199,31 +231,84 @@
     .add-btn:active { transform: scale(0.96); }
     .empty-list { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
 
+    /* Converter */
     .converter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .converter-result { text-align: center; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 15px; }
     .converter-result.danger { color: var(--red); }
     .ratio-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-2); padding: 4px; }
 
+    /* Pages */
     .app-page { display: none; animation: fadeIn 0.2s ease; }
     .app-page.active { display: block; }
     .bank-sub-page { display: none; animation: fadeIn 0.2s ease; }
     .bank-sub-page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+    /* ========== BANK PERSON SELECTOR (NEW) ========== */
+    .bank-step { display: none; animation: bankSlideIn 0.35s cubic-bezier(0.22,1,0.36,1); }
+    .bank-step.active { display: block; }
+    @keyframes bankSlideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    .person-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 8px; }
+    .person-select-card { background: var(--card); border: 2px solid var(--border); border-radius: var(--r-lg); padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.22,1,0.36,1); position: relative; overflow: hidden; }
+    .person-select-card:active { transform: scale(0.95); }
+    .person-select-card:hover { border-color: var(--text-3); }
+    .person-select-card .ps-emoji { font-size: 48px; display: block; margin-bottom: 12px; }
+    .person-select-card .ps-name { font-size: 18px; font-weight: 800; color: var(--text-1); margin-bottom: 4px; }
+    .person-select-card .ps-balance { font-size: 13px; color: var(--text-2); font-weight: 600; }
+    .person-select-card .ps-balance span { font-size: 20px; font-weight: 800; }
+    .person-select-card.torie-card:hover, .person-select-card.torie-card.selected { border-color: var(--torie); background: rgba(0,122,255,0.04); }
+    .person-select-card.jory-card:hover, .person-select-card.jory-card.selected { border-color: var(--jory); background: rgba(255,149,0,0.04); }
+    @media (prefers-color-scheme: dark) {
+      .person-select-card.torie-card.selected { background: rgba(0,122,255,0.08); }
+      .person-select-card.jory-card.selected { background: rgba(255,149,0,0.08); }
+    }
+
+    .bank-back-btn { display: inline-flex; align-items: center; gap: 4px; border: none; background: var(--bg); color: var(--text-2); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 20px; cursor: pointer; margin-bottom: 16px; transition: all 0.2s; border: 1px solid var(--border); }
+    .bank-back-btn:active { transform: scale(0.95); }
+
+    .bank-person-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-bottom: 16px; }
+    .bank-person-badge.torie-badge { background: rgba(0,122,255,0.1); color: var(--torie); }
+    .bank-person-badge.jory-badge { background: rgba(255,149,0,0.1); color: var(--jory); }
+
+    .bank-sub-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+    .bank-sub-nav-btn { padding: 24px 12px; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--card); text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: var(--shadow); }
+    .bank-sub-nav-btn:active { transform: scale(0.95); }
+    .bank-sub-nav-btn .bsn-emoji { font-size: 28px; display: block; margin-bottom: 8px; }
+    .bank-sub-nav-btn .bsn-label { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .bank-sub-nav-btn .bsn-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+    .bank-sub-nav-btn:hover { border-color: var(--text-3); }
+
+    /* ========== RECHARGE (NEW) ========== */
+    .recharge-card { background: linear-gradient(135deg, rgba(0,122,255,0.06), rgba(255,149,0,0.06)); border: 1px solid var(--border); }
+    .recharge-rate { font-size: 13px; color: var(--text-2); margin-bottom: 12px; font-weight: 600; }
+    .recharge-rate span { color: var(--torie); font-size: 16px; font-weight: 800; }
+
+    /* ========== UNIVERSAL CONVERTER (NEW) ========== */
+    .converter-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 16px; }
+    .converter-type-btn { height: auto; padding: 10px 4px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg); color: var(--text-2); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.3; }
+    .converter-type-btn.active { background: var(--torie); color: #fff; border-color: var(--torie); }
+    .converter-type-btn:active { transform: scale(0.95); }
+    .converter-type-btn .ctb-emoji { font-size: 18px; display: block; margin-bottom: 2px; }
+
+    /* Bottom Nav */
     .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(380px, calc(100% - 32px)); padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--card-trans); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
     .nav-btn { height: 52px; border: 0; border-radius: 16px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 600; transition: all 0.2s; }
     .nav-btn:active { transform: scale(0.92); }
     .nav-icon { font-size: 20px; line-height: 1; }
     .nav-btn.active { background: var(--text-1); color: var(--bg); }
 
+    /* Toast */
     .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
     .toast { padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all 0.3s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { background: var(--green); }
     .toast.error { background: var(--red); }
 
+    /* Celebration Canvas */
     #celebrationCanvas { position: fixed; inset: 0; z-index: 10000; pointer-events: none; width: 100%; height: 100%; }
     
+    /* Modals */
     .modal-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .modal-overlay.show { opacity: 1; pointer-events: auto; }
     .modal-box { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(320px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); text-align: center; }
@@ -245,6 +330,9 @@
     .redeem-sub { font-size: 14px; opacity: 0.8; margin-bottom: 24px; }
     .redeem-close-btn { height: 40px; padding: 0 28px; border: none; border-radius: 20px; background: rgba(255,255,255,0.2); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s; }
 
+    /* Background tint overlay */
+    .bg-tint-overlay { position: fixed; inset: 0; pointer-events: none; z-index: -1; transition: background 0.6s ease; }
+
     @media (max-width: 480px) {
       body { padding: 16px 12px 110px; }
       .page-title { font-size: 24px; }
@@ -262,11 +350,17 @@
       .nav-btn { height: 48px; border-radius: 14px; }
       .pet-svg { width: 56px; height: 56px; }
       .spirit-status { font-size: 12px; }
+      .person-select-card .ps-emoji { font-size: 40px; }
+      .person-select-card { padding: 20px 12px; }
+      .bank-sub-nav { gap: 8px; }
+      .bank-sub-nav-btn { padding: 18px 8px; }
+      .converter-type-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
 
+  <div class="bg-tint-overlay" id="bgTint"></div>
   <div class="toast-container"><div id="toast" class="toast"></div></div>
   <canvas id="celebrationCanvas"></canvas>
   
@@ -279,6 +373,7 @@
     </div>
   </div>
 
+  <!-- Calorie Ratio Modal -->
   <div id="calRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;">⚙️ 卡路里换算设置</div>
@@ -309,6 +404,7 @@
     </div>
   </div>
 
+  <!-- Late Ratio Modal -->
   <div id="lateRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;">⚙️ 迟到惩罚设置</div>
@@ -328,6 +424,7 @@
     </div>
   </div>
 
+  <!-- Settings Panel -->
   <div id="settingsOverlay" class="overlay"></div>
   <div id="settingsPanel" class="panel">
     <div class="panel-title">⚙️ 显示设置</div>
@@ -345,6 +442,7 @@
     <button id="settingsBtn" class="settings-btn" aria-label="设置">⚙️</button>
     <div id="festivalBannerContainer"></div>
 
+    <!-- ==================== HOME PAGE ==================== -->
     <section id="page-home" class="app-page active">
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
@@ -366,6 +464,7 @@
       </div>
 
       <div class="spirits-container">
+        <!-- Torie Pet -->
         <div class="spirit-card torie state-normal" id="spiritTorie">
           <div class="pet-container">
             <svg class="pet-svg" id="svgTorie" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -378,157 +477,216 @@
               <circle class="pupil" cx="62" cy="45" r="4" fill="currentColor" stroke="none" />
               <path class="star-eye" d="M38 40 L40 44 L44 45 L40 46 L38 50 L36 46 L32 45 L36 44 Z" fill="currentColor" stroke="none" style="display:none" />
               <path class="star-eye" d="M62 40 L64 44 L68 45 L64 46 L62 50 L60 46 L56 45 L60 44 Z" fill="currentColor" stroke="none" style="display:none" />
+              <path class="sleepy-eye" d="M30 45 Q38 48 46 45" style="display:none" />
+              <path class="sleepy-eye" d="M54 45 Q62 48 70 45" style="display:none" />
+              <path class="sad-eye" d="M30 48 Q38 44 46 48" style="display:none" />
+              <path class="sad-eye" d="M54 48 Q62 44 70 48" style="display:none" />
               <path d="M50 52 L46 58 L54 58 Z" fill="var(--jory)" stroke="var(--jory)" />
               <path d="M25 55 C15 60, 15 75, 25 80" />
               <path d="M75 55 C85 60, 85 75, 75 80" />
               <path class="sweat" d="M75 25 C75 25, 80 30, 80 35 C80 38, 75 38, 75 35 C75 30, 75 25, 75 25 Z" fill="var(--torie)" stroke="none" />
+              <text class="zzz" x="72" y="22" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
             </svg>
           </div>
           <div class="spirit-name">Torie</div>
           <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
+          <div class="digestion-wrap">
+            <div class="digestion-label"><span>🍖 饱腹度</span><span id="torieDigestPct">100%</span></div>
+            <div class="digestion-track"><div class="digestion-bar full" id="torieDigestBar" style="width:100%"></div></div>
+            <button class="feed-btn" id="feedTorieBtn">🍖 喂食（-1张）</button>
+          </div>
         </div>
 
+        <!-- Jory Pet -->
         <div class="spirit-card jory state-normal" id="spiritJory">
           <div class="pet-container">
-            <!-- WIDER ears: plump oval petal shape, splaying outward -->
             <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <!-- Mochi Body -->
               <ellipse cx="50" cy="65" rx="26" ry="22" fill="var(--card)" />
-              
-              <!-- Left Ear: wide oval, base 28-40, tip at x=18, curves outward left -->
               <path class="bunny-ear-l" d="M28 44 C18 32, 8 16, 14 6 C20 -2, 36 14, 40 44" fill="var(--card)" />
               <path class="bunny-ear-l" d="M30 40 C24 30, 18 18, 22 10 C26 4, 34 20, 36 40" stroke="var(--red)" stroke-width="1.5" opacity="0.35" fill="none" />
-              
-              <!-- Right Ear: mirror symmetric, base 60-72, tip at x=82 -->
               <path class="bunny-ear-r" d="M72 44 C82 32, 92 16, 86 6 C80 -2, 64 14, 60 44" fill="var(--card)" />
               <path class="bunny-ear-r" d="M70 40 C76 30, 82 18, 78 10 C74 4, 66 20, 64 40" stroke="var(--red)" stroke-width="1.5" opacity="0.35" fill="none" />
-              
-              <!-- Bean Eyes (Normal) -->
               <ellipse class="bean-eye" cx="40" cy="62" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
               <ellipse class="bean-eye" cx="60" cy="62" rx="2.5" ry="3.5" fill="currentColor" stroke="none" />
-              
-              <!-- Happy Closed Eyes -->
               <path class="happy-eye" d="M37 62 Q40 59 43 62" style="display:none" />
               <path class="happy-eye" d="M57 62 Q60 59 63 62" style="display:none" />
-              
-              <!-- Tiny Nose + Mouth -->
+              <path class="sleepy-eye" d="M36 62 Q40 64 44 62" style="display:none" />
+              <path class="sleepy-eye" d="M56 62 Q60 64 64 62" style="display:none" />
+              <path class="sad-eye" d="M37 64 Q40 60 43 64" style="display:none" />
+              <path class="sad-eye" d="M57 64 Q60 60 63 64" style="display:none" />
               <circle cx="50" cy="68" r="1.5" fill="var(--red)" stroke="none" opacity="0.6" />
               <path d="M47 71 Q50 73 53 71" stroke-width="1.5" />
-              
-              <!-- Cheek Blush -->
               <circle cx="32" cy="68" r="4.5" fill="var(--red)" opacity="0.12" stroke="none" />
               <circle cx="68" cy="68" r="4.5" fill="var(--red)" opacity="0.12" stroke="none" />
-              
-              <!-- Little Paws -->
               <ellipse cx="38" cy="84" rx="6" ry="3.5" fill="var(--card)" />
               <ellipse cx="62" cy="84" rx="6" ry="3.5" fill="var(--card)" />
-              
-              <!-- Sweat Drop -->
               <path class="sweat" d="M74 36 C74 36, 78 40, 78 44 C78 46.5, 74 46.5, 74 44 C74 40, 74 36, 74 36 Z" fill="var(--torie)" stroke="none" />
+              <text class="zzz" x="72" y="36" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
             </svg>
           </div>
           <div class="spirit-name">Jory</div>
           <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
+          <div class="digestion-wrap">
+            <div class="digestion-label"><span>🥕 饱腹度</span><span id="joryDigestPct">100%</span></div>
+            <div class="digestion-track"><div class="digestion-bar full" id="joryDigestBar" style="width:100%"></div></div>
+            <button class="feed-btn" id="feedJoryBtn">🥕 喂食（-1张）</button>
+          </div>
         </div>
+      </div>
+
+      <!-- Recharge Card (NEW) -->
+      <div class="card recharge-card">
+        <h2 class="section-title">💰 充值自由卡</h2>
+        <div class="recharge-rate">汇率：<span>10¥</span> = 1 张自由卡（充入小荷包）</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="rechargePerson">谁充值</label>
+            <select id="rechargePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+          </div>
+          <div class="form-group">
+            <label for="rechargeAmount">金额（¥）</label>
+            <input id="rechargeAmount" type="number" min="10" step="10" placeholder="10" />
+          </div>
+        </div>
+        <div id="rechargeResult" class="converter-result" style="display:none"></div>
+        <button id="rechargeSubmitBtn" class="submit-btn green" disabled>确认充值并入账</button>
       </div>
     </section>
 
+    <!-- ==================== BANK PAGE (REDESIGNED) ==================== -->
     <section id="page-bank" class="app-page">
       <div class="page-title">自由卡银行</div>
       <div class="subtitle">属于你们的小小约定 💕</div>
-      
-      <div class="segment segment-3">
-        <button class="seg-btn active" data-bank="shop">💰 心愿</button>
-        <button class="seg-btn" data-bank="earn">🔥 赚取</button>
-        <button class="seg-btn" data-bank="punish">⚠️ 惩罚</button>
-      </div>
 
-      <div id="bank-shop" class="bank-sub-page active">
-        <div class="card">
-          <div class="segment segment-2" style="margin-bottom: 16px;">
-            <button class="seg-btn active" data-view="Torie">🦉 Torie</button>
-            <button class="seg-btn" data-view="Jory">🐰 Jory</button>
+      <!-- STEP 1: Choose Person -->
+      <div id="bankStep1" class="bank-step active">
+        <div class="person-selector">
+          <div class="person-select-card torie-card" id="bankPickTorie">
+            <span class="ps-emoji">🦉</span>
+            <div class="ps-name">Torie</div>
+            <div class="ps-balance">余额 <span id="bankTorieBal">0</span> 张</div>
           </div>
-          <div id="shopList"></div>
-          <div class="add-form">
-            <div class="form-group"><label>心愿名称</label><input id="newProductName" type="text" maxlength="30" placeholder="周末酒店" /></div>
-            <div class="form-group"><label>价格</label><input id="newProductCost" type="number" min="1" max="999" placeholder="100" /></div>
-            <button class="add-btn" id="addProductBtn">添加</button>
+          <div class="person-select-card jory-card" id="bankPickJory">
+            <span class="ps-emoji">🐰</span>
+            <div class="ps-name">Jory</div>
+            <div class="ps-balance">余额 <span id="bankJoryBal">0</span> 张</div>
           </div>
         </div>
       </div>
 
-      <div id="bank-earn" class="bank-sub-page">
-        <div class="card">
-          <h2 class="section-title">💪 任务橱窗</h2>
-          <div class="segment segment-2" style="margin-bottom: 16px;">
-            <button class="seg-btn active" data-earn-view="Torie">🦉 Torie</button>
-            <button class="seg-btn" data-earn-view="Jory">🐰 Jory</button>
+      <!-- STEP 2: Choose Section -->
+      <div id="bankStep2" class="bank-step">
+        <button class="bank-back-btn" id="bankBackToStep1">← 重新选择</button>
+        <div class="bank-person-badge" id="bankPersonBadge"></div>
+        <div class="bank-sub-nav">
+          <div class="bank-sub-nav-btn" data-bank="shop">
+            <span class="bsn-emoji">💰</span>
+            <div class="bsn-label">心愿商店</div>
+            <div class="bsn-desc">兑换小心愿</div>
           </div>
-          <div id="earnList"></div>
-          <div class="add-form">
-            <div class="form-group"><label>任务名称</label><input id="newEarnName" type="text" maxlength="30" placeholder="阅读30分钟" /></div>
-            <div class="form-group"><label>奖励</label><input id="newEarnCost" type="number" min="1" max="99" placeholder="2" /></div>
-            <button class="add-btn" id="addEarnBtn">添加</button>
+          <div class="bank-sub-nav-btn" data-bank="earn">
+            <span class="bsn-emoji">🔥</span>
+            <div class="bsn-label">赚取自由卡</div>
+            <div class="bsn-desc">任务 & 运动</div>
           </div>
-        </div>
-
-        <div class="card">
-          <div class="converter-header">
-            <h2 class="section-title" style="margin:0">🔥 卡路里换算</h2>
-            <button class="ratio-btn" id="openCalRatioBtn">⚙️</button>
+          <div class="bank-sub-nav-btn" data-bank="punish">
+            <span class="bsn-emoji">⚠️</span>
+            <div class="bsn-label">惩罚清单</div>
+            <div class="bsn-desc">迟到 & 违规</div>
           </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="calPerson">谁</label>
-              <select id="calPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
-            </div>
-            <div class="form-group">
-              <label for="calInput">消耗大卡</label>
-              <input id="calInput" type="number" min="0" placeholder="350" />
-            </div>
-          </div>
-          <div id="calResult" class="converter-result" style="display:none"></div>
-          <button id="calSubmitBtn" class="submit-btn" disabled>一键入账</button>
         </div>
       </div>
 
-      <div id="bank-punish" class="bank-sub-page">
-        <div class="card">
-          <h2 class="section-title">🚨 惩罚清单</h2>
-          <div class="segment segment-2" style="margin-bottom: 16px;">
-            <button class="seg-btn active" data-punish-view="Torie">🦉 Torie</button>
-            <button class="seg-btn" data-punish-view="Jory">🐰 Jory</button>
-          </div>
-          <div id="punishList"></div>
-          <div class="add-form">
-            <div class="form-group"><label>惩罚项目</label><input id="newPunishName" type="text" maxlength="30" placeholder="迟到" /></div>
-            <div class="form-group"><label>扣除</label><input id="newPunishCost" type="number" min="1" max="99" placeholder="1" /></div>
-            <button class="add-btn" id="addPunishBtn">添加</button>
+      <!-- STEP 3: Content -->
+      <div id="bankStep3" class="bank-step">
+        <button class="bank-back-btn" id="bankBackToStep2">← 返回</button>
+        <div class="bank-person-badge" id="bankPersonBadge2"></div>
+
+        <div id="bank-shop" class="bank-sub-page">
+          <div class="card">
+            <div id="shopList"></div>
+            <div class="add-form">
+              <div class="form-group"><label>心愿名称</label><input id="newProductName" type="text" maxlength="30" placeholder="周末酒店" /></div>
+              <div class="form-group"><label>价格</label><input id="newProductCost" type="number" min="1" max="999" placeholder="100" /></div>
+              <button class="add-btn" id="addProductBtn">添加</button>
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="converter-header">
-            <h2 class="section-title" style="margin:0">⏰ 迟到换算</h2>
-            <button class="ratio-btn" id="openLateRatioBtn">⚙️</button>
-          </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="latePerson">谁迟到了</label>
-              <select id="latePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
-            </div>
-            <div class="form-group">
-              <label for="lateInput">迟到分钟数</label>
-              <input id="lateInput" type="number" min="0" placeholder="15" />
+        <div id="bank-earn" class="bank-sub-page">
+          <div class="card">
+            <h2 class="section-title">💪 任务橱窗</h2>
+            <div id="earnList"></div>
+            <div class="add-form">
+              <div class="form-group"><label>任务名称</label><input id="newEarnName" type="text" maxlength="30" placeholder="阅读30分钟" /></div>
+              <div class="form-group"><label>奖励</label><input id="newEarnCost" type="number" min="1" max="99" placeholder="2" /></div>
+              <button class="add-btn" id="addEarnBtn">添加</button>
             </div>
           </div>
-          <div id="lateResult" class="converter-result danger" style="display:none"></div>
-          <button id="lateSubmitBtn" class="submit-btn danger" disabled>确认扣除</button>
+
+          <!-- Universal Converter (UPGRADED) -->
+          <div class="card">
+            <div class="converter-header">
+              <h2 class="section-title" style="margin:0">🔥 通用换算器</h2>
+              <button class="ratio-btn" id="openCalRatioBtn">⚙️</button>
+            </div>
+            <div class="converter-type-grid" id="converterTypeGrid">
+              <button class="converter-type-btn active" data-ctype="calorie"><span class="ctb-emoji">🔥</span>卡路里</button>
+              <button class="converter-type-btn" data-ctype="momo"><span class="ctb-emoji">📖</span>墨墨背单词</button>
+              <button class="converter-type-btn" data-ctype="pushup"><span class="ctb-emoji">💪</span>俯卧撑</button>
+              <button class="converter-type-btn" data-ctype="pullup"><span class="ctb-emoji">🏋️</span>引体向上</button>
+              <button class="converter-type-btn" data-ctype="situp"><span class="ctb-emoji">🤸</span>仰卧起坐</button>
+              <button class="converter-type-btn" data-ctype="dip"><span class="ctb-emoji">🤾</span>撑双杠</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label id="converterPersonLabel">谁</label>
+                <select id="converterPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+              </div>
+              <div class="form-group">
+                <label id="converterInputLabel">消耗大卡</label>
+                <input id="converterInput" type="number" min="0" placeholder="350" />
+              </div>
+            </div>
+            <div id="converterResult" class="converter-result" style="display:none"></div>
+            <button id="converterSubmitBtn" class="submit-btn" disabled>一键入账</button>
+          </div>
+        </div>
+
+        <div id="bank-punish" class="bank-sub-page">
+          <div class="card">
+            <h2 class="section-title">🚨 惩罚清单</h2>
+            <div id="punishList"></div>
+            <div class="add-form">
+              <div class="form-group"><label>惩罚项目</label><input id="newPunishName" type="text" maxlength="30" placeholder="迟到" /></div>
+              <div class="form-group"><label>扣除</label><input id="newPunishCost" type="number" min="1" max="99" placeholder="1" /></div>
+              <button class="add-btn" id="addPunishBtn">添加</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="converter-header">
+              <h2 class="section-title" style="margin:0">⏰ 迟到换算</h2>
+              <button class="ratio-btn" id="openLateRatioBtn">⚙️</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="latePerson">谁迟到了</label>
+                <select id="latePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+              </div>
+              <div class="form-group">
+                <label for="lateInput">迟到分钟数</label>
+                <input id="lateInput" type="number" min="0" placeholder="15" />
+              </div>
+            </div>
+            <div id="lateResult" class="converter-result danger" style="display:none"></div>
+            <button id="lateSubmitBtn" class="submit-btn danger" disabled>确认扣除</button>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- ==================== DATA PAGE ==================== -->
     <section id="page-data" class="app-page">
       <div class="page-title">数据统计</div>
       <div class="subtitle">看见成长的轨迹 📊</div>
@@ -553,6 +711,7 @@
     </section>
   </div>
 
+  <!-- Bottom Nav -->
   <nav class="bottom-nav" aria-label="页面导航">
     <button class="nav-btn active" data-page="home" type="button"><span class="nav-icon">🏠</span><span>首页</span></button>
     <button class="nav-btn" data-page="bank" type="button"><span class="nav-icon">🏦</span><span>银行</span></button>
@@ -560,14 +719,16 @@
   </nav>
 
   <script>
+    /* ==================== SUPABASE INIT ==================== */
     const SUPABASE_URL = "https://vimaqasjmrocpqyepudw.supabase.co";
     const SUPABASE_KEY = "sb_publishable_yV3tVy_arOvm5HTNhwoVNw_lEyE70ah";
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let allLogs = [], allProducts = [];
     let currentPeriod = "today", currentHistoryFilter = "all";
-    let shopView = "Torie", earnView = "Torie", punishView = "Torie";
-    let lastBankTab = localStorage.getItem("fc_last_bank_tab") || "shop";
+    let bankPerson = localStorage.getItem("fc_bank_person") || "";
+    let bankSection = localStorage.getItem("fc_bank_section") || "";
+    let lastBankStep = parseInt(localStorage.getItem("fc_bank_step")) || 1;
 
     let calRatios = {
       torieX: parseInt(localStorage.getItem("fc_cal_torie_x")) || 200,
@@ -579,6 +740,7 @@
 
     const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
 
+    /* ==================== SPECIAL DATES ==================== */
     const SPECIAL_DATES = [
       { month: 9, day: 2, emoji: "🎂", title: "Jory 生日快乐！", sub: "愿你的每一天都像今天一样闪闪发光 ✨", tier: 3 },
       { month: 11, day: 2, emoji: "💕", title: "纪念日快乐！", sub: "从那天起，每一天都是最好的日子", tier: 4 },
@@ -590,15 +752,119 @@
     const URGE = ["这周稍微有点安静哦，下周要不要一起冲个任务？👀","一个人领跑也没关系，另一个人在蓄力呢 🔄","别灰心，哪怕一小步也是在前进，加油 🐾","休息好了就出发吧，下周期待你们的爆发 🔋"];
     const WARN = ["这周花得有点猛啦，小心透支，下周赶紧补回来！⚠️","偶尔透支没关系，但下周要一起努力填坑哦 💪","花钱的时候开心了吗？开心了就值得，但下次注意 🎁","入不敷出了哦，快踩踩刹车，多赚点卡吧 🛑"];
 
+    /* ==================== PET STATE SYSTEM (UPGRADED) ==================== */
     const SPIRIT_STATES = {
-      amazing: { texts: ["今天超神了！", "状态爆棚！", "闪闪发光中~", "简直太强啦！", "为你骄傲！"] },
-      good: { texts: ["今天很棒哦~", "稳稳的幸福", "继续加油呀！", "心情美美哒", "表现不错呢！"] },
-      normal: { texts: ["平静的一天~", "在蓄力中...", "慢慢来也好", "休息一下下", "稳扎稳打中"] },
-      low: { texts: ["今天有点累...", "需要充充电", "明天会更好", "抱抱你~", "没关系，歇歇吧"] },
-      warning: { texts: ["余额告急！", "要注意啦！", "快赚点卡吧", "透支警告！", "该努力咯~"] }
+      amazing:  { texts: ["超神了！！","状态爆棚！","闪闪发光~","简直太强啦！","为你骄傲！"], emoji: "🤩" },
+      happy:    { texts: ["今天很开心~","嘻嘻心情好","美滋滋的~","有点小兴奋","快乐加倍！"], emoji: "😊" },
+      good:     { texts: ["今天很棒哦~","稳稳的幸福","继续加油呀！","心情美美哒","表现不错呢！"], emoji: "😄" },
+      normal:   { texts: ["平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中"], emoji: "😌" },
+      sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重..."], emoji: "😴" },
+      low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧"], emoji: "😔" },
+      hungry:   { texts: ["肚子咕噜噜...","好饿呀~","想吃东西...","喂喂我嘛~","饿得没力气"], emoji: "🥺" },
+      starving: { texts: ["快饿晕了！","已经很久了...","主人忘了我吗","急需投喂！！","要撑不住了"], emoji: "😵" },
+      warning:  { texts: ["余额告急！","要注意啦！","快赚点卡吧","透支警告！","该努力咯~"], emoji: "😰" }
     };
 
-    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    /* ==================== DIGESTION SYSTEM (NEW) ==================== */
+    const DIGEST_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours to fully digest
+
+    function getLastFeedTime(person) {
+      return parseInt(localStorage.getItem(`fc_feed_${person.toLowerCase()}`)) || 0;
+    }
+    function setLastFeedTime(person) {
+      localStorage.setItem(`fc_feed_${person.toLowerCase()}`, Date.now().toString());
+    }
+    function getDigestPct(person) {
+      const last = getLastFeedTime(person);
+      if (!last) return 100; // never fed = assume full (won't show hungry unless explicitly tracked)
+      const elapsed = Date.now() - last;
+      const pct = Math.max(0, 100 - (elapsed / DIGEST_DURATION_MS) * 100);
+      return Math.round(pct);
+    }
+    function updateDigestionUI(person) {
+      const pct = getDigestPct(person);
+      const bar = document.getElementById(`${person.toLowerCase()}DigestBar`);
+      const label = document.getElementById(`${person.toLowerCase()}DigestPct`);
+      if (!bar || !label) return;
+      bar.style.width = pct + "%";
+      label.textContent = pct + "%";
+      bar.className = "digestion-bar " + (pct > 60 ? "full" : pct > 25 ? "mid" : "low");
+    }
+
+    let digestionTimer = null;
+    function startDigestionTimer() {
+      if (digestionTimer) clearInterval(digestionTimer);
+      updateDigestionUI("Torie");
+      updateDigestionUI("Jory");
+      digestionTimer = setInterval(() => {
+        updateDigestionUI("Torie");
+        updateDigestionUI("Jory");
+        updateSpirits(); // re-evaluate states based on digestion
+      }, 60000); // update every minute
+    }
+
+    /* ==================== PET MOOD LOGIC (UPGRADED) ==================== */
+    // Track recent events for mood
+    let recentEvents = { Torie: [], Jory: [] };
+
+    function trackEvent(person, type) {
+      // type: 'earn', 'redeem', 'punish', 'feed'
+      if (!recentEvents[person]) recentEvents[person] = [];
+      recentEvents[person].push({ type, time: Date.now() });
+      // keep only last 30 min
+      recentEvents[person] = recentEvents[person].filter(e => Date.now() - e.time < 30 * 60 * 1000);
+    }
+
+    function getRecentEventCounts(person) {
+      const now = Date.now();
+      const events = (recentEvents[person] || []).filter(e => now - e.time < 30 * 60 * 1000);
+      let earns = 0, redeems = 0, punishes = 0, feeds = 0;
+      events.forEach(e => {
+        if (e.type === 'earn') earns++;
+        if (e.type === 'redeem') redeems++;
+        if (e.type === 'punish') punishes++;
+        if (e.type === 'feed') feeds++;
+      });
+      return { earns, redeems, punishes, feeds };
+    }
+
+    function getPetState(person) {
+      const balance = calcBalance(person);
+      const digestPct = getDigestPct(person);
+      const now = new Date();
+      const hour = now.getHours();
+      const events = getRecentEventCounts(person);
+
+      // Priority order:
+      // 1. Starving (digestion < 10%)
+      if (getLastFeedTime(person) > 0 && digestPct < 10) return "starving";
+      // 2. Balance negative
+      if (balance < 0) return "warning";
+      // 3. Hungry (digestion < 30%)
+      if (getLastFeedTime(person) > 0 && digestPct < 30) return "hungry";
+      // 4. Recent punish (last 30 min)
+      if (events.punishes > 0) return "low";
+      // 5. Recent redeem
+      if (events.redeems > 0) return "amazing";
+      // 6. Recent feed
+      if (events.feeds > 0 && events.earns === 0) return "happy";
+      // 7. Sleepy (late night 23:00-06:00)
+      if (hour >= 23 || hour < 6) return "sleepy";
+      // 8. Today's activity
+      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+      const todayLogs = allLogs.filter(l => new Date(l.created_at) >= todayStart && l.operator === person);
+      let earned = 0, spent = 0;
+      todayLogs.forEach(l => {
+        const n = Number(l.card_num) || 0;
+        if (l.change_type === "增加") earned += n; else spent += n;
+      });
+      const net = earned - spent;
+      if (earned >= 10 || net >= 5) return "amazing";
+      if (events.earns > 0) return "happy";
+      if (earned >= 3 || net > 0) return "good";
+      if (spent > earned && spent > 0) return "low";
+      return "normal";
+    }
 
     function updatePetState(person, state) {
       const card = document.getElementById(`spirit${person}`);
@@ -608,28 +874,51 @@
       if (person === "Torie") {
         const pupils = svg.querySelectorAll('.pupil');
         const starEyes = svg.querySelectorAll('.star-eye');
-        pupils.forEach(p => p.style.display = '');
+        const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
+        const sadEyes = svg.querySelectorAll('.sad-eye');
+        // Reset all
+        pupils.forEach(p => p.style.display = 'none');
         starEyes.forEach(p => p.style.display = 'none');
-        if (state === 'amazing') {
-          pupils.forEach(p => p.style.display = 'none');
+        sleepyEyes.forEach(p => p.style.display = 'none');
+        sadEyes.forEach(p => p.style.display = 'none');
+        
+        if (state === 'amazing' || state === 'happy') {
           starEyes.forEach(p => p.style.display = '');
+        } else if (state === 'sleepy') {
+          sleepyEyes.forEach(p => p.style.display = '');
+        } else if (state === 'low' || state === 'hungry' || state === 'starving') {
+          sadEyes.forEach(p => p.style.display = '');
+        } else {
+          pupils.forEach(p => p.style.display = '');
         }
       } else {
         const beanEyes = svg.querySelectorAll('.bean-eye');
         const happyEyes = svg.querySelectorAll('.happy-eye');
+        const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
+        const sadEyes = svg.querySelectorAll('.sad-eye');
         const ears = svg.querySelectorAll('.bunny-ear-l, .bunny-ear-r');
-        beanEyes.forEach(e => e.style.display = '');
+        // Reset all
+        beanEyes.forEach(e => e.style.display = 'none');
         happyEyes.forEach(e => e.style.display = 'none');
+        sleepyEyes.forEach(e => e.style.display = 'none');
+        sadEyes.forEach(e => e.style.display = 'none');
         ears.forEach(e => e.classList.remove('ear-down'));
-        if (state === 'amazing' || state === 'good') {
-          beanEyes.forEach(e => e.style.display = 'none');
+
+        if (state === 'amazing' || state === 'happy' || state === 'good') {
           happyEyes.forEach(e => e.style.display = '');
-        } else if (state === 'low') {
+        } else if (state === 'sleepy') {
+          sleepyEyes.forEach(e => e.style.display = '');
+        } else if (state === 'low' || state === 'starving') {
+          sadEyes.forEach(e => e.style.display = '');
           ears.forEach(e => e.classList.add('ear-down'));
+        } else if (state === 'hungry') {
+          sadEyes.forEach(e => e.style.display = '');
+        } else {
+          beanEyes.forEach(e => e.style.display = '');
         }
       }
       
-      const config = SPIRIT_STATES[state];
+      const config = SPIRIT_STATES[state] || SPIRIT_STATES.normal;
       const todayStart = new Date(); todayStart.setHours(0,0,0,0);
       const seed = todayStart.getDate() + person.length;
       const textIdx = (seed + 1) % config.texts.length;
@@ -637,52 +926,51 @@
     }
 
     function updateSpirits() {
-      const todayStart = new Date();
-      todayStart.setHours(0,0,0,0);
-      const todayLogs = allLogs.filter(l => new Date(l.created_at) >= todayStart);
       ["Torie", "Jory"].forEach(person => {
-        const personLogs = todayLogs.filter(l => l.operator === person);
-        let earned = 0, spent = 0;
-        personLogs.forEach(l => {
-          const n = Number(l.card_num) || 0;
-          if(l.change_type === "增加") earned += n;
-          else spent += n;
-        });
-        const balance = calcBalance(person);
-        const net = earned - spent;
-        let state;
-        if (balance < 0) state = "warning";
-        else if (earned >= 10 || net >= 5) state = "amazing";
-        else if (earned >= 3 || net > 0) state = "good";
-        else if (spent > earned && spent > 0) state = "low";
-        else state = "normal";
+        const state = getPetState(person);
         updatePetState(person, state);
+        updateDigestionUI(person);
       });
+    }
+
+    /* ==================== FEED PET (NEW) ==================== */
+    async function feedPet(person) {
+      const balance = calcBalance(person);
+      if (balance < 1) {
+        showToast("余额不足，至少需要 1 张卡来喂食", "error");
+        return;
+      }
+      if (!confirm(`确认花费 1 张自由卡喂 ${person}？`)) return;
+      
+      const { error } = await sb.from("freecard_log").insert({
+        operator: person, change_type: "减少", card_num: 1, reason: `🍖 喂食 ${person}`
+      });
+      if (error) { showToast("喂食失败：" + error.message, "error"); return; }
+      
+      setLastFeedTime(person);
+      trackEvent(person, 'feed');
+      showToast(`${person} 吃得好开心！🥰`, "success");
+      spawnParticles(1);
+      await loadLogs();
     }
 
     function initPetInteractions() {
       document.getElementById('spiritTorie').addEventListener('click', () => {
         const svg = document.getElementById('svgTorie');
         svg.classList.add('pet-clicked');
-        const pupils = svg.querySelectorAll('.pupil');
-        pupils.forEach(p => { p.setAttribute('ry', '1'); p.setAttribute('rx', '4'); });
-        setTimeout(() => {
-          pupils.forEach(p => { p.setAttribute('ry', '4'); p.setAttribute('rx', '4'); });
-          svg.classList.remove('pet-clicked');
-        }, 400);
+        setTimeout(() => svg.classList.remove('pet-clicked'), 600);
       });
-
       document.getElementById('spiritJory').addEventListener('click', () => {
         const svg = document.getElementById('svgJory');
         svg.classList.add('pet-clicked');
         svg.style.animation = 'none';
         svg.offsetHeight;
         svg.style.animation = 'mochiSquish 0.5s ease forwards';
-        setTimeout(() => {
-          svg.style.animation = '';
-          svg.classList.remove('pet-clicked');
-        }, 500);
+        setTimeout(() => { svg.style.animation = ''; svg.classList.remove('pet-clicked'); }, 500);
       });
+      
+      document.getElementById('feedTorieBtn').addEventListener('click', (e) => { e.stopPropagation(); feedPet("Torie"); });
+      document.getElementById('feedJoryBtn').addEventListener('click', (e) => { e.stopPropagation(); feedPet("Jory"); });
       
       if (!document.getElementById('mochi-style')) {
         const style = document.createElement('style');
@@ -701,6 +989,7 @@
       }
     }
 
+    /* ==================== SPECIAL DATES ==================== */
     function checkSpecialDate() {
       const now = new Date(), m = now.getMonth() + 1, d = now.getDate();
       const match = SPECIAL_DATES.find((s) => s.month === m && s.day === d);
@@ -709,6 +998,7 @@
       setTimeout(() => spawnParticles(match.tier), 600);
     }
 
+    /* ==================== WEEKLY SUMMARY ==================== */
     function getStartOfWeekDate() { const d = new Date(); d.setHours(0,0,0,0); const day = d.getDay(); d.setDate(d.getDate() - (day === 0 ? 6 : day - 1)); return d; }
 
     function getSoulComment(tE, jE, tS, jS) {
@@ -752,9 +1042,7 @@
 
     function generateRecentTrend() {
       const now = new Date();
-      const threeDaysAgo = new Date(now);
-      threeDaysAgo.setDate(threeDaysAgo.getDate() - 2);
-      threeDaysAgo.setHours(0,0,0,0);
+      const threeDaysAgo = new Date(now); threeDaysAgo.setDate(threeDaysAgo.getDate() - 2); threeDaysAgo.setHours(0,0,0,0);
       const recentLogs = allLogs.filter((l) => new Date(l.created_at) >= threeDaysAgo);
       if (recentLogs.length === 0) return null;
       let tE=0, tS=0, jE=0, jS=0;
@@ -793,6 +1081,7 @@
       card.innerHTML = `<div class="summary-header"><span class="summary-icon">📊</span><span class="summary-title">${trend.title}</span></div><div class="summary-text">${trend.body}</div>`;
     }
 
+    /* ==================== PARTICLES / CELEBRATION ==================== */
     const canvas = document.getElementById("celebrationCanvas"), ctx = canvas.getContext("2d");
     let particles = [], animFrameId = null;
     function resizeCanvas() { canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
@@ -815,6 +1104,7 @@
     }
     function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particles=particles.filter((p)=>p.life>0); particles.forEach((p)=>{p.update();p.draw(ctx);}); if(particles.length>0) animFrameId=requestAnimationFrame(animateParticles); else { animFrameId=null; ctx.clearRect(0,0,canvas.width,canvas.height); } }
 
+    /* ==================== REDEEM CEREMONY ==================== */
     function getRedeemTier(cost) { if(cost<=5)return 1; if(cost<=15)return 2; if(cost<=30)return 3; return 4; }
     const TIER_CONFIG = { 1:{emoji:"✨",title:"小确幸！",sub:"每一份小奖励都值得被记住",duration:2000}, 2:{emoji:"🎉",title:"太棒了！",sub:"努力有了回响，继续闪闪发光",duration:3000}, 3:{emoji:"🎆",title:"了不起的成就！",sub:"坚持的力量，让梦想照进现实",duration:4000}, 4:{emoji:"👑",title:"史诗级兑换！",sub:"这是属于你们的传奇时刻",duration:5500} };
 
@@ -831,6 +1121,7 @@
       closeBtn.addEventListener("click",closeCeremony); autoTimer=setTimeout(closeCeremony,config.duration);
     }
 
+    /* ==================== SETTINGS ==================== */
     function initSettings() {
       const savedBlur=localStorage.getItem("fc_blur");
       if(savedBlur!==null){document.documentElement.style.setProperty("--blur-val",savedBlur+"px");document.getElementById("blurSlider").value=savedBlur;document.getElementById("blurValue").textContent=savedBlur+"px";}
@@ -863,7 +1154,7 @@
         localStorage.setItem("fc_cal_jory_y", calRatios.joryY);
         calModal.classList.remove("show");
         showToast("比例已保存", "success");
-        calcCalorie();
+        calcConverter();
       });
 
       const lateModal = document.getElementById("lateRatioModal");
@@ -881,29 +1172,120 @@
       });
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      initSettings();
-      initRatioModals();
-      initPetInteractions();
-      setupNav();
-      setupBankSegment();
-      setupPeriodTabs();
-      setupHistoryFilter();
-      setupShopViewSwitch();
-      setupEarnViewSwitch();
-      setupPunishViewSwitch();
-      setupAddProduct();
-      setupAddEarn();
-      setupAddPunish();
-      setupCalorieConverter();
-      setupLateConverter();
-      checkSpecialDate();
-      await loadLogs();
-      await loadProducts();
-      sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
-      sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
+    /* ==================== BACKGROUND TINT ==================== */
+    function applyBgTint(person) {
+      const tint = document.getElementById("bgTint");
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (person === "Torie") {
+        tint.style.background = isDark ? "rgba(0,80,180,0.06)" : "rgba(0,122,255,0.04)";
+      } else if (person === "Jory") {
+        tint.style.background = isDark ? "rgba(180,100,0,0.06)" : "rgba(255,149,0,0.04)";
+      } else {
+        tint.style.background = "transparent";
+      }
+    }
+
+    // Listen for dark mode changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (bankPerson) applyBgTint(bankPerson);
     });
 
+    /* ==================== BANK NAVIGATION (NEW) ==================== */
+    function showBankStep(step) {
+      document.querySelectorAll(".bank-step").forEach(s => s.classList.remove("active"));
+      const el = document.getElementById(`bankStep${step}`);
+      if (el) {
+        // Force re-animation
+        el.style.animation = 'none';
+        el.offsetHeight;
+        el.style.animation = '';
+        el.classList.add("active");
+      }
+      lastBankStep = step;
+      localStorage.setItem("fc_bank_step", step);
+    }
+
+    function updateBankPersonBadges() {
+      const emoji = bankPerson === "Torie" ? "🦉" : "🐰";
+      const cls = bankPerson === "Torie" ? "torie-badge" : "jory-badge";
+      const html = `<span class="bank-person-badge ${cls}">${emoji} ${bankPerson}</span>`;
+      document.getElementById("bankPersonBadge").outerHTML = html.replace('<span class="bank-person-badge', '<span id="bankPersonBadge" class="bank-person-badge');
+      const el2 = document.getElementById("bankPersonBadge2");
+      if (el2) el2.outerHTML = html.replace('<span class="bank-person-badge', '<span id="bankPersonBadge2" class="bank-person-badge');
+    }
+
+    function selectBankPerson(person) {
+      bankPerson = person;
+      localStorage.setItem("fc_bank_person", person);
+      applyBgTint(person);
+      updateBankPersonBadges();
+
+      // Show selected card
+      document.getElementById("bankPickTorie").classList.toggle("selected", person === "Torie");
+      document.getElementById("bankPickJory").classList.toggle("selected", person === "Jory");
+
+      showBankStep(2);
+    }
+
+    function selectBankSection(section) {
+      bankSection = section;
+      localStorage.setItem("fc_bank_section", section);
+      
+      // Show the right sub-page
+      document.querySelectorAll(".bank-sub-page").forEach(p => p.classList.remove("active"));
+      const target = document.getElementById(`bank-${section}`);
+      if (target) target.classList.add("active");
+
+      showBankStep(3);
+
+      // Render content
+      if (section === "shop") renderShop();
+      else if (section === "earn") renderEarnList();
+      else if (section === "punish") renderPunishList();
+    }
+
+    function setupBankNav() {
+      // Step 1: Person selection
+      document.getElementById("bankPickTorie").addEventListener("click", () => selectBankPerson("Torie"));
+      document.getElementById("bankPickJory").addEventListener("click", () => selectBankPerson("Jory"));
+
+      // Step 2: Section selection
+      document.querySelectorAll(".bank-sub-nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => selectBankSection(btn.dataset.bank));
+      });
+
+      // Back buttons
+      document.getElementById("bankBackToStep1").addEventListener("click", () => {
+        bankPerson = "";
+        localStorage.setItem("fc_bank_person", "");
+        applyBgTint("");
+        showBankStep(1);
+      });
+      document.getElementById("bankBackToStep2").addEventListener("click", () => {
+        showBankStep(2);
+      });
+    }
+
+    function restoreBankState() {
+      if (bankPerson) {
+        applyBgTint(bankPerson);
+        document.getElementById("bankPickTorie").classList.toggle("selected", bankPerson === "Torie");
+        document.getElementById("bankPickJory").classList.toggle("selected", bankPerson === "Jory");
+        updateBankPersonBadges();
+      }
+      if (bankPerson && bankSection && lastBankStep === 3) {
+        document.querySelectorAll(".bank-sub-page").forEach(p => p.classList.remove("active"));
+        const target = document.getElementById(`bank-${bankSection}`);
+        if (target) target.classList.add("active");
+        showBankStep(3);
+      } else if (bankPerson && lastBankStep >= 2) {
+        showBankStep(2);
+      } else {
+        showBankStep(1);
+      }
+    }
+
+    /* ==================== PAGE NAV ==================== */
     function setupNav() {
       document.querySelectorAll(".nav-btn").forEach((btn)=>{
         btn.addEventListener("click",()=>{
@@ -911,25 +1293,22 @@
           document.querySelectorAll(".app-page").forEach((s)=>s.classList.toggle("active",s.id===`page-${page}`));
           document.querySelectorAll(".nav-btn").forEach((b)=>{const active=b===btn;b.classList.toggle("active",active);});
           window.scrollTo({top:0,behavior:"smooth"});
+          // If navigating to bank, restore state
+          if (page === "bank") {
+            restoreBankState();
+            // Update balance displays on person cards
+            document.getElementById("bankTorieBal").textContent = calcBalance("Torie");
+            document.getElementById("bankJoryBal").textContent = calcBalance("Jory");
+          }
+          // If leaving bank, clear tint
+          if (page !== "bank") {
+            applyBgTint("");
+          }
         });
       });
     }
 
-    function setupBankSegment() {
-      document.querySelectorAll(".seg-btn[data-bank]").forEach(b => b.classList.toggle("active", b.dataset.bank === lastBankTab));
-      document.querySelectorAll(".bank-sub-page").forEach(p => p.classList.toggle("active", p.id === `bank-${lastBankTab}`));
-      document.querySelectorAll(".seg-btn[data-bank]").forEach((btn)=>{
-        btn.addEventListener("click",()=>{
-          const tab = btn.dataset.bank;
-          lastBankTab = tab;
-          localStorage.setItem("fc_last_bank_tab", tab);
-          document.querySelectorAll(".seg-btn[data-bank]").forEach((b)=>b.classList.remove("active"));
-          btn.classList.add("active");
-          document.querySelectorAll(".bank-sub-page").forEach((p)=>p.classList.toggle("active", p.id === `bank-${tab}`));
-        });
-      });
-    }
-
+    /* ==================== STATS ==================== */
     function setupPeriodTabs() {
       document.querySelectorAll(".period-tab").forEach((btn)=>{
         btn.addEventListener("click",()=>{
@@ -940,86 +1319,7 @@
     }
 
     function setupHistoryFilter() { document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();}); }
-    
-    function setupViewSwitch(selector, getter, setter, renderFn) {
-      document.querySelectorAll(selector).forEach((btn)=>{
-        btn.addEventListener("click",()=>{
-          setter(btn.dataset.view || btn.dataset.earnView || btn.dataset.punishView);
-          document.querySelectorAll(selector).forEach((b)=>b.classList.remove("active"));
-          btn.classList.add("active");
-          renderFn();
-        });
-      });
-    }
-    function setupShopViewSwitch() { setupViewSwitch("[data-view]", ()=>shopView, (v)=>shopView=v, renderShop); }
-    function setupEarnViewSwitch() { setupViewSwitch("[data-earn-view]", ()=>earnView, (v)=>earnView=v, renderEarnList); }
-    function setupPunishViewSwitch() { setupViewSwitch("[data-punish-view]", ()=>punishView, (v)=>punishView=v, renderPunishList); }
 
-    function setupCalorieConverter() {
-      const input = document.getElementById("calInput"), person = document.getElementById("calPerson"), result = document.getElementById("calResult"), btn = document.getElementById("calSubmitBtn");
-      window.calcCalorie = () => {
-        const cal = parseInt(input.value) || 0;
-        const x = person.value === "Torie" ? calRatios.torieX : calRatios.joryX;
-        const y = person.value === "Torie" ? calRatios.torieY : calRatios.joryY;
-        const cards = Math.floor((cal / x) * y);
-        if(cal > 0) { result.style.display = "block"; result.textContent = `可兑换 ${cards} 张自由卡 (每${x}大卡=${y}张)`; btn.disabled = cards <= 0; } 
-        else { result.style.display = "none"; btn.disabled = true; }
-      };
-      input.addEventListener("input", calcCalorie); 
-      person.addEventListener("change", calcCalorie);
-      btn.addEventListener("click", async () => {
-        const cal = parseInt(input.value) || 0;
-        const x = person.value === "Torie" ? calRatios.torieX : calRatios.joryX;
-        const y = person.value === "Torie" ? calRatios.torieY : calRatios.joryY;
-        const cards = Math.floor((cal / x) * y);
-        if(cards <= 0) return;
-        btn.disabled = true; btn.textContent = "入账中...";
-        const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: cards, reason: `🔥 运动消耗 ${cal} 大卡` });
-        btn.disabled = false; btn.textContent = "一键入账";
-        if(error) { showToast("入账失败："+error.message, "error"); return; }
-        showToast(`成功入账 ${cards} 张！`, "success"); spawnParticles(1); input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
-      });
-    }
-
-    function setupLateConverter() {
-      const input = document.getElementById("lateInput"), person = document.getElementById("latePerson"), result = document.getElementById("lateResult"), btn = document.getElementById("lateSubmitBtn");
-      window.calcLate = () => {
-        const mins = parseInt(input.value) || 0;
-        const cards = Math.ceil(mins / lateTier);
-        if(mins > 0) { result.style.display = "block"; result.textContent = `将扣除 ${cards} 张自由卡 (每${lateTier}分钟扣1张)`; btn.disabled = cards <= 0; } 
-        else { result.style.display = "none"; btn.disabled = true; }
-      };
-      input.addEventListener("input", calcLate); 
-      person.addEventListener("change", calcLate);
-      btn.addEventListener("click", async () => {
-        const mins = parseInt(input.value) || 0;
-        const cards = Math.ceil(mins / lateTier);
-        if(cards <= 0) return;
-        btn.disabled = true; btn.textContent = "扣除中...";
-        const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "减少", card_num: cards, reason: `⏰ 迟到 ${mins} 分钟` });
-        btn.disabled = false; btn.textContent = "确认扣除";
-        if(error) { showToast("扣除失败："+error.message, "error"); return; }
-        showToast(`已扣除 ${cards} 张，下次注意哦`, "error");
-        if(navigator.vibrate) navigator.vibrate(200);
-        input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
-      });
-    }
-
-    async function loadLogs() {
-      const {data,error}=await sb.from("freecard_log").select("*").order("created_at",{ascending:false});
-      if(error){showToast("读取记录失败："+error.message,"error");return;}
-      allLogs=data||[]; refreshAll();
-    }
-
-    async function loadProducts() {
-      const {data,error}=await sb.from("freecard_shop").select("*").order("created_at",{ascending:true});
-      if(error){allProducts=[]; renderShop(); renderEarnList(); renderPunishList(); return;}
-      allProducts=data||[]; renderShop(); renderEarnList(); renderPunishList();
-    }
-
-    function refreshAll() { updateBalances(); updateSpirits(); updateHistoryFilterOptions(); renderStats(); renderHistory(); renderWeeklyCard(); renderTrendCard(); }
-    function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
-    function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
     function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
     function getStartOfMonth() { const d=new Date(); d.setHours(0,0,0,0); d.setDate(1); return d; }
     function filterByPeriod(logs,period) { if(period==="all") return logs; const map={today:getStartOfToday,week:getStartOfWeekDate,month:getStartOfMonth}; return logs.filter((l)=>new Date(l.created_at)>=map[period]()); }
@@ -1034,6 +1334,7 @@
     }
     function bar(name,val,max,cls) { return `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${max===0?0:(val/max)*100}%"></div></div><div class="bar-number">${val}</div></div>`; }
 
+    /* ==================== HISTORY ==================== */
     function updateHistoryFilterOptions() {
       const select=document.getElementById("historyFilter"), months=new Set();
       allLogs.forEach((l)=>{const d=new Date(l.created_at);months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);});
@@ -1054,20 +1355,18 @@
       container.querySelectorAll("[data-del-log]").forEach(b=>b.addEventListener("click",()=>deleteLog(b.dataset.delLog)));
     }
 
+    /* ==================== SHOP / EARN / PUNISH LISTS ==================== */
     function classifyProduct(p) {
       if (p.name.startsWith(TYPE_PREFIX.earn)) return "earn";
       if (p.name.startsWith(TYPE_PREFIX.punish)) return "punish";
       return "shop";
     }
+    function getDisplayName(p) { return p.name.replace(TYPE_PREFIX.earn, "").replace(TYPE_PREFIX.punish, ""); }
 
-    function getDisplayName(p) {
-      return p.name.replace(TYPE_PREFIX.earn, "").replace(TYPE_PREFIX.punish, "");
-    }
-
-    function renderList(containerId, type, view) {
+    function renderList(containerId, type) {
       const container = document.getElementById(containerId);
-      let items = allProducts.filter(p => p.owner === view && classifyProduct(p) === type);
-      const balance = calcBalance(view);
+      let items = allProducts.filter(p => p.owner === bankPerson && classifyProduct(p) === type);
+      const balance = calcBalance(bankPerson);
       if(type === "shop") {
         items.sort((a, b) => {
           const aReady = balance >= a.cost ? 1 : 0;
@@ -1094,7 +1393,7 @@
         } else if (isEarn) { 
           actionBtn = `<button class="action-btn btn-earn" data-action="earn" data-id="${escAttr(p.id)}">✅ 完成领取</button>`; 
         } else {
-          const barClass = canRedeem ? "full" : view.toLowerCase();
+          const barClass = canRedeem ? "full" : bankPerson.toLowerCase();
           const pText = canRedeem ? `<span style="color:var(--green)">✅ 已达成！</span><span>${balance} / ${p.cost}</span>` : `<span>${balance} / ${p.cost}</span><span>差 ${p.cost-balance}</span>`;
           progressHTML = `<div class="progress-wrap"><div class="progress-text">${pText}</div><div class="progress-bar-track"><div class="progress-bar ${barClass}" style="width:${pct}%"></div></div></div>`;
           actionBtn = `<button class="action-btn btn-redeem" ${canRedeem?"":"disabled"} data-action="redeem" data-id="${escAttr(p.id)}">${canRedeem?"🎁 兑换":"余额不足"}</button>`;
@@ -1114,14 +1413,14 @@
           </div>
         </div>`;
       }).join("");
-      container.querySelectorAll("[data-action]").forEach(b => b.addEventListener("click", () => handleListAction(b.dataset.action, b.dataset.id, type, view)));
+      container.querySelectorAll("[data-action]").forEach(b => b.addEventListener("click", () => handleListAction(b.dataset.action, b.dataset.id, type)));
     }
 
-    function renderShop() { renderList("shopList", "shop", shopView); }
-    function renderEarnList() { renderList("earnList", "earn", earnView); }
-    function renderPunishList() { renderList("punishList", "punish", punishView); }
+    function renderShop() { renderList("shopList", "shop"); }
+    function renderEarnList() { renderList("earnList", "earn"); }
+    function renderPunishList() { renderList("punishList", "punish"); }
 
-    async function handleListAction(action, id, type, view) {
+    async function handleListAction(action, id, type) {
       const p = allProducts.find(x => String(x.id) === String(id)); if(!p) return;
       const displayName = getDisplayName(p);
       if(action === "del") { 
@@ -1139,31 +1438,34 @@
         if(error) return showToast("修改失败", "error"); showToast("已更新", "success"); await loadProducts(); 
       }
       else if(action === "redeem") { 
-        if(calcBalance(view) < p.cost) return showToast("余额不足", "error"); 
+        if(calcBalance(bankPerson) < p.cost) return showToast("余额不足", "error"); 
         if(!confirm(`确认花费 ${p.cost} 张兑换「${displayName}」？`)) return; 
-        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${displayName}`}); 
+        const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${displayName}`}); 
         if(error) return showToast("兑换失败", "error"); 
+        trackEvent(bankPerson, 'redeem');
         showRedeemCeremony(p, p.cost); await loadLogs(); 
       }
       else if(action === "earn") { 
-        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"增加", card_num:p.cost, reason:`💪 任务：${displayName}`}); 
+        const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"增加", card_num:p.cost, reason:`💪 任务：${displayName}`}); 
         if(error) return showToast("领取失败", "error"); 
+        trackEvent(bankPerson, 'earn');
         showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); 
       }
       else if(action === "punish") { 
-        if(calcBalance(view) < p.cost) { 
-          if(!confirm(`${view} 余额不足，是否允许透支扣除？`)) return; 
+        if(calcBalance(bankPerson) < p.cost) { 
+          if(!confirm(`${bankPerson} 余额不足，是否允许透支扣除？`)) return; 
         } else { 
           if(!confirm(`确认扣除 ${p.cost} 张自由卡（${displayName}）？`)) return; 
         } 
-        const {error} = await sb.from("freecard_log").insert({operator:view, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${displayName}`}); 
+        const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${displayName}`}); 
         if(error) return showToast("扣除失败", "error"); 
+        trackEvent(bankPerson, 'punish');
         showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); 
         if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); 
       }
     }
 
-    function setupAdd(type, nameId, costId, btnId, viewGetter) {
+    function setupAdd(type, nameId, costId, btnId) {
       document.getElementById(btnId).addEventListener("click", async () => {
         const rawName = document.getElementById(nameId).value.trim();
         const cost = parseInt(document.getElementById(costId).value);
@@ -1172,8 +1474,7 @@
         const btn = document.getElementById(btnId); btn.disabled = true; btn.textContent = "...";
         const prefix = type === "earn" ? TYPE_PREFIX.earn : type === "punish" ? TYPE_PREFIX.punish : "";
         const finalName = prefix + rawName;
-        const finalOwner = viewGetter();
-        const {error} = await sb.from("freecard_shop").insert({name: finalName, cost, owner: finalOwner});
+        const {error} = await sb.from("freecard_shop").insert({name: finalName, cost, owner: bankPerson});
         btn.disabled = false; btn.textContent = "添加";
         if(error) { showToast("添加失败：" + error.message, "error"); return; }
         document.getElementById(nameId).value = ""; document.getElementById(costId).value = ""; 
@@ -1181,15 +1482,246 @@
       });
     }
 
-    function setupAddProduct() { setupAdd("shop", "newProductName", "newProductCost", "addProductBtn", () => shopView); }
-    function setupAddEarn() { setupAdd("earn", "newEarnName", "newEarnCost", "addEarnBtn", () => earnView); }
-    function setupAddPunish() { setupAdd("punish", "newPunishName", "newPunishCost", "addPunishBtn", () => punishView); }
+    function setupAddProduct() { setupAdd("shop", "newProductName", "newProductCost", "addProductBtn"); }
+    function setupAddEarn() { setupAdd("earn", "newEarnName", "newEarnCost", "addEarnBtn"); }
+    function setupAddPunish() { setupAdd("punish", "newPunishName", "newPunishCost", "addPunishBtn"); }
+
+    /* ==================== UNIVERSAL CONVERTER (UPGRADED) ==================== */
+    const CONVERTER_TYPES = {
+      calorie: { emoji: "🔥", label: "卡路里", inputLabel: "消耗大卡", placeholder: "350", unit: "大卡", calc: (val, person) => {
+        const x = person === "Torie" ? calRatios.torieX : calRatios.joryX;
+        const y = person === "Torie" ? calRatios.torieY : calRatios.joryY;
+        const cards = Math.floor((val / x) * y);
+        return { cards, desc: `每${x}大卡 = ${y}张` };
+      }, reasonPrefix: "🔥 运动消耗", inputUnit: "大卡" },
+      momo: { emoji: "📖", label: "墨墨背单词", inputLabel: "单词数（复习+新学）", placeholder: "100", unit: "个", calc: (val) => {
+        const cards = Math.floor(val / 100) * 2;
+        return { cards, desc: "每100个单词 = 2张" };
+      }, reasonPrefix: "📖 背单词", inputUnit: "个" },
+      pushup: { emoji: "💪", label: "俯卧撑", inputLabel: "俯卧撑个数", placeholder: "15", unit: "个", calc: (val) => {
+        const cards = Math.floor(val / 15);
+        return { cards, desc: "每15个 = 1张" };
+      }, reasonPrefix: "💪 俯卧撑", inputUnit: "个" },
+      pullup: { emoji: "🏋️", label: "引体向上", inputLabel: "引体向上个数", placeholder: "9", unit: "个", calc: (val) => {
+        const cards = Math.floor(val / 9);
+        return { cards, desc: "每9个 = 1张" };
+      }, reasonPrefix: "🏋️ 引体向上", inputUnit: "个" },
+      situp: { emoji: "🤸", label: "仰卧起坐", inputLabel: "仰卧起坐个数", placeholder: "30", unit: "个", calc: (val) => {
+        const cards = Math.floor(val / 30);
+        return { cards, desc: "每30个 = 1张" };
+      }, reasonPrefix: "🤸 仰卧起坐", inputUnit: "个" },
+      dip: { emoji: "🤾", label: "撑双杠", inputLabel: "撑双杠个数", placeholder: "5", unit: "个", calc: (val) => {
+        const cards = Math.floor(val / 5);
+        return { cards, desc: "每5个 = 1张" };
+      }, reasonPrefix: "🤾 撑双杠", inputUnit: "个" }
+    };
+
+    let currentConverterType = "calorie";
+
+    function setupUniversalConverter() {
+      const grid = document.getElementById("converterTypeGrid");
+      const input = document.getElementById("converterInput");
+      const person = document.getElementById("converterPerson");
+      const result = document.getElementById("converterResult");
+      const btn = document.getElementById("converterSubmitBtn");
+      const inputLabel = document.getElementById("converterInputLabel");
+
+      // Type buttons
+      grid.querySelectorAll(".converter-type-btn").forEach(b => {
+        b.addEventListener("click", () => {
+          grid.querySelectorAll(".converter-type-btn").forEach(x => x.classList.remove("active"));
+          b.classList.add("active");
+          currentConverterType = b.dataset.ctype;
+          const config = CONVERTER_TYPES[currentConverterType];
+          inputLabel.textContent = config.inputLabel;
+          input.placeholder = config.placeholder;
+          input.value = "";
+          result.style.display = "none";
+          btn.disabled = true;
+          // Only show ratio settings button for calorie type
+          document.getElementById("openCalRatioBtn").style.display = currentConverterType === "calorie" ? "" : "none";
+        });
+      });
+
+      window.calcConverter = () => {
+        const val = parseInt(input.value) || 0;
+        const config = CONVERTER_TYPES[currentConverterType];
+        const { cards, desc } = config.calc(val, person.value);
+        if (val > 0) {
+          result.style.display = "block";
+          result.textContent = `可兑换 ${cards} 张自由卡（${desc}）`;
+          btn.disabled = cards <= 0;
+        } else {
+          result.style.display = "none";
+          btn.disabled = true;
+        }
+      };
+
+      input.addEventListener("input", calcConverter);
+      person.addEventListener("change", calcConverter);
+
+      btn.addEventListener("click", async () => {
+        const val = parseInt(input.value) || 0;
+        const config = CONVERTER_TYPES[currentConverterType];
+        const { cards } = config.calc(val, person.value);
+        if (cards <= 0) return;
+
+        btn.disabled = true; btn.textContent = "入账中...";
+        const reason = `${config.reasonPrefix} ${val} ${config.inputUnit}`;
+        const { error } = await sb.from("freecard_log").insert({
+          operator: person.value, change_type: "增加", card_num: cards, reason
+        });
+        btn.disabled = false; btn.textContent = "一键入账";
+
+        if (error) { showToast("入账失败：" + error.message, "error"); return; }
+        trackEvent(person.value, 'earn');
+        showToast(`成功入账 ${cards} 张！`, "success");
+        spawnParticles(1);
+        input.value = "";
+        result.style.display = "none";
+        btn.disabled = true;
+        await loadLogs();
+      });
+    }
+
+    /* ==================== LATE CONVERTER ==================== */
+    function setupLateConverter() {
+      const input = document.getElementById("lateInput"), person = document.getElementById("latePerson"), result = document.getElementById("lateResult"), btn = document.getElementById("lateSubmitBtn");
+      window.calcLate = () => {
+        const mins = parseInt(input.value) || 0;
+        const cards = Math.ceil(mins / lateTier);
+        if(mins > 0) { result.style.display = "block"; result.textContent = `将扣除 ${cards} 张自由卡 (每${lateTier}分钟扣1张)`; btn.disabled = cards <= 0; } 
+        else { result.style.display = "none"; btn.disabled = true; }
+      };
+      input.addEventListener("input", calcLate); 
+      person.addEventListener("change", calcLate);
+      btn.addEventListener("click", async () => {
+        const mins = parseInt(input.value) || 0;
+        const cards = Math.ceil(mins / lateTier);
+        if(cards <= 0) return;
+        btn.disabled = true; btn.textContent = "扣除中...";
+        const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "减少", card_num: cards, reason: `⏰ 迟到 ${mins} 分钟` });
+        btn.disabled = false; btn.textContent = "确认扣除";
+        if(error) { showToast("扣除失败："+error.message, "error"); return; }
+        trackEvent(person.value, 'punish');
+        showToast(`已扣除 ${cards} 张，下次注意哦`, "error");
+        if(navigator.vibrate) navigator.vibrate(200);
+        input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
+      });
+    }
+
+    /* ==================== RECHARGE (NEW) ==================== */
+    function setupRecharge() {
+      const input = document.getElementById("rechargeAmount");
+      const person = document.getElementById("rechargePerson");
+      const result = document.getElementById("rechargeResult");
+      const btn = document.getElementById("rechargeSubmitBtn");
+
+      function calcRecharge() {
+        const amount = parseInt(input.value) || 0;
+        const cards = Math.floor(amount / 10);
+        if (amount >= 10) {
+          result.style.display = "block";
+          result.textContent = `充值 ¥${cards * 10} → 获得 ${cards} 张自由卡`;
+          btn.disabled = cards <= 0;
+        } else {
+          result.style.display = "none";
+          btn.disabled = true;
+        }
+      }
+
+      input.addEventListener("input", calcRecharge);
+      person.addEventListener("change", calcRecharge);
+
+      btn.addEventListener("click", async () => {
+        const amount = parseInt(input.value) || 0;
+        const cards = Math.floor(amount / 10);
+        const actualAmount = cards * 10;
+        if (cards <= 0) return;
+
+        btn.disabled = true; btn.textContent = "入账中...";
+        const { error } = await sb.from("freecard_log").insert({
+          operator: person.value,
+          change_type: "增加",
+          card_num: cards,
+          reason: `💰 充值 ¥${actualAmount}（${cards}张 × 10¥）`
+        });
+        btn.disabled = false; btn.textContent = "确认充值并入账";
+
+        if (error) { showToast("入账失败：" + error.message, "error"); return; }
+        trackEvent(person.value, 'earn');
+        showToast(`充值成功！${person.value} 获得 ${cards} 张自由卡 🎉`, "success");
+        spawnParticles(1);
+        input.value = "";
+        result.style.display = "none";
+        btn.disabled = true;
+        await loadLogs();
+      });
+    }
+
+    /* ==================== DATA LOADING ==================== */
+    async function loadLogs() {
+      const {data,error}=await sb.from("freecard_log").select("*").order("created_at",{ascending:false});
+      if(error){showToast("读取记录失败："+error.message,"error");return;}
+      allLogs=data||[]; refreshAll();
+    }
+
+    async function loadProducts() {
+      const {data,error}=await sb.from("freecard_shop").select("*").order("created_at",{ascending:true});
+      if(error){allProducts=[]; renderShop(); renderEarnList(); renderPunishList(); return;}
+      allProducts=data||[]; renderShop(); renderEarnList(); renderPunishList();
+    }
+
+    function refreshAll() {
+      updateBalances();
+      updateSpirits();
+      updateHistoryFilterOptions();
+      renderStats();
+      renderHistory();
+      renderWeeklyCard();
+      renderTrendCard();
+      // Update bank person balances
+      const bt = document.getElementById("bankTorieBal");
+      const bj = document.getElementById("bankJoryBal");
+      if (bt) bt.textContent = calcBalance("Torie");
+      if (bj) bj.textContent = calcBalance("Jory");
+    }
+
+    function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
+    function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
 
     async function deleteLog(id) { if(!confirm("确定删除这条记录？")) return; const {error} = await sb.from("freecard_log").delete().eq("id", id); if(error) return showToast("删除失败", "error"); showToast("已删除", "success"); await loadLogs(); }
+
+    /* ==================== UTILS ==================== */
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
     function fmtDate(d) { const p=(n)=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; }
     function esc(v) { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
     function escAttr(v) { return String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#039;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
     function showToast(msg,type="success") { const toast=document.getElementById("toast"); toast.textContent=msg; toast.className=`toast ${type} show`; clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>{toast.classList.remove("show");},2500); }
+
+    /* ==================== INIT ==================== */
+    document.addEventListener("DOMContentLoaded", async () => {
+      initSettings();
+      initRatioModals();
+      initPetInteractions();
+      setupNav();
+      setupBankNav();
+      setupPeriodTabs();
+      setupHistoryFilter();
+      setupAddProduct();
+      setupAddEarn();
+      setupAddPunish();
+      setupUniversalConverter();
+      setupLateConverter();
+      setupRecharge();
+      checkSpecialDate();
+      startDigestionTimer();
+      await loadLogs();
+      await loadProducts();
+      restoreBankState();
+      sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
+      sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
+    });
   </script>
 </body>
 </html>
