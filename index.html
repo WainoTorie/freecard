@@ -109,7 +109,7 @@
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
 
-    /* Digestion Bar (Modified: Thinner & Subtle) */
+    /* Digestion Bar */
     .digestion-wrap { margin-bottom: 8px; }
     .digestion-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; opacity: 0.8; }
     .digestion-bar { height: 100%; border-radius: 2px; transition: width 0.6s ease, background 0.6s ease; }
@@ -216,7 +216,7 @@
     .bar-number { text-align: right; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-1); }
     .empty-stats { padding: 16px 0; color: var(--text-3); font-size: 13px; text-align: center; }
 
-    /* Balance Scale Chart for Individual Perspective */
+    /* Balance Scale Chart */
     .scale-chart { display: flex; align-items: center; height: 32px; margin: 16px 0 8px; position: relative; }
     .scale-bar { height: 100%; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 2px; }
     .scale-bar.spend { background: var(--red); border-radius: 6px 0 0 6px; opacity: 0.8; }
@@ -289,7 +289,7 @@
     .bank-sub-page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* ========== BANK PERSON SELECTOR ========== */
+    /* Bank Person Selector */
     .bank-step { display: none; animation: bankSlideIn 0.35s cubic-bezier(0.22,1,0.36,1); }
     .bank-step.active { display: block; }
     @keyframes bankSlideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -324,7 +324,7 @@
     .bank-sub-nav-btn .bsn-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
     .bank-sub-nav-btn:hover { border-color: var(--text-3); }
 
-    /* ========== UNIVERSAL CONVERTER ========== */
+    /* Universal Converter */
     .converter-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 16px; }
     .converter-type-btn { height: auto; padding: 10px 4px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg); color: var(--text-2); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.3; }
     .converter-type-btn.active { background: var(--torie); color: #fff; border-color: var(--torie); }
@@ -454,7 +454,7 @@
     </div>
   </div>
 
-  <!-- Universal Converter Ratio Modal (NEW: Supports all types) -->
+  <!-- Universal Converter Ratio Modal -->
   <div id="converterRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;" id="ratioModalTitle">⚙️ 换算比例设置</div>
@@ -487,7 +487,7 @@
     </div>
   </div>
 
-  <!-- Late Ratio Modal -->
+  <!-- Late Ratio Modal (UPDATED: Added Cap Setting) -->
   <div id="lateRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;">⚙️ 迟到惩罚设置</div>
@@ -499,6 +499,16 @@
           <span style="font-size: 13px; color: var(--text-2);">分钟 = 扣 1 张</span>
         </div>
         <div class="modal-hint">例：设为5，则迟到5分钟扣1张，6分钟扣2张</div>
+      </div>
+      <!-- NEW: Single Time Cap -->
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>⚠️ 单次扣卡上限</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 13px; color: var(--text-2);">最多扣</span>
+          <input type="number" id="lateRatioCap" min="1" max="50" style="flex: 1;" />
+          <span style="font-size: 13px; color: var(--text-2);">张 / 次</span>
+        </div>
+        <div class="modal-hint">防止一次迟到扣太多，默认5张</div>
       </div>
       <div class="modal-actions">
         <button class="modal-btn cancel" id="lateRatioCancel">取消</button>
@@ -543,7 +553,7 @@
     <button id="settingsBtn" class="settings-btn" aria-label="设置">⚙️</button>
     <div id="festivalBannerContainer"></div>
 
-    <!-- ==================== HOME PAGE ==================== -->
+    <!-- HOME PAGE -->
     <section id="page-home" class="app-page active">
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
@@ -634,12 +644,11 @@
       </div>
     </section>
 
-    <!-- ==================== BANK PAGE ==================== -->
+    <!-- BANK PAGE -->
     <section id="page-bank" class="app-page">
       <div class="page-title">自由卡银行</div>
       <div class="subtitle">属于你们的小小约定 💕</div>
 
-      <!-- STEP 1: Choose Person -->
       <div id="bankStep1" class="bank-step active">
         <div class="person-selector">
           <div class="person-select-card torie-card" id="bankPickTorie">
@@ -670,7 +679,6 @@
         </div>
       </div>
 
-      <!-- STEP 2: Choose Section -->
       <div id="bankStep2" class="bank-step">
         <button class="bank-back-btn" id="bankBackToStep1">← 重新选择</button>
         <div class="bank-person-badge" id="bankPersonBadge"></div>
@@ -693,7 +701,6 @@
         </div>
       </div>
 
-      <!-- STEP 3: Content -->
       <div id="bankStep3" class="bank-step">
         <button class="bank-back-btn" id="bankBackToStep2">← 返回</button>
         <div class="bank-person-badge" id="bankPersonBadge2"></div>
@@ -720,7 +727,6 @@
             </div>
           </div>
 
-          <!-- Universal Converter -->
           <div class="card">
             <div class="converter-header">
               <h2 class="section-title" style="margin:0">🔥 通用换算器</h2>
@@ -782,7 +788,7 @@
       </div>
     </section>
 
-    <!-- ==================== DATA PAGE ==================== -->
+    <!-- DATA PAGE -->
     <section id="page-data" class="app-page">
       <div class="page-title">数据统计</div>
       <div class="subtitle">看见成长的轨迹 📊</div>
@@ -812,7 +818,6 @@
     </section>
   </div>
 
-  <!-- Bottom Nav -->
   <nav class="bottom-nav" aria-label="页面导航">
     <button class="nav-btn active" data-page="home" type="button"><span class="nav-icon">🏠</span><span>首页</span></button>
     <button class="nav-btn" data-page="bank" type="button"><span class="nav-icon">🏦</span><span>银行</span></button>
@@ -831,7 +836,6 @@
     let bankPerson = "";
     let bankSection = "";
 
-    // Default ratios for all converter types
     const DEFAULT_RATIOS = {
       calorie: { torieX: 200, torieY: 1, joryX: 100, joryY: 1 },
       momo: { torieX: 100, torieY: 2, joryX: 100, joryY: 2 },
@@ -841,16 +845,15 @@
       dip: { torieX: 5, torieY: 1, joryX: 5, joryY: 1 }
     };
 
-    // Load ratios from localStorage or use defaults
     function loadRatios() {
       const saved = localStorage.getItem("fc_converter_ratios");
-      if (saved) {
-        try { return JSON.parse(saved); } catch(e) {}
-      }
+      if (saved) { try { return JSON.parse(saved); } catch(e) {} }
       return JSON.parse(JSON.stringify(DEFAULT_RATIOS));
     }
     let converterRatios = loadRatios();
     let lateTier = parseInt(localStorage.getItem("fc_late_tier")) || 5;
+    // NEW: Late cap setting
+    let lateCap = parseInt(localStorage.getItem("fc_late_cap")) || 5;
 
     const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
 
@@ -879,23 +882,58 @@
       warning:  { texts: ["余额告急！","要注意啦！","快赚点卡吧","透支警告！","该努力咯~"], emoji: "😰" }
     };
 
-    /* ==================== DIGESTION SYSTEM ==================== */
+    /* ==================== DIGESTION SYSTEM (UPGRADED TO CLOUD) ==================== */
     const DIGEST_DURATION_MS = 24 * 60 * 60 * 1000;
     const FEED_INCREMENTS = [60, 30, 10];
+    
+    // Cloud-synced pet state
+    let petState = { torie_hunger: 100, jory_hunger: 100, last_update: new Date().toISOString() };
+    let petStateLoaded = false;
+
+    async function loadPetState() {
+      try {
+        const { data, error } = await sb.from('freecard_pet_state').select('*').eq('id', 1).maybeSingle();
+        if (error) throw error;
+        if (data) {
+          petState = data;
+          // Apply offline decay
+          const elapsed = Date.now() - new Date(petState.last_update).getTime();
+          const decay = (elapsed / DIGEST_DURATION_MS) * 100;
+          petState.torie_hunger = Math.max(0, petState.torie_hunger - decay);
+          petState.jory_hunger = Math.max(0, petState.jory_hunger - decay);
+        } else {
+          // First time: insert default
+          const { data: inserted, error: insErr } = await sb.from('freecard_pet_state')
+            .insert({ id: 1, torie_hunger: 100, jory_hunger: 100, last_update: new Date().toISOString() })
+            .select().single();
+          if (!insErr && inserted) petState = inserted;
+        }
+        petStateLoaded = true;
+      } catch (e) {
+        console.error('Pet state load failed:', e);
+        petStateLoaded = true; // Fallback to defaults
+      }
+      updateDigestionUI("Torie");
+      updateDigestionUI("Jory");
+      updateSpirits();
+    }
+
+    async function savePetState() {
+      if (!petStateLoaded) return;
+      petState.last_update = new Date().toISOString();
+      await sb.from('freecard_pet_state').upsert({ ...petState, id: 1 });
+    }
 
     function getFullnessData(person) {
-      const stored = parseFloat(localStorage.getItem(`fc_fullness_${person.toLowerCase()}`));
-      const storedTime = parseInt(localStorage.getItem(`fc_fullness_time_${person.toLowerCase()}`)) || 0;
-      if (!storedTime) return { pct: 100, hasHistory: false };
-      const elapsed = Date.now() - storedTime;
-      const decay = (elapsed / DIGEST_DURATION_MS) * 100;
-      const pct = Math.max(0, Math.min(100, stored - decay));
-      return { pct: Math.round(pct), hasHistory: true };
+      const key = person.toLowerCase();
+      const pct = Math.round(petState[`${key}_hunger`] ?? 100);
+      return { pct, hasHistory: petStateLoaded };
     }
 
     function setFullnessData(person, pct) {
-      localStorage.setItem(`fc_fullness_${person.toLowerCase()}`, pct.toString());
-      localStorage.setItem(`fc_fullness_time_${person.toLowerCase()}`, Date.now().toString());
+      const key = person.toLowerCase();
+      petState[`${key}_hunger`] = Math.max(0, Math.min(100, pct));
+      savePetState();
     }
 
     function getEffectivePct(person) {
@@ -905,9 +943,7 @@
     function calcFeedPreview(person, count) {
       const currentPct = getEffectivePct(person);
       let addPct = 0;
-      for (let i = 0; i < count; i++) {
-        addPct += FEED_INCREMENTS[i] || 0;
-      }
+      for (let i = 0; i < count; i++) addPct += FEED_INCREMENTS[i] || 0;
       const resultPct = Math.min(100, currentPct + addPct);
       return { currentPct, addPct, resultPct };
     }
@@ -925,7 +961,16 @@
       if (digestionTimer) clearInterval(digestionTimer);
       updateDigestionUI("Torie");
       updateDigestionUI("Jory");
-      digestionTimer = setInterval(() => {
+      digestionTimer = setInterval(async () => {
+        // Apply real-time decay every minute
+        const elapsed = Date.now() - new Date(petState.last_update).getTime();
+        const decay = (elapsed / DIGEST_DURATION_MS) * 100;
+        if (decay > 0.1) {
+          petState.torie_hunger = Math.max(0, petState.torie_hunger - decay);
+          petState.jory_hunger = Math.max(0, petState.jory_hunger - decay);
+          petState.last_update = new Date().toISOString();
+          await savePetState();
+        }
         updateDigestionUI("Torie");
         updateDigestionUI("Jory");
         updateSpirits();
@@ -1096,10 +1141,7 @@
       if (!feedTargetPerson) return;
       const count = parseInt(document.getElementById("feedCountSelect").value) || 1;
       const balance = calcBalance(feedTargetPerson);
-      if (balance < count) {
-        showToast("余额不足", "error");
-        return;
-      }
+      if (balance < count) { showToast("余额不足", "error"); return; }
 
       const { resultPct } = calcFeedPreview(feedTargetPerson, count);
 
@@ -1110,7 +1152,6 @@
       if (error) { showToast("喂食失败：" + error.message, "error"); return; }
 
       setFullnessData(feedTargetPerson, resultPct);
-
       trackEvent(feedTargetPerson, 'feed');
       closeFeedModal();
       showToast(`${feedTargetPerson} 吃得好开心！🥰`, "success");
@@ -1306,14 +1347,13 @@
       overlay.addEventListener("click",()=>{overlay.classList.remove("show");panel.classList.remove("show");});
     }
 
-    /* ==================== RATIO MODALS (Universal + Late) ==================== */
+    /* ==================== RATIO MODALS (UPDATED: Late Cap) ==================== */
     function initRatioModals() {
       // Universal Converter Ratio Modal
       const ratioModal = document.getElementById("converterRatioModal");
       document.getElementById("openConverterRatioBtn").addEventListener("click", () => {
         const config = CONVERTER_TYPES[currentConverterType];
         const ratios = converterRatios[currentConverterType] || DEFAULT_RATIOS[currentConverterType];
-        
         document.getElementById("ratioModalTitle").textContent = `⚙️ ${config.label}换算设置`;
         document.getElementById("ratioUnitLabel").textContent = config.unit;
         document.getElementById("ratioUnitLabel2").textContent = config.unit;
@@ -1338,18 +1378,21 @@
         calcConverter();
       });
 
-      // Late Ratio Modal
+      // Late Ratio Modal (UPDATED with Cap)
       const lateModal = document.getElementById("lateRatioModal");
       document.getElementById("openLateRatioBtn").addEventListener("click", () => {
         document.getElementById("lateRatioTier").value = lateTier;
+        document.getElementById("lateRatioCap").value = lateCap;
         lateModal.classList.add("show");
       });
       document.getElementById("lateRatioCancel").addEventListener("click", () => lateModal.classList.remove("show"));
       document.getElementById("lateRatioSave").addEventListener("click", () => {
         lateTier = parseInt(document.getElementById("lateRatioTier").value) || 5;
+        lateCap = parseInt(document.getElementById("lateRatioCap").value) || 5;
         localStorage.setItem("fc_late_tier", lateTier);
+        localStorage.setItem("fc_late_cap", lateCap);
         lateModal.classList.remove("show");
-        showToast("档位已保存", "success");
+        showToast("惩罚设置已保存", "success");
         calcLate();
       });
     }
@@ -1375,12 +1418,7 @@
     function showBankStep(step) {
       document.querySelectorAll(".bank-step").forEach(s => s.classList.remove("active"));
       const el = document.getElementById(`bankStep${step}`);
-      if (el) {
-        el.style.animation = 'none';
-        el.offsetHeight;
-        el.style.animation = '';
-        el.classList.add("active");
-      }
+      if (el) { el.style.animation = 'none'; el.offsetHeight; el.style.animation = ''; el.classList.add("active"); }
     }
 
     function updateBankPersonBadges() {
@@ -1426,14 +1464,8 @@
       document.querySelectorAll(".bank-sub-nav-btn").forEach(btn => {
         btn.addEventListener("click", () => selectBankSection(btn.dataset.bank));
       });
-      document.getElementById("bankBackToStep1").addEventListener("click", () => {
-        bankPerson = "";
-        applyBgTint("");
-        showBankStep(1);
-      });
-      document.getElementById("bankBackToStep2").addEventListener("click", () => {
-        showBankStep(2);
-      });
+      document.getElementById("bankBackToStep1").addEventListener("click", () => { bankPerson = ""; applyBgTint(""); showBankStep(1); });
+      document.getElementById("bankBackToStep2").addEventListener("click", () => { showBankStep(2); });
     }
 
     /* ==================== PAGE NAV ==================== */
@@ -1444,17 +1476,13 @@
           document.querySelectorAll(".app-page").forEach((s)=>s.classList.toggle("active",s.id===`page-${page}`));
           document.querySelectorAll(".nav-btn").forEach((b)=>{const active=b===btn;b.classList.toggle("active",active);});
           window.scrollTo({top:0,behavior:"smooth"});
-          if (page === "bank") {
-            resetBankToStep1();
-          }
-          if (page !== "bank") {
-            applyBgTint("");
-          }
+          if (page === "bank") resetBankToStep1();
+          if (page !== "bank") applyBgTint("");
         });
       });
     }
 
-    /* ==================== STATS (Redesigned with Balance Scale) ==================== */
+    /* ==================== STATS ==================== */
     function setupPeriodTabs() {
       document.querySelectorAll(".period-tab").forEach((btn)=>{
         btn.addEventListener("click",()=>{
@@ -1497,7 +1525,6 @@
         const net = earn - spend;
         const emoji = isTorie ? "🦉" : "🐰";
         const name = isTorie ? "Torie" : "Jory";
-        const color = isTorie ? "var(--torie)" : "var(--jory)";
 
         document.getElementById("statsSummary").innerHTML = `
           <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${earn}</div></div>
@@ -1505,7 +1532,6 @@
           <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
         `;
 
-        // Balance Scale Visualization
         const total = earn + spend;
         const spendPct = total > 0 ? (spend / total) * 100 : 50;
         const earnPct = total > 0 ? (earn / total) * 100 : 50;
@@ -1531,7 +1557,6 @@
           </div>
         `;
       } else {
-        // Together
         const totalE = tE + jE, totalS = tS + jS, net = totalE - totalS;
         document.getElementById("statsSummary").innerHTML = `
           <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${totalE}</div></div>
@@ -1749,7 +1774,6 @@
 
       window.calcConverter = () => {
         const val = parseInt(input.value) || 0;
-        const config = CONVERTER_TYPES[currentConverterType];
         const { cards, desc } = getConverterCards(currentConverterType, val, person.value);
         if (val > 0) {
           result.style.display = "block";
@@ -1788,21 +1812,36 @@
       });
     }
 
-    /* ==================== LATE CONVERTER ==================== */
+    /* ==================== LATE CONVERTER (UPDATED: With Cap) ==================== */
     function setupLateConverter() {
       const input = document.getElementById("lateInput"), person = document.getElementById("latePerson"), result = document.getElementById("lateResult"), btn = document.getElementById("lateSubmitBtn");
+      
       window.calcLate = () => {
         const mins = parseInt(input.value) || 0;
-        const cards = Math.ceil(mins / lateTier);
-        if(mins > 0) { result.style.display = "block"; result.textContent = `将扣除 ${cards} 张自由卡 (每${lateTier}分钟扣1张)`; btn.disabled = cards <= 0; } 
+        const rawCards = Math.ceil(mins / lateTier);
+        // Apply cap
+        const cards = Math.min(rawCards, lateCap);
+        const wasCapped = rawCards > lateCap;
+        
+        if(mins > 0) { 
+          result.style.display = "block"; 
+          let text = `将扣除 ${cards} 张自由卡 (每${lateTier}分钟扣1张)`;
+          if (wasCapped) text += ` ⚠️ 已达单次上限${lateCap}张`;
+          result.textContent = text;
+          btn.disabled = cards <= 0; 
+        } 
         else { result.style.display = "none"; btn.disabled = true; }
       };
+      
       input.addEventListener("input", calcLate); 
       person.addEventListener("change", calcLate);
+      
       btn.addEventListener("click", async () => {
         const mins = parseInt(input.value) || 0;
-        const cards = Math.ceil(mins / lateTier);
+        const rawCards = Math.ceil(mins / lateTier);
+        const cards = Math.min(rawCards, lateCap);
         if(cards <= 0) return;
+        
         btn.disabled = true; btn.textContent = "扣除中...";
         const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "减少", card_num: cards, reason: `⏰ 迟到 ${mins} 分钟` });
         btn.disabled = false; btn.textContent = "确认扣除";
@@ -1845,9 +1884,7 @@
 
         btn.disabled = true; btn.textContent = "入账中...";
         const { error } = await sb.from("freecard_log").insert({
-          operator: person.value,
-          change_type: "增加",
-          card_num: cards,
+          operator: person.value, change_type: "增加", card_num: cards,
           reason: `💰 充值 ¥${actualAmount}（${cards}张 × 10¥）`
         });
         btn.disabled = false; btn.textContent = "确认充值并入账";
@@ -1920,7 +1957,11 @@
       setupLateConverter();
       setupRecharge();
       checkSpecialDate();
+      
+      // Load cloud pet state FIRST, then start timer
+      await loadPetState();
       startDigestionTimer();
+      
       await loadLogs();
       await loadProducts();
       sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
