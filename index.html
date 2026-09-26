@@ -2058,7 +2058,46 @@
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
     function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
 
-    async function deleteLog(id) { if(!confirm("确定删除这条记录？")) return; const {error} = await sb.from("freecard_log").delete().eq("id", id); if(error) return showToast("删除失败", "error"); showToast("已删除", "success"); await loadLogs(); }
+    /* ==================== ✅ FIXED DELETE LOG ==================== */
+    async function deleteLog(id) {
+      if (!confirm("确定删除这条记录？")) return;
+      
+      const log = allLogs.find(l => String(l.id) === String(id));
+      if (!log) return showToast("找不到该记录", "error");
+
+      // 1. 先删数据库记录（触发余额重算）
+      const { error } = await sb.from("freecard_log").delete().eq("id", id);
+      if (error) return showToast("删除失败", "error");
+
+      // 2. 如果是喂食记录，回退体力到"假设从未喂过"的状态
+      const feedMatch = log.reason && log.reason.match(/^🍖 喂食(\d+)张（(\w+) 体力 (\d+)%→(\d+)%）$/);
+      if (feedMatch) {
+        const person = feedMatch[2];
+        const beforeStamina = parseInt(feedMatch[3]); // 喂食前的体力
+
+        // 计算从喂食发生到现在经过了多少分钟
+        const minutesPassed = Math.max(0, (Date.now() - new Date(log.created_at).getTime()) / 60000);
+        // 这段时间的自然衰减量
+        const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
+
+        // ✅ 核心修正：删除后体力 = max(0, 喂食前体力 - 期间自然衰减)
+        // 这等价于"如果从没喂过食，只经历自然衰减"的状态
+        staminaData[person].stamina = Math.max(0, beforeStamina - decay);
+        staminaData[person].updated_at = new Date().toISOString();
+
+        await saveStamina(person);
+        updateStaminaUI();
+        updateSpirits();
+
+        const resultPct = Math.round(staminaData[person].stamina);
+        showToast(`已删除。${person} 体力回退至 ${resultPct}%`, "success");
+      } else {
+        showToast("已删除", "success");
+      }
+
+      // 3. 重新加载流水
+      await loadLogs();
+    }
 
     /* ==================== UTILS ==================== */
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
