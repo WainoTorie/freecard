@@ -118,6 +118,49 @@
     .feed-btn:active { transform: scale(0.85); background: var(--border); }
     .feed-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
+    /* === FEED MODAL === */
+    .feed-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .feed-overlay.show { opacity: 1; pointer-events: auto; }
+    .feed-modal { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(340px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); }
+    .feed-overlay.show .feed-modal { transform: scale(1); }
+    .feed-modal-header { text-align: center; margin-bottom: 20px; }
+    .feed-modal-pet { font-size: 40px; display: block; margin-bottom: 6px; }
+    .feed-modal-title { font-size: 18px; font-weight: 800; color: var(--text-1); }
+    .feed-current { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding: 14px; background: var(--bg); border-radius: var(--r-md); border: 1px solid var(--border); }
+    .feed-current-label { font-size: 12px; font-weight: 600; color: var(--text-2); white-space: nowrap; }
+    .feed-current-bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; min-width: 0; }
+    .feed-current-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s; }
+    .feed-current-pct { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 36px; text-align: right; }
+    .feed-select-row { margin-bottom: 16px; }
+    .feed-select-label { font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; display: block; }
+    .feed-select-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .feed-card-opt { padding: 12px 6px; border: 2px solid var(--border); border-radius: var(--r-md); background: var(--card); cursor: pointer; text-align: center; transition: all 0.2s; }
+    .feed-card-opt:hover { border-color: var(--text-3); }
+    .feed-card-opt.selected { border-color: var(--green); background: rgba(52,199,89,0.06); }
+    .feed-card-opt .fco-num { font-size: 22px; font-weight: 800; color: var(--text-1); display: block; }
+    .feed-card-opt .fco-label { font-size: 11px; color: var(--text-3); font-weight: 600; }
+    .feed-card-opt .fco-cost { font-size: 11px; color: var(--red); font-weight: 700; margin-top: 2px; }
+    .feed-preview { padding: 14px; background: var(--bg); border-radius: var(--r-md); border: 1px solid var(--border); margin-bottom: 20px; }
+    .feed-preview-title { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 10px; }
+    .feed-preview-steps { display: flex; flex-direction: column; gap: 6px; }
+    .feed-step { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); }
+    .feed-step-arrow { color: var(--text-3); font-size: 11px; flex-shrink: 0; }
+    .feed-step-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; min-width: 0; }
+    .feed-step-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s, background 0.3s; }
+    .feed-step-val { font-weight: 800; font-variant-numeric: tabular-nums; min-width: 36px; text-align: right; font-size: 13px; }
+    .feed-step-val.highlight { color: var(--green); }
+    .feed-step-bonus { font-size: 11px; color: var(--green); font-weight: 700; min-width: 36px; flex-shrink: 0; }
+    .feed-result { text-align: center; padding: 10px; border-radius: var(--r-sm); margin-bottom: 16px; font-size: 13px; font-weight: 700; }
+    .feed-result.ok { background: rgba(52,199,89,0.08); color: var(--green); border: 1px solid rgba(52,199,89,0.15); }
+    .feed-result.warn { background: rgba(255,59,48,0.08); color: var(--red); border: 1px solid rgba(255,59,48,0.15); }
+    .feed-result.full { background: rgba(0,122,255,0.08); color: var(--torie); border: 1px solid rgba(0,122,255,0.15); }
+    .feed-actions { display: flex; gap: 8px; }
+    .feed-btn-cancel { flex: 1; height: 42px; border: none; border-radius: var(--r-sm); background: var(--bg); color: var(--text-2); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; }
+    .feed-btn-confirm { flex: 1; height: 42px; border: none; border-radius: var(--r-sm); background: var(--green); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .feed-btn-confirm:active { transform: scale(0.96); opacity: 0.9; }
+    .feed-btn-confirm:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
+    .feed-btn-cancel:active { transform: scale(0.96); }
+
     /* Summary */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
     .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
@@ -383,6 +426,55 @@
       <div class="redeem-title" id="redeemTitle"></div>
       <div class="redeem-sub" id="redeemSub"></div>
       <button class="redeem-close-btn" id="redeemCloseBtn">太棒了！</button>
+    </div>
+  </div>
+
+  <!-- === FEED MODAL === -->
+  <div id="feedOverlay" class="feed-overlay">
+    <div class="feed-modal">
+      <div class="feed-modal-header">
+        <span class="feed-modal-pet" id="feedModalPet">🦉</span>
+        <div class="feed-modal-title" id="feedModalTitle">喂食 Torie</div>
+      </div>
+      <!-- Current stamina -->
+      <div class="feed-current">
+        <span class="feed-current-label">当前体力</span>
+        <div class="feed-current-bar-track"><div class="feed-current-bar-fill" id="feedCurrentBar"></div></div>
+        <span class="feed-current-pct" id="feedCurrentPct">80%</span>
+      </div>
+      <!-- Card selection -->
+      <div class="feed-select-row">
+        <span class="feed-select-label">选择喂食张数</span>
+        <div class="feed-select-cards" id="feedSelectCards">
+          <div class="feed-card-opt selected" data-cards="1">
+            <span class="fco-num">1</span>
+            <span class="fco-label">张自由卡</span>
+            <span class="fco-cost">+50% 体力</span>
+          </div>
+          <div class="feed-card-opt" data-cards="2">
+            <span class="fco-num">2</span>
+            <span class="fco-label">张自由卡</span>
+            <span class="fco-cost">+80% 体力</span>
+          </div>
+          <div class="feed-card-opt" data-cards="3">
+            <span class="fco-num">3</span>
+            <span class="fco-label">张自由卡</span>
+            <span class="fco-cost">+100% 体力</span>
+          </div>
+        </div>
+      </div>
+      <!-- Preview -->
+      <div class="feed-preview" id="feedPreview">
+        <div class="feed-preview-title">📈 喂食预览</div>
+        <div class="feed-preview-steps" id="feedPreviewSteps"></div>
+      </div>
+      <!-- Result -->
+      <div class="feed-result ok" id="feedResult"></div>
+      <!-- Actions -->
+      <div class="feed-actions">
+        <button class="feed-btn-cancel" id="feedCancelBtn">取消</button>
+        <button class="feed-btn-confirm" id="feedConfirmBtn">确认喂食</button>
+      </div>
     </div>
   </div>
 
@@ -816,8 +908,9 @@
     let staminaData = { Torie: { stamina: 80, updated_at: new Date().toISOString() }, Jory: { stamina: 80, updated_at: new Date().toISOString() } };
     let staminaTimer = null;
     const STAMINA_DECAY_PER_MIN = 0.1;
-    const STAMINA_FEED_AMOUNT = 60;
     const STAMINA_LOW_THRESHOLD = 20;
+    // Feed bonuses: 1st card +50%, 2nd card +30%, 3rd card +20%
+    const FEED_BONUSES = [50, 30, 20];
 
     async function loadStamina() {
       const { data, error } = await sb.from("freecard_stamina").select("*");
@@ -827,7 +920,6 @@
           staminaData[row.person] = { stamina: Number(row.stamina), updated_at: row.updated_at };
         });
       }
-      // Apply offline decay
       applyOfflineDecay();
       updateStaminaUI();
     }
@@ -868,25 +960,15 @@
       });
     }
 
-    async function feedPet(person) {
-      const btn = document.getElementById(`feedBtn${person}`);
-      if (btn) { btn.disabled = true; }
-
-      const current = staminaData[person].stamina;
-      if (current >= 100) {
-        showToast(`${person} 已经吃饱啦~`, "success");
-        if (btn) btn.disabled = false;
-        return;
+    // Calculate stamina after feeding N cards
+    function calcFeedResult(currentStamina, numCards) {
+      let result = currentStamina;
+      let steps = [Math.round(result)];
+      for (let i = 0; i < numCards && i < FEED_BONUSES.length; i++) {
+        result = Math.min(100, result + FEED_BONUSES[i]);
+        steps.push(Math.round(result));
       }
-
-      staminaData[person].stamina = Math.min(100, current + STAMINA_FEED_AMOUNT);
-      staminaData[person].updated_at = new Date().toISOString();
-      updateStaminaUI();
-      updateSpirits();
-      spawnParticles(1);
-      showToast(`已喂食 ${person}，体力恢复！`, "success");
-      await saveStamina(person);
-      if (btn) btn.disabled = false;
+      return { final: Math.min(100, result), steps };
     }
 
     function startStaminaTimer() {
@@ -900,20 +982,195 @@
           }
         });
         if (changed) {
-          // Update local timestamp every tick so offline calc stays accurate
           ["Torie", "Jory"].forEach(p => { staminaData[p].updated_at = new Date().toISOString(); });
           updateStaminaUI();
           updateSpirits();
-          // Save to DB every minute
           saveStamina("Torie");
           saveStamina("Jory");
         }
-      }, 60000); // Every 1 minute
+      }, 60000);
+    }
+
+    /* ==================== FEED MODAL ==================== */
+    let feedTarget = "";
+    let feedSelectedCards = 1;
+
+    function openFeedModal(person) {
+      feedTarget = person;
+      feedSelectedCards = 1;
+
+      const emoji = person === "Torie" ? "🦉" : "🐰";
+      document.getElementById("feedModalPet").textContent = emoji;
+      document.getElementById("feedModalTitle").textContent = `喂食 ${person}`;
+
+      // Reset selection
+      document.querySelectorAll(".feed-card-opt").forEach(el => {
+        el.classList.toggle("selected", el.dataset.cards === "1");
+      });
+
+      updateFeedPreview();
+
+      document.getElementById("feedOverlay").classList.add("show");
+    }
+
+    function closeFeedModal() {
+      document.getElementById("feedOverlay").classList.remove("show");
+    }
+
+    function updateFeedPreview() {
+      const current = Math.max(0, Math.min(100, staminaData[feedTarget].stamina));
+      const currentRound = Math.round(current);
+
+      // Update current bar
+      const currentBar = document.getElementById("feedCurrentBar");
+      currentBar.style.width = currentRound + "%";
+      currentBar.className = `feed-current-bar-fill ${getStaminaColor(currentRound)}`;
+      document.getElementById("feedCurrentPct").textContent = currentRound + "%";
+      document.getElementById("feedCurrentPct").style.color = 
+        currentRound >= 50 ? "var(--green)" : currentRound >= 20 ? "var(--jory)" : "var(--red)";
+
+      // Calculate preview
+      const { final, steps } = calcFeedResult(current, feedSelectedCards);
+
+      // Build preview steps HTML
+      const stepsContainer = document.getElementById("feedPreviewSteps");
+      let html = "";
+
+      // Step 0: current state
+      html += `<div class="feed-step">
+        <span class="feed-step-bonus" style="color:var(--text-3)">当前</span>
+        <div class="feed-step-bar-track"><div class="feed-step-bar-fill" style="width:${currentRound}%;background:${currentRound>=50?'var(--green)':currentRound>=20?'var(--jory)':'var(--red)'}"></div></div>
+        <span class="feed-step-val">${currentRound}%</span>
+      </div>`;
+
+      // Each feed step
+      for (let i = 0; i < feedSelectedCards && i < FEED_BONUSES.length; i++) {
+        const bonus = FEED_BONUSES[i];
+        const before = steps[i];
+        const after = steps[i + 1];
+        const actualBonus = after - before;
+        const bonusText = actualBonus > 0 ? `+${actualBonus}%` : "已满";
+        html += `<div class="feed-step">
+          <span class="feed-step-bonus">+${bonus}%</span>
+          <div class="feed-step-bar-track"><div class="feed-step-bar-fill" style="width:${after}%;background:var(--green)"></div></div>
+          <span class="feed-step-val highlight">${after}%</span>
+        </div>`;
+      }
+
+      stepsContainer.innerHTML = html;
+
+      // Result line
+      const balance = calcBalance(feedTarget);
+      const resultEl = document.getElementById("feedResult");
+      const confirmBtn = document.getElementById("feedConfirmBtn");
+      const totalGain = steps[steps.length - 1] - currentRound;
+
+      if (currentRound >= 100) {
+        resultEl.className = "feed-result full";
+        resultEl.textContent = `🎉 ${feedTarget} 已经满体力啦，不需要喂食~`;
+        confirmBtn.disabled = true;
+      } else if (balance < feedSelectedCards) {
+        resultEl.className = "feed-result warn";
+        resultEl.textContent = `⚠️ 余额不足！${feedTarget} 只有 ${balance} 张自由卡，需要 ${feedSelectedCards} 张`;
+        confirmBtn.disabled = true;
+      } else {
+        resultEl.className = "feed-result ok";
+        const effectiveGain = steps[steps.length - 1] - currentRound;
+        resultEl.textContent = `✅ 消耗 ${feedSelectedCards} 张自由卡 → 体力 ${currentRound}% → ${steps[steps.length-1]}%（实际 +${effectiveGain}%）`;
+        confirmBtn.disabled = false;
+      }
+    }
+
+    async function confirmFeed() {
+      if (!feedTarget) return;
+      const current = staminaData[feedTarget].stamina;
+      const currentRound = Math.round(current);
+      const { final, steps } = calcFeedResult(current, feedSelectedCards);
+      const finalRound = Math.round(final);
+      const balance = calcBalance(feedTarget);
+
+      if (balance < feedSelectedCards) {
+        showToast("余额不足，无法喂食", "error");
+        return;
+      }
+      if (currentRound >= 100) {
+        showToast("已经满体力啦~", "success");
+        closeFeedModal();
+        return;
+      }
+
+      const confirmBtn = document.getElementById("feedConfirmBtn");
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "喂食中...";
+
+      // 1. Deduct cards from balance (insert into log)
+      const reason = `🍖 喂食${feedSelectedCards}张（${feedTarget} 体力 ${currentRound}%→${finalRound}%）`;
+      const { error: logError } = await sb.from("freecard_log").insert({
+        operator: feedTarget,
+        change_type: "减少",
+        card_num: feedSelectedCards,
+        reason: reason
+      });
+
+      if (logError) {
+        showToast("喂食失败：" + logError.message, "error");
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = "确认喂食";
+        return;
+      }
+
+      // 2. Update stamina
+      staminaData[feedTarget].stamina = final;
+      staminaData[feedTarget].updated_at = new Date().toISOString();
+      await saveStamina(feedTarget);
+
+      // 3. Update UI
+      updateStaminaUI();
+      updateSpirits();
+      spawnParticles(1);
+      showToast(`喂食成功！${feedTarget} 体力 → ${finalRound}%`, "success");
+
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = "确认喂食";
+      closeFeedModal();
+
+      // Reload logs to show the transaction
+      await loadLogs();
+    }
+
+    function setupFeedModal() {
+      // Open buttons
+      document.getElementById("feedBtnTorie").addEventListener("click", (e) => {
+        e.stopPropagation();
+        openFeedModal("Torie");
+      });
+      document.getElementById("feedBtnJory").addEventListener("click", (e) => {
+        e.stopPropagation();
+        openFeedModal("Jory");
+      });
+
+      // Card selection
+      document.querySelectorAll(".feed-card-opt").forEach(el => {
+        el.addEventListener("click", () => {
+          document.querySelectorAll(".feed-card-opt").forEach(x => x.classList.remove("selected"));
+          el.classList.add("selected");
+          feedSelectedCards = parseInt(el.dataset.cards);
+          updateFeedPreview();
+        });
+      });
+
+      // Cancel & Confirm
+      document.getElementById("feedCancelBtn").addEventListener("click", closeFeedModal);
+      document.getElementById("feedConfirmBtn").addEventListener("click", confirmFeed);
+
+      // Close on overlay click
+      document.getElementById("feedOverlay").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("feedOverlay")) closeFeedModal();
+      });
     }
 
     function initStaminaSystem() {
-      document.getElementById("feedBtnTorie").addEventListener("click", (e) => { e.stopPropagation(); feedPet("Torie"); });
-      document.getElementById("feedBtnJory").addEventListener("click", (e) => { e.stopPropagation(); feedPet("Jory"); });
+      setupFeedModal();
       loadStamina().then(() => {
         startStaminaTimer();
         updateSpirits();
@@ -963,7 +1220,6 @@
       const events = getRecentEventCounts(person);
       const stamina = staminaData[person] ? staminaData[person].stamina : 80;
 
-      // Hunger overrides most states
       if (stamina < STAMINA_LOW_THRESHOLD) return "warning";
       if (balance < 0) return "warning";
       if (events.punishes > 0) return "low";
