@@ -80,8 +80,6 @@
     .state-low .pet-svg { transform: translateY(8px) scale(0.9); opacity: 0.8; }
     .state-warning .pet-svg { animation: petShake 0.4s ease-in-out infinite; }
     .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
-    .state-hungry .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.7; transform: scale(0.92); }
-    .state-starving .pet-svg { animation: petShake 0.6s ease-in-out infinite; opacity: 0.5; transform: scale(0.85); }
     .state-sleepy .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.8; }
     
     .pet-clicked { animation: petJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
@@ -99,7 +97,7 @@
     .ear-down.bunny-ear-r { transform: rotate(-12deg) translateY(3px); }
     
     .sweat { opacity: 0; transform: translateY(-5px); transition: all 0.3s; }
-    .state-warning .sweat, .state-starving .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
+    .state-warning .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
     @keyframes sweatDrop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
 
     .zzz { opacity: 0; transition: all 0.3s; }
@@ -108,42 +106,6 @@
 
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
-
-    /* Digestion Bar */
-    .digestion-wrap { margin-bottom: 8px; }
-    .digestion-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; opacity: 0.8; }
-    .digestion-bar { height: 100%; border-radius: 2px; transition: width 0.6s ease, background 0.6s ease; }
-    .digestion-bar.full { background: var(--green); }
-    .digestion-bar.mid { background: var(--jory); }
-    .digestion-bar.low { background: var(--red); }
-
-    /* Feed Button */
-    .feed-btn { margin-top: 8px; width: 100%; height: 32px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; background: var(--green); color: #fff; }
-    .feed-btn:active { transform: scale(0.95); }
-    .feed-btn:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
-
-    /* Feed Modal */
-    .feed-modal-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-    .feed-modal-overlay.show { opacity: 1; pointer-events: auto; }
-    .feed-modal-box { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(300px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); text-align: center; }
-    .feed-modal-overlay.show .feed-modal-box { transform: scale(1); }
-    .feed-modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
-    .feed-modal-select-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; }
-    .feed-modal-select-row label { font-size: 14px; font-weight: 600; color: var(--text-2); }
-    .feed-modal-select-row select { width: auto; min-width: 80px; height: 38px; font-size: 15px; text-align: center; }
-    .feed-preview { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px; margin-bottom: 16px; }
-    .feed-preview-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 13px; color: var(--text-2); }
-    .feed-preview-row:last-child { margin-bottom: 0; }
-    .feed-preview-val { font-weight: 700; color: var(--text-1); }
-    .feed-preview-val.green { color: var(--green); }
-    .feed-preview-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 8px; }
-    .feed-preview-bar-inner { height: 100%; border-radius: 4px; transition: width 0.3s ease; background: var(--green); }
-    .feed-modal-actions { display: flex; gap: 8px; }
-    .feed-modal-btn { flex: 1; height: 40px; border: none; border-radius: var(--r-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .feed-modal-btn.cancel { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
-    .feed-modal-btn.confirm { background: var(--green); color: #fff; }
-    .feed-modal-btn:active { transform: scale(0.96); }
-    .feed-rule-hint { font-size: 11px; color: var(--text-3); margin-bottom: 12px; line-height: 1.5; }
 
     /* Summary */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
@@ -413,47 +375,6 @@
     </div>
   </div>
 
-  <!-- Feed Modal -->
-  <div id="feedModal" class="feed-modal-overlay">
-    <div class="feed-modal-box">
-      <div class="feed-modal-title" id="feedModalTitle">🍖 喂食</div>
-      <div class="feed-rule-hint">第1张 +60%，第2张 +30%，第3张 +10%</div>
-      <div class="feed-modal-select-row">
-        <label>喂几张</label>
-        <select id="feedCountSelect">
-          <option value="1">1 张</option>
-          <option value="2">2 张</option>
-          <option value="3">3 张</option>
-        </select>
-      </div>
-      <div class="feed-preview" id="feedPreview">
-        <div class="feed-preview-row">
-          <span>当前饱腹度</span>
-          <span class="feed-preview-val" id="feedCurrentPct">100%</span>
-        </div>
-        <div class="feed-preview-row">
-          <span>本次增加</span>
-          <span class="feed-preview-val green" id="feedAddPct">+60%</span>
-        </div>
-        <div class="feed-preview-row">
-          <span>喂食后</span>
-          <span class="feed-preview-val green" id="feedResultPct">100%</span>
-        </div>
-        <div class="feed-preview-bar">
-          <div class="feed-preview-bar-inner" id="feedPreviewBar" style="width:100%"></div>
-        </div>
-        <div class="feed-preview-row" style="margin-top:8px">
-          <span>消耗自由卡</span>
-          <span class="feed-preview-val" id="feedCostVal">1 张</span>
-        </div>
-      </div>
-      <div class="feed-modal-actions">
-        <button class="feed-modal-btn cancel" id="feedCancelBtn">取消</button>
-        <button class="feed-modal-btn confirm" id="feedConfirmBtn">确认喂食</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Universal Converter Ratio Modal -->
   <div id="converterRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
@@ -487,7 +408,7 @@
     </div>
   </div>
 
-  <!-- Late Ratio Modal (UPDATED: Added Cap Setting) -->
+  <!-- Late Ratio Modal -->
   <div id="lateRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;">⚙️ 迟到惩罚设置</div>
@@ -500,7 +421,6 @@
         </div>
         <div class="modal-hint">例：设为5，则迟到5分钟扣1张，6分钟扣2张</div>
       </div>
-      <!-- NEW: Single Time Cap -->
       <div class="form-group" style="margin-bottom: 0;">
         <label>⚠️ 单次扣卡上限</label>
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -577,9 +497,6 @@
       <div class="spirits-container">
         <!-- Torie Pet -->
         <div class="spirit-card torie state-normal" id="spiritTorie">
-          <div class="digestion-wrap">
-            <div class="digestion-track"><div class="digestion-bar full" id="torieDigestBar" style="width:100%"></div></div>
-          </div>
           <div class="pet-container">
             <svg class="pet-svg" id="svgTorie" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
               <path d="M25 45 C25 20, 75 20, 75 45 C75 75, 65 90, 50 90 C35 90, 25 75, 25 45 Z" fill="var(--card)" />
@@ -604,14 +521,10 @@
           </div>
           <div class="spirit-name">Torie</div>
           <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
-          <button class="feed-btn" id="feedTorieBtn">🍖 喂食</button>
         </div>
 
         <!-- Jory Pet -->
         <div class="spirit-card jory state-normal" id="spiritJory">
-          <div class="digestion-wrap">
-            <div class="digestion-track"><div class="digestion-bar full" id="joryDigestBar" style="width:100%"></div></div>
-          </div>
           <div class="pet-container">
             <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <ellipse cx="50" cy="65" rx="26" ry="22" fill="var(--card)" />
@@ -639,7 +552,6 @@
           </div>
           <div class="spirit-name">Jory</div>
           <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
-          <button class="feed-btn" id="feedJoryBtn">🥕 喂食</button>
         </div>
       </div>
     </section>
@@ -852,7 +764,6 @@
     }
     let converterRatios = loadRatios();
     let lateTier = parseInt(localStorage.getItem("fc_late_tier")) || 5;
-    // NEW: Late cap setting
     let lateCap = parseInt(localStorage.getItem("fc_late_cap")) || 5;
 
     const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
@@ -877,105 +788,8 @@
       normal:   { texts: ["平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中"], emoji: "😌" },
       sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重..."], emoji: "😴" },
       low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧"], emoji: "😔" },
-      hungry:   { texts: ["肚子咕噜噜...","好饿呀~","想吃东西...","喂喂我嘛~","饿得没力气"], emoji: "🥺" },
-      starving: { texts: ["快饿晕了！","已经很久了...","主人忘了我吗","急需投喂！！","要撑不住了"], emoji: "😵" },
       warning:  { texts: ["余额告急！","要注意啦！","快赚点卡吧","透支警告！","该努力咯~"], emoji: "😰" }
     };
-
-    /* ==================== DIGESTION SYSTEM (UPGRADED TO CLOUD) ==================== */
-    const DIGEST_DURATION_MS = 24 * 60 * 60 * 1000;
-    const FEED_INCREMENTS = [60, 30, 10];
-    
-    // Cloud-synced pet state
-    let petState = { torie_hunger: 100, jory_hunger: 100, last_update: new Date().toISOString() };
-    let petStateLoaded = false;
-
-    async function loadPetState() {
-      try {
-        const { data, error } = await sb.from('freecard_pet_state').select('*').eq('id', 1).maybeSingle();
-        if (error) throw error;
-        if (data) {
-          petState = data;
-          // Apply offline decay
-          const elapsed = Date.now() - new Date(petState.last_update).getTime();
-          const decay = (elapsed / DIGEST_DURATION_MS) * 100;
-          petState.torie_hunger = Math.max(0, petState.torie_hunger - decay);
-          petState.jory_hunger = Math.max(0, petState.jory_hunger - decay);
-        } else {
-          // First time: insert default
-          const { data: inserted, error: insErr } = await sb.from('freecard_pet_state')
-            .insert({ id: 1, torie_hunger: 100, jory_hunger: 100, last_update: new Date().toISOString() })
-            .select().single();
-          if (!insErr && inserted) petState = inserted;
-        }
-        petStateLoaded = true;
-      } catch (e) {
-        console.error('Pet state load failed:', e);
-        petStateLoaded = true; // Fallback to defaults
-      }
-      updateDigestionUI("Torie");
-      updateDigestionUI("Jory");
-      updateSpirits();
-    }
-
-    async function savePetState() {
-      if (!petStateLoaded) return;
-      petState.last_update = new Date().toISOString();
-      await sb.from('freecard_pet_state').upsert({ ...petState, id: 1 });
-    }
-
-    function getFullnessData(person) {
-      const key = person.toLowerCase();
-      const pct = Math.round(petState[`${key}_hunger`] ?? 100);
-      return { pct, hasHistory: petStateLoaded };
-    }
-
-    function setFullnessData(person, pct) {
-      const key = person.toLowerCase();
-      petState[`${key}_hunger`] = Math.max(0, Math.min(100, pct));
-      savePetState();
-    }
-
-    function getEffectivePct(person) {
-      return getFullnessData(person).pct;
-    }
-
-    function calcFeedPreview(person, count) {
-      const currentPct = getEffectivePct(person);
-      let addPct = 0;
-      for (let i = 0; i < count; i++) addPct += FEED_INCREMENTS[i] || 0;
-      const resultPct = Math.min(100, currentPct + addPct);
-      return { currentPct, addPct, resultPct };
-    }
-
-    function updateDigestionUI(person) {
-      const pct = getEffectivePct(person);
-      const bar = document.getElementById(`${person.toLowerCase()}DigestBar`);
-      if (!bar) return;
-      bar.style.width = pct + "%";
-      bar.className = "digestion-bar " + (pct > 60 ? "full" : pct > 25 ? "mid" : "low");
-    }
-
-    let digestionTimer = null;
-    function startDigestionTimer() {
-      if (digestionTimer) clearInterval(digestionTimer);
-      updateDigestionUI("Torie");
-      updateDigestionUI("Jory");
-      digestionTimer = setInterval(async () => {
-        // Apply real-time decay every minute
-        const elapsed = Date.now() - new Date(petState.last_update).getTime();
-        const decay = (elapsed / DIGEST_DURATION_MS) * 100;
-        if (decay > 0.1) {
-          petState.torie_hunger = Math.max(0, petState.torie_hunger - decay);
-          petState.jory_hunger = Math.max(0, petState.jory_hunger - decay);
-          petState.last_update = new Date().toISOString();
-          await savePetState();
-        }
-        updateDigestionUI("Torie");
-        updateDigestionUI("Jory");
-        updateSpirits();
-      }, 60000);
-    }
 
     /* ==================== PET MOOD LOGIC ==================== */
     let recentEvents = { Torie: [], Jory: [] };
@@ -989,30 +803,24 @@
     function getRecentEventCounts(person) {
       const now = Date.now();
       const events = (recentEvents[person] || []).filter(e => now - e.time < 30 * 60 * 1000);
-      let earns = 0, redeems = 0, punishes = 0, feeds = 0;
+      let earns = 0, redeems = 0, punishes = 0;
       events.forEach(e => {
         if (e.type === 'earn') earns++;
         if (e.type === 'redeem') redeems++;
         if (e.type === 'punish') punishes++;
-        if (e.type === 'feed') feeds++;
       });
-      return { earns, redeems, punishes, feeds };
+      return { earns, redeems, punishes };
     }
 
     function getPetState(person) {
       const balance = calcBalance(person);
-      const digestPct = getEffectivePct(person);
       const now = new Date();
       const hour = now.getHours();
       const events = getRecentEventCounts(person);
-      const hasHistory = getFullnessData(person).hasHistory;
 
-      if (hasHistory && digestPct < 10) return "starving";
       if (balance < 0) return "warning";
-      if (hasHistory && digestPct < 30) return "hungry";
       if (events.punishes > 0) return "low";
       if (events.redeems > 0) return "amazing";
-      if (events.feeds > 0 && events.earns === 0) return "happy";
       if (hour >= 23 || hour < 6) return "sleepy";
       const todayStart = new Date(); todayStart.setHours(0,0,0,0);
       const todayLogs = allLogs.filter(l => new Date(l.created_at) >= todayStart && l.operator === person);
@@ -1048,7 +856,7 @@
           starEyes.forEach(p => p.style.display = '');
         } else if (state === 'sleepy') {
           sleepyEyes.forEach(p => p.style.display = '');
-        } else if (state === 'low' || state === 'hungry' || state === 'starving') {
+        } else if (state === 'low') {
           sadEyes.forEach(p => p.style.display = '');
         } else {
           pupils.forEach(p => p.style.display = '');
@@ -1069,11 +877,9 @@
           happyEyes.forEach(e => e.style.display = '');
         } else if (state === 'sleepy') {
           sleepyEyes.forEach(e => e.style.display = '');
-        } else if (state === 'low' || state === 'starving') {
+        } else if (state === 'low') {
           sadEyes.forEach(e => e.style.display = '');
           ears.forEach(e => e.classList.add('ear-down'));
-        } else if (state === 'hungry') {
-          sadEyes.forEach(e => e.style.display = '');
         } else {
           beanEyes.forEach(e => e.style.display = '');
         }
@@ -1090,86 +896,10 @@
       ["Torie", "Jory"].forEach(person => {
         const state = getPetState(person);
         updatePetState(person, state);
-        updateDigestionUI(person);
       });
     }
 
-    /* ==================== FEED PET ==================== */
-    let feedTargetPerson = "";
-
-    function openFeedModal(person) {
-      feedTargetPerson = person;
-      const modal = document.getElementById("feedModal");
-      const emoji = person === "Torie" ? "🦉" : "🐰";
-      document.getElementById("feedModalTitle").textContent = `${emoji} 喂食 ${person}`;
-      document.getElementById("feedCountSelect").value = "1";
-      updateFeedPreview();
-      modal.classList.add("show");
-    }
-
-    function closeFeedModal() {
-      document.getElementById("feedModal").classList.remove("show");
-      feedTargetPerson = "";
-    }
-
-    function updateFeedPreview() {
-      if (!feedTargetPerson) return;
-      const count = parseInt(document.getElementById("feedCountSelect").value) || 1;
-      const { currentPct, addPct, resultPct } = calcFeedPreview(feedTargetPerson, count);
-      
-      document.getElementById("feedCurrentPct").textContent = currentPct + "%";
-      document.getElementById("feedAddPct").textContent = "+" + addPct + "%";
-      document.getElementById("feedResultPct").textContent = resultPct + "%";
-      document.getElementById("feedCostVal").textContent = count + " 张";
-      
-      const bar = document.getElementById("feedPreviewBar");
-      bar.style.width = resultPct + "%";
-      bar.style.background = resultPct > 60 ? "var(--green)" : resultPct > 25 ? "var(--jory)" : "var(--red)";
-      
-      const balance = calcBalance(feedTargetPerson);
-      const btn = document.getElementById("feedConfirmBtn");
-      if (balance < count) {
-        btn.disabled = true;
-        btn.textContent = "余额不足";
-      } else {
-        btn.disabled = false;
-        btn.textContent = "确认喂食";
-      }
-    }
-
-    async function confirmFeed() {
-      if (!feedTargetPerson) return;
-      const count = parseInt(document.getElementById("feedCountSelect").value) || 1;
-      const balance = calcBalance(feedTargetPerson);
-      if (balance < count) { showToast("余额不足", "error"); return; }
-
-      const { resultPct } = calcFeedPreview(feedTargetPerson, count);
-
-      const foodEmoji = feedTargetPerson === "Torie" ? "🍖" : "🥕";
-      const { error } = await sb.from("freecard_log").insert({
-        operator: feedTargetPerson, change_type: "减少", card_num: count, reason: `${foodEmoji} 喂食（${count}张）`
-      });
-      if (error) { showToast("喂食失败：" + error.message, "error"); return; }
-
-      setFullnessData(feedTargetPerson, resultPct);
-      trackEvent(feedTargetPerson, 'feed');
-      closeFeedModal();
-      showToast(`${feedTargetPerson} 吃得好开心！🥰`, "success");
-      spawnParticles(1);
-      updateDigestionUI(feedTargetPerson);
-      updateSpirits();
-      await loadLogs();
-    }
-
-    function initFeedModal() {
-      document.getElementById("feedCountSelect").addEventListener("change", updateFeedPreview);
-      document.getElementById("feedCancelBtn").addEventListener("click", closeFeedModal);
-      document.getElementById("feedConfirmBtn").addEventListener("click", confirmFeed);
-      document.getElementById("feedModal").addEventListener("click", (e) => {
-        if (e.target === document.getElementById("feedModal")) closeFeedModal();
-      });
-    }
-
+    /* ==================== PET CLICK INTERACTIONS ==================== */
     function initPetInteractions() {
       document.getElementById('spiritTorie').addEventListener('click', () => {
         const svg = document.getElementById('svgTorie');
@@ -1184,9 +914,6 @@
         svg.style.animation = 'mochiSquish 0.5s ease forwards';
         setTimeout(() => { svg.style.animation = ''; svg.classList.remove('pet-clicked'); }, 500);
       });
-      
-      document.getElementById('feedTorieBtn').addEventListener('click', (e) => { e.stopPropagation(); openFeedModal("Torie"); });
-      document.getElementById('feedJoryBtn').addEventListener('click', (e) => { e.stopPropagation(); openFeedModal("Jory"); });
       
       if (!document.getElementById('mochi-style')) {
         const style = document.createElement('style');
@@ -1347,7 +1074,7 @@
       overlay.addEventListener("click",()=>{overlay.classList.remove("show");panel.classList.remove("show");});
     }
 
-    /* ==================== RATIO MODALS (UPDATED: Late Cap) ==================== */
+    /* ==================== RATIO MODALS ==================== */
     function initRatioModals() {
       // Universal Converter Ratio Modal
       const ratioModal = document.getElementById("converterRatioModal");
@@ -1378,7 +1105,7 @@
         calcConverter();
       });
 
-      // Late Ratio Modal (UPDATED with Cap)
+      // Late Ratio Modal
       const lateModal = document.getElementById("lateRatioModal");
       document.getElementById("openLateRatioBtn").addEventListener("click", () => {
         document.getElementById("lateRatioTier").value = lateTier;
@@ -1812,14 +1539,13 @@
       });
     }
 
-    /* ==================== LATE CONVERTER (UPDATED: With Cap) ==================== */
+    /* ==================== LATE CONVERTER ==================== */
     function setupLateConverter() {
       const input = document.getElementById("lateInput"), person = document.getElementById("latePerson"), result = document.getElementById("lateResult"), btn = document.getElementById("lateSubmitBtn");
       
       window.calcLate = () => {
         const mins = parseInt(input.value) || 0;
         const rawCards = Math.ceil(mins / lateTier);
-        // Apply cap
         const cards = Math.min(rawCards, lateCap);
         const wasCapped = rawCards > lateCap;
         
@@ -1944,7 +1670,6 @@
       initSettings();
       initRatioModals();
       initPetInteractions();
-      initFeedModal();
       setupNav();
       setupBankNav();
       setupPeriodTabs();
@@ -1957,10 +1682,6 @@
       setupLateConverter();
       setupRecharge();
       checkSpecialDate();
-      
-      // Load cloud pet state FIRST, then start timer
-      await loadPetState();
-      startDigestionTimer();
       
       await loadLogs();
       await loadProducts();
