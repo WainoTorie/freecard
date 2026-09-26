@@ -107,6 +107,17 @@
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
 
+    /* === STAMINA BAR & FEED BUTTON === */
+    .stamina-wrap { margin-top: 8px; display: flex; align-items: center; gap: 6px; justify-content: center; }
+    .stamina-track { width: 60px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+    .stamina-fill { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(0.22,1,0.36,1), background 0.3s; }
+    .stamina-fill.high { background: var(--green); }
+    .stamina-fill.mid { background: var(--jory); }
+    .stamina-fill.low { background: var(--red); }
+    .feed-btn { border: none; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; font-size: 14px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; line-height: 1; padding: 0; }
+    .feed-btn:active { transform: scale(0.85); background: var(--border); }
+    .feed-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
     /* Summary */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
     .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
@@ -521,6 +532,11 @@
           </div>
           <div class="spirit-name">Torie</div>
           <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
+          <!-- STAMINA BAR -->
+          <div class="stamina-wrap">
+            <div class="stamina-track"><div class="stamina-fill high" id="staminaBarTorie" style="width:80%"></div></div>
+            <button class="feed-btn" id="feedBtnTorie" title="喂食">🍖</button>
+          </div>
         </div>
 
         <!-- Jory Pet -->
@@ -552,6 +568,11 @@
           </div>
           <div class="spirit-name">Jory</div>
           <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
+          <!-- STAMINA BAR -->
+          <div class="stamina-wrap">
+            <div class="stamina-track"><div class="stamina-fill high" id="staminaBarJory" style="width:80%"></div></div>
+            <button class="feed-btn" id="feedBtnJory" title="喂食">🍖</button>
+          </div>
         </div>
       </div>
     </section>
@@ -788,8 +809,131 @@
       normal:   { texts: ["平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中"], emoji: "😌" },
       sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重..."], emoji: "😴" },
       low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧"], emoji: "😔" },
-      warning:  { texts: ["余额告急！","要注意啦！","快赚点卡吧","透支警告！","该努力咯~"], emoji: "😰" }
+      warning:  { texts: ["肚子好饿...","快喂喂我吧！","饿到发抖...","需要投食！","呜呜好饿..."], emoji: "😰" }
     };
+
+    /* ==================== STAMINA SYSTEM ==================== */
+    let staminaData = { Torie: { stamina: 80, updated_at: new Date().toISOString() }, Jory: { stamina: 80, updated_at: new Date().toISOString() } };
+    let staminaTimer = null;
+    const STAMINA_DECAY_PER_MIN = 0.1;
+    const STAMINA_FEED_AMOUNT = 60;
+    const STAMINA_LOW_THRESHOLD = 20;
+
+    async function loadStamina() {
+      const { data, error } = await sb.from("freecard_stamina").select("*");
+      if (error) { console.error("Stamina load error:", error); return; }
+      if (data && data.length > 0) {
+        data.forEach(row => {
+          staminaData[row.person] = { stamina: Number(row.stamina), updated_at: row.updated_at };
+        });
+      }
+      // Apply offline decay
+      applyOfflineDecay();
+      updateStaminaUI();
+    }
+
+    function applyOfflineDecay() {
+      const now = Date.now();
+      ["Torie", "Jory"].forEach(person => {
+        const lastUpdate = new Date(staminaData[person].updated_at).getTime();
+        const minutesPassed = Math.max(0, (now - lastUpdate) / 60000);
+        const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
+        staminaData[person].stamina = Math.max(0, staminaData[person].stamina - decay);
+        staminaData[person].updated_at = new Date().toISOString();
+      });
+    }
+
+    async function saveStamina(person) {
+      const val = staminaData[person];
+      const { error } = await sb.from("freecard_stamina").upsert({
+        person, stamina: Math.round(val.stamina * 100) / 100, updated_at: val.updated_at
+      }, { onConflict: 'person' });
+      if (error) console.error("Stamina save error:", error);
+    }
+
+    function getStaminaColor(val) {
+      if (val >= 50) return "high";
+      if (val >= STAMINA_LOW_THRESHOLD) return "mid";
+      return "low";
+    }
+
+    function updateStaminaUI() {
+      ["Torie", "Jory"].forEach(person => {
+        const val = Math.max(0, Math.min(100, staminaData[person].stamina));
+        const bar = document.getElementById(`staminaBar${person}`);
+        if (bar) {
+          bar.style.width = val + "%";
+          bar.className = `stamina-fill ${getStaminaColor(val)}`;
+        }
+      });
+    }
+
+    async function feedPet(person) {
+      const btn = document.getElementById(`feedBtn${person}`);
+      if (btn) { btn.disabled = true; }
+
+      const current = staminaData[person].stamina;
+      if (current >= 100) {
+        showToast(`${person} 已经吃饱啦~`, "success");
+        if (btn) btn.disabled = false;
+        return;
+      }
+
+      staminaData[person].stamina = Math.min(100, current + STAMINA_FEED_AMOUNT);
+      staminaData[person].updated_at = new Date().toISOString();
+      updateStaminaUI();
+      updateSpirits();
+      spawnParticles(1);
+      showToast(`已喂食 ${person}，体力恢复！`, "success");
+      await saveStamina(person);
+      if (btn) btn.disabled = false;
+    }
+
+    function startStaminaTimer() {
+      if (staminaTimer) clearInterval(staminaTimer);
+      staminaTimer = setInterval(() => {
+        let changed = false;
+        ["Torie", "Jory"].forEach(person => {
+          if (staminaData[person].stamina > 0) {
+            staminaData[person].stamina = Math.max(0, staminaData[person].stamina - STAMINA_DECAY_PER_MIN);
+            changed = true;
+          }
+        });
+        if (changed) {
+          // Update local timestamp every tick so offline calc stays accurate
+          ["Torie", "Jory"].forEach(p => { staminaData[p].updated_at = new Date().toISOString(); });
+          updateStaminaUI();
+          updateSpirits();
+          // Save to DB every minute
+          saveStamina("Torie");
+          saveStamina("Jory");
+        }
+      }, 60000); // Every 1 minute
+    }
+
+    function initStaminaSystem() {
+      document.getElementById("feedBtnTorie").addEventListener("click", (e) => { e.stopPropagation(); feedPet("Torie"); });
+      document.getElementById("feedBtnJory").addEventListener("click", (e) => { e.stopPropagation(); feedPet("Jory"); });
+      loadStamina().then(() => {
+        startStaminaTimer();
+        updateSpirits();
+      });
+
+      // Realtime sync for stamina
+      sb.channel("stamina-realtime")
+        .on("postgres_changes", { event: "*", schema: "public", table: "freecard_stamina" }, (payload) => {
+          if (payload.new && payload.new.person) {
+            staminaData[payload.new.person] = {
+              stamina: Number(payload.new.stamina),
+              updated_at: payload.new.updated_at
+            };
+            applyOfflineDecay();
+            updateStaminaUI();
+            updateSpirits();
+          }
+        })
+        .subscribe();
+    }
 
     /* ==================== PET MOOD LOGIC ==================== */
     let recentEvents = { Torie: [], Jory: [] };
@@ -817,7 +961,10 @@
       const now = new Date();
       const hour = now.getHours();
       const events = getRecentEventCounts(person);
+      const stamina = staminaData[person] ? staminaData[person].stamina : 80;
 
+      // Hunger overrides most states
+      if (stamina < STAMINA_LOW_THRESHOLD) return "warning";
       if (balance < 0) return "warning";
       if (events.punishes > 0) return "low";
       if (events.redeems > 0) return "amazing";
@@ -856,7 +1003,7 @@
           starEyes.forEach(p => p.style.display = '');
         } else if (state === 'sleepy') {
           sleepyEyes.forEach(p => p.style.display = '');
-        } else if (state === 'low') {
+        } else if (state === 'low' || state === 'warning') {
           sadEyes.forEach(p => p.style.display = '');
         } else {
           pupils.forEach(p => p.style.display = '');
@@ -877,7 +1024,7 @@
           happyEyes.forEach(e => e.style.display = '');
         } else if (state === 'sleepy') {
           sleepyEyes.forEach(e => e.style.display = '');
-        } else if (state === 'low') {
+        } else if (state === 'low' || state === 'warning') {
           sadEyes.forEach(e => e.style.display = '');
           ears.forEach(e => e.classList.add('ear-down'));
         } else {
@@ -1076,7 +1223,6 @@
 
     /* ==================== RATIO MODALS ==================== */
     function initRatioModals() {
-      // Universal Converter Ratio Modal
       const ratioModal = document.getElementById("converterRatioModal");
       document.getElementById("openConverterRatioBtn").addEventListener("click", () => {
         const config = CONVERTER_TYPES[currentConverterType];
@@ -1105,7 +1251,6 @@
         calcConverter();
       });
 
-      // Late Ratio Modal
       const lateModal = document.getElementById("lateRatioModal");
       document.getElementById("openLateRatioBtn").addEventListener("click", () => {
         document.getElementById("lateRatioTier").value = lateTier;
@@ -1642,6 +1787,7 @@
     function refreshAll() {
       updateBalances();
       updateSpirits();
+      updateStaminaUI();
       updateHistoryFilterOptions();
       renderStats();
       renderHistory();
@@ -1682,6 +1828,7 @@
       setupLateConverter();
       setupRecharge();
       checkSpecialDate();
+      initStaminaSystem();
       
       await loadLogs();
       await loadProducts();
