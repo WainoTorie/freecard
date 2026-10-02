@@ -81,6 +81,13 @@
     .state-warning .pet-svg { animation: petShake 0.4s ease-in-out infinite; }
     .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
     .state-sleepy .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.8; }
+    /* === MODIFIED: Starved Animation === */
+    .state-starved .pet-svg { 
+      transform: translateX(-10px) scale(0.85) rotate(-10deg); 
+      opacity: 0.6; 
+      filter: grayscale(0.8);
+      animation: petHide 3s ease-in-out infinite; 
+    }
     
     .pet-clicked { animation: petJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
     
@@ -89,6 +96,8 @@
     @keyframes petShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
     @keyframes petBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
     @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-15px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
+    /* === MODIFIED: Hide Keyframes === */
+    @keyframes petHide { 0%, 100% { transform: translateX(-10px) scale(0.85) rotate(-10deg); } 50% { transform: translateX(-15px) scale(0.8) rotate(-15deg); } }
 
     .pet-svg * { transition: all 0.4s ease; }
     .bunny-ear-l { transform-origin: 34px 44px; }
@@ -103,6 +112,11 @@
     .zzz { opacity: 0; transition: all 0.3s; }
     .state-sleepy .zzz { opacity: 1; animation: zzzFloat 2s ease-in-out infinite; }
     @keyframes zzzFloat { 0%,100% { transform: translateY(0); opacity: 0.7; } 50% { transform: translateY(-6px); opacity: 1; } }
+
+    /* === MODIFIED: Anger Symbol for Starved === */
+    .anger-mark { opacity: 0; transition: all 0.3s; transform-origin: center; }
+    .state-starved .anger-mark { opacity: 1; animation: angerPulse 1s ease-in-out infinite; }
+    @keyframes angerPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
 
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
@@ -235,8 +249,8 @@
     /* Balance Scale Chart */
     .scale-chart { display: flex; align-items: center; height: 32px; margin: 16px 0 8px; position: relative; }
     .scale-bar { height: 100%; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 2px; }
-    .scale-bar.spend { background: var(--red); border-radius: 6px 0 0 6px; opacity: 0.8; }
-    .scale-bar.earn { background: var(--green); border-radius: 0 6px 6px 0; opacity: 0.8; }
+    .scale-bar.spend { background: var(--red); border-radius: 0 6px 6px 0; opacity: 0.8; } /* === MODIFIED: Red Right === */
+    .scale-bar.earn { background: var(--green); border-radius: 6px 0 0 6px; opacity: 0.8; } /* === MODIFIED: Green Left === */
     .scale-center { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--text-3); transform: translateX(-50%); z-index: 2; opacity: 0.5; }
     .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); font-weight: 600; margin-top: 4px; }
     .scale-net { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; padding: 6px; border-radius: var(--r-sm); background: var(--bg); border: 1px solid var(--border); }
@@ -615,11 +629,17 @@
               <path class="sleepy-eye" d="M54 45 Q62 48 70 45" style="display:none" />
               <path class="sad-eye" d="M30 48 Q38 44 46 48" style="display:none" />
               <path class="sad-eye" d="M54 48 Q62 44 70 48" style="display:none" />
+              <!-- === MODIFIED: Angry Eyes for Starved === -->
+              <path class="angry-eye" d="M30 42 L46 46" stroke-width="3" style="display:none" />
+              <path class="angry-eye" d="M70 42 L54 46" stroke-width="3" style="display:none" />
+              
               <path d="M50 52 L46 58 L54 58 Z" fill="var(--jory)" stroke="var(--jory)" />
               <path d="M25 55 C15 60, 15 75, 25 80" />
               <path d="M75 55 C85 60, 85 75, 75 80" />
               <path class="sweat" d="M75 25 C75 25, 80 30, 80 35 C80 38, 75 38, 75 35 C75 30, 75 25, 75 25 Z" fill="var(--torie)" stroke="none" />
               <text class="zzz" x="72" y="22" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
+              <!-- === MODIFIED: Anger Mark === -->
+              <path class="anger-mark" d="M75 15 L85 25 M85 15 L75 25" stroke="var(--red)" stroke-width="3" stroke-linecap="round" />
             </svg>
           </div>
           <div class="spirit-name">Torie</div>
@@ -648,6 +668,10 @@
               <path class="sleepy-eye" d="M56 62 Q60 64 64 62" style="display:none" />
               <path class="sad-eye" d="M37 64 Q40 60 43 64" style="display:none" />
               <path class="sad-eye" d="M57 64 Q60 60 63 64" style="display:none" />
+              <!-- === MODIFIED: Angry Eyes for Starved === -->
+              <path class="angry-eye" d="M36 58 L44 62" stroke-width="2.5" style="display:none" />
+              <path class="angry-eye" d="M64 58 L56 62" stroke-width="2.5" style="display:none" />
+
               <circle cx="50" cy="68" r="1.5" fill="var(--red)" stroke="none" opacity="0.6" />
               <path d="M47 71 Q50 73 53 71" stroke-width="1.5" />
               <circle cx="32" cy="68" r="4.5" fill="var(--red)" opacity="0.12" stroke="none" />
@@ -656,6 +680,8 @@
               <ellipse cx="62" cy="84" rx="6" ry="3.5" fill="var(--card)" />
               <path class="sweat" d="M74 36 C74 36, 78 40, 78 44 C78 46.5, 74 46.5, 74 44 C74 40, 74 36, 74 36 Z" fill="var(--torie)" stroke="none" />
               <text class="zzz" x="72" y="36" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
+              <!-- === MODIFIED: Anger Mark === -->
+              <path class="anger-mark" d="M75 25 L85 35 M85 25 L75 35" stroke="var(--red)" stroke-width="3" stroke-linecap="round" />
             </svg>
           </div>
           <div class="spirit-name">Jory</div>
@@ -901,7 +927,9 @@
       normal:   { texts: ["平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中"], emoji: "😌" },
       sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重..."], emoji: "😴" },
       low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧"], emoji: "😔" },
-      warning:  { texts: ["肚子好饿...","快喂喂我吧！","饿到发抖...","需要投食！","呜呜好饿..."], emoji: "😰" }
+      warning:  { texts: ["肚子好饿...","快喂喂我吧！","饿到发抖...","需要投食！","呜呜好饿..."], emoji: "😰" },
+      /* === MODIFIED: Added Starved State === */
+      starved:  { texts: ["不想理你...","已经绝食了","哄不好的那种","哼！走开！","心碎了..."], emoji: "💢" }
     };
 
     /* ==================== STAMINA SYSTEM ==================== */
@@ -971,11 +999,37 @@
       return { final: Math.min(100, result), steps };
     }
 
+    /* === MODIFIED: Helper to calculate revive cost === */
+    function getReviveCost(person) {
+      const stamina = staminaData[person].stamina;
+      if (stamina > 0) return 0;
+      
+      const updatedAt = new Date(staminaData[person].updated_at).getTime();
+      const now = Date.now();
+      const hoursStarved = Math.max(0, (now - updatedAt) / (1000 * 60 * 60));
+      // Base 1 card + 1 card per 24 hours
+      const extra = Math.floor(hoursStarved / 24);
+      return 1 + extra;
+    }
+
+    /* === MODIFIED: Helper to format starved duration === */
+    function getStarvedDurationText(person) {
+      const updatedAt = new Date(staminaData[person].updated_at).getTime();
+      const now = Date.now();
+      const diffMs = now - updatedAt;
+      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      
+      if (days > 0) return `${days}天${hours}小时`;
+      return `${hours}小时`;
+    }
+
     function startStaminaTimer() {
       if (staminaTimer) clearInterval(staminaTimer);
       staminaTimer = setInterval(() => {
         let changed = false;
         ["Torie", "Jory"].forEach(person => {
+          // Only decay if stamina > 0. If 0, it stays 0 (starved state locks it)
           if (staminaData[person].stamina > 0) {
             staminaData[person].stamina = Math.max(0, staminaData[person].stamina - STAMINA_DECAY_PER_MIN);
             changed = true;
@@ -987,6 +1041,9 @@
           updateSpirits();
           saveStamina("Torie");
           saveStamina("Jory");
+        } else {
+          // Even if no decay (because starved), we might need to update UI for revive cost ticking up
+          updateSpirits(); 
         }
       }, 60000);
     }
@@ -1020,6 +1077,7 @@
     function updateFeedPreview() {
       const current = Math.max(0, Math.min(100, staminaData[feedTarget].stamina));
       const currentRound = Math.round(current);
+      const isStarved = current <= 0;
 
       // Update current bar
       const currentBar = document.getElementById("feedCurrentBar");
@@ -1028,6 +1086,39 @@
       document.getElementById("feedCurrentPct").textContent = currentRound + "%";
       document.getElementById("feedCurrentPct").style.color = 
         currentRound >= 50 ? "var(--green)" : currentRound >= 20 ? "var(--jory)" : "var(--red)";
+
+      const balance = calcBalance(feedTarget);
+      const resultEl = document.getElementById("feedResult");
+      const confirmBtn = document.getElementById("feedConfirmBtn");
+      const previewContainer = document.getElementById("feedPreview");
+      const selectRow = document.querySelector(".feed-select-row");
+
+      /* === MODIFIED: Starved Logic in Modal === */
+      if (isStarved) {
+        const reviveCost = getReviveCost(feedTarget);
+        const durationText = getStarvedDurationText(feedTarget);
+        
+        // Hide normal feed controls
+        previewContainer.style.display = "none";
+        selectRow.style.display = "none";
+        
+        resultEl.className = "feed-result warn";
+        resultEl.innerHTML = `💢 <b>${feedTarget}</b> 已经绝食 ${durationText}！<br>需要 <b>${reviveCost} 张</b>自由卡才能唤醒并恢复喂食。`;
+        
+        if (balance < reviveCost) {
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = "余额不足";
+          resultEl.innerHTML += `<br><span style="font-size:11px;opacity:0.8">（余额仅 ${balance} 张）</span>`;
+        } else {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = `支付 ${reviveCost} 张唤醒`;
+        }
+        return;
+      }
+
+      // Normal Feed Logic
+      previewContainer.style.display = "block";
+      selectRow.style.display = "block";
 
       // Calculate preview
       const { final, steps } = calcFeedResult(current, feedSelectedCards);
@@ -1059,12 +1150,6 @@
 
       stepsContainer.innerHTML = html;
 
-      // Result line
-      const balance = calcBalance(feedTarget);
-      const resultEl = document.getElementById("feedResult");
-      const confirmBtn = document.getElementById("feedConfirmBtn");
-      const totalGain = steps[steps.length - 1] - currentRound;
-
       if (currentRound >= 100) {
         resultEl.className = "feed-result full";
         resultEl.textContent = `🎉 ${feedTarget} 已经满体力啦，不需要喂食~`;
@@ -1078,6 +1163,7 @@
         const effectiveGain = steps[steps.length - 1] - currentRound;
         resultEl.textContent = `✅ 消耗 ${feedSelectedCards} 张自由卡 → 体力 ${currentRound}% → ${steps[steps.length-1]}%（实际 +${effectiveGain}%）`;
         confirmBtn.disabled = false;
+        confirmBtn.textContent = "确认喂食";
       }
     }
 
@@ -1085,12 +1171,65 @@
       if (!feedTarget) return;
       const current = staminaData[feedTarget].stamina;
       const currentRound = Math.round(current);
+      const balance = calcBalance(feedTarget);
+      const isStarved = current <= 0;
+
+      const confirmBtn = document.getElementById("feedConfirmBtn");
+      confirmBtn.disabled = true;
+      const originalBtnText = confirmBtn.textContent;
+      confirmBtn.textContent = "处理中...";
+
+      /* === MODIFIED: Handle Revive Transaction === */
+      if (isStarved) {
+        const reviveCost = getReviveCost(feedTarget);
+        if (balance < reviveCost) {
+          showToast("余额不足，无法唤醒", "error");
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = originalBtnText;
+          return;
+        }
+
+        // Deduct revive cost
+        const reason = `💢 唤醒绝食的${feedTarget}（绝食惩罚）`;
+        const { error: logError } = await sb.from("freecard_log").insert({
+          operator: feedTarget,
+          change_type: "减少",
+          card_num: reviveCost,
+          reason: reason
+        });
+
+        if (logError) {
+          showToast("唤醒失败：" + logError.message, "error");
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = originalBtnText;
+          return;
+        }
+
+        // Reset stamina to 50% upon revive
+        staminaData[feedTarget].stamina = 50;
+        staminaData[feedTarget].updated_at = new Date().toISOString();
+        await saveStamina(feedTarget);
+
+        updateStaminaUI();
+        updateSpirits();
+        spawnParticles(1);
+        showToast(`${feedTarget} 被唤醒了！体力恢复至 50%`, "success");
+        
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = "确认喂食";
+        closeFeedModal();
+        await loadLogs();
+        return;
+      }
+
+      // Normal Feed Logic
       const { final, steps } = calcFeedResult(current, feedSelectedCards);
       const finalRound = Math.round(final);
-      const balance = calcBalance(feedTarget);
 
       if (balance < feedSelectedCards) {
         showToast("余额不足，无法喂食", "error");
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = originalBtnText;
         return;
       }
       if (currentRound >= 100) {
@@ -1098,10 +1237,6 @@
         closeFeedModal();
         return;
       }
-
-      const confirmBtn = document.getElementById("feedConfirmBtn");
-      confirmBtn.disabled = true;
-      confirmBtn.textContent = "喂食中...";
 
       // 1. Deduct cards from balance (insert into log)
       const reason = `🍖 喂食${feedSelectedCards}张（${feedTarget} 体力 ${currentRound}%→${finalRound}%）`;
@@ -1115,7 +1250,7 @@
       if (logError) {
         showToast("喂食失败：" + logError.message, "error");
         confirmBtn.disabled = false;
-        confirmBtn.textContent = "确认喂食";
+        confirmBtn.textContent = originalBtnText;
         return;
       }
 
@@ -1220,7 +1355,9 @@
       const events = getRecentEventCounts(person);
       const stamina = staminaData[person] ? staminaData[person].stamina : 80;
 
-      if (stamina < STAMINA_LOW_THRESHOLD) return "warning";
+      /* === MODIFIED: Starved Priority Check === */
+      if (stamina <= 0) return "starved";
+
       if (balance < 0) return "warning";
       if (events.punishes > 0) return "low";
       if (events.redeems > 0) return "amazing";
@@ -1250,12 +1387,17 @@
         const starEyes = svg.querySelectorAll('.star-eye');
         const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
         const sadEyes = svg.querySelectorAll('.sad-eye');
+        const angryEyes = svg.querySelectorAll('.angry-eye'); // New
+        
         pupils.forEach(p => p.style.display = 'none');
         starEyes.forEach(p => p.style.display = 'none');
         sleepyEyes.forEach(p => p.style.display = 'none');
         sadEyes.forEach(p => p.style.display = 'none');
+        angryEyes.forEach(p => p.style.display = 'none');
         
-        if (state === 'amazing' || state === 'happy') {
+        if (state === 'starved') {
+          angryEyes.forEach(p => p.style.display = '');
+        } else if (state === 'amazing' || state === 'happy') {
           starEyes.forEach(p => p.style.display = '');
         } else if (state === 'sleepy') {
           sleepyEyes.forEach(p => p.style.display = '');
@@ -1269,14 +1411,20 @@
         const happyEyes = svg.querySelectorAll('.happy-eye');
         const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
         const sadEyes = svg.querySelectorAll('.sad-eye');
+        const angryEyes = svg.querySelectorAll('.angry-eye'); // New
         const ears = svg.querySelectorAll('.bunny-ear-l, .bunny-ear-r');
+        
         beanEyes.forEach(e => e.style.display = 'none');
         happyEyes.forEach(e => e.style.display = 'none');
         sleepyEyes.forEach(e => e.style.display = 'none');
         sadEyes.forEach(e => e.style.display = 'none');
+        angryEyes.forEach(e => e.style.display = 'none');
         ears.forEach(e => e.classList.remove('ear-down'));
 
-        if (state === 'amazing' || state === 'happy' || state === 'good') {
+        if (state === 'starved') {
+          angryEyes.forEach(e => e.style.display = '');
+          ears.forEach(e => e.classList.add('ear-down'));
+        } else if (state === 'amazing' || state === 'happy' || state === 'good') {
           happyEyes.forEach(e => e.style.display = '');
         } else if (state === 'sleepy') {
           sleepyEyes.forEach(e => e.style.display = '');
@@ -1289,10 +1437,18 @@
       }
       
       const config = SPIRIT_STATES[state] || SPIRIT_STATES.normal;
-      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
-      const seed = todayStart.getDate() + person.length;
-      const textIdx = (seed + 1) % config.texts.length;
-      document.getElementById(`spirit${person}Status`).textContent = config.texts[textIdx];
+      
+      /* === MODIFIED: Custom Text for Starved === */
+      if (state === 'starved') {
+        const duration = getStarvedDurationText(person);
+        const cost = getReviveCost(person);
+        document.getElementById(`spirit${person}Status`).innerHTML = `绝食${duration}...<br><span style="color:var(--red);font-size:11px">需${cost}张卡唤醒</span>`;
+      } else {
+        const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+        const seed = todayStart.getDate() + person.length;
+        const textIdx = (seed + 1) % config.texts.length;
+        document.getElementById(`spirit${person}Status`).textContent = config.texts[textIdx];
+      }
     }
 
     function updateSpirits() {
@@ -1667,17 +1823,20 @@
         const netSign = net >= 0 ? "+" : "";
         const verdict = net > 0 ? "赚得更多 💪" : net < 0 ? "花得更多 💸" : "收支平衡 ⚖️";
 
+        /* === MODIFIED: Swapped Earn/Spend Visual Positions === */
         document.getElementById("statsContent").innerHTML = `
           <div class="stats-group">
             <div class="stats-label">${emoji} ${name} ${pLabel}收支对比</div>
             <div class="scale-chart">
               <div class="scale-center"></div>
-              <div class="scale-bar spend" style="width:${spendPct}%"></div>
+              <!-- Green (Earn) on Left -->
               <div class="scale-bar earn" style="width:${earnPct}%"></div>
+              <!-- Red (Spend) on Right -->
+              <div class="scale-bar spend" style="width:${spendPct}%"></div>
             </div>
             <div class="scale-labels">
-              <span style="color:var(--red)">消耗 ${spend}</span>
               <span style="color:var(--green)">获得 ${earn}</span>
+              <span style="color:var(--red)">消耗 ${spend}</span>
             </div>
             <div class="scale-net" style="color:${netColor}">
               净积累 ${netSign}${net} · ${verdict}
