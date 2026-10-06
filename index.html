@@ -758,6 +758,62 @@
             <div class="bsn-desc">迟到 & 违规</div>
           </div>
         </div>
+
+        <div class="card" style="margin-top: 16px;">
+          <div class="converter-header">
+            <h2 class="section-title" style="margin:0">🧮 换算器</h2>
+          </div>
+          <div class="segment segment-2" style="margin-bottom:16px;">
+            <button class="seg-btn active" id="bankConverterTab" type="button">🔥 通用换算</button>
+            <button class="seg-btn" id="bankLateTab" type="button">⏰ 迟到换算</button>
+          </div>
+
+          <div id="bankConverterPanel">
+            <div class="converter-header">
+              <h3 class="section-title" style="margin:0">🔥 通用换算</h3>
+              <button class="ratio-btn" id="openConverterRatioBtn">⚙️</button>
+            </div>
+            <div class="converter-type-grid" id="converterTypeGrid">
+              <button class="converter-type-btn active" data-ctype="calorie"><span class="ctb-emoji">🔥</span>卡路里</button>
+              <button class="converter-type-btn" data-ctype="momo"><span class="ctb-emoji">📖</span>墨墨背单词</button>
+              <button class="converter-type-btn" data-ctype="pushup"><span class="ctb-emoji">💪</span>俯卧撑</button>
+              <button class="converter-type-btn" data-ctype="pullup"><span class="ctb-emoji">🏋️</span>引体向上</button>
+              <button class="converter-type-btn" data-ctype="situp"><span class="ctb-emoji">🤸</span>仰卧起坐</button>
+              <button class="converter-type-btn" data-ctype="dip"><span class="ctb-emoji">🤾</span>撑双杠</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label id="converterPersonLabel">谁</label>
+                <select id="converterPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+              </div>
+              <div class="form-group">
+                <label id="converterInputLabel">消耗大卡</label>
+                <input id="converterInput" type="number" min="0" placeholder="350" />
+              </div>
+            </div>
+            <div id="converterResult" class="converter-result" style="display:none"></div>
+            <button id="converterSubmitBtn" class="submit-btn" disabled>一键入账</button>
+          </div>
+
+          <div id="bankLatePanel" style="display:none">
+            <div class="converter-header">
+              <h3 class="section-title" style="margin:0">⏰ 迟到换算</h3>
+              <button class="ratio-btn" id="openLateRatioBtn">⚙️</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="latePerson">谁迟到了</label>
+                <select id="latePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+              </div>
+              <div class="form-group">
+                <label for="lateInput">迟到分钟数</label>
+                <input id="lateInput" type="number" min="0" placeholder="15" />
+              </div>
+            </div>
+            <div id="lateResult" class="converter-result danger" style="display:none"></div>
+            <button id="lateSubmitBtn" class="submit-btn danger" disabled>确认扣除</button>
+          </div>
+        </div>
       </div>
 
       <div id="bankStep3" class="bank-step">
@@ -786,32 +842,6 @@
             </div>
           </div>
 
-          <div class="card">
-            <div class="converter-header">
-              <h2 class="section-title" style="margin:0">🔥 通用换算器</h2>
-              <button class="ratio-btn" id="openConverterRatioBtn">⚙️</button>
-            </div>
-            <div class="converter-type-grid" id="converterTypeGrid">
-              <button class="converter-type-btn active" data-ctype="calorie"><span class="ctb-emoji">🔥</span>卡路里</button>
-              <button class="converter-type-btn" data-ctype="momo"><span class="ctb-emoji">📖</span>墨墨背单词</button>
-              <button class="converter-type-btn" data-ctype="pushup"><span class="ctb-emoji">💪</span>俯卧撑</button>
-              <button class="converter-type-btn" data-ctype="pullup"><span class="ctb-emoji">🏋️</span>引体向上</button>
-              <button class="converter-type-btn" data-ctype="situp"><span class="ctb-emoji">🤸</span>仰卧起坐</button>
-              <button class="converter-type-btn" data-ctype="dip"><span class="ctb-emoji">🤾</span>撑双杠</button>
-            </div>
-            <div class="form-grid">
-              <div class="form-group">
-                <label id="converterPersonLabel">谁</label>
-                <select id="converterPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
-              </div>
-              <div class="form-group">
-                <label id="converterInputLabel">消耗大卡</label>
-                <input id="converterInput" type="number" min="0" placeholder="350" />
-              </div>
-            </div>
-            <div id="converterResult" class="converter-result" style="display:none"></div>
-            <button id="converterSubmitBtn" class="submit-btn" disabled>一键入账</button>
-          </div>
         </div>
 
         <div id="bank-punish" class="bank-sub-page">
@@ -825,24 +855,6 @@
             </div>
           </div>
 
-          <div class="card">
-            <div class="converter-header">
-              <h2 class="section-title" style="margin:0">⏰ 迟到换算</h2>
-              <button class="ratio-btn" id="openLateRatioBtn">⚙️</button>
-            </div>
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="latePerson">谁迟到了</label>
-                <select id="latePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
-              </div>
-              <div class="form-group">
-                <label for="lateInput">迟到分钟数</label>
-                <input id="lateInput" type="number" min="0" placeholder="15" />
-              </div>
-            </div>
-            <div id="lateResult" class="converter-result danger" style="display:none"></div>
-            <button id="lateSubmitBtn" class="submit-btn danger" disabled>确认扣除</button>
-          </div>
         </div>
       </div>
     </section>
@@ -1606,6 +1618,18 @@
       document.getElementById("bankPickTorie").addEventListener("click", () => selectBankPerson("Torie"));
       document.getElementById("bankPickJory").addEventListener("click", () => selectBankPerson("Jory"));
       document.querySelectorAll(".bank-sub-nav-btn").forEach(btn => { btn.addEventListener("click", () => selectBankSection(btn.dataset.bank)); });
+      document.getElementById("bankConverterTab").addEventListener("click", () => {
+        document.getElementById("bankConverterTab").classList.add("active");
+        document.getElementById("bankLateTab").classList.remove("active");
+        document.getElementById("bankConverterPanel").style.display = "block";
+        document.getElementById("bankLatePanel").style.display = "none";
+      });
+      document.getElementById("bankLateTab").addEventListener("click", () => {
+        document.getElementById("bankLateTab").classList.add("active");
+        document.getElementById("bankConverterTab").classList.remove("active");
+        document.getElementById("bankConverterPanel").style.display = "none";
+        document.getElementById("bankLatePanel").style.display = "block";
+      });
       document.getElementById("bankBackToStep1").addEventListener("click", () => { bankPerson = ""; applyBgTint(""); showBankStep(1); });
       document.getElementById("bankBackToStep2").addEventListener("click", () => { showBankStep(2); });
     }
