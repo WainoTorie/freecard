@@ -6,6 +6,7 @@
   <title>一起变好 · 自由卡记录</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    /* ... (CSS 样式保持不变，此处省略以节省篇幅，请保留你原有的 CSS) ... */
     :root {
       --bg: #f2f2f7; --bg-tint: #f2f2f7; --card: #ffffff; --card-trans: rgba(255, 255, 255, 0.88);
       --text-1: #1d1d1f; --text-2: #86868b; --text-3: #aeaeb2;
@@ -29,14 +30,10 @@
     body { background: var(--bg-tint); color: var(--text-1); font-family: var(--font); padding: 20px 16px 120px; min-height: 100vh; line-height: 1.5; transition: background 0.5s, color 0.3s; }
     button, input, select { font-family: inherit; }
     .container { width: min(680px, 100%); margin: 0 auto; position: relative; min-width: 0; }
-
-    /* Festival Banner */
     .festival-banner { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden; }
     .festival-emoji { font-size: 32px; display: block; margin-bottom: 8px; }
     .festival-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-1); }
     .festival-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; }
-
-    /* Settings */
     .settings-btn { position: absolute; top: 8px; right: 0; width: 36px; height: 36px; border: none; background: var(--card); border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
     .settings-btn:active { transform: scale(0.9); }
     .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
@@ -48,32 +45,24 @@
     .setting-label { font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; display: flex; justify-content: space-between; }
     input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--torie); cursor: pointer; }
-
-    /* Recharge in Settings */
     .settings-recharge { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 8px; }
     .settings-recharge h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
     .settings-recharge .recharge-rate { font-size: 12px; color: var(--text-2); margin-bottom: 10px; font-weight: 600; }
     .settings-recharge .recharge-rate span { color: var(--torie); font-size: 14px; font-weight: 800; }
     .settings-recharge .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .settings-recharge .converter-result { text-align: center; padding: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 8px 0; font-weight: 700; color: var(--green); font-size: 13px; }
-
-    /* Common */
     .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; color: var(--text-1); }
     .subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 24px; }
     .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
     .card { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); min-width: 0; }
-
-    /* Spirits / Pets */
     .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer; }
     .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.04; pointer-events: none; transition: background 0.3s; }
     .spirit-card.torie::before { background: var(--torie); }
     .spirit-card.jory::before { background: var(--jory); }
     .spirit-card:active { transform: scale(0.96); }
-    
     .pet-container { height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; }
     .pet-svg { width: 64px; height: 64px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    
     .state-amazing .pet-svg { animation: petBounce 1s ease-in-out infinite; }
     .state-happy .pet-svg { animation: petSway 2s ease-in-out infinite; }
     .state-good .pet-svg { animation: petSway 2.5s ease-in-out infinite; }
@@ -81,44 +70,30 @@
     .state-warning .pet-svg { animation: petShake 0.4s ease-in-out infinite; }
     .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
     .state-sleepy .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.8; }
-    .state-starved .pet-svg { 
-      transform: translateX(-10px) scale(0.85) rotate(-10deg); 
-      opacity: 0.6; 
-      filter: grayscale(0.8);
-      animation: petHide 3s ease-in-out infinite; 
-    }
-    
+    .state-starved .pet-svg { transform: translateX(-10px) scale(0.85) rotate(-10deg); opacity: 0.6; filter: grayscale(0.8); animation: petHide 3s ease-in-out infinite; }
     .pet-clicked { animation: petJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
-    
     @keyframes petBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
     @keyframes petSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
     @keyframes petShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
     @keyframes petBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
     @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-15px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
     @keyframes petHide { 0%, 100% { transform: translateX(-10px) scale(0.85) rotate(-10deg); } 50% { transform: translateX(-15px) scale(0.8) rotate(-15deg); } }
-
     .pet-svg * { transition: all 0.4s ease; }
     .bunny-ear-l { transform-origin: 34px 44px; }
     .bunny-ear-r { transform-origin: 66px 44px; }
     .ear-down.bunny-ear-l { transform: rotate(12deg) translateY(3px); }
     .ear-down.bunny-ear-r { transform: rotate(-12deg) translateY(3px); }
-    
     .sweat { opacity: 0; transform: translateY(-5px); transition: all 0.3s; }
     .state-warning .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
     @keyframes sweatDrop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
-
     .zzz { opacity: 0; transition: all 0.3s; }
     .state-sleepy .zzz { opacity: 1; animation: zzzFloat 2s ease-in-out infinite; }
     @keyframes zzzFloat { 0%,100% { transform: translateY(0); opacity: 0.7; } 50% { transform: translateY(-6px); opacity: 1; } }
-
     .anger-mark { opacity: 0; transition: all 0.3s; transform-origin: center; }
     .state-starved .anger-mark { opacity: 1; animation: angerPulse 1s ease-in-out infinite; }
     @keyframes angerPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
-
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
-
-    /* === STAMINA BAR & FEED BUTTON === */
     .stamina-wrap { margin-top: 8px; display: flex; align-items: center; gap: 6px; justify-content: center; }
     .stamina-track { width: 60px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
     .stamina-fill { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(0.22,1,0.36,1), background 0.3s; }
@@ -128,8 +103,6 @@
     .feed-btn { border: none; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; font-size: 14px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; line-height: 1; padding: 0; }
     .feed-btn:active { transform: scale(0.85); background: var(--border); }
     .feed-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* === FEED MODAL === */
     .feed-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .feed-overlay.show { opacity: 1; pointer-events: auto; }
     .feed-modal { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(340px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); }
@@ -171,8 +144,6 @@
     .feed-btn-confirm:active { transform: scale(0.96); opacity: 0.9; }
     .feed-btn-confirm:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
     .feed-btn-cancel:active { transform: scale(0.96); }
-
-    /* Summary */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
     .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     .summary-icon { font-size: 20px; }
@@ -184,8 +155,6 @@
     .summary-text .jory-hl { color: var(--jory); }
     .summary-text .green-hl { color: var(--green); }
     .summary-text .red-hl { color: var(--red); }
-
-    /* Balances */
     .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .balance-box { text-align: center; padding: 16px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); }
     .balance-box.torie { border-color: rgba(0, 122, 255, 0.2); }
@@ -195,8 +164,6 @@
     .balance-box.torie .balance-number { color: var(--torie); }
     .balance-box.jory .balance-number { color: var(--jory); }
     .balance-unit { font-size: 12px; font-weight: 500; color: var(--text-3); margin-left: 2px; }
-
-    /* Forms */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .form-group.full { grid-column: 1 / -1; }
@@ -208,20 +175,15 @@
     .submit-btn:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
     .submit-btn.danger { background: var(--red); }
     .submit-btn.green { background: var(--green); }
-
-    /* Segments */
     .segment { display: grid; gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
     .segment-3 { grid-template-columns: repeat(3, 1fr); }
     .segment-2 { grid-template-columns: repeat(2, 1fr); }
     .seg-btn { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .seg-btn.active { background: var(--card); color: var(--text-1); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-
-    /* Stats */
     .perspective-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 12px; }
     .perspective-tab { height: 36px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px; }
     .perspective-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
     .perspective-tab .pt-emoji { font-size: 15px; }
-
     .period-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
     .period-tab { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
@@ -242,8 +204,6 @@
     .bar.jory-bar { background: var(--jory); }
     .bar-number { text-align: right; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-1); }
     .empty-stats { padding: 16px 0; color: var(--text-3); font-size: 13px; text-align: center; }
-
-    /* Balance Scale Chart */
     .scale-chart { display: flex; align-items: center; height: 32px; margin: 16px 0 8px; position: relative; }
     .scale-bar { height: 100%; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 2px; }
     .scale-bar.spend { background: var(--red); border-radius: 0 6px 6px 0; opacity: 0.8; }
@@ -251,29 +211,22 @@
     .scale-center { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--text-3); transform: translateX(-50%); z-index: 2; opacity: 0.5; }
     .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); font-weight: 600; margin-top: 4px; }
     .scale-net { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; padding: 6px; border-radius: var(--r-sm); background: var(--bg); border: 1px solid var(--border); }
-
-    /* History */
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
     .history-header .section-title { margin: 0; }
     .history-controls { display: flex; align-items: center; gap: 8px; }
     .history-filter { width: auto; min-width: 90px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
-    /* === MODIFIED: Count Badge Style === */
     .history-count { font-size: 12px; font-weight: 700; color: var(--text-3); background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
-
     .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; position: relative; }
     .history-item:last-child { border-bottom: none; }
     .history-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; width: 100%; flex-wrap: wrap; }
     .history-person { font-weight: 700; font-size: 14px; flex-shrink: 0; white-space: nowrap; }
     .history-reason { color: var(--text-2); font-size: 13px; white-space: normal; word-break: break-word; line-height: 1.4; min-width: 0; flex: 1; display: block; }
-    /* === MODIFIED: Note Styling === */
     .history-note { display: inline-block; margin-top: 4px; font-size: 12px; color: var(--text-3); background: var(--bg); padding: 2px 6px; border-radius: 4px; border: 1px dashed var(--border); width: 100%; }
     .history-time { font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; margin-top: 2px; white-space: nowrap; }
     .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; min-width: 40px; width: auto; position: relative; }
     .history-change { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
     .history-change.plus { color: var(--green); }
     .history-change.minus { color: var(--red); }
-    
-    /* === MODIFIED: Three Dot Menu Styles === */
     .menu-btn { border: none; background: transparent; color: var(--text-3); font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; line-height: 1; letter-spacing: 2px; }
     .menu-btn:hover, .menu-btn.active { background: var(--bg); color: var(--text-1); }
     .action-menu { position: absolute; top: 24px; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 100; display: none; flex-direction: column; min-width: 100px; overflow: hidden; animation: menuFadeIn 0.15s ease; }
@@ -282,10 +235,7 @@
     .action-menu-item:hover { background: var(--bg); }
     .action-menu-item.danger { color: var(--red); }
     @keyframes menuFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-
     .empty-history { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
-
-    /* Shop / Earn / Punish list items */
     .list-item { padding: 16px 0; border-bottom: 1px solid var(--separator); display: flex; flex-direction: column; gap: 10px; }
     .list-item:last-child { border-bottom: none; }
     .list-item-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -293,7 +243,6 @@
     .list-item-cost { font-size: 14px; font-weight: 700; color: var(--text-2); white-space: nowrap; flex-shrink: 0; }
     .list-item-cost.punish { color: var(--red); }
     .list-item-cost.earn { color: var(--green); }
-    
     .progress-wrap { display: flex; flex-direction: column; gap: 4px; }
     .progress-text { font-size: 12px; color: var(--text-3); display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
     .progress-bar-track { height: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
@@ -301,7 +250,6 @@
     .progress-bar.torie { background: var(--torie); }
     .progress-bar.jory { background: var(--jory); }
     .progress-bar.full { background: var(--green); }
-
     .list-actions { display: flex; gap: 8px; }
     .action-btn { flex: 1; height: 32px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; min-width: 0; }
     .action-btn:active { transform: scale(0.96); }
@@ -311,31 +259,23 @@
     .btn-punish { background: var(--red); color: #fff; }
     .btn-edit { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
     .btn-del { background: var(--bg); color: var(--red); border: 1px solid var(--border); }
-
     .add-form { display: grid; grid-template-columns: 1fr 80px auto; gap: 8px; align-items: end; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
     .add-form .form-group { gap: 2px; }
     .add-btn { height: 44px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: var(--bg); font-size: 13px; font-weight: 700; cursor: pointer; padding: 0 16px; white-space: nowrap; }
     .add-btn:active { transform: scale(0.96); }
     .empty-list { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
-
-    /* Converter */
     .converter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .converter-result { text-align: center; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 15px; }
     .converter-result.danger { color: var(--red); }
     .ratio-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-2); padding: 4px; }
-
-    /* Pages */
     .app-page { display: none; animation: fadeIn 0.2s ease; }
     .app-page.active { display: block; }
     .bank-sub-page { display: none; animation: fadeIn 0.2s ease; }
     .bank-sub-page.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* Bank Person Selector */
     .bank-step { display: none; animation: bankSlideIn 0.35s cubic-bezier(0.22,1,0.36,1); }
     .bank-step.active { display: block; }
     @keyframes bankSlideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
     .person-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 8px; }
     .person-select-card { background: var(--card); border: 2px solid var(--border); border-radius: var(--r-lg); padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.22,1,0.36,1); position: relative; overflow: hidden; }
     .person-select-card:active { transform: scale(0.95); }
@@ -350,14 +290,11 @@
       .person-select-card.torie-card.selected { background: rgba(0,122,255,0.08); }
       .person-select-card.jory-card.selected { background: rgba(255,149,0,0.08); }
     }
-
     .bank-back-btn { display: inline-flex; align-items: center; gap: 4px; border: none; background: var(--bg); color: var(--text-2); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 20px; cursor: pointer; margin-bottom: 16px; transition: all 0.2s; border: 1px solid var(--border); }
     .bank-back-btn:active { transform: scale(0.95); }
-
     .bank-person-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-bottom: 16px; }
     .bank-person-badge.torie-badge { background: rgba(0,122,255,0.1); color: var(--torie); }
     .bank-person-badge.jory-badge { background: rgba(255,149,0,0.1); color: var(--jory); }
-
     .bank-sub-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
     .bank-sub-nav-btn { padding: 24px 12px; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--card); text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: var(--shadow); }
     .bank-sub-nav-btn:active { transform: scale(0.95); }
@@ -365,32 +302,22 @@
     .bank-sub-nav-btn .bsn-label { font-size: 14px; font-weight: 700; color: var(--text-1); }
     .bank-sub-nav-btn .bsn-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
     .bank-sub-nav-btn:hover { border-color: var(--text-3); }
-
-    /* Universal Converter */
     .converter-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 16px; }
     .converter-type-btn { height: auto; padding: 10px 4px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg); color: var(--text-2); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.3; }
     .converter-type-btn.active { background: var(--torie); color: #fff; border-color: var(--torie); }
     .converter-type-btn:active { transform: scale(0.95); }
     .converter-type-btn .ctb-emoji { font-size: 18px; display: block; margin-bottom: 2px; }
-
-    /* Bottom Nav */
     .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(380px, calc(100% - 32px)); padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--card-trans); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
     .nav-btn { height: 52px; border: 0; border-radius: 16px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 600; transition: all 0.2s; }
     .nav-btn:active { transform: scale(0.92); }
     .nav-icon { font-size: 20px; line-height: 1; }
     .nav-btn.active { background: var(--text-1); color: var(--bg); }
-
-    /* Toast */
     .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 99999; pointer-events: none; }
     .toast { padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all 0.3s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { background: var(--green); }
     .toast.error { background: var(--red); }
-
-    /* Celebration Canvas */
     #celebrationCanvas { position: fixed; inset: 0; z-index: 10000; pointer-events: none; width: 100%; height: 100%; }
-    
-    /* Modals */
     .modal-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .modal-overlay.show { opacity: 1; pointer-events: auto; }
     .modal-box { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(320px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); text-align: center; }
@@ -402,7 +329,6 @@
     .modal-btn.confirm { background: var(--red); color: #fff; }
     .modal-btn.confirm.green { background: var(--green); }
     .modal-hint { font-size: 12px; color: var(--text-3); margin-top: 4px; }
-
     .redeem-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
     .redeem-overlay.show { opacity: 1; pointer-events: auto; }
     .redeem-celebration { text-align: center; color: #fff; transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.22,1,0.36,1); padding: 20px; }
@@ -411,10 +337,7 @@
     .redeem-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
     .redeem-sub { font-size: 14px; opacity: 0.8; margin-bottom: 24px; }
     .redeem-close-btn { height: 40px; padding: 0 28px; border: none; border-radius: 20px; background: rgba(255,255,255,0.2); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s; }
-
-    /* Background tint overlay */
     .bg-tint-overlay { position: fixed; inset: 0; pointer-events: none; z-index: -1; transition: background 0.6s ease; }
-
     @media (max-width: 480px) {
       body { padding: 16px 12px 110px; }
       .page-title { font-size: 24px; }
@@ -462,13 +385,11 @@
         <span class="feed-modal-pet" id="feedModalPet">🦉</span>
         <div class="feed-modal-title" id="feedModalTitle">喂食 Torie</div>
       </div>
-      <!-- Current stamina -->
       <div class="feed-current">
         <span class="feed-current-label">当前体力</span>
         <div class="feed-current-bar-track"><div class="feed-current-bar-fill" id="feedCurrentBar"></div></div>
         <span class="feed-current-pct" id="feedCurrentPct">80%</span>
       </div>
-      <!-- Card selection -->
       <div class="feed-select-row">
         <span class="feed-select-label">选择喂食张数</span>
         <div class="feed-select-cards" id="feedSelectCards">
@@ -489,14 +410,11 @@
           </div>
         </div>
       </div>
-      <!-- Preview -->
       <div class="feed-preview" id="feedPreview">
         <div class="feed-preview-title">📈 喂食预览</div>
         <div class="feed-preview-steps" id="feedPreviewSteps"></div>
       </div>
-      <!-- Result -->
       <div class="feed-result ok" id="feedResult"></div>
-      <!-- Actions -->
       <div class="feed-actions">
         <button class="feed-btn-cancel" id="feedCancelBtn">取消</button>
         <button class="feed-btn-confirm" id="feedConfirmBtn">确认喂食</button>
@@ -562,6 +480,49 @@
       <div class="modal-actions">
         <button class="modal-btn cancel" id="lateRatioCancel">取消</button>
         <button class="modal-btn confirm green" id="lateRatioSave">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sleep Rules Modal -->
+  <div id="sleepRuleModal" class="modal-overlay">
+    <div class="modal-box" style="text-align:left; width:min(360px, calc(100% - 40px));">
+      <div class="modal-title" style="text-align:center;">⚙️ 睡眠奖励设置</div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>⏰ 时间分段</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div><div style="font-size:12px;color:var(--text-2);margin-bottom:4px;">A 点</div><input type="time" id="sleepTimeA" /></div>
+          <div><div style="font-size:12px;color:var(--text-2);margin-bottom:4px;">B 点</div><input type="time" id="sleepTimeB" /></div>
+        </div>
+        <div class="modal-hint">默认：A = 00:00，B = 01:00；上床时间分为 A 点前、A 点–B 点、B 点后</div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>🌙 A点前：评分达到</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="number" id="sleepEarlyScore" min="0" max="100" placeholder="90" />
+          <input type="number" id="sleepEarlyReward" min="0" max="99" placeholder="2" />
+        </div>
+        <div class="modal-hint">默认：评分 ≥ 90，奖励 2 张自由卡</div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label>😌 A点–B点：评分范围</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="number" id="sleepMiddleScoreMin" min="0" max="100" placeholder="80" />
+          <input type="number" id="sleepMiddleScoreMax" min="0" max="100" placeholder="90" />
+        </div>
+        <div class="modal-hint">默认：80–90 分，不加不减</div>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label>⚠️ B点后 / 低评分：评分低于</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input type="number" id="sleepLowScore" min="0" max="100" placeholder="70" />
+          <input type="number" id="sleepPunish" min="0" max="99" placeholder="3" />
+        </div>
+        <div class="modal-hint">默认：评分低于70，或B点后上床，扣3张</div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="sleepRuleCancel">取消</button>
+        <button class="modal-btn confirm green" id="sleepRuleSave">保存</button>
       </div>
     </div>
   </div>
@@ -654,7 +615,6 @@
           </div>
           <div class="spirit-name">Torie</div>
           <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
-          <!-- STAMINA BAR -->
           <div class="stamina-wrap">
             <div class="stamina-track"><div class="stamina-fill high" id="staminaBarTorie" style="width:80%"></div></div>
             <button class="feed-btn" id="feedBtnTorie" title="喂食">🍖</button>
@@ -694,7 +654,6 @@
           </div>
           <div class="spirit-name">Jory</div>
           <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
-          <!-- STAMINA BAR -->
           <div class="stamina-wrap">
             <div class="stamina-track"><div class="stamina-fill high" id="staminaBarJory" style="width:80%"></div></div>
             <button class="feed-btn" id="feedBtnJory" title="喂食">🍖</button>
@@ -765,7 +724,7 @@
           </div>
           <div id="bankConverterPanel">
             <div class="converter-header">
-              <h3 class="section-title" style="margin:0">🔥 通用换算</h3>
+              <h3 class="section-title" style="margin:0"></h3>
               <button class="ratio-btn" id="openConverterRatioBtn">⚙️</button>
             </div>
             <div class="converter-type-grid" id="converterTypeGrid">
@@ -776,6 +735,7 @@
               <button class="converter-type-btn" data-ctype="situp"><span class="ctb-emoji">🤸</span>仰卧起坐</button>
               <button class="converter-type-btn" data-ctype="dip"><span class="ctb-emoji">🤾</span>撑双杠</button>
               <button class="converter-type-btn" data-ctype="late"><span class="ctb-emoji">⏰</span>迟到换算</button>
+              <button class="converter-type-btn" data-ctype="sleep"><span class="ctb-emoji">😴</span>睡眠</button>
             </div>
             <div class="form-grid">
               <div class="form-group">
@@ -789,6 +749,34 @@
             </div>
             <div id="converterResult" class="converter-result" style="display:none"></div>
             <button id="converterSubmitBtn" class="submit-btn" disabled>一键入账</button>
+          </div>
+
+          <div id="bankSleepPanel" style="display:none">
+            <div class="converter-header">
+              <h3 class="section-title" style="margin:0">😴 睡眠</h3>
+              <button class="ratio-btn" id="openSleepRuleBtn">⚙️</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="sleepPerson">谁</label>
+                <select id="sleepPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+              </div>
+              <div class="form-group">
+                <label for="sleepBedtime">上床时间</label>
+                <!-- === MODIFIED: Updated Option Labels === -->
+                <select id="sleepBedtime">
+                  <option value="before">凌晨/深夜 (A点前)</option>
+                  <option value="middle">凌晨/深夜 (A-B点)</option>
+                  <option value="after">早上/上午 (B点后)</option>
+                </select>
+              </div>
+              <div class="form-group full">
+                <label for="sleepScore">Apple Watch 睡眠评分</label>
+                <input id="sleepScore" type="number" min="0" max="100" placeholder="90" />
+              </div>
+            </div>
+            <div id="sleepResult" class="converter-result" style="display:none"></div>
+            <button id="sleepSubmitBtn" class="submit-btn" disabled>确认记录</button>
           </div>
 
           <div id="bankLatePanel" style="display:none">
@@ -876,7 +864,6 @@
         <div id="statsContent"></div>
       </div>
       <div class="card">
-        <!-- === MODIFIED: Added Count Badge and Controls Wrapper === -->
         <div class="history-header">
           <h2 class="section-title">🧾 流水明细</h2>
           <div class="history-controls">
@@ -924,6 +911,24 @@
     let converterRatios = loadRatios();
     let lateTier = parseInt(localStorage.getItem("fc_late_tier")) || 5;
     let lateCap = parseInt(localStorage.getItem("fc_late_cap")) || 5;
+
+    const DEFAULT_SLEEP_RULES = {
+      timeA: "00:00",
+      timeB: "01:00",
+      earlyScore: 90,
+      middleScoreMin: 80,
+      middleScoreMax: 90,
+      lowScore: 70,
+      earlyReward: 2,
+      neutralReward: 0,
+      punish: 3
+    };
+    function loadSleepRules() {
+      const saved = localStorage.getItem("fc_sleep_rules");
+      if (saved) { try { return { ...DEFAULT_SLEEP_RULES, ...JSON.parse(saved) }; } catch(e) {} }
+      return { ...DEFAULT_SLEEP_RULES };
+    }
+    let sleepRules = loadSleepRules();
 
     const TYPE_PREFIX = { earn: "[EARN]", punish: "[PUNISH]" };
 
@@ -1566,6 +1571,44 @@
         showToast("惩罚设置已保存", "success");
         calcLate();
       });
+
+      const sleepModal = document.getElementById("sleepRuleModal");
+      document.getElementById("openSleepRuleBtn").addEventListener("click", () => {
+        document.getElementById("sleepTimeA").value = sleepRules.timeA;
+        document.getElementById("sleepTimeB").value = sleepRules.timeB;
+        document.getElementById("sleepEarlyScore").value = sleepRules.earlyScore;
+        document.getElementById("sleepMiddleScoreMin").value = sleepRules.middleScoreMin;
+        document.getElementById("sleepMiddleScoreMax").value = sleepRules.middleScoreMax;
+        document.getElementById("sleepLowScore").value = sleepRules.lowScore;
+        document.getElementById("sleepPunish").value = sleepRules.punish;
+        document.getElementById("sleepEarlyReward").value = sleepRules.earlyReward;
+        sleepModal.classList.add("show");
+      });
+      document.getElementById("sleepRuleCancel").addEventListener("click", () => sleepModal.classList.remove("show"));
+      document.getElementById("sleepRuleSave").addEventListener("click", () => {
+        const timeA = document.getElementById("sleepTimeA").value || "00:00";
+        const timeB = document.getElementById("sleepTimeB").value || "01:00";
+        if (timeA >= timeB) {
+          showToast("A点必须早于B点", "error");
+          return;
+        }
+        sleepRules = {
+          timeA,
+          timeB,
+          earlyScore: Math.min(100, Math.max(0, parseInt(document.getElementById("sleepEarlyScore").value) || 90)),
+          middleScoreMin: Math.min(100, Math.max(0, parseInt(document.getElementById("sleepMiddleScoreMin").value) || 80)),
+          middleScoreMax: Math.min(100, Math.max(0, parseInt(document.getElementById("sleepMiddleScoreMax").value) || 90)),
+          lowScore: Math.min(100, Math.max(0, parseInt(document.getElementById("sleepLowScore").value) || 70)),
+          punish: Math.min(99, Math.max(0, parseInt(document.getElementById("sleepPunish").value) || 3)),
+          earlyReward: Math.min(99, Math.max(0, parseInt(document.getElementById("sleepEarlyReward").value) || 2)),
+          neutralReward: 0
+        };
+        localStorage.setItem("fc_sleep_rules", JSON.stringify(sleepRules));
+        updateSleepTimeOptions();
+        sleepModal.classList.remove("show");
+        showToast("睡眠规则已保存", "success");
+        if (typeof calcSleep === "function") calcSleep();
+      });
     }
 
     /* ==================== BACKGROUND TINT ==================== */
@@ -1721,45 +1764,32 @@
     function bar(name,val,max,cls) { return `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${max===0?0:(val/max)*100}%"></div></div><div class="bar-number">${val}</div></div>`; }
 
     /* ==================== HISTORY ==================== */
-    /* === MODIFIED: Added Week Option Logic === */
     function updateHistoryFilterOptions() {
       const select=document.getElementById("historyFilter"), months=new Set();
       allLogs.forEach((l)=>{const d=new Date(l.created_at);months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);});
       const sorted=[...months].sort((a,b)=>b.localeCompare(a)), current=currentHistoryFilter;
-      
-      // Build options: All -> This Week -> Months
       let html = '<option value="all">全部</option>';
       html += '<option value="week">本周</option>';
-      
       sorted.forEach((key)=>{
         const[y,m]=key.split("-");
         html += `<option value="${key}">${y}年${Number(m)}月</option>`;
       });
-      
       select.innerHTML = html;
-      
-      // Restore selection if valid, otherwise default to all
       if([...select.options].some((o)=>o.value===current)) select.value=current; 
       else { currentHistoryFilter="all"; select.value="all"; }
     }
 
-    /* === MODIFIED: Added Note Editing & Menu Logic === */
     async function editNote(id, currentNote) {
       const newNote = prompt("编辑备注：", currentNote || "");
-      if (newNote === null) return; // Cancelled
-      
-      // Optimistic UI update could go here, but we'll wait for DB
+      if (newNote === null) return; 
       const { error } = await sb.from("freecard_log").update({ note: newNote }).eq("id", id);
       if (error) {
         showToast("备注更新失败", "error");
         return;
       }
-      
-      // Update local data
       const log = allLogs.find(l => String(l.id) === String(id));
       if (log) log.note = newNote;
-      
-      renderHistory(); // Re-render to show changes
+      renderHistory(); 
       showToast("备注已更新", "success");
     }
 
@@ -1771,8 +1801,6 @@
     function renderHistory() {
       const container=document.getElementById("historyList");
       const countBadge=document.getElementById("historyCount");
-      
-      // Filter Logic
       let logs;
       if (currentHistoryFilter === "all") {
         logs = allLogs;
@@ -1780,25 +1808,19 @@
         const weekStart = getStartOfWeekDate();
         logs = allLogs.filter(l => new Date(l.created_at) >= weekStart);
       } else {
-        // Month filter (YYYY-MM)
         logs = allLogs.filter((l)=>{
           const d=new Date(l.created_at);
           return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;
         });
       }
-
-      // Update Count
       if (countBadge) countBadge.textContent = `${logs.length}条`;
-
       if(!logs.length){
         container.innerHTML='<div class="empty-history">暂无记录 🍃</div>';
         return;
       }
-
       container.innerHTML=logs.map((l)=>{
         const d=new Date(l.created_at),time=fmtDate(d),plus=l.change_type==="增加",symbol=plus?"+":"−";
         const note = l.note ? `<div class="history-note">📝 ${esc(l.note)}</div>` : '';
-        
         return `<div class="history-item">
           <div>
             <div class="history-top">
@@ -1818,24 +1840,19 @@
           </div>
         </div>`;
       }).join("");
-
-      // Bind Events
       container.querySelectorAll(".menu-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
           const id = btn.dataset.menuId;
           const menu = document.getElementById(`menu-${id}`);
           const isOpen = menu.classList.contains("show");
-          
           closeAllMenus();
-          
           if (!isOpen) {
             menu.classList.add("show");
             btn.classList.add("active");
           }
         });
       });
-
       container.querySelectorAll("[data-action='del']").forEach(b => {
         b.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -1843,19 +1860,15 @@
           deleteLog(b.dataset.id);
         });
       });
-
       container.querySelectorAll("[data-action='note']").forEach(b => {
         b.addEventListener("click", (e) => {
           e.stopPropagation();
           closeAllMenus();
-          // Find current note from local data or attribute
           const log = allLogs.find(l => String(l.id) === String(b.dataset.id));
           editNote(b.dataset.id, log ? log.note : "");
         });
       });
     }
-
-    // Global click to close menus
     document.addEventListener("click", () => closeAllMenus());
 
     /* ==================== SHOP / EARN / PUNISH LISTS ==================== */
@@ -1878,7 +1891,6 @@
         });
       } else if(type === "earn") items.sort((a, b) => b.cost - a.cost);
       else if(type === "punish") items.sort((a, b) => a.cost - b.cost);
-      
       if(!items.length) { 
         container.innerHTML = `<div class="empty-list">还没有${type==='shop'?'心愿':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; 
         return; 
@@ -2011,6 +2023,7 @@
           b.classList.add("active");
           currentConverterType = b.dataset.ctype;
           const latePanel = document.getElementById("bankLatePanel");
+          const sleepPanel = document.getElementById("bankSleepPanel");
           const commonForm = document.querySelector("#bankConverterPanel > .form-grid");
           const commonResult = document.getElementById("converterResult");
           const commonSubmit = document.getElementById("converterSubmitBtn");
@@ -2021,9 +2034,22 @@
             commonSubmit.style.display = "none";
             commonHeader.style.display = "none";
             latePanel.style.display = "block";
+            sleepPanel.style.display = "none";
             document.getElementById("lateInput").value = "";
             document.getElementById("lateResult").style.display = "none";
             document.getElementById("lateSubmitBtn").disabled = true;
+          } else if (currentConverterType === "sleep") {
+            commonForm.style.display = "none";
+            commonResult.style.display = "none";
+            commonSubmit.style.display = "none";
+            commonHeader.style.display = "none";
+            latePanel.style.display = "none";
+            sleepPanel.style.display = "block";
+            document.getElementById("sleepResult").style.display = "none";
+            document.getElementById("sleepSubmitBtn").disabled = true;
+            updateSleepTimeOptions();
+            document.getElementById("sleepBedtime").value = "before";
+            document.getElementById("sleepScore").value = "";
           } else {
             const config = CONVERTER_TYPES[currentConverterType];
             commonForm.style.display = "grid";
@@ -2032,6 +2058,7 @@
             commonSubmit.disabled = true;
             commonHeader.style.display = "flex";
             latePanel.style.display = "none";
+            sleepPanel.style.display = "none";
             inputLabel.textContent = config.inputLabel;
             input.placeholder = config.placeholder;
             input.value = "";
@@ -2070,6 +2097,143 @@
         input.value = "";
         result.style.display = "none";
         btn.disabled = true;
+        await loadLogs();
+      });
+    }
+
+    /* ==================== SLEEP CONVERTER ==================== */
+    /* === MODIFIED: Added Helper Function for Time Formatting === */
+    function formatTimeToChinese(timeStr) {
+      if (!timeStr) return "";
+      const [hStr, mStr] = timeStr.split(":");
+      let h = parseInt(hStr, 10);
+      const m = mStr || "00";
+      
+      let period = "";
+      if (h >= 0 && h < 6) period = "凌晨";
+      else if (h >= 6 && h < 9) period = "早上";
+      else if (h >= 9 && h < 11) period = "上午";
+      else if (h >= 11 && h < 13) period = "中午";
+      else if (h >= 13 && h < 18) period = "下午";
+      else period = "晚上";
+      
+      // Convert to 12-hour format
+      let h12 = h % 12;
+      if (h12 === 0) h12 = 12;
+      
+      return `${period} ${h12}:${m}`;
+    }
+
+    function updateSleepTimeOptions() {
+      const select = document.getElementById("sleepBedtime");
+      if (!select) return;
+      const current = select.value || "before";
+      const a = sleepRules.timeA || "00:00";
+      const b = sleepRules.timeB || "01:00";
+      
+      const aText = formatTimeToChinese(a);
+      const bText = formatTimeToChinese(b);
+      
+      select.innerHTML = `
+        <option value="before">${aText} 前</option>
+        <option value="middle">${aText} – ${bText}</option>
+        <option value="after">${bText} 后</option>
+      `;
+      select.value = ["before", "middle", "after"].includes(current) ? current : "before";
+    }
+
+    function setupSleepConverter() {
+      const bedtime = document.getElementById("sleepBedtime");
+      const score = document.getElementById("sleepScore");
+      const person = document.getElementById("sleepPerson");
+      const result = document.getElementById("sleepResult");
+      const btn = document.getElementById("sleepSubmitBtn");
+      updateSleepTimeOptions();
+
+      function getSleepOutcome(timeRange, scoreValue) {
+        let change = 0, text = "不加不减", kind = "neutral";
+        if (scoreValue < sleepRules.lowScore) {
+          change = -sleepRules.punish;
+          text = `扣 ${sleepRules.punish} 张`;
+          kind = "punish";
+        } else if (timeRange === "before") {
+          if (scoreValue >= sleepRules.earlyScore) {
+            change = sleepRules.earlyReward;
+            text = `奖励 ${sleepRules.earlyReward} 张`;
+            kind = "reward";
+          }
+        } else if (timeRange === "after") {
+          change = -sleepRules.punish;
+          text = `扣 ${sleepRules.punish} 张`;
+          kind = "punish";
+        } else {
+          change = sleepRules.neutralReward;
+          text = "不加不减";
+        }
+        return { change, text, kind };
+      }
+
+      window.calcSleep = () => {
+        const timeRange = bedtime.value;
+        const scoreValue = parseInt(score.value);
+        if (!timeRange || Number.isNaN(scoreValue) || scoreValue < 0 || scoreValue > 100) {
+          result.style.display = "none";
+          btn.disabled = true;
+          return;
+        }
+        const outcome = getSleepOutcome(timeRange, scoreValue);
+        result.style.display = "block";
+        result.textContent = `睡眠结果：${outcome.text}`;
+        result.classList.toggle("danger", outcome.kind === "punish");
+        btn.disabled = false;
+      };
+
+      bedtime.addEventListener("change", calcSleep);
+      score.addEventListener("input", calcSleep);
+      person.addEventListener("change", calcSleep);
+
+      btn.addEventListener("click", async () => {
+        const timeRange = bedtime.value;
+        const scoreValue = parseInt(score.value);
+        if (!timeRange || Number.isNaN(scoreValue) || scoreValue < 0 || scoreValue > 100) return;
+        const outcome = getSleepOutcome(timeRange, scoreValue);
+        
+        // === MODIFIED: Use formatted text for Reason Log ===
+        const a = sleepRules.timeA || "00:00";
+        const b = sleepRules.timeB || "01:00";
+        const aText = formatTimeToChinese(a);
+        const bText = formatTimeToChinese(b);
+        
+        let rangeText = "";
+        if (timeRange === "before") rangeText = `${aText}前`;
+        else if (timeRange === "middle") rangeText = `${aText}–${bText}`;
+        else rangeText = `${bText}后`;
+        
+        btn.disabled = true; btn.textContent = "记录中...";
+
+        if (outcome.change === 0) {
+          const { error } = await sb.from("freecard_log").insert({
+            operator: person.value, change_type: "增加", card_num: 0,
+            reason: `😴 睡眠：${rangeText}，Apple Watch 评分 ${scoreValue} 分（不加不减）`
+          });
+          btn.disabled = false; btn.textContent = "确认记录";
+          if (error) { showToast("记录失败：" + error.message, "error"); return; }
+          showToast("睡眠已记录，不加不减", "success");
+        } else {
+          const { error } = await sb.from("freecard_log").insert({
+            operator: person.value,
+            change_type: outcome.change > 0 ? "增加" : "减少",
+            card_num: Math.abs(outcome.change),
+            reason: `😴 睡眠：${rangeText}，Apple Watch 评分 ${scoreValue} 分（${outcome.text}）`
+          });
+          btn.disabled = false; btn.textContent = "确认记录";
+          if (error) { showToast("记录失败：" + error.message, "error"); return; }
+          if (outcome.change > 0) { trackEvent(person.value, 'earn'); spawnParticles(1); showToast(`睡眠达标！获得 ${outcome.change} 张自由卡 🎉`, "success"); }
+          else { trackEvent(person.value, 'punish'); showToast(`睡眠惩罚：扣除 ${Math.abs(outcome.change)} 张自由卡`, "error"); if(navigator.vibrate) navigator.vibrate(200); }
+        }
+        bedtime.value = "before";
+        score.value = "";
+        result.style.display = "none";
         await loadLogs();
       });
     }
@@ -2226,6 +2390,7 @@
       setupAddEarn();
       setupAddPunish();
       setupUniversalConverter();
+      setupSleepConverter();
       setupLateConverter();
       setupRecharge();
       checkSpecialDate();
