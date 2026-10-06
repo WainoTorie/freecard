@@ -81,7 +81,6 @@
     .state-warning .pet-svg { animation: petShake 0.4s ease-in-out infinite; }
     .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
     .state-sleepy .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.8; }
-    /* === MODIFIED: Starved Animation === */
     .state-starved .pet-svg { 
       transform: translateX(-10px) scale(0.85) rotate(-10deg); 
       opacity: 0.6; 
@@ -96,7 +95,6 @@
     @keyframes petShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
     @keyframes petBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
     @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-15px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
-    /* === MODIFIED: Hide Keyframes === */
     @keyframes petHide { 0%, 100% { transform: translateX(-10px) scale(0.85) rotate(-10deg); } 50% { transform: translateX(-15px) scale(0.8) rotate(-15deg); } }
 
     .pet-svg * { transition: all 0.4s ease; }
@@ -113,7 +111,6 @@
     .state-sleepy .zzz { opacity: 1; animation: zzzFloat 2s ease-in-out infinite; }
     @keyframes zzzFloat { 0%,100% { transform: translateY(0); opacity: 0.7; } 50% { transform: translateY(-6px); opacity: 1; } }
 
-    /* === MODIFIED: Anger Symbol for Starved === */
     .anger-mark { opacity: 0; transition: all 0.3s; transform-origin: center; }
     .state-starved .anger-mark { opacity: 1; animation: angerPulse 1s ease-in-out infinite; }
     @keyframes angerPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
@@ -249,8 +246,8 @@
     /* Balance Scale Chart */
     .scale-chart { display: flex; align-items: center; height: 32px; margin: 16px 0 8px; position: relative; }
     .scale-bar { height: 100%; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 2px; }
-    .scale-bar.spend { background: var(--red); border-radius: 0 6px 6px 0; opacity: 0.8; } /* === MODIFIED: Red Right === */
-    .scale-bar.earn { background: var(--green); border-radius: 6px 0 0 6px; opacity: 0.8; } /* === MODIFIED: Green Left === */
+    .scale-bar.spend { background: var(--red); border-radius: 0 6px 6px 0; opacity: 0.8; }
+    .scale-bar.earn { background: var(--green); border-radius: 6px 0 0 6px; opacity: 0.8; }
     .scale-center { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--text-3); transform: translateX(-50%); z-index: 2; opacity: 0.5; }
     .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); font-weight: 600; margin-top: 4px; }
     .scale-net { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; padding: 6px; border-radius: var(--r-sm); background: var(--bg); border: 1px solid var(--border); }
@@ -258,19 +255,34 @@
     /* History */
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
     .history-header .section-title { margin: 0; }
-    .history-filter { width: auto; min-width: 100px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
-    .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; }
+    .history-controls { display: flex; align-items: center; gap: 8px; }
+    .history-filter { width: auto; min-width: 90px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
+    /* === MODIFIED: Count Badge Style === */
+    .history-count { font-size: 12px; font-weight: 700; color: var(--text-3); background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
+
+    .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; position: relative; }
     .history-item:last-child { border-bottom: none; }
-    .history-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; width: 100%; }
+    .history-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; width: 100%; flex-wrap: wrap; }
     .history-person { font-weight: 700; font-size: 14px; flex-shrink: 0; white-space: nowrap; }
     .history-reason { color: var(--text-2); font-size: 13px; white-space: normal; word-break: break-word; line-height: 1.4; min-width: 0; flex: 1; display: block; }
+    /* === MODIFIED: Note Styling === */
+    .history-note { display: inline-block; margin-top: 4px; font-size: 12px; color: var(--text-3); background: var(--bg); padding: 2px 6px; border-radius: 4px; border: 1px dashed var(--border); width: 100%; }
     .history-time { font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; margin-top: 2px; white-space: nowrap; }
-    .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; min-width: 40px; width: auto; }
+    .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; min-width: 40px; width: auto; position: relative; }
     .history-change { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
     .history-change.plus { color: var(--green); }
     .history-change.minus { color: var(--red); }
-    .delete-btn { border: none; background: transparent; color: var(--red); font-size: 11px; font-weight: 600; padding: 2px 0; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; opacity: 0.7; }
-    .delete-btn:hover { opacity: 1; }
+    
+    /* === MODIFIED: Three Dot Menu Styles === */
+    .menu-btn { border: none; background: transparent; color: var(--text-3); font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; line-height: 1; letter-spacing: 2px; }
+    .menu-btn:hover, .menu-btn.active { background: var(--bg); color: var(--text-1); }
+    .action-menu { position: absolute; top: 24px; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 100; display: none; flex-direction: column; min-width: 100px; overflow: hidden; animation: menuFadeIn 0.15s ease; }
+    .action-menu.show { display: flex; }
+    .action-menu-item { padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--text-1); cursor: pointer; border: none; background: none; text-align: left; width: 100%; transition: background 0.1s; display: flex; align-items: center; gap: 6px; }
+    .action-menu-item:hover { background: var(--bg); }
+    .action-menu-item.danger { color: var(--red); }
+    @keyframes menuFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
     .empty-history { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
 
     /* Shop / Earn / Punish list items */
@@ -629,7 +641,6 @@
               <path class="sleepy-eye" d="M54 45 Q62 48 70 45" style="display:none" />
               <path class="sad-eye" d="M30 48 Q38 44 46 48" style="display:none" />
               <path class="sad-eye" d="M54 48 Q62 44 70 48" style="display:none" />
-              <!-- === MODIFIED: Angry Eyes for Starved === -->
               <path class="angry-eye" d="M30 42 L46 46" stroke-width="3" style="display:none" />
               <path class="angry-eye" d="M70 42 L54 46" stroke-width="3" style="display:none" />
               
@@ -638,7 +649,6 @@
               <path d="M75 55 C85 60, 85 75, 75 80" />
               <path class="sweat" d="M75 25 C75 25, 80 30, 80 35 C80 38, 75 38, 75 35 C75 30, 75 25, 75 25 Z" fill="var(--torie)" stroke="none" />
               <text class="zzz" x="72" y="22" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
-              <!-- === MODIFIED: Anger Mark === -->
               <path class="anger-mark" d="M75 15 L85 25 M85 15 L75 25" stroke="var(--red)" stroke-width="3" stroke-linecap="round" />
             </svg>
           </div>
@@ -668,7 +678,6 @@
               <path class="sleepy-eye" d="M56 62 Q60 64 64 62" style="display:none" />
               <path class="sad-eye" d="M37 64 Q40 60 43 64" style="display:none" />
               <path class="sad-eye" d="M57 64 Q60 60 63 64" style="display:none" />
-              <!-- === MODIFIED: Angry Eyes for Starved === -->
               <path class="angry-eye" d="M36 58 L44 62" stroke-width="2.5" style="display:none" />
               <path class="angry-eye" d="M64 58 L56 62" stroke-width="2.5" style="display:none" />
 
@@ -680,7 +689,6 @@
               <ellipse cx="62" cy="84" rx="6" ry="3.5" fill="var(--card)" />
               <path class="sweat" d="M74 36 C74 36, 78 40, 78 44 C78 46.5, 74 46.5, 74 44 C74 40, 74 36, 74 36 Z" fill="var(--torie)" stroke="none" />
               <text class="zzz" x="72" y="36" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
-              <!-- === MODIFIED: Anger Mark === -->
               <path class="anger-mark" d="M75 25 L85 35 M85 25 L75 35" stroke="var(--red)" stroke-width="3" stroke-linecap="round" />
             </svg>
           </div>
@@ -860,9 +868,13 @@
         <div id="statsContent"></div>
       </div>
       <div class="card">
+        <!-- === MODIFIED: Added Count Badge and Controls Wrapper === -->
         <div class="history-header">
           <h2 class="section-title">🧾 流水明细</h2>
-          <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
+          <div class="history-controls">
+            <span id="historyCount" class="history-count">0条</span>
+            <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
+          </div>
         </div>
         <div id="historyList" class="history-list"></div>
       </div>
@@ -928,7 +940,6 @@
       sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重..."], emoji: "😴" },
       low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧"], emoji: "😔" },
       warning:  { texts: ["肚子好饿...","快喂喂我吧！","饿到发抖...","需要投食！","呜呜好饿..."], emoji: "😰" },
-      /* === MODIFIED: Added Starved State === */
       starved:  { texts: ["不想理你...","已经绝食了","哄不好的那种","哼！走开！","心碎了..."], emoji: "💢" }
     };
 
@@ -937,7 +948,6 @@
     let staminaTimer = null;
     const STAMINA_DECAY_PER_MIN = 0.1;
     const STAMINA_LOW_THRESHOLD = 20;
-    // Feed bonuses: 1st card +50%, 2nd card +30%, 3rd card +20%
     const FEED_BONUSES = [50, 30, 20];
 
     async function loadStamina() {
@@ -988,7 +998,6 @@
       });
     }
 
-    // Calculate stamina after feeding N cards
     function calcFeedResult(currentStamina, numCards) {
       let result = currentStamina;
       let steps = [Math.round(result)];
@@ -999,27 +1008,22 @@
       return { final: Math.min(100, result), steps };
     }
 
-    /* === MODIFIED: Helper to calculate revive cost === */
     function getReviveCost(person) {
       const stamina = staminaData[person].stamina;
       if (stamina > 0) return 0;
-      
       const updatedAt = new Date(staminaData[person].updated_at).getTime();
       const now = Date.now();
       const hoursStarved = Math.max(0, (now - updatedAt) / (1000 * 60 * 60));
-      // Base 1 card + 1 card per 24 hours
       const extra = Math.floor(hoursStarved / 24);
       return 1 + extra;
     }
 
-    /* === MODIFIED: Helper to format starved duration === */
     function getStarvedDurationText(person) {
       const updatedAt = new Date(staminaData[person].updated_at).getTime();
       const now = Date.now();
       const diffMs = now - updatedAt;
       const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      
       if (days > 0) return `${days}天${hours}小时`;
       return `${hours}小时`;
     }
@@ -1029,7 +1033,6 @@
       staminaTimer = setInterval(() => {
         let changed = false;
         ["Torie", "Jory"].forEach(person => {
-          // Only decay if stamina > 0. If 0, it stays 0 (starved state locks it)
           if (staminaData[person].stamina > 0) {
             staminaData[person].stamina = Math.max(0, staminaData[person].stamina - STAMINA_DECAY_PER_MIN);
             changed = true;
@@ -1042,7 +1045,6 @@
           saveStamina("Torie");
           saveStamina("Jory");
         } else {
-          // Even if no decay (because starved), we might need to update UI for revive cost ticking up
           updateSpirits(); 
         }
       }, 60000);
@@ -1055,18 +1057,13 @@
     function openFeedModal(person) {
       feedTarget = person;
       feedSelectedCards = 1;
-
       const emoji = person === "Torie" ? "🦉" : "🐰";
       document.getElementById("feedModalPet").textContent = emoji;
       document.getElementById("feedModalTitle").textContent = `喂食 ${person}`;
-
-      // Reset selection
       document.querySelectorAll(".feed-card-opt").forEach(el => {
         el.classList.toggle("selected", el.dataset.cards === "1");
       });
-
       updateFeedPreview();
-
       document.getElementById("feedOverlay").classList.add("show");
     }
 
@@ -1078,33 +1075,25 @@
       const current = Math.max(0, Math.min(100, staminaData[feedTarget].stamina));
       const currentRound = Math.round(current);
       const isStarved = current <= 0;
-
-      // Update current bar
       const currentBar = document.getElementById("feedCurrentBar");
       currentBar.style.width = currentRound + "%";
       currentBar.className = `feed-current-bar-fill ${getStaminaColor(currentRound)}`;
       document.getElementById("feedCurrentPct").textContent = currentRound + "%";
       document.getElementById("feedCurrentPct").style.color = 
         currentRound >= 50 ? "var(--green)" : currentRound >= 20 ? "var(--jory)" : "var(--red)";
-
       const balance = calcBalance(feedTarget);
       const resultEl = document.getElementById("feedResult");
       const confirmBtn = document.getElementById("feedConfirmBtn");
       const previewContainer = document.getElementById("feedPreview");
       const selectRow = document.querySelector(".feed-select-row");
 
-      /* === MODIFIED: Starved Logic in Modal === */
       if (isStarved) {
         const reviveCost = getReviveCost(feedTarget);
         const durationText = getStarvedDurationText(feedTarget);
-        
-        // Hide normal feed controls
         previewContainer.style.display = "none";
         selectRow.style.display = "none";
-        
         resultEl.className = "feed-result warn";
         resultEl.innerHTML = `💢 <b>${feedTarget}</b> 已经绝食 ${durationText}！<br>需要 <b>${reviveCost} 张</b>自由卡才能唤醒并恢复喂食。`;
-        
         if (balance < reviveCost) {
           confirmBtn.disabled = true;
           confirmBtn.textContent = "余额不足";
@@ -1116,25 +1105,16 @@
         return;
       }
 
-      // Normal Feed Logic
       previewContainer.style.display = "block";
       selectRow.style.display = "block";
-
-      // Calculate preview
       const { final, steps } = calcFeedResult(current, feedSelectedCards);
-
-      // Build preview steps HTML
       const stepsContainer = document.getElementById("feedPreviewSteps");
       let html = "";
-
-      // Step 0: current state
       html += `<div class="feed-step">
         <span class="feed-step-bonus" style="color:var(--text-3)">当前</span>
         <div class="feed-step-bar-track"><div class="feed-step-bar-fill" style="width:${currentRound}%;background:${currentRound>=50?'var(--green)':currentRound>=20?'var(--jory)':'var(--red)'}"></div></div>
         <span class="feed-step-val">${currentRound}%</span>
       </div>`;
-
-      // Each feed step
       for (let i = 0; i < feedSelectedCards && i < FEED_BONUSES.length; i++) {
         const bonus = FEED_BONUSES[i];
         const before = steps[i];
@@ -1147,7 +1127,6 @@
           <span class="feed-step-val highlight">${after}%</span>
         </div>`;
       }
-
       stepsContainer.innerHTML = html;
 
       if (currentRound >= 100) {
@@ -1173,13 +1152,11 @@
       const currentRound = Math.round(current);
       const balance = calcBalance(feedTarget);
       const isStarved = current <= 0;
-
       const confirmBtn = document.getElementById("feedConfirmBtn");
       confirmBtn.disabled = true;
       const originalBtnText = confirmBtn.textContent;
       confirmBtn.textContent = "处理中...";
 
-      /* === MODIFIED: Handle Revive Transaction === */
       if (isStarved) {
         const reviveCost = getReviveCost(feedTarget);
         if (balance < reviveCost) {
@@ -1188,33 +1165,23 @@
           confirmBtn.textContent = originalBtnText;
           return;
         }
-
-        // Deduct revive cost
         const reason = `💢 唤醒绝食的${feedTarget}（绝食惩罚）`;
         const { error: logError } = await sb.from("freecard_log").insert({
-          operator: feedTarget,
-          change_type: "减少",
-          card_num: reviveCost,
-          reason: reason
+          operator: feedTarget, change_type: "减少", card_num: reviveCost, reason: reason
         });
-
         if (logError) {
           showToast("唤醒失败：" + logError.message, "error");
           confirmBtn.disabled = false;
           confirmBtn.textContent = originalBtnText;
           return;
         }
-
-        // Reset stamina to 50% upon revive
         staminaData[feedTarget].stamina = 50;
         staminaData[feedTarget].updated_at = new Date().toISOString();
         await saveStamina(feedTarget);
-
         updateStaminaUI();
         updateSpirits();
         spawnParticles(1);
         showToast(`${feedTarget} 被唤醒了！体力恢复至 50%`, "success");
-        
         confirmBtn.disabled = false;
         confirmBtn.textContent = "确认喂食";
         closeFeedModal();
@@ -1222,10 +1189,8 @@
         return;
       }
 
-      // Normal Feed Logic
       const { final, steps } = calcFeedResult(current, feedSelectedCards);
       const finalRound = Math.round(final);
-
       if (balance < feedSelectedCards) {
         showToast("余额不足，无法喂食", "error");
         confirmBtn.disabled = false;
@@ -1237,54 +1202,32 @@
         closeFeedModal();
         return;
       }
-
-      // 1. Deduct cards from balance (insert into log)
       const reason = `🍖 喂食${feedSelectedCards}张（${feedTarget} 体力 ${currentRound}%→${finalRound}%）`;
       const { error: logError } = await sb.from("freecard_log").insert({
-        operator: feedTarget,
-        change_type: "减少",
-        card_num: feedSelectedCards,
-        reason: reason
+        operator: feedTarget, change_type: "减少", card_num: feedSelectedCards, reason: reason
       });
-
       if (logError) {
         showToast("喂食失败：" + logError.message, "error");
         confirmBtn.disabled = false;
         confirmBtn.textContent = originalBtnText;
         return;
       }
-
-      // 2. Update stamina
       staminaData[feedTarget].stamina = final;
       staminaData[feedTarget].updated_at = new Date().toISOString();
       await saveStamina(feedTarget);
-
-      // 3. Update UI
       updateStaminaUI();
       updateSpirits();
       spawnParticles(1);
       showToast(`喂食成功！${feedTarget} 体力 → ${finalRound}%`, "success");
-
       confirmBtn.disabled = false;
       confirmBtn.textContent = "确认喂食";
       closeFeedModal();
-
-      // Reload logs to show the transaction
       await loadLogs();
     }
 
     function setupFeedModal() {
-      // Open buttons
-      document.getElementById("feedBtnTorie").addEventListener("click", (e) => {
-        e.stopPropagation();
-        openFeedModal("Torie");
-      });
-      document.getElementById("feedBtnJory").addEventListener("click", (e) => {
-        e.stopPropagation();
-        openFeedModal("Jory");
-      });
-
-      // Card selection
+      document.getElementById("feedBtnTorie").addEventListener("click", (e) => { e.stopPropagation(); openFeedModal("Torie"); });
+      document.getElementById("feedBtnJory").addEventListener("click", (e) => { e.stopPropagation(); openFeedModal("Jory"); });
       document.querySelectorAll(".feed-card-opt").forEach(el => {
         el.addEventListener("click", () => {
           document.querySelectorAll(".feed-card-opt").forEach(x => x.classList.remove("selected"));
@@ -1293,12 +1236,8 @@
           updateFeedPreview();
         });
       });
-
-      // Cancel & Confirm
       document.getElementById("feedCancelBtn").addEventListener("click", closeFeedModal);
       document.getElementById("feedConfirmBtn").addEventListener("click", confirmFeed);
-
-      // Close on overlay click
       document.getElementById("feedOverlay").addEventListener("click", (e) => {
         if (e.target === document.getElementById("feedOverlay")) closeFeedModal();
       });
@@ -1306,19 +1245,11 @@
 
     function initStaminaSystem() {
       setupFeedModal();
-      loadStamina().then(() => {
-        startStaminaTimer();
-        updateSpirits();
-      });
-
-      // Realtime sync for stamina
+      loadStamina().then(() => { startStaminaTimer(); updateSpirits(); });
       sb.channel("stamina-realtime")
         .on("postgres_changes", { event: "*", schema: "public", table: "freecard_stamina" }, (payload) => {
           if (payload.new && payload.new.person) {
-            staminaData[payload.new.person] = {
-              stamina: Number(payload.new.stamina),
-              updated_at: payload.new.updated_at
-            };
+            staminaData[payload.new.person] = { stamina: Number(payload.new.stamina), updated_at: payload.new.updated_at };
             applyOfflineDecay();
             updateStaminaUI();
             updateSpirits();
@@ -1329,35 +1260,25 @@
 
     /* ==================== PET MOOD LOGIC ==================== */
     let recentEvents = { Torie: [], Jory: [] };
-
     function trackEvent(person, type) {
       if (!recentEvents[person]) recentEvents[person] = [];
       recentEvents[person].push({ type, time: Date.now() });
       recentEvents[person] = recentEvents[person].filter(e => Date.now() - e.time < 30 * 60 * 1000);
     }
-
     function getRecentEventCounts(person) {
       const now = Date.now();
       const events = (recentEvents[person] || []).filter(e => now - e.time < 30 * 60 * 1000);
       let earns = 0, redeems = 0, punishes = 0;
-      events.forEach(e => {
-        if (e.type === 'earn') earns++;
-        if (e.type === 'redeem') redeems++;
-        if (e.type === 'punish') punishes++;
-      });
+      events.forEach(e => { if (e.type === 'earn') earns++; if (e.type === 'redeem') redeems++; if (e.type === 'punish') punishes++; });
       return { earns, redeems, punishes };
     }
-
     function getPetState(person) {
       const balance = calcBalance(person);
       const now = new Date();
       const hour = now.getHours();
       const events = getRecentEventCounts(person);
       const stamina = staminaData[person] ? staminaData[person].stamina : 80;
-
-      /* === MODIFIED: Starved Priority Check === */
       if (stamina <= 0) return "starved";
-
       if (balance < 0) return "warning";
       if (events.punishes > 0) return "low";
       if (events.redeems > 0) return "amazing";
@@ -1365,10 +1286,7 @@
       const todayStart = new Date(); todayStart.setHours(0,0,0,0);
       const todayLogs = allLogs.filter(l => new Date(l.created_at) >= todayStart && l.operator === person);
       let earned = 0, spent = 0;
-      todayLogs.forEach(l => {
-        const n = Number(l.card_num) || 0;
-        if (l.change_type === "增加") earned += n; else spent += n;
-      });
+      todayLogs.forEach(l => { const n = Number(l.card_num) || 0; if (l.change_type === "增加") earned += n; else spent += n; });
       const net = earned - spent;
       if (earned >= 10 || net >= 5) return "amazing";
       if (events.earns > 0) return "happy";
@@ -1376,69 +1294,46 @@
       if (spent > earned && spent > 0) return "low";
       return "normal";
     }
-
     function updatePetState(person, state) {
       const card = document.getElementById(`spirit${person}`);
       card.className = `spirit-card ${person.toLowerCase()} state-${state}`;
       const svg = document.getElementById(`svg${person}`);
-      
       if (person === "Torie") {
         const pupils = svg.querySelectorAll('.pupil');
         const starEyes = svg.querySelectorAll('.star-eye');
         const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
         const sadEyes = svg.querySelectorAll('.sad-eye');
-        const angryEyes = svg.querySelectorAll('.angry-eye'); // New
-        
+        const angryEyes = svg.querySelectorAll('.angry-eye');
         pupils.forEach(p => p.style.display = 'none');
         starEyes.forEach(p => p.style.display = 'none');
         sleepyEyes.forEach(p => p.style.display = 'none');
         sadEyes.forEach(p => p.style.display = 'none');
         angryEyes.forEach(p => p.style.display = 'none');
-        
-        if (state === 'starved') {
-          angryEyes.forEach(p => p.style.display = '');
-        } else if (state === 'amazing' || state === 'happy') {
-          starEyes.forEach(p => p.style.display = '');
-        } else if (state === 'sleepy') {
-          sleepyEyes.forEach(p => p.style.display = '');
-        } else if (state === 'low' || state === 'warning') {
-          sadEyes.forEach(p => p.style.display = '');
-        } else {
-          pupils.forEach(p => p.style.display = '');
-        }
+        if (state === 'starved') angryEyes.forEach(p => p.style.display = '');
+        else if (state === 'amazing' || state === 'happy') starEyes.forEach(p => p.style.display = '');
+        else if (state === 'sleepy') sleepyEyes.forEach(p => p.style.display = '');
+        else if (state === 'low' || state === 'warning') sadEyes.forEach(p => p.style.display = '');
+        else pupils.forEach(p => p.style.display = '');
       } else {
         const beanEyes = svg.querySelectorAll('.bean-eye');
         const happyEyes = svg.querySelectorAll('.happy-eye');
         const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
         const sadEyes = svg.querySelectorAll('.sad-eye');
-        const angryEyes = svg.querySelectorAll('.angry-eye'); // New
+        const angryEyes = svg.querySelectorAll('.angry-eye');
         const ears = svg.querySelectorAll('.bunny-ear-l, .bunny-ear-r');
-        
         beanEyes.forEach(e => e.style.display = 'none');
         happyEyes.forEach(e => e.style.display = 'none');
         sleepyEyes.forEach(e => e.style.display = 'none');
         sadEyes.forEach(e => e.style.display = 'none');
         angryEyes.forEach(e => e.style.display = 'none');
         ears.forEach(e => e.classList.remove('ear-down'));
-
-        if (state === 'starved') {
-          angryEyes.forEach(e => e.style.display = '');
-          ears.forEach(e => e.classList.add('ear-down'));
-        } else if (state === 'amazing' || state === 'happy' || state === 'good') {
-          happyEyes.forEach(e => e.style.display = '');
-        } else if (state === 'sleepy') {
-          sleepyEyes.forEach(e => e.style.display = '');
-        } else if (state === 'low' || state === 'warning') {
-          sadEyes.forEach(e => e.style.display = '');
-          ears.forEach(e => e.classList.add('ear-down'));
-        } else {
-          beanEyes.forEach(e => e.style.display = '');
-        }
+        if (state === 'starved') { angryEyes.forEach(e => e.style.display = ''); ears.forEach(e => e.classList.add('ear-down')); }
+        else if (state === 'amazing' || state === 'happy' || state === 'good') happyEyes.forEach(e => e.style.display = '');
+        else if (state === 'sleepy') sleepyEyes.forEach(e => e.style.display = '');
+        else if (state === 'low' || state === 'warning') { sadEyes.forEach(e => e.style.display = ''); ears.forEach(e => e.classList.add('ear-down')); }
+        else beanEyes.forEach(e => e.style.display = '');
       }
-      
       const config = SPIRIT_STATES[state] || SPIRIT_STATES.normal;
-      
-      /* === MODIFIED: Custom Text for Starved === */
       if (state === 'starved') {
         const duration = getStarvedDurationText(person);
         const cost = getReviveCost(person);
@@ -1450,13 +1345,7 @@
         document.getElementById(`spirit${person}Status`).textContent = config.texts[textIdx];
       }
     }
-
-    function updateSpirits() {
-      ["Torie", "Jory"].forEach(person => {
-        const state = getPetState(person);
-        updatePetState(person, state);
-      });
-    }
+    function updateSpirits() { ["Torie", "Jory"].forEach(person => { const state = getPetState(person); updatePetState(person, state); }); }
 
     /* ==================== PET CLICK INTERACTIONS ==================== */
     function initPetInteractions() {
@@ -1473,7 +1362,6 @@
         svg.style.animation = 'mochiSquish 0.5s ease forwards';
         setTimeout(() => { svg.style.animation = ''; svg.classList.remove('pet-clicked'); }, 500);
       });
-      
       if (!document.getElementById('mochi-style')) {
         const style = document.createElement('style');
         style.id = 'mochi-style';
@@ -1502,7 +1390,6 @@
 
     /* ==================== WEEKLY SUMMARY ==================== */
     function getStartOfWeekDate() { const d = new Date(); d.setHours(0,0,0,0); const day = d.getDay(); d.setDate(d.getDate() - (day === 0 ? 6 : day - 1)); return d; }
-
     function getSoulComment(tE, jE, tS, jS) {
       const net = (tE + jE) - (tS + jS);
       const bothActive = tE > 0 && jE > 0;
@@ -1512,7 +1399,6 @@
       if (net >= 10 || (bothActive && net > 0)) return pick(PRAISE);
       return pick(ENCOURAGE);
     }
-
     function generateWeeklySummary() {
       const now = new Date();
       const isSunday = now.getDay() === 0;
@@ -1541,7 +1427,6 @@
       dataStr += "。";
       return { title: "💌 一周小结", body: dataStr + getSoulComment(tE, jE, tS, jS), dateRange };
     }
-
     function generateRecentTrend() {
       const now = new Date();
       const threeDaysAgo = new Date(now); threeDaysAgo.setDate(threeDaysAgo.getDate() - 2); threeDaysAgo.setHours(0,0,0,0);
@@ -1568,14 +1453,12 @@
       dataStr += "。";
       return { title: "📊 近三天动态", body: dataStr + getSoulComment(tE, jE, tS, jS), dateRange };
     }
-
     function renderWeeklyCard() {
       const card = document.getElementById("weeklyCard"), summary = generateWeeklySummary();
       if(!summary){ card.style.display="none"; return; }
       card.style.display="block";
       card.innerHTML = `<div class="summary-header"><span class="summary-icon">💌</span><span class="summary-title">${summary.title}</span><span class="summary-date">${summary.dateRange}</span></div><div class="summary-text">${summary.body}</div>`;
     }
-
     function renderTrendCard() {
       const card = document.getElementById("trendCard"), trend = generateRecentTrend();
       if(!trend){ card.style.display="none"; return; }
@@ -1588,14 +1471,12 @@
     let particles = [], animFrameId = null;
     function resizeCanvas() { canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
     window.addEventListener("resize", resizeCanvas); resizeCanvas();
-
     class Particle {
       constructor(x,y,color,size,vx,vy,gravity,life,shape) { this.x=x; this.y=y; this.color=color; this.size=size; this.vx=vx; this.vy=vy; this.gravity=gravity; this.life=life; this.maxLife=life; this.shape=shape; this.rotation=Math.random()*Math.PI*2; this.rotSpeed=(Math.random()-0.5)*0.2; }
       update() { this.x+=this.vx; this.y+=this.vy; this.vy+=this.gravity; this.vx*=0.99; this.life--; this.rotation+=this.rotSpeed; }
       draw(ctx) { const alpha=Math.max(0,this.life/this.maxLife); ctx.save(); ctx.globalAlpha=alpha; ctx.translate(this.x,this.y); ctx.rotate(this.rotation); if(this.shape==="circle"){ ctx.beginPath(); ctx.arc(0,0,this.size,0,Math.PI*2); ctx.fillStyle=this.color; ctx.fill(); } else if(this.shape==="rect"){ ctx.fillStyle=this.color; ctx.fillRect(-this.size,-this.size*0.4,this.size*2,this.size*0.8); } else if(this.shape==="star"){ ctx.beginPath(); for(let i=0;i<5;i++){const a=(i*4*Math.PI)/5-Math.PI/2; ctx[i===0?"moveTo":"lineTo"](Math.cos(a)*this.size,Math.sin(a)*this.size);} ctx.closePath(); ctx.fillStyle=this.color; ctx.fill(); } ctx.restore(); }
     }
     const C1=["#34c759","#30d158","#5ac8fa","#a2d729"], C2=["#007aff","#5ac8fa","#ffd60a","#ff9500","#34c759","#af52de"], C3=["#ff375f","#ff9f0a","#ffd60a","#30d158","#0a84ff","#bf5af2","#ff6482"], C4=["#ffd60a","#ff9f0a","#ff375f","#bf5af2","#0a84ff","#30d158","#5ac8fa","#ff6482","#ac8e68"];
-
     function spawnParticles(tier) {
       const cx=canvas.width/2, cy=canvas.height/2;
       if(tier===1){ for(let i=0;i<20;i++){const a=Math.random()*Math.PI*2,s=1+Math.random()*3; particles.push(new Particle(cx,cy,C1[Math.floor(Math.random()*C1.length)],2+Math.random()*3,Math.cos(a)*s,Math.sin(a)*s-1,0.02,50+Math.random()*30,"circle"));}}
@@ -1609,7 +1490,6 @@
     /* ==================== REDEEM CEREMONY ==================== */
     function getRedeemTier(cost) { if(cost<=5)return 1; if(cost<=15)return 2; if(cost<=30)return 3; return 4; }
     const TIER_CONFIG = { 1:{emoji:"✨",title:"小确幸！",sub:"每一份小奖励都值得被记住",duration:2000}, 2:{emoji:"🎉",title:"太棒了！",sub:"努力有了回响，继续闪闪发光",duration:3000}, 3:{emoji:"🎆",title:"了不起的成就！",sub:"坚持的力量，让梦想照进现实",duration:4000}, 4:{emoji:"👑",title:"史诗级兑换！",sub:"这是属于你们的传奇时刻",duration:5500} };
-
     function showRedeemCeremony(product,cost) {
       const tier=getRedeemTier(cost), config=TIER_CONFIG[tier], overlay=document.getElementById("redeemOverlay");
       const displayName = product.name.replace(TYPE_PREFIX.earn,"").replace(TYPE_PREFIX.punish,"");
@@ -1662,7 +1542,6 @@
         showToast("比例已保存", "success");
         calcConverter();
       });
-
       const lateModal = document.getElementById("lateRatioModal");
       document.getElementById("openLateRatioBtn").addEventListener("click", () => {
         document.getElementById("lateRatioTier").value = lateTier;
@@ -1685,18 +1564,11 @@
     function applyBgTint(person) {
       const tint = document.getElementById("bgTint");
       const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (person === "Torie") {
-        tint.style.background = isDark ? "rgba(0,80,180,0.06)" : "rgba(0,122,255,0.04)";
-      } else if (person === "Jory") {
-        tint.style.background = isDark ? "rgba(180,100,0,0.06)" : "rgba(255,149,0,0.04)";
-      } else {
-        tint.style.background = "transparent";
-      }
+      if (person === "Torie") tint.style.background = isDark ? "rgba(0,80,180,0.06)" : "rgba(0,122,255,0.04)";
+      else if (person === "Jory") tint.style.background = isDark ? "rgba(180,100,0,0.06)" : "rgba(255,149,0,0.04)";
+      else tint.style.background = "transparent";
     }
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (bankPerson) applyBgTint(bankPerson);
-    });
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (bankPerson) applyBgTint(bankPerson); });
 
     /* ==================== BANK NAVIGATION ==================== */
     function showBankStep(step) {
@@ -1704,7 +1576,6 @@
       const el = document.getElementById(`bankStep${step}`);
       if (el) { el.style.animation = 'none'; el.offsetHeight; el.style.animation = ''; el.classList.add("active"); }
     }
-
     function updateBankPersonBadges() {
       const emoji = bankPerson === "Torie" ? "🦉" : "🐰";
       const cls = bankPerson === "Torie" ? "torie-badge" : "jory-badge";
@@ -1714,14 +1585,7 @@
       const badge2 = document.getElementById("bankPersonBadge2");
       if (badge2) badge2.outerHTML = html.replace('<span class="bank-person-badge', '<span id="bankPersonBadge2" class="bank-person-badge');
     }
-
-    function selectBankPerson(person) {
-      bankPerson = person;
-      applyBgTint(person);
-      updateBankPersonBadges();
-      showBankStep(2);
-    }
-
+    function selectBankPerson(person) { bankPerson = person; applyBgTint(person); updateBankPersonBadges(); showBankStep(2); }
     function selectBankSection(section) {
       bankSection = section;
       document.querySelectorAll(".bank-sub-page").forEach(p => p.classList.remove("active"));
@@ -1732,22 +1596,16 @@
       else if (section === "earn") renderEarnList();
       else if (section === "punish") renderPunishList();
     }
-
     function resetBankToStep1() {
-      bankPerson = "";
-      bankSection = "";
-      applyBgTint("");
+      bankPerson = ""; bankSection = ""; applyBgTint("");
       document.getElementById("bankTorieBal").textContent = calcBalance("Torie");
       document.getElementById("bankJoryBal").textContent = calcBalance("Jory");
       showBankStep(1);
     }
-
     function setupBankNav() {
       document.getElementById("bankPickTorie").addEventListener("click", () => selectBankPerson("Torie"));
       document.getElementById("bankPickJory").addEventListener("click", () => selectBankPerson("Jory"));
-      document.querySelectorAll(".bank-sub-nav-btn").forEach(btn => {
-        btn.addEventListener("click", () => selectBankSection(btn.dataset.bank));
-      });
+      document.querySelectorAll(".bank-sub-nav-btn").forEach(btn => { btn.addEventListener("click", () => selectBankSection(btn.dataset.bank)); });
       document.getElementById("bankBackToStep1").addEventListener("click", () => { bankPerson = ""; applyBgTint(""); showBankStep(1); });
       document.getElementById("bankBackToStep2").addEventListener("click", () => { showBankStep(2); });
     }
@@ -1775,7 +1633,6 @@
         });
       });
     }
-
     function setupPerspectiveTabs() {
       document.querySelectorAll(".perspective-tab").forEach((btn)=>{
         btn.addEventListener("click",()=>{
@@ -1784,7 +1641,6 @@
         });
       });
     }
-
     function setupHistoryFilter() { document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();}); }
 
     function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
@@ -1794,14 +1650,12 @@
     function renderStats() {
       const filtered = filterByPeriod(allLogs, currentPeriod);
       const pLabel = {today:"今日",week:"本周",month:"本月",all:"累计"}[currentPeriod];
-
       let tE=0, tS=0, jE=0, jS=0;
       filtered.forEach(l => {
         const n = Number(l.card_num)||0;
         if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; }
         else { if(l.change_type==="增加") jE+=n; else jS+=n; }
       });
-
       if (currentPerspective === "torie" || currentPerspective === "jory") {
         const isTorie = currentPerspective === "torie";
         const earn = isTorie ? tE : jE;
@@ -1809,29 +1663,23 @@
         const net = earn - spend;
         const emoji = isTorie ? "🦉" : "🐰";
         const name = isTorie ? "Torie" : "Jory";
-
         document.getElementById("statsSummary").innerHTML = `
           <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${earn}</div></div>
           <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${spend}</div></div>
           <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
         `;
-
         const total = earn + spend;
         const spendPct = total > 0 ? (spend / total) * 100 : 50;
         const earnPct = total > 0 ? (earn / total) * 100 : 50;
         const netColor = net >= 0 ? "var(--green)" : "var(--red)";
         const netSign = net >= 0 ? "+" : "";
         const verdict = net > 0 ? "赚得更多 💪" : net < 0 ? "花得更多 💸" : "收支平衡 ⚖️";
-
-        /* === MODIFIED: Swapped Earn/Spend Visual Positions === */
         document.getElementById("statsContent").innerHTML = `
           <div class="stats-group">
             <div class="stats-label">${emoji} ${name} ${pLabel}收支对比</div>
             <div class="scale-chart">
               <div class="scale-center"></div>
-              <!-- Green (Earn) on Left -->
               <div class="scale-bar earn" style="width:${earnPct}%"></div>
-              <!-- Red (Spend) on Right -->
               <div class="scale-bar spend" style="width:${spendPct}%"></div>
             </div>
             <div class="scale-labels">
@@ -1862,29 +1710,145 @@
         document.getElementById("statsContent").innerHTML = group("获得") + groupSpend("消耗");
       }
     }
-
     function bar(name,val,max,cls) { return `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${max===0?0:(val/max)*100}%"></div></div><div class="bar-number">${val}</div></div>`; }
 
     /* ==================== HISTORY ==================== */
+    /* === MODIFIED: Added Week Option Logic === */
     function updateHistoryFilterOptions() {
       const select=document.getElementById("historyFilter"), months=new Set();
       allLogs.forEach((l)=>{const d=new Date(l.created_at);months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);});
       const sorted=[...months].sort((a,b)=>b.localeCompare(a)), current=currentHistoryFilter;
-      select.innerHTML='<option value="all">全部</option>';
-      sorted.forEach((key)=>{const[y,m]=key.split("-");const o=document.createElement("option");o.value=key;o.textContent=`${y}年${Number(m)}月`;select.appendChild(o);});
-      if([...select.options].some((o)=>o.value===current))select.value=current; else{currentHistoryFilter="all";select.value="all";}
+      
+      // Build options: All -> This Week -> Months
+      let html = '<option value="all">全部</option>';
+      html += '<option value="week">本周</option>';
+      
+      sorted.forEach((key)=>{
+        const[y,m]=key.split("-");
+        html += `<option value="${key}">${y}年${Number(m)}月</option>`;
+      });
+      
+      select.innerHTML = html;
+      
+      // Restore selection if valid, otherwise default to all
+      if([...select.options].some((o)=>o.value===current)) select.value=current; 
+      else { currentHistoryFilter="all"; select.value="all"; }
+    }
+
+    /* === MODIFIED: Added Note Editing & Menu Logic === */
+    async function editNote(id, currentNote) {
+      const newNote = prompt("编辑备注：", currentNote || "");
+      if (newNote === null) return; // Cancelled
+      
+      // Optimistic UI update could go here, but we'll wait for DB
+      const { error } = await sb.from("freecard_log").update({ note: newNote }).eq("id", id);
+      if (error) {
+        showToast("备注更新失败", "error");
+        return;
+      }
+      
+      // Update local data
+      const log = allLogs.find(l => String(l.id) === String(id));
+      if (log) log.note = newNote;
+      
+      renderHistory(); // Re-render to show changes
+      showToast("备注已更新", "success");
+    }
+
+    function closeAllMenus() {
+      document.querySelectorAll(".action-menu.show").forEach(m => m.classList.remove("show"));
+      document.querySelectorAll(".menu-btn.active").forEach(b => b.classList.remove("active"));
     }
 
     function renderHistory() {
       const container=document.getElementById("historyList");
-      const logs=currentHistoryFilter==="all"?allLogs:allLogs.filter((l)=>{const d=new Date(l.created_at);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;});
-      if(!logs.length){container.innerHTML='<div class="empty-history">暂无记录 🍃</div>';return;}
+      const countBadge=document.getElementById("historyCount");
+      
+      // Filter Logic
+      let logs;
+      if (currentHistoryFilter === "all") {
+        logs = allLogs;
+      } else if (currentHistoryFilter === "week") {
+        const weekStart = getStartOfWeekDate();
+        logs = allLogs.filter(l => new Date(l.created_at) >= weekStart);
+      } else {
+        // Month filter (YYYY-MM)
+        logs = allLogs.filter((l)=>{
+          const d=new Date(l.created_at);
+          return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;
+        });
+      }
+
+      // Update Count
+      if (countBadge) countBadge.textContent = `${logs.length}条`;
+
+      if(!logs.length){
+        container.innerHTML='<div class="empty-history">暂无记录 🍃</div>';
+        return;
+      }
+
       container.innerHTML=logs.map((l)=>{
         const d=new Date(l.created_at),time=fmtDate(d),plus=l.change_type==="增加",symbol=plus?"+":"−";
-        return `<div class="history-item"><div><div class="history-top"><span class="history-person">${esc(l.operator)}</span><span class="history-reason">${esc(l.reason||"—")}</span></div><div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${plus?"plus":"minus"}">${symbol}${Number(l.card_num)}</div><button class="delete-btn" data-del-log="${escAttr(l.id)}">删除</button></div></div>`;
+        const note = l.note ? `<div class="history-note">📝 ${esc(l.note)}</div>` : '';
+        
+        return `<div class="history-item">
+          <div>
+            <div class="history-top">
+              <span class="history-person">${esc(l.operator)}</span>
+              <span class="history-reason">${esc(l.reason||"—")}</span>
+            </div>
+            ${note}
+            <div class="history-time">${time}</div>
+          </div>
+          <div class="history-right">
+            <div class="history-change ${plus?"plus":"minus"}">${symbol}${Number(l.card_num)}</div>
+            <button class="menu-btn" data-menu-id="${escAttr(l.id)}" data-note="${escAttr(l.note || '')}">···</button>
+            <div class="action-menu" id="menu-${escAttr(l.id)}">
+              <button class="action-menu-item" data-action="note" data-id="${escAttr(l.id)}">📝 备注</button>
+              <button class="action-menu-item danger" data-action="del" data-id="${escAttr(l.id)}">🗑️ 删除</button>
+            </div>
+          </div>
+        </div>`;
       }).join("");
-      container.querySelectorAll("[data-del-log]").forEach(b=>b.addEventListener("click",()=>deleteLog(b.dataset.delLog)));
+
+      // Bind Events
+      container.querySelectorAll(".menu-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.menuId;
+          const menu = document.getElementById(`menu-${id}`);
+          const isOpen = menu.classList.contains("show");
+          
+          closeAllMenus();
+          
+          if (!isOpen) {
+            menu.classList.add("show");
+            btn.classList.add("active");
+          }
+        });
+      });
+
+      container.querySelectorAll("[data-action='del']").forEach(b => {
+        b.addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeAllMenus();
+          deleteLog(b.dataset.id);
+        });
+      });
+
+      container.querySelectorAll("[data-action='note']").forEach(b => {
+        b.addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeAllMenus();
+          // Find current note from local data or attribute
+          const log = allLogs.find(l => String(l.id) === String(b.dataset.id));
+          editNote(b.dataset.id, log ? log.note : "");
+        });
+      });
     }
+
+    // Global click to close menus
+    document.addEventListener("click", () => closeAllMenus());
 
     /* ==================== SHOP / EARN / PUNISH LISTS ==================== */
     function classifyProduct(p) {
@@ -1893,7 +1857,6 @@
       return "shop";
     }
     function getDisplayName(p) { return p.name.replace(TYPE_PREFIX.earn, "").replace(TYPE_PREFIX.punish, ""); }
-
     function renderList(containerId, type) {
       const container = document.getElementById(containerId);
       let items = allProducts.filter(p => p.owner === bankPerson && classifyProduct(p) === type);
@@ -1905,11 +1868,9 @@
           if(aReady !== bReady) return bReady - aReady;
           return (balance / b.cost) - (balance / a.cost);
         });
-      } else if(type === "earn") {
-        items.sort((a, b) => b.cost - a.cost);
-      } else if(type === "punish") {
-        items.sort((a, b) => a.cost - b.cost);
-      }
+      } else if(type === "earn") items.sort((a, b) => b.cost - a.cost);
+      else if(type === "punish") items.sort((a, b) => a.cost - b.cost);
+      
       if(!items.length) { 
         container.innerHTML = `<div class="empty-list">还没有${type==='shop'?'心愿':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; 
         return; 
@@ -1919,11 +1880,9 @@
         const displayName = getDisplayName(p);
         const pct = Math.min(100, Math.round((balance / p.cost) * 100)), canRedeem = balance >= p.cost;
         let progressHTML = "", actionBtn = "";
-        if (isPunish) { 
-          actionBtn = `<button class="action-btn btn-punish" data-action="punish" data-id="${escAttr(p.id)}">⚠️ 触发扣除</button>`; 
-        } else if (isEarn) { 
-          actionBtn = `<button class="action-btn btn-earn" data-action="earn" data-id="${escAttr(p.id)}">✅ 完成领取</button>`; 
-        } else {
+        if (isPunish) actionBtn = `<button class="action-btn btn-punish" data-action="punish" data-id="${escAttr(p.id)}">⚠️ 触发扣除</button>`; 
+        else if (isEarn) actionBtn = `<button class="action-btn btn-earn" data-action="earn" data-id="${escAttr(p.id)}">✅ 完成领取</button>`; 
+        else {
           const barClass = canRedeem ? "full" : bankPerson.toLowerCase();
           const pText = canRedeem ? `<span style="color:var(--green)">✅ 已达成！</span><span>${balance} / ${p.cost}</span>` : `<span>${balance} / ${p.cost}</span><span>差 ${p.cost-balance}</span>`;
           progressHTML = `<div class="progress-wrap"><div class="progress-text">${pText}</div><div class="progress-bar-track"><div class="progress-bar ${barClass}" style="width:${pct}%"></div></div></div>`;
@@ -1946,7 +1905,6 @@
       }).join("");
       container.querySelectorAll("[data-action]").forEach(b => b.addEventListener("click", () => handleListAction(b.dataset.action, b.dataset.id, type)));
     }
-
     function renderShop() { renderList("shopList", "shop"); }
     function renderEarnList() { renderList("earnList", "earn"); }
     function renderPunishList() { renderList("punishList", "punish"); }
@@ -1995,7 +1953,6 @@
         if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); 
       }
     }
-
     function setupAdd(type, nameId, costId, btnId) {
       document.getElementById(btnId).addEventListener("click", async () => {
         const rawName = document.getElementById(nameId).value.trim();
@@ -2012,7 +1969,6 @@
         showToast("添加成功 🎉", "success"); await loadProducts();
       });
     }
-
     function setupAddProduct() { setupAdd("shop", "newProductName", "newProductCost", "addProductBtn"); }
     function setupAddEarn() { setupAdd("earn", "newEarnName", "newEarnCost", "addEarnBtn"); }
     function setupAddPunish() { setupAdd("punish", "newPunishName", "newPunishCost", "addPunishBtn"); }
@@ -2026,9 +1982,7 @@
       situp: { emoji: "🤸", label: "仰卧起坐", inputLabel: "仰卧起坐个数", placeholder: "30", unit: "个", reasonPrefix: "🤸 仰卧起坐", inputUnit: "个" },
       dip: { emoji: "🤾", label: "撑双杠", inputLabel: "撑双杠个数", placeholder: "5", unit: "个", reasonPrefix: "🤾 撑双杠", inputUnit: "个" }
     };
-
     let currentConverterType = "calorie";
-
     function getConverterCards(type, val, person) {
       const ratios = converterRatios[type] || DEFAULT_RATIOS[type];
       const x = person === "Torie" ? ratios.torieX : ratios.joryX;
@@ -2036,7 +1990,6 @@
       const cards = Math.floor((val / x) * y);
       return { cards, desc: `每${x}${CONVERTER_TYPES[type].unit} = ${y}张` };
     }
-
     function setupUniversalConverter() {
       const grid = document.getElementById("converterTypeGrid");
       const input = document.getElementById("converterInput");
@@ -2044,7 +1997,6 @@
       const result = document.getElementById("converterResult");
       const btn = document.getElementById("converterSubmitBtn");
       const inputLabel = document.getElementById("converterInputLabel");
-
       grid.querySelectorAll(".converter-type-btn").forEach(b => {
         b.addEventListener("click", () => {
           grid.querySelectorAll(".converter-type-btn").forEach(x => x.classList.remove("active"));
@@ -2058,7 +2010,6 @@
           btn.disabled = true;
         });
       });
-
       window.calcConverter = () => {
         const val = parseInt(input.value) || 0;
         const { cards, desc } = getConverterCards(currentConverterType, val, person.value);
@@ -2071,23 +2022,19 @@
           btn.disabled = true;
         }
       };
-
       input.addEventListener("input", calcConverter);
       person.addEventListener("change", calcConverter);
-
       btn.addEventListener("click", async () => {
         const val = parseInt(input.value) || 0;
         const config = CONVERTER_TYPES[currentConverterType];
         const { cards } = getConverterCards(currentConverterType, val, person.value);
         if (cards <= 0) return;
-
         btn.disabled = true; btn.textContent = "入账中...";
         const reason = `${config.reasonPrefix} ${val} ${config.inputUnit}`;
         const { error } = await sb.from("freecard_log").insert({
           operator: person.value, change_type: "增加", card_num: cards, reason
         });
         btn.disabled = false; btn.textContent = "一键入账";
-
         if (error) { showToast("入账失败：" + error.message, "error"); return; }
         trackEvent(person.value, 'earn');
         showToast(`成功入账 ${cards} 张！`, "success");
@@ -2102,13 +2049,11 @@
     /* ==================== LATE CONVERTER ==================== */
     function setupLateConverter() {
       const input = document.getElementById("lateInput"), person = document.getElementById("latePerson"), result = document.getElementById("lateResult"), btn = document.getElementById("lateSubmitBtn");
-      
       window.calcLate = () => {
         const mins = parseInt(input.value) || 0;
         const rawCards = Math.ceil(mins / lateTier);
         const cards = Math.min(rawCards, lateCap);
         const wasCapped = rawCards > lateCap;
-        
         if(mins > 0) { 
           result.style.display = "block"; 
           let text = `将扣除 ${cards} 张自由卡 (每${lateTier}分钟扣1张)`;
@@ -2118,16 +2063,13 @@
         } 
         else { result.style.display = "none"; btn.disabled = true; }
       };
-      
       input.addEventListener("input", calcLate); 
       person.addEventListener("change", calcLate);
-      
       btn.addEventListener("click", async () => {
         const mins = parseInt(input.value) || 0;
         const rawCards = Math.ceil(mins / lateTier);
         const cards = Math.min(rawCards, lateCap);
         if(cards <= 0) return;
-        
         btn.disabled = true; btn.textContent = "扣除中...";
         const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "减少", card_num: cards, reason: `⏰ 迟到 ${mins} 分钟` });
         btn.disabled = false; btn.textContent = "确认扣除";
@@ -2145,7 +2087,6 @@
       const person = document.getElementById("rechargePerson");
       const result = document.getElementById("rechargeResult");
       const btn = document.getElementById("rechargeSubmitBtn");
-
       function calcRecharge() {
         const amount = parseInt(input.value) || 0;
         const cards = Math.floor(amount / 10);
@@ -2158,23 +2099,19 @@
           btn.disabled = true;
         }
       }
-
       input.addEventListener("input", calcRecharge);
       person.addEventListener("change", calcRecharge);
-
       btn.addEventListener("click", async () => {
         const amount = parseInt(input.value) || 0;
         const cards = Math.floor(amount / 10);
         const actualAmount = cards * 10;
         if (cards <= 0) return;
-
         btn.disabled = true; btn.textContent = "入账中...";
         const { error } = await sb.from("freecard_log").insert({
           operator: person.value, change_type: "增加", card_num: cards,
           reason: `💰 充值 ¥${actualAmount}（${cards}张 × 10¥）`
         });
         btn.disabled = false; btn.textContent = "确认充值并入账";
-
         if (error) { showToast("入账失败：" + error.message, "error"); return; }
         trackEvent(person.value, 'earn');
         showToast(`充值成功！${person.value} 获得 ${cards} 张自由卡 🎉`, "success");
@@ -2192,13 +2129,11 @@
       if(error){showToast("读取记录失败："+error.message,"error");return;}
       allLogs=data||[]; refreshAll();
     }
-
     async function loadProducts() {
       const {data,error}=await sb.from("freecard_shop").select("*").order("created_at",{ascending:true});
       if(error){allProducts=[]; renderShop(); renderEarnList(); renderPunishList(); return;}
       allProducts=data||[]; renderShop(); renderEarnList(); renderPunishList();
     }
-
     function refreshAll() {
       updateBalances();
       updateSpirits();
@@ -2213,48 +2148,32 @@
       if (bt) bt.textContent = calcBalance("Torie");
       if (bj) bj.textContent = calcBalance("Jory");
     }
-
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
     function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
 
-    /* ==================== ✅ FIXED DELETE LOG ==================== */
+    /* ==================== DELETE LOG ==================== */
     async function deleteLog(id) {
       if (!confirm("确定删除这条记录？")) return;
-      
       const log = allLogs.find(l => String(l.id) === String(id));
       if (!log) return showToast("找不到该记录", "error");
-
-      // 1. 先删数据库记录（触发余额重算）
       const { error } = await sb.from("freecard_log").delete().eq("id", id);
       if (error) return showToast("删除失败", "error");
-
-      // 2. 如果是喂食记录，回退体力到"假设从未喂过"的状态
       const feedMatch = log.reason && log.reason.match(/^🍖 喂食(\d+)张（(\w+) 体力 (\d+)%→(\d+)%）$/);
       if (feedMatch) {
         const person = feedMatch[2];
-        const beforeStamina = parseInt(feedMatch[3]); // 喂食前的体力
-
-        // 计算从喂食发生到现在经过了多少分钟
+        const beforeStamina = parseInt(feedMatch[3]);
         const minutesPassed = Math.max(0, (Date.now() - new Date(log.created_at).getTime()) / 60000);
-        // 这段时间的自然衰减量
         const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
-
-        // ✅ 核心修正：删除后体力 = max(0, 喂食前体力 - 期间自然衰减)
-        // 这等价于"如果从没喂过食，只经历自然衰减"的状态
         staminaData[person].stamina = Math.max(0, beforeStamina - decay);
         staminaData[person].updated_at = new Date().toISOString();
-
         await saveStamina(person);
         updateStaminaUI();
         updateSpirits();
-
         const resultPct = Math.round(staminaData[person].stamina);
         showToast(`已删除。${person} 体力回退至 ${resultPct}%`, "success");
       } else {
         showToast("已删除", "success");
       }
-
-      // 3. 重新加载流水
       await loadLogs();
     }
 
@@ -2283,7 +2202,6 @@
       setupRecharge();
       checkSpecialDate();
       initStaminaSystem();
-      
       await loadLogs();
       await loadProducts();
       sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
