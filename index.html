@@ -763,11 +763,6 @@
           <div class="converter-header">
             <h2 class="section-title" style="margin:0">🧮 换算器</h2>
           </div>
-          <div class="segment segment-2" style="margin-bottom:16px;">
-            <button class="seg-btn active" id="bankConverterTab" type="button">🔥 通用换算</button>
-            <button class="seg-btn" id="bankLateTab" type="button">⏰ 迟到换算</button>
-          </div>
-
           <div id="bankConverterPanel">
             <div class="converter-header">
               <h3 class="section-title" style="margin:0">🔥 通用换算</h3>
@@ -780,6 +775,7 @@
               <button class="converter-type-btn" data-ctype="pullup"><span class="ctb-emoji">🏋️</span>引体向上</button>
               <button class="converter-type-btn" data-ctype="situp"><span class="ctb-emoji">🤸</span>仰卧起坐</button>
               <button class="converter-type-btn" data-ctype="dip"><span class="ctb-emoji">🤾</span>撑双杠</button>
+              <button class="converter-type-btn" data-ctype="late"><span class="ctb-emoji">⏰</span>迟到换算</button>
             </div>
             <div class="form-grid">
               <div class="form-group">
@@ -1618,18 +1614,6 @@
       document.getElementById("bankPickTorie").addEventListener("click", () => selectBankPerson("Torie"));
       document.getElementById("bankPickJory").addEventListener("click", () => selectBankPerson("Jory"));
       document.querySelectorAll(".bank-sub-nav-btn").forEach(btn => { btn.addEventListener("click", () => selectBankSection(btn.dataset.bank)); });
-      document.getElementById("bankConverterTab").addEventListener("click", () => {
-        document.getElementById("bankConverterTab").classList.add("active");
-        document.getElementById("bankLateTab").classList.remove("active");
-        document.getElementById("bankConverterPanel").style.display = "block";
-        document.getElementById("bankLatePanel").style.display = "none";
-      });
-      document.getElementById("bankLateTab").addEventListener("click", () => {
-        document.getElementById("bankLateTab").classList.add("active");
-        document.getElementById("bankConverterTab").classList.remove("active");
-        document.getElementById("bankConverterPanel").style.display = "none";
-        document.getElementById("bankLatePanel").style.display = "block";
-      });
       document.getElementById("bankBackToStep1").addEventListener("click", () => { bankPerson = ""; applyBgTint(""); showBankStep(1); });
       document.getElementById("bankBackToStep2").addEventListener("click", () => { showBankStep(2); });
     }
@@ -2026,12 +2010,32 @@
           grid.querySelectorAll(".converter-type-btn").forEach(x => x.classList.remove("active"));
           b.classList.add("active");
           currentConverterType = b.dataset.ctype;
-          const config = CONVERTER_TYPES[currentConverterType];
-          inputLabel.textContent = config.inputLabel;
-          input.placeholder = config.placeholder;
-          input.value = "";
-          result.style.display = "none";
-          btn.disabled = true;
+          const latePanel = document.getElementById("bankLatePanel");
+          const commonForm = document.querySelector("#bankConverterPanel > .form-grid");
+          const commonResult = document.getElementById("converterResult");
+          const commonSubmit = document.getElementById("converterSubmitBtn");
+          const commonHeader = document.querySelector("#bankConverterPanel > .converter-header");
+          if (currentConverterType === "late") {
+            commonForm.style.display = "none";
+            commonResult.style.display = "none";
+            commonSubmit.style.display = "none";
+            commonHeader.style.display = "none";
+            latePanel.style.display = "block";
+            document.getElementById("lateInput").value = "";
+            document.getElementById("lateResult").style.display = "none";
+            document.getElementById("lateSubmitBtn").disabled = true;
+          } else {
+            const config = CONVERTER_TYPES[currentConverterType];
+            commonForm.style.display = "grid";
+            commonResult.style.display = "none";
+            commonSubmit.style.display = "block";
+            commonSubmit.disabled = true;
+            commonHeader.style.display = "flex";
+            latePanel.style.display = "none";
+            inputLabel.textContent = config.inputLabel;
+            input.placeholder = config.placeholder;
+            input.value = "";
+          }
         });
       });
       window.calcConverter = () => {
