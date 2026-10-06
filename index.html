@@ -6,7 +6,6 @@
   <title>一起变好 · 自由卡记录</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    /* ... (CSS 样式保持不变，此处省略以节省篇幅，请保留你原有的 CSS) ... */
     :root {
       --bg: #f2f2f7; --bg-tint: #f2f2f7; --card: #ffffff; --card-trans: rgba(255, 255, 255, 0.88);
       --text-1: #1d1d1f; --text-2: #86868b; --text-3: #aeaeb2;
@@ -264,10 +263,51 @@
     .add-btn { height: 44px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: var(--bg); font-size: 13px; font-weight: 700; cursor: pointer; padding: 0 16px; white-space: nowrap; }
     .add-btn:active { transform: scale(0.96); }
     .empty-list { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
-    .converter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .converter-result { text-align: center; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 15px; }
-    .converter-result.danger { color: var(--red); }
-    .ratio-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-2); padding: 4px; }
+    
+    /* === UNIFIED CONVERTER UI STYLES === */
+    .converter-unified-panel {
+      /* This class unifies the look of Converter, Sleep, and Late panels */
+      margin-top: 12px;
+      padding-top: 4px;
+      /* Optional: Add a subtle top border if you want to separate from type grid visually but keep them grouped */
+      /* border-top: 1px dashed var(--border); */ 
+    }
+    .converter-unified-panel .converter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .converter-unified-panel .converter-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-1);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .converter-unified-panel .form-grid {
+      margin-bottom: 12px;
+    }
+    .converter-result { 
+      text-align: center; 
+      padding: 12px; 
+      background: var(--bg); 
+      border: 1px solid var(--border); 
+      border-radius: var(--r-sm); 
+      margin: 12px 0; 
+      font-weight: 700; 
+      color: var(--green); 
+      font-size: 15px; 
+    }
+    .converter-result.danger { color: var(--red); border-color: rgba(255,59,48,0.2); background: rgba(255,59,48,0.05); }
+    
+    .ratio-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-2); padding: 4px; transition: transform 0.2s; }
+    .ratio-btn:active { transform: scale(0.9); }
+    
     .app-page { display: none; animation: fadeIn 0.2s ease; }
     .app-page.active { display: block; }
     .bank-sub-page { display: none; animation: fadeIn 0.2s ease; }
@@ -722,20 +762,23 @@
           <div class="converter-header">
             <h2 class="section-title" style="margin:0">🧮 换算器</h2>
           </div>
-          <div id="bankConverterPanel">
+          
+          <!-- Type Grid stays outside unified panel as it is the navigator -->
+          <div class="converter-type-grid" id="converterTypeGrid">
+            <button class="converter-type-btn active" data-ctype="calorie"><span class="ctb-emoji">🔥</span>卡路里</button>
+            <button class="converter-type-btn" data-ctype="momo"><span class="ctb-emoji">📖</span>墨墨背单词</button>
+            <button class="converter-type-btn" data-ctype="pushup"><span class="ctb-emoji">💪</span>俯卧撑</button>
+            <button class="converter-type-btn" data-ctype="pullup"><span class="ctb-emoji">🏋️</span>引体向上</button>
+            <button class="converter-type-btn" data-ctype="situp"><span class="ctb-emoji">🤸</span>仰卧起坐</button>
+            <button class="converter-type-btn" data-ctype="dip"><span class="ctb-emoji">🤾</span>撑双杠</button>
+            <button class="converter-type-btn" data-ctype="late"><span class="ctb-emoji">⏰</span>迟到换算</button>
+            <button class="converter-type-btn" data-ctype="sleep"><span class="ctb-emoji">😴</span>睡眠</button>
+          </div>
+
+          <div id="bankConverterPanel" class="converter-unified-panel">
             <div class="converter-header">
-              <h3 class="section-title" style="margin:0"></h3>
+              <h3 class="section-title" style="margin:0" id="converterPanelTitle">🔥 卡路里换算</h3>
               <button class="ratio-btn" id="openConverterRatioBtn">⚙️</button>
-            </div>
-            <div class="converter-type-grid" id="converterTypeGrid">
-              <button class="converter-type-btn active" data-ctype="calorie"><span class="ctb-emoji">🔥</span>卡路里</button>
-              <button class="converter-type-btn" data-ctype="momo"><span class="ctb-emoji">📖</span>墨墨背单词</button>
-              <button class="converter-type-btn" data-ctype="pushup"><span class="ctb-emoji">💪</span>俯卧撑</button>
-              <button class="converter-type-btn" data-ctype="pullup"><span class="ctb-emoji">🏋️</span>引体向上</button>
-              <button class="converter-type-btn" data-ctype="situp"><span class="ctb-emoji">🤸</span>仰卧起坐</button>
-              <button class="converter-type-btn" data-ctype="dip"><span class="ctb-emoji">🤾</span>撑双杠</button>
-              <button class="converter-type-btn" data-ctype="late"><span class="ctb-emoji">⏰</span>迟到换算</button>
-              <button class="converter-type-btn" data-ctype="sleep"><span class="ctb-emoji">😴</span>睡眠</button>
             </div>
             <div class="form-grid">
               <div class="form-group">
@@ -748,12 +791,12 @@
               </div>
             </div>
             <div id="converterResult" class="converter-result" style="display:none"></div>
-            <button id="converterSubmitBtn" class="submit-btn" disabled>一键入账</button>
+            <button id="converterSubmitBtn" class="submit-btn green" disabled>一键入账</button>
           </div>
 
-          <div id="bankSleepPanel" style="display:none">
+          <div id="bankSleepPanel" class="converter-unified-panel" style="display:none">
             <div class="converter-header">
-              <h3 class="section-title" style="margin:0">😴 睡眠</h3>
+              <h3 class="section-title" style="margin:0">😴 睡眠记录</h3>
               <button class="ratio-btn" id="openSleepRuleBtn">⚙️</button>
             </div>
             <div class="form-grid">
@@ -763,7 +806,6 @@
               </div>
               <div class="form-group">
                 <label for="sleepBedtime">上床时间</label>
-                <!-- === MODIFIED: Updated Option Labels === -->
                 <select id="sleepBedtime">
                   <option value="before">凌晨/深夜 (A点前)</option>
                   <option value="middle">凌晨/深夜 (A-B点)</option>
@@ -779,9 +821,9 @@
             <button id="sleepSubmitBtn" class="submit-btn" disabled>确认记录</button>
           </div>
 
-          <div id="bankLatePanel" style="display:none">
+          <div id="bankLatePanel" class="converter-unified-panel" style="display:none">
             <div class="converter-header">
-              <h3 class="section-title" style="margin:0">⏰ 迟到换算</h3>
+              <h3 class="section-title" style="margin:0">⏰ 迟到惩罚</h3>
               <button class="ratio-btn" id="openLateRatioBtn">⚙️</button>
             </div>
             <div class="form-grid">
@@ -2017,6 +2059,8 @@
       const result = document.getElementById("converterResult");
       const btn = document.getElementById("converterSubmitBtn");
       const inputLabel = document.getElementById("converterInputLabel");
+      const panelTitle = document.getElementById("converterPanelTitle");
+      
       grid.querySelectorAll(".converter-type-btn").forEach(b => {
         b.addEventListener("click", () => {
           grid.querySelectorAll(".converter-type-btn").forEach(x => x.classList.remove("active"));
@@ -2024,26 +2068,19 @@
           currentConverterType = b.dataset.ctype;
           const latePanel = document.getElementById("bankLatePanel");
           const sleepPanel = document.getElementById("bankSleepPanel");
-          const commonForm = document.querySelector("#bankConverterPanel > .form-grid");
-          const commonResult = document.getElementById("converterResult");
-          const commonSubmit = document.getElementById("converterSubmitBtn");
-          const commonHeader = document.querySelector("#bankConverterPanel > .converter-header");
+          const commonPanel = document.getElementById("bankConverterPanel");
+          
+          // Hide all first
+          commonPanel.style.display = "none";
+          latePanel.style.display = "none";
+          sleepPanel.style.display = "none";
+
           if (currentConverterType === "late") {
-            commonForm.style.display = "none";
-            commonResult.style.display = "none";
-            commonSubmit.style.display = "none";
-            commonHeader.style.display = "none";
             latePanel.style.display = "block";
-            sleepPanel.style.display = "none";
             document.getElementById("lateInput").value = "";
             document.getElementById("lateResult").style.display = "none";
             document.getElementById("lateSubmitBtn").disabled = true;
           } else if (currentConverterType === "sleep") {
-            commonForm.style.display = "none";
-            commonResult.style.display = "none";
-            commonSubmit.style.display = "none";
-            commonHeader.style.display = "none";
-            latePanel.style.display = "none";
             sleepPanel.style.display = "block";
             document.getElementById("sleepResult").style.display = "none";
             document.getElementById("sleepSubmitBtn").disabled = true;
@@ -2052,19 +2089,21 @@
             document.getElementById("sleepScore").value = "";
           } else {
             const config = CONVERTER_TYPES[currentConverterType];
-            commonForm.style.display = "grid";
-            commonResult.style.display = "none";
-            commonSubmit.style.display = "block";
-            commonSubmit.disabled = true;
-            commonHeader.style.display = "flex";
-            latePanel.style.display = "none";
-            sleepPanel.style.display = "none";
+            commonPanel.style.display = "block";
+            panelTitle.innerHTML = `${config.emoji} ${config.label}换算`;
+            document.getElementById("openConverterRatioBtn").style.display = "block";
+            
             inputLabel.textContent = config.inputLabel;
             input.placeholder = config.placeholder;
             input.value = "";
+            result.style.display = "none";
+            btn.disabled = true;
+            btn.textContent = "一键入账";
+            btn.className = "submit-btn green"; // Reset to green
           }
         });
       });
+      
       window.calcConverter = () => {
         const val = parseInt(input.value) || 0;
         const { cards, desc } = getConverterCards(currentConverterType, val, person.value);
@@ -2102,7 +2141,6 @@
     }
 
     /* ==================== SLEEP CONVERTER ==================== */
-    /* === MODIFIED: Added Helper Function for Time Formatting === */
     function formatTimeToChinese(timeStr) {
       if (!timeStr) return "";
       const [hStr, mStr] = timeStr.split(":");
@@ -2117,7 +2155,6 @@
       else if (h >= 13 && h < 18) period = "下午";
       else period = "晚上";
       
-      // Convert to 12-hour format
       let h12 = h % 12;
       if (h12 === 0) h12 = 12;
       
@@ -2184,7 +2221,18 @@
         const outcome = getSleepOutcome(timeRange, scoreValue);
         result.style.display = "block";
         result.textContent = `睡眠结果：${outcome.text}`;
-        result.classList.toggle("danger", outcome.kind === "punish");
+        
+        // Dynamic Button Styling
+        if (outcome.kind === "punish") {
+          result.classList.add("danger");
+          btn.className = "submit-btn danger";
+          btn.textContent = "确认扣除";
+        } else {
+          result.classList.remove("danger");
+          btn.className = outcome.kind === "reward" ? "submit-btn green" : "submit-btn";
+          btn.textContent = outcome.kind === "reward" ? "领取奖励" : "确认记录";
+        }
+        
         btn.disabled = false;
       };
 
@@ -2198,7 +2246,6 @@
         if (!timeRange || Number.isNaN(scoreValue) || scoreValue < 0 || scoreValue > 100) return;
         const outcome = getSleepOutcome(timeRange, scoreValue);
         
-        // === MODIFIED: Use formatted text for Reason Log ===
         const a = sleepRules.timeA || "00:00";
         const b = sleepRules.timeB || "01:00";
         const aText = formatTimeToChinese(a);
@@ -2209,14 +2256,16 @@
         else if (timeRange === "middle") rangeText = `${aText}–${bText}`;
         else rangeText = `${bText}后`;
         
-        btn.disabled = true; btn.textContent = "记录中...";
+        btn.disabled = true; 
+        const originalText = btn.textContent;
+        btn.textContent = "记录中...";
 
         if (outcome.change === 0) {
           const { error } = await sb.from("freecard_log").insert({
             operator: person.value, change_type: "增加", card_num: 0,
             reason: `😴 睡眠：${rangeText}，Apple Watch 评分 ${scoreValue} 分（不加不减）`
           });
-          btn.disabled = false; btn.textContent = "确认记录";
+          btn.disabled = false; btn.textContent = originalText;
           if (error) { showToast("记录失败：" + error.message, "error"); return; }
           showToast("睡眠已记录，不加不减", "success");
         } else {
@@ -2226,7 +2275,7 @@
             card_num: Math.abs(outcome.change),
             reason: `😴 睡眠：${rangeText}，Apple Watch 评分 ${scoreValue} 分（${outcome.text}）`
           });
-          btn.disabled = false; btn.textContent = "确认记录";
+          btn.disabled = false; btn.textContent = originalText;
           if (error) { showToast("记录失败：" + error.message, "error"); return; }
           if (outcome.change > 0) { trackEvent(person.value, 'earn'); spawnParticles(1); showToast(`睡眠达标！获得 ${outcome.change} 张自由卡 🎉`, "success"); }
           else { trackEvent(person.value, 'punish'); showToast(`睡眠惩罚：扣除 ${Math.abs(outcome.change)} 张自由卡`, "error"); if(navigator.vibrate) navigator.vibrate(200); }
