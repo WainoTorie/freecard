@@ -266,11 +266,8 @@
     
     /* === UNIFIED CONVERTER UI STYLES === */
     .converter-unified-panel {
-      /* This class unifies the look of Converter, Sleep, and Late panels */
       margin-top: 12px;
       padding-top: 4px;
-      /* Optional: Add a subtle top border if you want to separate from type grid visually but keep them grouped */
-      /* border-top: 1px dashed var(--border); */ 
     }
     .converter-unified-panel .converter-header {
       display: flex;
@@ -378,6 +375,24 @@
     .redeem-sub { font-size: 14px; opacity: 0.8; margin-bottom: 24px; }
     .redeem-close-btn { height: 40px; padding: 0 28px; border: none; border-radius: 20px; background: rgba(255,255,255,0.2); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s; }
     .bg-tint-overlay { position: fixed; inset: 0; pointer-events: none; z-index: -1; transition: background 0.6s ease; }
+    
+    /* Supervise Preview Style */
+    .supervise-preview {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-1);
+      display: none;
+    }
+    .supervise-preview .arrow { color: var(--text-3); margin: 0 6px; }
+    .supervise-preview .victim { color: var(--red); }
+    .supervise-preview .supervisor { color: var(--green); }
+
     @media (max-width: 480px) {
       body { padding: 16px 12px 110px; }
       .page-title { font-size: 24px; }
@@ -773,6 +788,7 @@
             <button class="converter-type-btn" data-ctype="dip"><span class="ctb-emoji">🤾</span>撑双杠</button>
             <button class="converter-type-btn" data-ctype="late"><span class="ctb-emoji">⏰</span>迟到换算</button>
             <button class="converter-type-btn" data-ctype="sleep"><span class="ctb-emoji">😴</span>睡眠</button>
+            <button class="converter-type-btn" data-ctype="supervise"><span class="ctb-emoji">👀</span>监督</button>
           </div>
 
           <div id="bankConverterPanel" class="converter-unified-panel">
@@ -839,6 +855,34 @@
             <div id="lateResult" class="converter-result danger" style="display:none"></div>
             <button id="lateSubmitBtn" class="submit-btn danger" disabled>确认扣除</button>
           </div>
+
+          <!-- 👀 SUPERVISE PANEL -->
+          <div id="bankSupervisePanel" class="converter-unified-panel" style="display:none">
+            <div class="converter-header">
+              <h3 class="section-title" style="margin:0">👀 监督记录</h3>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="supervisePerson">谁是监督者</label>
+                <select id="supervisePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+              </div>
+              <div class="form-group">
+                <label for="superviseVictim">被抓者 (自动)</label>
+                <input id="superviseVictim" type="text" readonly value="Jory" style="background:var(--bg);color:var(--text-2);cursor:not-allowed;" />
+              </div>
+              <div class="form-group full">
+                <label for="superviseReason">情况</label>
+                <input id="superviseReason" type="text" placeholder="例如：偷吃零食 / 玩手机超时" maxlength="30" />
+              </div>
+              <div class="form-group">
+                <label for="superviseCards">转移张数</label>
+                <input id="superviseCards" type="number" min="1" max="99" placeholder="1" />
+              </div>
+            </div>
+            <div id="supervisePreview" class="supervise-preview"></div>
+            <button id="superviseSubmitBtn" class="submit-btn" disabled>确认监督</button>
+          </div>
+
         </div>
       </div>
 
@@ -2068,12 +2112,14 @@
           currentConverterType = b.dataset.ctype;
           const latePanel = document.getElementById("bankLatePanel");
           const sleepPanel = document.getElementById("bankSleepPanel");
+          const supervisePanel = document.getElementById("bankSupervisePanel");
           const commonPanel = document.getElementById("bankConverterPanel");
           
           // Hide all first
           commonPanel.style.display = "none";
           latePanel.style.display = "none";
           sleepPanel.style.display = "none";
+          supervisePanel.style.display = "none";
 
           if (currentConverterType === "late") {
             latePanel.style.display = "block";
@@ -2087,6 +2133,13 @@
             updateSleepTimeOptions();
             document.getElementById("sleepBedtime").value = "before";
             document.getElementById("sleepScore").value = "";
+          } else if (currentConverterType === "supervise") {
+            supervisePanel.style.display = "block";
+            document.getElementById("superviseCards").value = "";
+            document.getElementById("superviseReason").value = "";
+            document.getElementById("supervisePreview").style.display = "none";
+            document.getElementById("superviseSubmitBtn").disabled = true;
+            updateSupervisePreview();
           } else {
             const config = CONVERTER_TYPES[currentConverterType];
             commonPanel.style.display = "block";
@@ -2322,6 +2375,89 @@
       });
     }
 
+    /* ==================== SUPERVISE CONVERTER ==================== */
+    function setupSuperviseConverter() {
+      const supervisorSel = document.getElementById("supervisePerson");
+      const victimInput = document.getElementById("superviseVictim");
+      const reasonInput = document.getElementById("superviseReason");
+      const cardsInput = document.getElementById("superviseCards");
+      const preview = document.getElementById("supervisePreview");
+      const btn = document.getElementById("superviseSubmitBtn");
+
+      function getVictim(supervisor) {
+        return supervisor === "Torie" ? "Jory" : "Torie";
+      }
+
+      window.updateSupervisePreview = () => {
+        const supervisor = supervisorSel.value;
+        const victim = getVictim(supervisor);
+        const cards = parseInt(cardsInput.value) || 0;
+        const reason = reasonInput.value.trim();
+
+        victimInput.value = victim;
+
+        if (cards > 0) {
+          preview.style.display = "block";
+          preview.innerHTML = `<span class="victim">${victim}</span> <span class="arrow">→</span> <span class="supervisor">${supervisor}</span><br><span style="font-size:12px;color:var(--text-2);font-weight:600;margin-top:4px;display:inline-block;">转移 ${cards} 张${reason ? ' · ' + esc(reason) : ''}</span>`;
+          btn.disabled = false;
+        } else {
+          preview.style.display = "none";
+          btn.disabled = true;
+        }
+      };
+
+      supervisorSel.addEventListener("change", updateSupervisePreview);
+      cardsInput.addEventListener("input", updateSupervisePreview);
+      reasonInput.addEventListener("input", updateSupervisePreview);
+
+      btn.addEventListener("click", async () => {
+        const supervisor = supervisorSel.value;
+        const victim = getVictim(supervisor);
+        const cards = parseInt(cardsInput.value) || 0;
+        const reason = reasonInput.value.trim();
+        if (cards <= 0) return;
+
+        btn.disabled = true;
+        btn.textContent = "记录中...";
+
+        const reasonText = reason ? `👀 监督：${reason}` : "👀 监督记录";
+        
+        // Victim loses cards
+        const { error: err1 } = await sb.from("freecard_log").insert({
+          operator: victim, change_type: "减少", card_num: cards, reason: `${reasonText}（被${supervisor}抓）`
+        });
+        
+        if (err1) {
+          showToast("记录失败：" + err1.message, "error");
+          btn.disabled = false; btn.textContent = "确认监督";
+          return;
+        }
+
+        // Supervisor gains cards
+        const { error: err2 } = await sb.from("freecard_log").insert({
+          operator: supervisor, change_type: "增加", card_num: cards, reason: `${reasonText}（抓到${victim}）`
+        });
+
+        btn.disabled = false; btn.textContent = "确认监督";
+        if (err2) {
+          showToast("监督者入账失败，请检查数据", "error");
+          // Note: In a real app you'd want transactional integrity here
+          return;
+        }
+
+        trackEvent(victim, 'punish');
+        trackEvent(supervisor, 'earn');
+        showToast(`监督成功！${victim} → ${supervisor} ${cards}张`, "success");
+        spawnParticles(1);
+        
+        cardsInput.value = "";
+        reasonInput.value = "";
+        preview.style.display = "none";
+        btn.disabled = true;
+        await loadLogs();
+      });
+    }
+
     /* ==================== RECHARGE ==================== */
     function setupRecharge() {
       const input = document.getElementById("rechargeAmount");
@@ -2441,6 +2577,7 @@
       setupUniversalConverter();
       setupSleepConverter();
       setupLateConverter();
+      setupSuperviseConverter();
       setupRecharge();
       checkSpecialDate();
       initStaminaSystem();
