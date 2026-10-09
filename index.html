@@ -956,7 +956,11 @@
     };
 
     /* ==================== STAMINA SYSTEM ==================== */
-    let staminaData = { Torie: { stamina: 80, updated_at: new Date().toISOString() }, Jory: { stamina: 80, updated_at: new Date().toISOString() } };
+    // ★ 修改：staminaData 新增 starved_at 字段
+    let staminaData = {
+      Torie: { stamina: 80, updated_at: new Date().toISOString(), starved_at: null },
+      Jory:  { stamina: 80, updated_at: new Date().toISOString(), starved_at: null }
+    };
     let staminaTimer = null;
     let feedStarveTimer = null;
     const STAMINA_DECAY_PER_MIN = 0.1;
@@ -968,7 +972,12 @@
       if (error) { console.error("Stamina load error:", error); return; }
       if (data && data.length > 0) {
         data.forEach(row => {
-          staminaData[row.person] = { stamina: Number(row.stamina), updated_at: row.updated_at };
+          staminaData[row.person] = {
+            stamina: Number(row.stamina),
+            updated_at: row.updated_at,
+            // ★ 修改：加载 starved_at，兼容旧数据（数据库中可能没有此字段）
+            starved_at: row.starved_at || null
+          };
         });
       }
       applyOfflineDecay();
@@ -980,16 +989,31 @@
       ["Torie", "Jory"].forEach(person => {
         const lastUpdate = new Date(staminaData[person].updated_at).getTime();
         const minutesPassed = Math.max(0, (now - lastUpdate) / 60000);
+        const prevStamina = staminaData[person].stamina;
         const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
-        staminaData[person].stamina = Math.max(0, staminaData[person].stamina - decay);
+        const newStamina = Math.max(0, prevStamina - decay);
+        staminaData[person].stamina = newStamina;
         staminaData[person].updated_at = new Date().toISOString();
+
+        // ★ 修改：如果体力从 >0 衰减到 <=0，记录 starved_at
+        if (prevStamina > 0 && newStamina <= 0) {
+          staminaData[person].starved_at = new Date().toISOString();
+        }
+        // ★ 修改：兼容旧数据 —— 如果体力为0但没有 starved_at，用 updated_at 兜底
+        if (newStamina <= 0 && !staminaData[person].starved_at) {
+          staminaData[person].starved_at = staminaData[person].updated_at;
+        }
       });
     }
 
     async function saveStamina(person) {
       const val = staminaData[person];
       const { error } = await sb.from("freecard_stamina").upsert({
-        person, stamina: Math.round(val.stamina * 100) / 100, updated_at: val.updated_at
+        person,
+        stamina: Math.round(val.stamina * 100) / 100,
+        updated_at: val.updated_at,
+        // ★ 修改：持久化 starved_at
+        starved_at: val.starved_at
       }, { onConflict: 'person' });
       if (error) console.error("Stamina save error:", error);
     }
@@ -1021,23 +1045,24 @@
       return { final: Math.min(100, result), steps };
     }
 
-    /* ★ 修改2：重写唤醒成本计算 —— 归零后0~10h=1张，之后每3h+1张 */
+    /* ★ 修改：getReviveCost 使用 starved_at 计算绝食时长 */
     function getReviveCost(person) {
       const stamina = staminaData[person].stamina;
       if (stamina > 0) return 0;
-      const updatedAt = new Date(staminaData[person].updated_at).getTime();
-      const now = Date.now();
-      const hoursStarved = Math.max(0, (now - updatedAt) / (1000 * 60 * 60));
+      const starvedAt = staminaData[person].starved_at;
+      if (!starvedAt) return 1; // 兜底：如果没有 starved_at，最少1张
+      const hoursStarved = Math.max(0, (Date.now() - new Date(starvedAt).getTime()) / (1000 * 60 * 60));
       if (hoursStarved <= 10) return 1;
       const extraHours = hoursStarved - 10;
       const extra = Math.floor(extraHours / 3);
       return 1 + extra;
     }
 
+    /* ★ 修改：getStarvedDurationText 使用 starved_at 计算绝食时长 */
     function getStarvedDurationText(person) {
-      const updatedAt = new Date(staminaData[person].updated_at).getTime();
-      const now = Date.now();
-      const diffMs = now - updatedAt;
+      const starvedAt = staminaData[person].starved_at;
+      if (!starvedAt) return "0分钟"; // 兜底
+      const diffMs = Date.now() - new Date(starvedAt).getTime();
       const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -1101,8 +1126,14 @@
         let changed = false;
         ["Torie", "Jory"].forEach(person => {
           if (staminaData[person].stamina > 0) {
+            const prevStamina = staminaData[person].stamina;
             staminaData[person].stamina = Math.max(0, staminaData[person].stamina - STAMINA_DECAY_PER_MIN);
             changed = true;
+
+            // ★ 修改：在线衰减时，体力首次降至0则记录 starved_at
+            if (prevStamina > 0 && staminaData[person].stamina <= 0) {
+              staminaData[person].starved_at = new Date().toISOString();
+            }
           }
         });
         if (changed) {
@@ -1143,7 +1174,6 @@
       if (feedStarveTimer) { clearInterval(feedStarveTimer); feedStarveTimer = null; }
     }
 
-    /* ★ 修改2：绝食时预览只显示唤醒信息，唤醒后喂食才增加体力 */
     function updateFeedPreview() {
       const current = Math.max(0, Math.min(100, staminaData[feedTarget].stamina));
       const currentRound = Math.round(current);
@@ -1166,7 +1196,7 @@
         previewContainer.style.display = "none";
         selectRow.style.display = "none";
         resultEl.className = "feed-result warn";
-        resultEl.innerHTML = `💢 <b>${feedTarget}</b> 已绝食 ${durationText}！<br>唤醒需 <b>${reviveCost} 张</b>自由卡（仅唤醒，恢复至50%体力）<br><span style="font-size:11px;opacity:0.8">唤醒后可再次打开喂食界面正常补充体力</span>`;
+        resultEl.innerHTML = `💢 <b>${feedTarget}</b> 已绝食 ${durationText}！<br>唤醒需 <b>${reviveCost} 张</b>自由卡（仅唤醒，恢复至10%体力）<br><span style="font-size:11px;opacity:0.8">唤醒后可再次打开喂食界面正常补充体力</span>`;
         if (balance < reviveCost) {
           confirmBtn.disabled = true;
           confirmBtn.textContent = "余额不足";
@@ -1216,7 +1246,7 @@
       }
     }
 
-    /* ★ 修改2：唤醒只恢复到50%，不叠加喂食体力；唤醒和喂食分离 */
+    /* ★ 修改：唤醒后体力设为10%，并清除 starved_at */
     async function confirmFeed() {
       if (!feedTarget) return;
       const current = staminaData[feedTarget].stamina;
@@ -1246,14 +1276,16 @@
           confirmBtn.textContent = originalBtnText;
           return;
         }
-        // ★ 修改2：唤醒只恢复到50%，不额外增加体力
-        staminaData[feedTarget].stamina = 50;
+        // ★ 修改1：唤醒后体力设为10%
+        staminaData[feedTarget].stamina = 10;
         staminaData[feedTarget].updated_at = new Date().toISOString();
+        // ★ 修改2：唤醒成功后清除 starved_at
+        staminaData[feedTarget].starved_at = null;
         await saveStamina(feedTarget);
         updateStaminaUI();
         updateSpirits();
         spawnParticles(1);
-        showToast(`${feedTarget} 被唤醒了！体力恢复至 50%，可再次喂食补充`, "success");
+        showToast(`${feedTarget} 被唤醒了！体力恢复至 10%，可再次喂食补充`, "success");
         confirmBtn.disabled = false;
         confirmBtn.textContent = "确认喂食";
         closeFeedModal();
@@ -1322,7 +1354,12 @@
       sb.channel("stamina-realtime")
         .on("postgres_changes", { event: "*", schema: "public", table: "freecard_stamina" }, (payload) => {
           if (payload.new && payload.new.person) {
-            staminaData[payload.new.person] = { stamina: Number(payload.new.stamina), updated_at: payload.new.updated_at };
+            staminaData[payload.new.person] = {
+              stamina: Number(payload.new.stamina),
+              updated_at: payload.new.updated_at,
+              // ★ 修改：实时同步时也读取 starved_at
+              starved_at: payload.new.starved_at || null
+            };
             applyOfflineDecay();
             updateStaminaUI();
             updateSpirits();
