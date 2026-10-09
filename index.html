@@ -217,8 +217,10 @@
     .scale-net { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; padding: 6px; border-radius: var(--r-sm); background: var(--bg); border: 1px solid var(--border); }
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
     .history-header .section-title { margin: 0; }
-    .history-controls { display: flex; align-items: center; gap: 8px; }
+    .history-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .history-filter { width: auto; min-width: 90px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
+    /* ★ 新增：搜索框样式 */
+    .history-search { width: auto; min-width: 120px; flex: 1; max-width: 200px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 1; padding: 0 10px; }
     .history-count { font-size: 12px; font-weight: 700; color: var(--text-3); background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
     .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; position: relative; }
     .history-item:last-child { border-bottom: none; }
@@ -377,6 +379,9 @@
       .bank-sub-nav { gap: 8px; }
       .bank-sub-nav-btn { padding: 18px 8px; }
       .converter-type-grid { grid-template-columns: repeat(2, 1fr); }
+      /* ★ 新增：小屏下搜索框自适应 */
+      .history-controls { flex-wrap: wrap; }
+      .history-search { min-width: 100px; max-width: none; flex: 1 1 100%; order: 10; margin-top: 4px; }
     }
   </style>
 </head>
@@ -407,7 +412,6 @@
         <div class="feed-current-bar-track"><div class="feed-current-bar-fill" id="feedCurrentBar"></div></div>
         <span class="feed-current-pct" id="feedCurrentPct">80%</span>
       </div>
-      <!-- ★ 修改1：预计饿到零的倒计时 -->
       <div class="feed-starve-timer" id="feedStarveTimer" style="display:none">
         <span id="feedStarveLabel">预计饿到零</span>
         <span class="starve-time" id="feedStarveTime">--:--:--</span>
@@ -731,7 +735,6 @@
             <button id="converterSubmitBtn" class="submit-btn green" disabled>一键入账</button>
           </div>
 
-          <!-- ★ 修改3：重写的睡眠面板 -->
           <div id="bankSleepPanel" class="converter-unified-panel" style="display:none">
             <div class="converter-header">
               <h3 class="section-title" style="margin:0">😴 睡眠记录</h3>
@@ -880,6 +883,8 @@
           <div class="history-controls">
             <span id="historyCount" class="history-count">0条</span>
             <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
+            <!-- ★ 修改1：新增搜索框 -->
+            <input id="historySearch" class="history-search" type="search" placeholder="🔍 搜索原因/备注..." />
           </div>
         </div>
         <div id="historyList" class="history-list"></div>
@@ -901,6 +906,7 @@
 
     let allLogs = [], allProducts = [];
     let currentPeriod = "today", currentHistoryFilter = "all";
+    let currentHistorySearch = ""; // ★ 修改1：搜索关键词
     let currentPerspective = "torie";
     let bankPerson = "";
     let bankSection = "";
@@ -1015,13 +1021,16 @@
       return { final: Math.min(100, result), steps };
     }
 
+    /* ★ 修改2：重写唤醒成本计算 —— 归零后0~10h=1张，之后每3h+1张 */
     function getReviveCost(person) {
       const stamina = staminaData[person].stamina;
       if (stamina > 0) return 0;
       const updatedAt = new Date(staminaData[person].updated_at).getTime();
       const now = Date.now();
       const hoursStarved = Math.max(0, (now - updatedAt) / (1000 * 60 * 60));
-      const extra = Math.floor(hoursStarved / 24);
+      if (hoursStarved <= 10) return 1;
+      const extraHours = hoursStarved - 10;
+      const extra = Math.floor(extraHours / 3);
       return 1 + extra;
     }
 
@@ -1031,13 +1040,14 @@
       const diffMs = now - updatedAt;
       const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      if (days > 0) return `${days}天${hours}小时`;
-      return `${hours}小时`;
+      const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      if (days > 0) return `${days}天${hours}小时${mins}分`;
+      if (hours > 0) return `${hours}小时${mins}分`;
+      return `${mins}分钟`;
     }
 
-    /* ★ 修改1：计算距离饿到零的剩余时间 */
     function getTimeToZeroText(stamina) {
-      if (stamina <= 0) return null; // 已经为零
+      if (stamina <= 0) return null;
       const minutesLeft = stamina / STAMINA_DECAY_PER_MIN;
       const totalMinutes = Math.round(minutesLeft);
       const days = Math.floor(totalMinutes / (60 * 24));
@@ -1058,7 +1068,6 @@
       return `${p(futureDate.getMonth()+1)}/${p(futureDate.getDate())} ${p(futureDate.getHours())}:${p(futureDate.getMinutes())}`;
     }
 
-    /* ★ 修改1：更新喂食界面的饿到零倒计时 */
     function updateFeedStarveTimer() {
       if (!feedTarget) return;
       const timerEl = document.getElementById("feedStarveTimer");
@@ -1105,7 +1114,6 @@
         } else {
           updateSpirits(); 
         }
-        /* ★ 修改1：实时更新喂食界面的倒计时 */
         updateFeedStarveTimer();
       }, 60000);
     }
@@ -1124,9 +1132,8 @@
         el.classList.toggle("selected", el.dataset.cards === "1");
       });
       updateFeedPreview();
-      updateFeedStarveTimer(); /* ★ 修改1：打开时显示倒计时 */
+      updateFeedStarveTimer();
       document.getElementById("feedOverlay").classList.add("show");
-      /* ★ 修改1：开启秒级倒计时刷新（每分钟更新一次已够用） */
       if (feedStarveTimer) clearInterval(feedStarveTimer);
       feedStarveTimer = setInterval(updateFeedStarveTimer, 60000);
     }
@@ -1136,6 +1143,7 @@
       if (feedStarveTimer) { clearInterval(feedStarveTimer); feedStarveTimer = null; }
     }
 
+    /* ★ 修改2：绝食时预览只显示唤醒信息，唤醒后喂食才增加体力 */
     function updateFeedPreview() {
       const current = Math.max(0, Math.min(100, staminaData[feedTarget].stamina));
       const currentRound = Math.round(current);
@@ -1158,7 +1166,7 @@
         previewContainer.style.display = "none";
         selectRow.style.display = "none";
         resultEl.className = "feed-result warn";
-        resultEl.innerHTML = `💢 <b>${feedTarget}</b> 已经绝食 ${durationText}！<br>需要 <b>${reviveCost} 张</b>自由卡才能唤醒并恢复喂食。`;
+        resultEl.innerHTML = `💢 <b>${feedTarget}</b> 已绝食 ${durationText}！<br>唤醒需 <b>${reviveCost} 张</b>自由卡（仅唤醒，恢复至50%体力）<br><span style="font-size:11px;opacity:0.8">唤醒后可再次打开喂食界面正常补充体力</span>`;
         if (balance < reviveCost) {
           confirmBtn.disabled = true;
           confirmBtn.textContent = "余额不足";
@@ -1208,6 +1216,7 @@
       }
     }
 
+    /* ★ 修改2：唤醒只恢复到50%，不叠加喂食体力；唤醒和喂食分离 */
     async function confirmFeed() {
       if (!feedTarget) return;
       const current = staminaData[feedTarget].stamina;
@@ -1227,7 +1236,7 @@
           confirmBtn.textContent = originalBtnText;
           return;
         }
-        const reason = `💢 唤醒绝食的${feedTarget}（绝食惩罚）`;
+        const reason = `💢 唤醒绝食的${feedTarget}（绝食${getStarvedDurationText(feedTarget)}，花费${reviveCost}张）`;
         const { error: logError } = await sb.from("freecard_log").insert({
           operator: feedTarget, change_type: "减少", card_num: reviveCost, reason: reason
         });
@@ -1237,13 +1246,14 @@
           confirmBtn.textContent = originalBtnText;
           return;
         }
+        // ★ 修改2：唤醒只恢复到50%，不额外增加体力
         staminaData[feedTarget].stamina = 50;
         staminaData[feedTarget].updated_at = new Date().toISOString();
         await saveStamina(feedTarget);
         updateStaminaUI();
         updateSpirits();
         spawnParticles(1);
-        showToast(`${feedTarget} 被唤醒了！体力恢复至 50%`, "success");
+        showToast(`${feedTarget} 被唤醒了！体力恢复至 50%，可再次喂食补充`, "success");
         confirmBtn.disabled = false;
         confirmBtn.textContent = "确认喂食";
         closeFeedModal();
@@ -1705,7 +1715,11 @@
         });
       });
     }
-    function setupHistoryFilter() { document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();}); }
+    /* ★ 修改1：搜索框事件绑定 */
+    function setupHistoryFilter() {
+      document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();});
+      document.getElementById("historySearch").addEventListener("input",(e)=>{currentHistorySearch=e.target.value.trim().toLowerCase();renderHistory();});
+    }
 
     function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
     function getStartOfMonth() { const d=new Date(); d.setHours(0,0,0,0); d.setDate(1); return d; }
@@ -1777,7 +1791,6 @@
     function bar(name,val,max,cls) { return `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${max===0?0:(val/max)*100}%"></div></div><div class="bar-number">${val}</div></div>`; }
 
     /* ==================== HISTORY ==================== */
-    /* ★ 修改2：流水明细筛选器增加"今日"选项 */
     function updateHistoryFilterOptions() {
       const select=document.getElementById("historyFilter"), months=new Set();
       allLogs.forEach((l)=>{const d=new Date(l.created_at);months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);});
@@ -1813,6 +1826,7 @@
       document.querySelectorAll(".menu-btn.active").forEach(b => b.classList.remove("active"));
     }
 
+    /* ★ 修改1：renderHistory 增加搜索过滤逻辑 */
     function renderHistory() {
       const container=document.getElementById("historyList");
       const countBadge=document.getElementById("historyCount");
@@ -1820,7 +1834,6 @@
       if (currentHistoryFilter === "all") {
         logs = allLogs;
       } else if (currentHistoryFilter === "today") {
-        /* ★ 修改2：支持"今日"筛选 */
         const todayStart = getStartOfToday();
         logs = allLogs.filter(l => new Date(l.created_at) >= todayStart);
       } else if (currentHistoryFilter === "week") {
@@ -1832,9 +1845,23 @@
           return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;
         });
       }
+
+      // ★ 修改1：在时间筛选基础上叠加搜索过滤
+      if (currentHistorySearch) {
+        const kw = currentHistorySearch;
+        logs = logs.filter(l => {
+          const reason = (l.reason || "").toLowerCase();
+          const note = (l.note || "").toLowerCase();
+          const operator = (l.operator || "").toLowerCase();
+          return reason.includes(kw) || note.includes(kw) || operator.includes(kw);
+        });
+      }
+
       if (countBadge) countBadge.textContent = `${logs.length}条`;
       if(!logs.length){
-        container.innerHTML='<div class="empty-history">暂无记录 🍃</div>';
+        container.innerHTML = currentHistorySearch
+          ? '<div class="empty-history">没有匹配的记录 🔍</div>'
+          : '<div class="empty-history">暂无记录 🍃</div>';
         return;
       }
       container.innerHTML=logs.map((l)=>{
@@ -2123,17 +2150,7 @@
       });
     }
 
-    /* ==================== ★ 修改3：完全重写的睡眠换算器 ==================== */
-    /*
-     * 规则优先级：
-     * 1. 1点后上床 → 无论如何扣 3 张（不管有没有手表）
-     * 2. 1点前上床（0点前 / 0~1点）：
-     *    - 没戴手表（留空）→ 不奖不扣
-     *    - 有评分：
-     *      - 0点前：≥90 → +2 | 70~89 → 0 | <70 → -3
-     *      - 0~1点：≥70 → 0 | <70 → -3
-     * 备注：同一晚最多扣一次3卡，不会叠加
-     */
+    /* ==================== SLEEP CONVERTER ==================== */
     function getBedtimeLabel(val) {
       if (val === "before_midnight") return "0点前";
       if (val === "midnight_to_1am") return "0:00~1:00";
@@ -2142,44 +2159,20 @@
     }
 
     function getSleepOutcome(bedtime, scoreValue, hasScore) {
-      // 优先级1：1点后上床 → 无论如何扣3张
       if (bedtime === "after_1am") {
-        return {
-          change: -3,
-          text: "🚨 1点后上床，扣 3 张",
-          kind: "punish"
-        };
+        return { change: -3, text: "🚨 1点后上床，扣 3 张", kind: "punish" };
       }
-
-      // 优先级2：1点前，判断是否戴了手表
       if (!hasScore) {
-        // 没戴手表 → 不奖不扣
-        return {
-          change: 0,
-          text: "⌚ 没戴手表，不奖不扣",
-          kind: "neutral"
-        };
+        return { change: 0, text: "⌚ 没戴手表，不奖不扣", kind: "neutral" };
       }
-
-      // 有评分，根据上床时间段判断
       if (bedtime === "before_midnight") {
-        // 0点前上床
-        if (scoreValue >= 90) {
-          return { change: 2, text: `🌙 0点前上床 + 评分 ${scoreValue} ≥ 90，奖励 2 张`, kind: "reward" };
-        } else if (scoreValue >= 70) {
-          return { change: 0, text: `⚖️ 0点前上床 + 评分 ${scoreValue}（70~89），不奖不扣`, kind: "neutral" };
-        } else {
-          return { change: -3, text: `❌ 0点前上床 + 评分 ${scoreValue} < 70，扣 3 张`, kind: "punish" };
-        }
+        if (scoreValue >= 90) return { change: 2, text: `🌙 0点前上床 + 评分 ${scoreValue} ≥ 90，奖励 2 张`, kind: "reward" };
+        else if (scoreValue >= 70) return { change: 0, text: `⚖️ 0点前上床 + 评分 ${scoreValue}（70~89），不奖不扣`, kind: "neutral" };
+        else return { change: -3, text: `❌ 0点前上床 + 评分 ${scoreValue} < 70，扣 3 张`, kind: "punish" };
       } else if (bedtime === "midnight_to_1am") {
-        // 0:00~1:00 上床
-        if (scoreValue >= 70) {
-          return { change: 0, text: `⚖️ 0~1点上床 + 评分 ${scoreValue} ≥ 70，不奖不扣`, kind: "neutral" };
-        } else {
-          return { change: -3, text: `❌ 0~1点上床 + 评分 ${scoreValue} < 70，扣 3 张`, kind: "punish" };
-        }
+        if (scoreValue >= 70) return { change: 0, text: `⚖️ 0~1点上床 + 评分 ${scoreValue} ≥ 70，不奖不扣`, kind: "neutral" };
+        else return { change: -3, text: `❌ 0~1点上床 + 评分 ${scoreValue} < 70，扣 3 张`, kind: "punish" };
       }
-
       return { change: 0, text: "不加不减", kind: "neutral" };
     }
 
@@ -2195,18 +2188,14 @@
         const scoreRaw = score.value.trim();
         const hasScore = scoreRaw !== "" && !isNaN(parseInt(scoreRaw));
         const scoreValue = hasScore ? parseInt(scoreRaw) : null;
-
-        // 验证：有评分时检查范围
         if (hasScore && (scoreValue < 0 || scoreValue > 100)) {
           result.style.display = "none";
           btn.disabled = true;
           return;
         }
-
         const outcome = getSleepOutcome(bedtimeVal, scoreValue, hasScore);
         result.style.display = "block";
         result.textContent = outcome.text;
-        
         if (outcome.kind === "punish") {
           result.classList.add("danger");
           btn.className = "submit-btn danger";
@@ -2233,17 +2222,13 @@
         const scoreRaw = score.value.trim();
         const hasScore = scoreRaw !== "" && !isNaN(parseInt(scoreRaw));
         const scoreValue = hasScore ? parseInt(scoreRaw) : null;
-
         if (hasScore && (scoreValue < 0 || scoreValue > 100)) return;
-
         const outcome = getSleepOutcome(bedtimeVal, scoreValue, hasScore);
         const bedtimeLabel = getBedtimeLabel(bedtimeVal);
         const scoreText = hasScore ? `Apple Watch 评分 ${scoreValue} 分` : "未佩戴手表";
-        
         btn.disabled = true; 
         const originalText = btn.textContent;
         btn.textContent = "记录中...";
-
         if (outcome.change === 0) {
           const { error } = await sb.from("freecard_log").insert({
             operator: person.value, change_type: "增加", card_num: 0,
@@ -2273,7 +2258,6 @@
           showToast(`睡眠惩罚：扣除 ${Math.abs(outcome.change)} 张自由卡`, "error");
           if(navigator.vibrate) navigator.vibrate(200);
         }
-
         bedtime.value = "before_midnight";
         score.value = "";
         result.style.display = "none";
