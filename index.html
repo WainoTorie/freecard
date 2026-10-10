@@ -952,7 +952,7 @@
       starved:  { texts: ["不想理你...","已经绝食了","哄不好的那种","哼！走开！","心碎了..."], emoji: "💢" }
     };
 
-    /* ==================== STAMINA SYSTEM (FIXED) ==================== */
+    /* ==================== STAMINA SYSTEM ==================== */
     let staminaData = {
       Torie: { stamina: 80, updated_at: new Date().toISOString(), starved_at: null },
       Jory:  { stamina: 80, updated_at: new Date().toISOString(), starved_at: null }
@@ -962,94 +962,93 @@
     const STAMINA_DECAY_PER_MIN = 0.1;
     const STAMINA_LOW_THRESHOLD = 20;
     const FEED_BONUSES = [50, 30, 20];
-    
-    // ★ FIX: 初始化锁，防止 Realtime 在离线衰减完成前覆盖数据
-    let isInitializingStamina = true; 
-    // ★ FIX: 记录正在保存的状态，防止并发写入冲突
-    let savingLock = { Torie: false, Jory: false };
 
     async function loadStamina() {
-      isInitializingStamina = true;
       const { data, error } = await sb.from("freecard_stamina").select("*");
-      if (error) { console.error("Stamina load error:", error); isInitializingStamina = false; return; }
-      if (data && data.length > 0) {
+      if (error) {
+        console.error("Stamina load error:", error);
+        showToast("宠物体力读取失败，请检查网络后刷新", "error");
+        return;
+      }
+
+      if (Array.isArray(data)) {
         data.forEach(row => {
-          let starvedAt = row.starved_at || null;
+          if (!row || !["Torie", "Jory"].includes(row.person)) return;
+          let starvedAt = row.starved_at;
           if (starvedAt === "" || starvedAt === "null") starvedAt = null;
+          const parsedStamina = Number(row.stamina);
+          const parsedUpdated = row.updated_at && Number.isFinite(new Date(row.updated_at).getTime())
+            ? new Date(row.updated_at).toISOString()
+            : new Date().toISOString();
           staminaData[row.person] = {
-            stamina: Number(row.stamina),
-            updated_at: row.updated_at,
-            starved_at: starvedAt
+            stamina: Number.isFinite(parsedStamina) ? Math.max(0, Math.min(100, parsedStamina)) : 80,
+            updated_at: parsedUpdated,
+            starved_at: starvedAt && Number.isFinite(new Date(starvedAt).getTime())
+              ? new Date(starvedAt).toISOString() : null
           };
         });
       }
-      // ★ FIX: 离线衰减后，必须等待保存完成再解锁
+
       await applyOfflineDecay();
       updateStaminaUI();
-      // 给 Realtime 一点缓冲时间，确保数据库已更新
-      setTimeout(() => { isInitializingStamina = false; }, 1500);
+      updateSpirits();
     }
 
+    // 体力归零时记录“实际归零时刻”，不能用刷新时刻代替。
+    // 否则 starved_at 为空的旧记录每次刷新都会被重置成“绝食 0 分钟”。
     async function applyOfflineDecay() {
       const now = Date.now();
-      const savePromises = [];
-      
+      const toSave = [];
+
       ["Torie", "Jory"].forEach(person => {
-        const lastUpdate = new Date(staminaData[person].updated_at).getTime();
-        const minutesPassed = Math.max(0, (now - lastUpdate) / 60000);
-        const prevStamina = staminaData[person].stamina;
+        const val = staminaData[person];
+        const lastUpdate = new Date(val.updated_at).getTime();
+        const safeLastUpdate = Number.isFinite(lastUpdate) ? Math.min(lastUpdate, now) : now;
+        const prevStamina = Math.max(0, Math.min(100, Number(val.stamina) || 0));
+        const minutesPassed = Math.max(0, (now - safeLastUpdate) / 60000);
         const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
         const newStamina = Math.max(0, prevStamina - decay);
-        
-        let needsSave = false;
-        
-        // 只有当变化超过阈值才认为需要更新
-        if (Math.abs(newStamina - prevStamina) > 0.01) {
-          needsSave = true;
-        }
-        
-        staminaData[person].stamina = newStamina;
-        staminaData[person].updated_at = new Date().toISOString();
+        let changed = false;
 
-        // ★ FIX: 关键逻辑 - 如果体力从 >0 衰减到 <=0，必须记录 starved_at
         if (prevStamina > 0 && newStamina <= 0) {
-          staminaData[person].starved_at = new Date().toISOString();
-          needsSave = true;
+          // 用上次保存时刻 + 剩余体力所需衰减时间，得到实际归零时刻。
+          const zeroAt = safeLastUpdate + (prevStamina / STAMINA_DECAY_PER_MIN) * 60000;
+          val.starved_at = new Date(Math.min(zeroAt, now)).toISOString();
+          changed = true;
+        } else if (newStamina <= 0 && !val.starved_at) {
+          // 兼容旧数据：旧版若已把体力保存为 0，却没保存 starved_at，
+          // 最可信的回退值是原始 updated_at；绝不能先把 updated_at 改成现在。
+          val.starved_at = new Date(safeLastUpdate).toISOString();
+          changed = true;
         }
-        // ★ FIX: 兼容旧数据 —— 如果体力为0但没有 starved_at，用 updated_at 兜底
-        else if (newStamina <= 0 && !staminaData[person].starved_at) {
-          staminaData[person].starved_at = staminaData[person].updated_at;
-          needsSave = true;
+
+        if (Math.abs(newStamina - prevStamina) > 0.001) {
+          val.stamina = newStamina;
+          changed = true;
         }
-        
-        if (needsSave) {
-          savePromises.push(saveStamina(person));
+
+        // 有体力衰减时才更新时间；已经绝食的宠物不再不断改写 updated_at。
+        if (prevStamina > 0 && Math.abs(newStamina - prevStamina) > 0.001) {
+          val.updated_at = new Date(now).toISOString();
+          changed = true;
         }
+        if (changed) toSave.push(person);
       });
-      
-      // ★ FIX: 等待所有保存操作完成
-      if (savePromises.length > 0) {
-        await Promise.all(savePromises);
-      }
+
+      // 等待写入结束，避免页面初始化期间写入和 realtime 回调互相覆盖。
+      await Promise.all([...new Set(toSave)].map(person => saveStamina(person)));
     }
 
     async function saveStamina(person) {
-      // ★ FIX: 简单的锁机制，防止同一人的并发保存
-      if (savingLock[person]) return;
-      savingLock[person] = true;
-      
-      try {
-        const val = staminaData[person];
-        const { error } = await sb.from("freecard_stamina").upsert({
-          person,
-          stamina: Math.round(val.stamina * 100) / 100,
-          updated_at: val.updated_at,
-          starved_at: val.starved_at || null
-        }, { onConflict: 'person' });
-        if (error) console.error(`Stamina save error (${person}):`, error);
-      } finally {
-        savingLock[person] = false;
-      }
+      const val = staminaData[person];
+      const { error } = await sb.from("freecard_stamina").upsert({
+        person,
+        stamina: Math.round(val.stamina * 100) / 100,
+        updated_at: val.updated_at,
+        // ★ FIX: 确保 starved_at 为 null 时传 null 而非 undefined
+        starved_at: val.starved_at || null
+      }, { onConflict: 'person' });
+      if (error) console.error("Stamina save error:", error);
     }
 
     function getStaminaColor(val) {
@@ -1154,34 +1153,44 @@
 
     function startStaminaTimer() {
       if (staminaTimer) clearInterval(staminaTimer);
-      staminaTimer = setInterval(() => {
-        let changed = false;
+      staminaTimer = setInterval(async () => {
+        const now = Date.now();
+        const toSave = [];
+
         ["Torie", "Jory"].forEach(person => {
-          if (staminaData[person].stamina > 0) {
-            const prevStamina = staminaData[person].stamina;
-            staminaData[person].stamina = Math.max(0, staminaData[person].stamina - STAMINA_DECAY_PER_MIN);
-            
-            // ★ FIX: 在线衰减时，体力首次降至0则记录 starved_at
-            if (prevStamina > 0 && staminaData[person].stamina <= 0) {
-              staminaData[person].starved_at = new Date().toISOString();
-              changed = true; // 强制标记为已更改
-            } else {
-              changed = true;
+          const val = staminaData[person];
+          if (val.stamina <= 0) {
+            // 已经绝食后绝不重置 starved_at 或 updated_at。
+            if (!val.starved_at) {
+              const fallback = val.updated_at && Number.isFinite(new Date(val.updated_at).getTime())
+                ? new Date(val.updated_at).toISOString() : new Date(now).toISOString();
+              val.starved_at = fallback;
+              toSave.push(person);
             }
+            return;
           }
+
+          const lastUpdate = new Date(val.updated_at).getTime();
+          const safeLastUpdate = Number.isFinite(lastUpdate) ? Math.min(lastUpdate, now) : now;
+          const minutesPassed = Math.max(0, (now - safeLastUpdate) / 60000);
+          if (minutesPassed <= 0) return;
+
+          const prevStamina = val.stamina;
+          const newStamina = Math.max(0, prevStamina - minutesPassed * STAMINA_DECAY_PER_MIN);
+          if (newStamina <= 0) {
+            const zeroAt = safeLastUpdate + (prevStamina / STAMINA_DECAY_PER_MIN) * 60000;
+            val.starved_at = new Date(Math.min(zeroAt, now)).toISOString();
+          }
+          val.stamina = newStamina;
+          val.updated_at = new Date(now).toISOString();
+          toSave.push(person);
         });
-        
-        if (changed) {
-          ["Torie", "Jory"].forEach(p => { staminaData[p].updated_at = new Date().toISOString(); });
-          updateStaminaUI();
-          updateSpirits();
-          saveStamina("Torie");
-          saveStamina("Jory");
-        } else {
-          updateSpirits(); 
-        }
+
+        updateStaminaUI();
+        updateSpirits();
         updateFeedStarveTimer();
-      }, 60000);
+        await Promise.all([...new Set(toSave)].map(person => saveStamina(person)));
+      }, 10000);
     }
 
     /* ==================== FEED MODAL ==================== */
@@ -1201,6 +1210,7 @@
       updateFeedStarveTimer();
       document.getElementById("feedOverlay").classList.add("show");
       if (feedStarveTimer) clearInterval(feedStarveTimer);
+      // ★ FIX: 缩短刷新间隔到10秒，让绝食倒计时更及时
       feedStarveTimer = setInterval(updateFeedStarveTimer, 10000);
     }
 
@@ -1310,6 +1320,7 @@
           confirmBtn.textContent = originalBtnText;
           return;
         }
+        // ★ FIX: 唤醒后体力设为10%，并清除 starved_at
         staminaData[feedTarget].stamina = 10;
         staminaData[feedTarget].updated_at = new Date().toISOString();
         staminaData[feedTarget].starved_at = null;
@@ -1350,6 +1361,8 @@
       }
       staminaData[feedTarget].stamina = final;
       staminaData[feedTarget].updated_at = new Date().toISOString();
+      // ★ FIX: 正常喂食不清除 starved_at（因为此时 stamina > 0，starved_at 本应为 null）
+      // 但如果之前是绝食状态通过其他方式恢复了体力（理论上不应发生），这里也做清理
       staminaData[feedTarget].starved_at = null;
       await saveStamina(feedTarget);
       updateStaminaUI();
@@ -1384,49 +1397,29 @@
     function initStaminaSystem() {
       setupFeedModal();
       loadStamina().then(() => { startStaminaTimer(); updateSpirits(); });
-      
-      // ★ FIX: 改进的 Realtime 订阅逻辑
       sb.channel("stamina-realtime")
         .on("postgres_changes", { event: "*", schema: "public", table: "freecard_stamina" }, (payload) => {
-          // 1. 初始化期间忽略所有推送
-          if (isInitializingStamina) return;
-          
           if (payload.new && payload.new.person) {
+            // ★ FIX: 安全解析 Realtime 推送的 starved_at
+            let starvedAt = payload.new.starved_at || null;
+            if (starvedAt === "" || starvedAt === "null") starvedAt = null;
             const person = payload.new.person;
-            
-            // 2. 如果本地正在保存该人的数据，忽略推送（避免自己写的数据又推回来覆盖）
-            if (savingLock[person]) return;
-            
-            let remoteStarvedAt = payload.new.starved_at || null;
-            if (remoteStarvedAt === "" || remoteStarvedAt === "null") remoteStarvedAt = null;
-            
-            const localData = staminaData[person];
-            const remoteUpdatedAt = new Date(payload.new.updated_at).getTime();
-            const localUpdatedAt = new Date(localData.updated_at).getTime();
-            
-            // 3. 核心合并策略：
-            // - 如果远程时间明显旧于本地，忽略
-            // - 如果本地已经是绝食状态(starved_at有值)，绝不接受远程的 null
-            const shouldIgnoreOlder = remoteUpdatedAt < localUpdatedAt - 5000; // 5秒容差
-            const isLocalStarved = localData.stamina <= 0 && localData.starved_at;
-            const isRemoteClearingStarve = isLocalStarved && !remoteStarvedAt;
-            
-            if (shouldIgnoreOlder || isRemoteClearingStarve) {
-              console.log(`[Stamina RT] Ignored update for ${person}: older=${shouldIgnoreOlder}, clearingStarve=${isRemoteClearingStarve}`);
-              return;
+            const incomingUpdated = payload.new.updated_at ? new Date(payload.new.updated_at).getTime() : 0;
+            const currentUpdated = staminaData[person]?.updated_at ? new Date(staminaData[person].updated_at).getTime() : 0;
+            // 忽略较旧的 realtime 消息，避免异步写入回声覆盖当前状态。
+            if (incomingUpdated >= currentUpdated) {
+              staminaData[person] = {
+                stamina: Math.max(0, Math.min(100, Number(payload.new.stamina) || 0)),
+                updated_at: payload.new.updated_at,
+                starved_at: starvedAt && Number.isFinite(new Date(starvedAt).getTime())
+                  ? new Date(starvedAt).toISOString() : null
+              };
+              applyOfflineDecay().then(() => {
+                updateStaminaUI();
+                updateSpirits();
+                updateFeedStarveTimer();
+              });
             }
-            
-            staminaData[person] = {
-              stamina: Number(payload.new.stamina),
-              updated_at: payload.new.updated_at,
-              starved_at: remoteStarvedAt
-            };
-            
-            // 收到有效推送后，仍需检查离线衰减（以防推送的是旧快照）
-            applyOfflineDecay();
-            updateStaminaUI();
-            updateSpirits();
-            updateFeedStarveTimer();
           }
         })
         .subscribe();
@@ -2554,9 +2547,12 @@
         const revertedStamina = Math.max(0, beforeStamina - decay);
         staminaData[person].stamina = revertedStamina;
         staminaData[person].updated_at = new Date().toISOString();
+        // ★ FIX: 删除喂食记录后正确处理 starved_at
         if (revertedStamina <= 0) {
+          // 回退后体力为0，需要设置 starved_at（使用原始记录的创建时间作为绝食起点）
           staminaData[person].starved_at = log.created_at;
         } else {
+          // 回退后体力 > 0，清除 starved_at
           staminaData[person].starved_at = null;
         }
         await saveStamina(person);
@@ -2604,4 +2600,4 @@
     });
   </script>
 </body>
-</html>
+</html>宠物喂食的机制还是有问题，比如Torie 的宠物已经进入绝食状态了，我留在了网站页面等了 5 分钟，上面就显示绝食 5 分钟。当我刷新网页时，再一次变成了 绝食 0 分钟。你能不能把真正的问题揪出来（实在不行那所有关于宠物喂食这一部分的代码就重写），然后修改后完整代码发给我
