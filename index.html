@@ -69,14 +69,12 @@
     .state-warning .pet-svg { animation: petShake 0.4s ease-in-out infinite; }
     .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
     .state-sleepy .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.8; }
-    .state-starved .pet-svg { transform: translateX(-10px) scale(0.85) rotate(-10deg); opacity: 0.6; filter: grayscale(0.8); animation: petHide 3s ease-in-out infinite; }
     .pet-clicked { animation: petJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
     @keyframes petBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
     @keyframes petSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
     @keyframes petShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
     @keyframes petBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
     @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-15px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
-    @keyframes petHide { 0%, 100% { transform: translateX(-10px) scale(0.85) rotate(-10deg); } 50% { transform: translateX(-15px) scale(0.8) rotate(-15deg); } }
     .pet-svg * { transition: all 0.4s ease; }
     .bunny-ear-l { transform-origin: 34px 44px; }
     .bunny-ear-r { transform-origin: 66px 44px; }
@@ -88,66 +86,8 @@
     .zzz { opacity: 0; transition: all 0.3s; }
     .state-sleepy .zzz { opacity: 1; animation: zzzFloat 2s ease-in-out infinite; }
     @keyframes zzzFloat { 0%,100% { transform: translateY(0); opacity: 0.7; } 50% { transform: translateY(-6px); opacity: 1; } }
-    .anger-mark { opacity: 0; transition: all 0.3s; transform-origin: center; }
-    .state-starved .anger-mark { opacity: 1; animation: angerPulse 1s ease-in-out infinite; }
-    @keyframes angerPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
     .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
-    .stamina-wrap { margin-top: 8px; display: flex; align-items: center; gap: 6px; justify-content: center; }
-    .stamina-track { width: 60px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
-    .stamina-fill { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(0.22,1,0.36,1), background 0.3s; }
-    .stamina-fill.high { background: var(--green); }
-    .stamina-fill.mid { background: var(--jory); }
-    .stamina-fill.low { background: var(--red); }
-    .feed-btn { border: none; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; font-size: 14px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; line-height: 1; padding: 0; }
-    .feed-btn:active { transform: scale(0.85); background: var(--border); }
-    .feed-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .feed-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-    .feed-overlay.show { opacity: 1; pointer-events: auto; }
-    .feed-modal { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(340px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); }
-    .feed-overlay.show .feed-modal { transform: scale(1); }
-    .feed-modal-header { text-align: center; margin-bottom: 20px; }
-    .feed-modal-pet { font-size: 40px; display: block; margin-bottom: 6px; }
-    .feed-modal-title { font-size: 18px; font-weight: 800; color: var(--text-1); }
-    .feed-current { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding: 14px; background: var(--bg); border-radius: var(--r-md); border: 1px solid var(--border); }
-    .feed-current-label { font-size: 12px; font-weight: 600; color: var(--text-2); white-space: nowrap; }
-    .feed-current-bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; min-width: 0; }
-    .feed-current-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s; }
-    .feed-current-pct { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 36px; text-align: right; }
-    .feed-select-row { margin-bottom: 16px; }
-    .feed-select-label { font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; display: block; }
-    .feed-select-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .feed-card-opt { padding: 12px 6px; border: 2px solid var(--border); border-radius: var(--r-md); background: var(--card); cursor: pointer; text-align: center; transition: all 0.2s; }
-    .feed-card-opt:hover { border-color: var(--text-3); }
-    .feed-card-opt.selected { border-color: var(--green); background: rgba(52,199,89,0.06); }
-    .feed-card-opt .fco-num { font-size: 22px; font-weight: 800; color: var(--text-1); display: block; }
-    .feed-card-opt .fco-label { font-size: 11px; color: var(--text-3); font-weight: 600; }
-    .feed-card-opt .fco-cost { font-size: 11px; color: var(--red); font-weight: 700; margin-top: 2px; }
-    .feed-preview { padding: 14px; background: var(--bg); border-radius: var(--r-md); border: 1px solid var(--border); margin-bottom: 20px; }
-    .feed-preview-title { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 10px; }
-    .feed-preview-steps { display: flex; flex-direction: column; gap: 6px; }
-    .feed-step { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); }
-    .feed-step-arrow { color: var(--text-3); font-size: 11px; flex-shrink: 0; }
-    .feed-step-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; min-width: 0; }
-    .feed-step-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s, background 0.3s; }
-    .feed-step-val { font-weight: 800; font-variant-numeric: tabular-nums; min-width: 36px; text-align: right; font-size: 13px; }
-    .feed-step-val.highlight { color: var(--green); }
-    .feed-step-bonus { font-size: 11px; color: var(--green); font-weight: 700; min-width: 36px; flex-shrink: 0; }
-    .feed-result { text-align: center; padding: 10px; border-radius: var(--r-sm); margin-bottom: 16px; font-size: 13px; font-weight: 700; }
-    .feed-result.ok { background: rgba(52,199,89,0.08); color: var(--green); border: 1px solid rgba(52,199,89,0.15); }
-    .feed-result.warn { background: rgba(255,59,48,0.08); color: var(--red); border: 1px solid rgba(255,59,48,0.15); }
-    .feed-result.full { background: rgba(0,122,255,0.08); color: var(--torie); border: 1px solid rgba(0,122,255,0.15); }
-    .feed-actions { display: flex; gap: 8px; }
-    .feed-btn-cancel { flex: 1; height: 42px; border: none; border-radius: var(--r-sm); background: var(--bg); color: var(--text-2); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; }
-    .feed-btn-confirm { flex: 1; height: 42px; border: none; border-radius: var(--r-sm); background: var(--green); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-    .feed-btn-confirm:active { transform: scale(0.96); opacity: 0.9; }
-    .feed-btn-confirm:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
-    .feed-btn-cancel:active { transform: scale(0.96); }
-    .feed-starve-timer { margin-top: 8px; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); text-align: center; font-size: 13px; color: var(--text-2); font-weight: 600; line-height: 1.5; }
-    .feed-starve-timer .starve-time { font-size: 18px; font-weight: 800; color: var(--jory); display: block; margin-top: 2px; font-variant-numeric: tabular-nums; }
-    .feed-starve-timer.danger .starve-time { color: var(--red); }
-    .feed-starve-timer.dead { border-color: rgba(255,59,48,0.2); background: rgba(255,59,48,0.05); }
-    .feed-starve-timer.dead .starve-time { color: var(--red); font-size: 14px; }
     .summary-card { background: var(--card); border: 1px solid var(--border); }
     .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     .summary-icon { font-size: 20px; }
@@ -398,54 +338,6 @@
     </div>
   </div>
 
-  <!-- === FEED MODAL === -->
-  <div id="feedOverlay" class="feed-overlay">
-    <div class="feed-modal">
-      <div class="feed-modal-header">
-        <span class="feed-modal-pet" id="feedModalPet">🦉</span>
-        <div class="feed-modal-title" id="feedModalTitle">喂食 Torie</div>
-      </div>
-      <div class="feed-current">
-        <span class="feed-current-label">当前体力</span>
-        <div class="feed-current-bar-track"><div class="feed-current-bar-fill" id="feedCurrentBar"></div></div>
-        <span class="feed-current-pct" id="feedCurrentPct">80%</span>
-      </div>
-      <div class="feed-starve-timer" id="feedStarveTimer" style="display:none">
-        <span id="feedStarveLabel">预计饿到零</span>
-        <span class="starve-time" id="feedStarveTime">--:--:--</span>
-      </div>
-      <div class="feed-select-row">
-        <span class="feed-select-label">选择喂食张数</span>
-        <div class="feed-select-cards" id="feedSelectCards">
-          <div class="feed-card-opt selected" data-cards="1">
-            <span class="fco-num">1</span>
-            <span class="fco-label">张自由卡</span>
-            <span class="fco-cost">+50% 体力</span>
-          </div>
-          <div class="feed-card-opt" data-cards="2">
-            <span class="fco-num">2</span>
-            <span class="fco-label">张自由卡</span>
-            <span class="fco-cost">+80% 体力</span>
-          </div>
-          <div class="feed-card-opt" data-cards="3">
-            <span class="fco-num">3</span>
-            <span class="fco-label">张自由卡</span>
-            <span class="fco-cost">+100% 体力</span>
-          </div>
-        </div>
-      </div>
-      <div class="feed-preview" id="feedPreview">
-        <div class="feed-preview-title">📈 喂食预览</div>
-        <div class="feed-preview-steps" id="feedPreviewSteps"></div>
-      </div>
-      <div class="feed-result ok" id="feedResult"></div>
-      <div class="feed-actions">
-        <button class="feed-btn-cancel" id="feedCancelBtn">取消</button>
-        <button class="feed-btn-confirm" id="feedConfirmBtn">确认喂食</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Universal Converter Ratio Modal -->
   <div id="converterRatioModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
@@ -583,22 +475,15 @@
               <path class="sleepy-eye" d="M54 45 Q62 48 70 45" style="display:none" />
               <path class="sad-eye" d="M30 48 Q38 44 46 48" style="display:none" />
               <path class="sad-eye" d="M54 48 Q62 44 70 48" style="display:none" />
-              <path class="angry-eye" d="M30 42 L46 46" stroke-width="3" style="display:none" />
-              <path class="angry-eye" d="M70 42 L54 46" stroke-width="3" style="display:none" />
               <path d="M50 52 L46 58 L54 58 Z" fill="var(--jory)" stroke="var(--jory)" />
               <path d="M25 55 C15 60, 15 75, 25 80" />
               <path d="M75 55 C85 60, 85 75, 75 80" />
               <path class="sweat" d="M75 25 C75 25, 80 30, 80 35 C80 38, 75 38, 75 35 C75 30, 75 25, 75 25 Z" fill="var(--torie)" stroke="none" />
               <text class="zzz" x="72" y="22" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
-              <path class="anger-mark" d="M75 15 L85 25 M85 15 L75 25" stroke="var(--red)" stroke-width="3" stroke-linecap="round" />
             </svg>
           </div>
           <div class="spirit-name">Torie</div>
           <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
-          <div class="stamina-wrap">
-            <div class="stamina-track"><div class="stamina-fill high" id="staminaBarTorie" style="width:80%"></div></div>
-            <button class="feed-btn" id="feedBtnTorie" title="喂食">🍖</button>
-          </div>
         </div>
 
         <!-- Jory Pet -->
@@ -618,8 +503,6 @@
               <path class="sleepy-eye" d="M56 62 Q60 64 64 62" style="display:none" />
               <path class="sad-eye" d="M37 64 Q40 60 43 64" style="display:none" />
               <path class="sad-eye" d="M57 64 Q60 60 63 64" style="display:none" />
-              <path class="angry-eye" d="M36 58 L44 62" stroke-width="2.5" style="display:none" />
-              <path class="angry-eye" d="M64 58 L56 62" stroke-width="2.5" style="display:none" />
               <circle cx="50" cy="68" r="1.5" fill="var(--red)" stroke="none" opacity="0.6" />
               <path d="M47 71 Q50 73 53 71" stroke-width="1.5" />
               <circle cx="32" cy="68" r="4.5" fill="var(--red)" opacity="0.12" stroke="none" />
@@ -628,15 +511,10 @@
               <ellipse cx="62" cy="84" rx="6" ry="3.5" fill="var(--card)" />
               <path class="sweat" d="M74 36 C74 36, 78 40, 78 44 C78 46.5, 74 46.5, 74 44 C74 40, 74 36, 74 36 Z" fill="var(--torie)" stroke="none" />
               <text class="zzz" x="72" y="36" font-size="12" fill="var(--text-3)" stroke="none" font-weight="bold">z</text>
-              <path class="anger-mark" d="M75 25 L85 35 M85 25 L75 35" stroke="var(--red)" stroke-width="3" stroke-linecap="round" />
             </svg>
           </div>
           <div class="spirit-name">Jory</div>
           <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
-          <div class="stamina-wrap">
-            <div class="stamina-track"><div class="stamina-fill high" id="staminaBarJory" style="width:80%"></div></div>
-            <button class="feed-btn" id="feedBtnJory" title="喂食">🍖</button>
-          </div>
         </div>
       </div>
     </section>
@@ -948,521 +826,8 @@
       normal:   { texts: ["平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中"], emoji: "😌" },
       sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重..."], emoji: "😴" },
       low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧"], emoji: "😔" },
-      warning:  { texts: ["肚子好饿...","快喂喂我吧！","饿到发抖...","需要投食！","呜呜好饿..."], emoji: "😰" },
-      starved:  { texts: ["不想理你...","已经绝食了","哄不好的那种","哼！走开！","心碎了..."], emoji: "💢" }
+      warning:  { texts: ["余额告急啦...","有点小透支...","要省着点用哦","注意收支平衡","快赚点卡吧~"], emoji: "😰" }
     };
-
-    /* ==================== STAMINA SYSTEM ==================== */
-    let staminaData = {
-      Torie: { stamina: 80, updated_at: new Date().toISOString(), starved_at: null },
-      Jory:  { stamina: 80, updated_at: new Date().toISOString(), starved_at: null }
-    };
-    let staminaTimer = null;
-    let feedStarveTimer = null;
-    const STAMINA_DECAY_PER_MIN = 0.1;
-    const STAMINA_LOW_THRESHOLD = 20;
-    const FEED_BONUSES = [50, 30, 20];
-
-    async function loadStamina() {
-      const { data, error } = await sb.from("freecard_stamina").select("*");
-      if (error) {
-        console.error("Stamina load error:", error);
-        showToast("宠物体力读取失败，请检查网络后刷新", "error");
-        return;
-      }
-
-      if (Array.isArray(data)) {
-        data.forEach(row => {
-          if (!row || !["Torie", "Jory"].includes(row.person)) return;
-          let starvedAt = row.starved_at;
-          if (starvedAt === "" || starvedAt === "null") starvedAt = null;
-          const parsedStamina = Number(row.stamina);
-          const parsedUpdated = row.updated_at && Number.isFinite(new Date(row.updated_at).getTime())
-            ? new Date(row.updated_at).toISOString()
-            : new Date().toISOString();
-          staminaData[row.person] = {
-            stamina: Number.isFinite(parsedStamina) ? Math.max(0, Math.min(100, parsedStamina)) : 80,
-            updated_at: parsedUpdated,
-            starved_at: starvedAt && Number.isFinite(new Date(starvedAt).getTime())
-              ? new Date(starvedAt).toISOString() : null
-          };
-        });
-      }
-
-      await applyOfflineDecay();
-      updateStaminaUI();
-      updateSpirits();
-    }
-
-    // 体力归零时记录“实际归零时刻”，不能用刷新时刻代替。
-    // 否则 starved_at 为空的旧记录每次刷新都会被重置成“绝食 0 分钟”。
-    async function applyOfflineDecay() {
-      const now = Date.now();
-      const toSave = [];
-
-      ["Torie", "Jory"].forEach(person => {
-        const val = staminaData[person];
-        const lastUpdate = new Date(val.updated_at).getTime();
-        const safeLastUpdate = Number.isFinite(lastUpdate) ? Math.min(lastUpdate, now) : now;
-        const prevStamina = Math.max(0, Math.min(100, Number(val.stamina) || 0));
-        const minutesPassed = Math.max(0, (now - safeLastUpdate) / 60000);
-        const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
-        const newStamina = Math.max(0, prevStamina - decay);
-        let changed = false;
-
-        if (prevStamina > 0 && newStamina <= 0) {
-          // 用上次保存时刻 + 剩余体力所需衰减时间，得到实际归零时刻。
-          const zeroAt = safeLastUpdate + (prevStamina / STAMINA_DECAY_PER_MIN) * 60000;
-          val.starved_at = new Date(Math.min(zeroAt, now)).toISOString();
-          changed = true;
-        } else if (newStamina <= 0 && !val.starved_at) {
-          // 兼容旧数据：旧版若已把体力保存为 0，却没保存 starved_at，
-          // 最可信的回退值是原始 updated_at；绝不能先把 updated_at 改成现在。
-          val.starved_at = new Date(safeLastUpdate).toISOString();
-          changed = true;
-        }
-
-        if (Math.abs(newStamina - prevStamina) > 0.001) {
-          val.stamina = newStamina;
-          changed = true;
-        }
-
-        // 有体力衰减时才更新时间；已经绝食的宠物不再不断改写 updated_at。
-        if (prevStamina > 0 && Math.abs(newStamina - prevStamina) > 0.001) {
-          val.updated_at = new Date(now).toISOString();
-          changed = true;
-        }
-        if (changed) toSave.push(person);
-      });
-
-      // 等待写入结束，避免页面初始化期间写入和 realtime 回调互相覆盖。
-      await Promise.all([...new Set(toSave)].map(person => saveStamina(person)));
-    }
-
-    // 体力写入必须返回明确结果。以前这里只 console.error，调用方仍会提示成功，
-    // 所以数据库写入失败时页面暂时显示 10%，刷新后却又从数据库读回 0%。
-    async function saveStamina(person) {
-      const val = staminaData[person];
-      if (!val || !["Torie", "Jory"].includes(person)) {
-        throw new Error(`无效的宠物对象：${person}`);
-      }
-      const payload = {
-        person,
-        stamina: Math.round(Math.max(0, Math.min(100, Number(val.stamina))) * 100) / 100,
-        updated_at: val.updated_at || new Date().toISOString(),
-        starved_at: val.starved_at || null
-      };
-      const { error } = await sb.from("freecard_stamina").upsert(payload, { onConflict: "person" });
-      if (error) {
-        console.error("Stamina save error:", error);
-        throw new Error(`体力写入数据库失败：${error.message || "未知 Supabase 错误"}`);
-      }
-
-      // 回读验证，避免 upsert 请求表面完成、实际数据却未按预期保存。
-      const { data, error: readError } = await sb
-        .from("freecard_stamina")
-        .select("person, stamina, updated_at, starved_at")
-        .eq("person", person)
-        .maybeSingle();
-      if (readError) {
-        console.error("Stamina verify error:", readError);
-        throw new Error(`体力已提交但无法验证保存结果：${readError.message || "读取失败"}`);
-      }
-      // Realtime 衰减回调可能在回读前将 updated_at 推进几毫秒；验证核心体力值即可。
-      if (!data || Math.abs(Number(data.stamina) - payload.stamina) > 0.01) {
-        throw new Error("数据库中的宠物体力与本次喂食结果不一致，请检查 freecard_stamina 表和权限设置");
-      }
-      return data;
-    }
-
-    function getStaminaColor(val) {
-      if (val >= 50) return "high";
-      if (val >= STAMINA_LOW_THRESHOLD) return "mid";
-      return "low";
-    }
-
-    function updateStaminaUI() {
-      ["Torie", "Jory"].forEach(person => {
-        const val = Math.max(0, Math.min(100, staminaData[person].stamina));
-        const bar = document.getElementById(`staminaBar${person}`);
-        if (bar) {
-          bar.style.width = val + "%";
-          bar.className = `stamina-fill ${getStaminaColor(val)}`;
-        }
-      });
-    }
-
-    function calcFeedResult(currentStamina, numCards) {
-      let result = currentStamina;
-      let steps = [Math.round(result)];
-      for (let i = 0; i < numCards && i < FEED_BONUSES.length; i++) {
-        result = Math.min(100, result + FEED_BONUSES[i]);
-        steps.push(Math.round(result));
-      }
-      return { final: Math.min(100, result), steps };
-    }
-
-    function getReviveCost(person) {
-      const stamina = staminaData[person].stamina;
-      if (stamina > 0) return 0;
-      const starvedAt = staminaData[person].starved_at;
-      if (!starvedAt) return 1;
-      const hoursStarved = Math.max(0, (Date.now() - new Date(starvedAt).getTime()) / (1000 * 60 * 60));
-      if (hoursStarved <= 10) return 1;
-      const extraHours = hoursStarved - 10;
-      const extra = Math.floor(extraHours / 3);
-      return 1 + extra;
-    }
-
-    function getStarvedDurationText(person) {
-      const starvedAt = staminaData[person].starved_at;
-      if (!starvedAt) return "0分钟";
-      const diffMs = Date.now() - new Date(starvedAt).getTime();
-      const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-      if (days > 0) return `${days}天${hours}小时${mins}分`;
-      if (hours > 0) return `${hours}小时${mins}分`;
-      return `${mins}分钟`;
-    }
-
-    function getTimeToZeroText(stamina) {
-      if (stamina <= 0) return null;
-      const minutesLeft = stamina / STAMINA_DECAY_PER_MIN;
-      const totalMinutes = Math.round(minutesLeft);
-      const days = Math.floor(totalMinutes / (60 * 24));
-      const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-      const mins = totalMinutes % 60;
-      let parts = [];
-      if (days > 0) parts.push(`${days}天`);
-      if (hours > 0) parts.push(`${hours}小时`);
-      parts.push(`${mins}分钟`);
-      return parts.join("");
-    }
-
-    function getTimeToZeroClock(stamina) {
-      if (stamina <= 0) return null;
-      const minutesLeft = stamina / STAMINA_DECAY_PER_MIN;
-      const futureDate = new Date(Date.now() + minutesLeft * 60 * 1000);
-      const p = (n) => String(n).padStart(2, "0");
-      return `${p(futureDate.getMonth()+1)}/${p(futureDate.getDate())} ${p(futureDate.getHours())}:${p(futureDate.getMinutes())}`;
-    }
-
-    function updateFeedStarveTimer() {
-      if (!feedTarget) return;
-      const timerEl = document.getElementById("feedStarveTimer");
-      const labelEl = document.getElementById("feedStarveLabel");
-      const timeEl = document.getElementById("feedStarveTime");
-      const stamina = staminaData[feedTarget].stamina;
-      
-      if (stamina <= 0) {
-        timerEl.style.display = "block";
-        timerEl.className = "feed-starve-timer dead";
-        const duration = getStarvedDurationText(feedTarget);
-        const cost = getReviveCost(feedTarget);
-        labelEl.textContent = "💢 已经绝食";
-        timeEl.textContent = `绝食了 ${duration}，需 ${cost} 张卡唤醒`;
-        return;
-      }
-
-      timerEl.style.display = "block";
-      const timeText = getTimeToZeroText(stamina);
-      const clockText = getTimeToZeroClock(stamina);
-      const isUrgent = stamina < 20;
-      
-      timerEl.className = `feed-starve-timer${isUrgent ? ' danger' : ''}`;
-      labelEl.textContent = isUrgent ? "⚠️ 快要饿到零了！" : "⏳ 预计饿到零";
-      timeEl.innerHTML = `${timeText}<br><span style="font-size:11px;font-weight:600;color:var(--text-3)">约 ${clockText}</span>`;
-    }
-
-    function startStaminaTimer() {
-      if (staminaTimer) clearInterval(staminaTimer);
-      staminaTimer = setInterval(async () => {
-        const now = Date.now();
-        const toSave = [];
-
-        ["Torie", "Jory"].forEach(person => {
-          const val = staminaData[person];
-          if (val.stamina <= 0) {
-            // 已经绝食后绝不重置 starved_at 或 updated_at。
-            if (!val.starved_at) {
-              const fallback = val.updated_at && Number.isFinite(new Date(val.updated_at).getTime())
-                ? new Date(val.updated_at).toISOString() : new Date(now).toISOString();
-              val.starved_at = fallback;
-              toSave.push(person);
-            }
-            return;
-          }
-
-          const lastUpdate = new Date(val.updated_at).getTime();
-          const safeLastUpdate = Number.isFinite(lastUpdate) ? Math.min(lastUpdate, now) : now;
-          const minutesPassed = Math.max(0, (now - safeLastUpdate) / 60000);
-          if (minutesPassed <= 0) return;
-
-          const prevStamina = val.stamina;
-          const newStamina = Math.max(0, prevStamina - minutesPassed * STAMINA_DECAY_PER_MIN);
-          if (newStamina <= 0) {
-            const zeroAt = safeLastUpdate + (prevStamina / STAMINA_DECAY_PER_MIN) * 60000;
-            val.starved_at = new Date(Math.min(zeroAt, now)).toISOString();
-          }
-          val.stamina = newStamina;
-          val.updated_at = new Date(now).toISOString();
-          toSave.push(person);
-        });
-
-        updateStaminaUI();
-        updateSpirits();
-        updateFeedStarveTimer();
-        await Promise.all([...new Set(toSave)].map(person => saveStamina(person)));
-      }, 10000);
-    }
-
-    /* ==================== FEED MODAL ==================== */
-    let feedTarget = "";
-    let feedSelectedCards = 1;
-
-    function openFeedModal(person) {
-      feedTarget = person;
-      feedSelectedCards = 1;
-      const emoji = person === "Torie" ? "🦉" : "🐰";
-      document.getElementById("feedModalPet").textContent = emoji;
-      document.getElementById("feedModalTitle").textContent = `喂食 ${person}`;
-      document.querySelectorAll(".feed-card-opt").forEach(el => {
-        el.classList.toggle("selected", el.dataset.cards === "1");
-      });
-      updateFeedPreview();
-      updateFeedStarveTimer();
-      document.getElementById("feedOverlay").classList.add("show");
-      if (feedStarveTimer) clearInterval(feedStarveTimer);
-      // ★ FIX: 缩短刷新间隔到10秒，让绝食倒计时更及时
-      feedStarveTimer = setInterval(updateFeedStarveTimer, 10000);
-    }
-
-    function closeFeedModal() {
-      document.getElementById("feedOverlay").classList.remove("show");
-      if (feedStarveTimer) { clearInterval(feedStarveTimer); feedStarveTimer = null; }
-    }
-
-    function updateFeedPreview() {
-      const current = Math.max(0, Math.min(100, staminaData[feedTarget].stamina));
-      const currentRound = Math.round(current);
-      const isStarved = current <= 0;
-      const currentBar = document.getElementById("feedCurrentBar");
-      currentBar.style.width = currentRound + "%";
-      currentBar.className = `feed-current-bar-fill ${getStaminaColor(currentRound)}`;
-      document.getElementById("feedCurrentPct").textContent = currentRound + "%";
-      document.getElementById("feedCurrentPct").style.color = 
-        currentRound >= 50 ? "var(--green)" : currentRound >= 20 ? "var(--jory)" : "var(--red)";
-      const balance = calcBalance(feedTarget);
-      const resultEl = document.getElementById("feedResult");
-      const confirmBtn = document.getElementById("feedConfirmBtn");
-      const previewContainer = document.getElementById("feedPreview");
-      const selectRow = document.querySelector(".feed-select-row");
-
-      if (isStarved) {
-        const reviveCost = getReviveCost(feedTarget);
-        const durationText = getStarvedDurationText(feedTarget);
-        previewContainer.style.display = "none";
-        selectRow.style.display = "none";
-        resultEl.className = "feed-result warn";
-        resultEl.innerHTML = `💢 <b>${feedTarget}</b> 已绝食 ${durationText}！<br>唤醒需 <b>${reviveCost} 张</b>自由卡（仅唤醒，恢复至10%体力）<br><span style="font-size:11px;opacity:0.8">唤醒后可再次打开喂食界面正常补充体力</span>`;
-        if (balance < reviveCost) {
-          confirmBtn.disabled = true;
-          confirmBtn.textContent = "余额不足";
-          resultEl.innerHTML += `<br><span style="font-size:11px;opacity:0.8">（余额仅 ${balance} 张）</span>`;
-        } else {
-          confirmBtn.disabled = false;
-          confirmBtn.textContent = `支付 ${reviveCost} 张唤醒`;
-        }
-        return;
-      }
-
-      previewContainer.style.display = "block";
-      selectRow.style.display = "block";
-      const { final, steps } = calcFeedResult(current, feedSelectedCards);
-      const stepsContainer = document.getElementById("feedPreviewSteps");
-      let html = "";
-      html += `<div class="feed-step">
-        <span class="feed-step-bonus" style="color:var(--text-3)">当前</span>
-        <div class="feed-step-bar-track"><div class="feed-step-bar-fill" style="width:${currentRound}%;background:${currentRound>=50?'var(--green)':currentRound>=20?'var(--jory)':'var(--red)'}"></div></div>
-        <span class="feed-step-val">${currentRound}%</span>
-      </div>`;
-      for (let i = 0; i < feedSelectedCards && i < FEED_BONUSES.length; i++) {
-        const bonus = FEED_BONUSES[i];
-        const after = steps[i + 1];
-        html += `<div class="feed-step">
-          <span class="feed-step-bonus">+${bonus}%</span>
-          <div class="feed-step-bar-track"><div class="feed-step-bar-fill" style="width:${after}%;background:var(--green)"></div></div>
-          <span class="feed-step-val highlight">${after}%</span>
-        </div>`;
-      }
-      stepsContainer.innerHTML = html;
-
-      if (currentRound >= 100) {
-        resultEl.className = "feed-result full";
-        resultEl.textContent = `🎉 ${feedTarget} 已经满体力啦，不需要喂食~`;
-        confirmBtn.disabled = true;
-      } else if (balance < feedSelectedCards) {
-        resultEl.className = "feed-result warn";
-        resultEl.textContent = `⚠️ 余额不足！${feedTarget} 只有 ${balance} 张自由卡，需要 ${feedSelectedCards} 张`;
-        confirmBtn.disabled = true;
-      } else {
-        resultEl.className = "feed-result ok";
-        const effectiveGain = steps[steps.length - 1] - currentRound;
-        resultEl.textContent = `✅ 消耗 ${feedSelectedCards} 张自由卡 → 体力 ${currentRound}% → ${steps[steps.length-1]}%（实际 +${effectiveGain}%）`;
-        confirmBtn.disabled = false;
-        confirmBtn.textContent = "确认喂食";
-      }
-    }
-
-    async function confirmFeed() {
-      if (!feedTarget || !staminaData[feedTarget]) return;
-      const person = feedTarget;
-      const current = Number(staminaData[person].stamina) || 0;
-      const currentRound = Math.round(current);
-      const balance = calcBalance(person);
-      const isStarved = current <= 0;
-      const confirmBtn = document.getElementById("feedConfirmBtn");
-      if (confirmBtn.disabled) return;
-      confirmBtn.disabled = true;
-      const originalBtnText = confirmBtn.textContent;
-      confirmBtn.textContent = "处理中...";
-
-      // 用于失败回滚，确保 UI 与数据库一致。
-      const previousState = { ...staminaData[person] };
-      let insertedLogId = null;
-
-      try {
-        if (isStarved) {
-          const reviveCost = getReviveCost(person);
-          if (balance < reviveCost) {
-            showToast("余额不足，无法唤醒", "error");
-            return;
-          }
-          const reason = `💢 唤醒绝食的${person}（绝食${getStarvedDurationText(person)}，花费${reviveCost}张）`;
-          const { data: logRow, error: logError } = await sb.from("freecard_log")
-            .insert({ operator: person, change_type: "减少", card_num: reviveCost, reason })
-            .select("id")
-            .single();
-          if (logError) throw new Error("唤醒记录写入失败：" + logError.message);
-          insertedLogId = logRow?.id ?? null;
-
-          staminaData[person].stamina = 10;
-          staminaData[person].updated_at = new Date().toISOString();
-          staminaData[person].starved_at = null;
-          await saveStamina(person); // 写入失败会抛错，绝不再假装唤醒成功
-
-          updateStaminaUI();
-          updateSpirits();
-          spawnParticles(1);
-          showToast(`${person} 被唤醒了！体力恢复至 10%，可再次喂食补充`, "success");
-          closeFeedModal();
-          await loadLogs();
-          return;
-        }
-
-        const { final, steps } = calcFeedResult(current, feedSelectedCards);
-        const finalRound = Math.round(final);
-        if (balance < feedSelectedCards) throw new Error("余额不足，无法喂食");
-        if (currentRound >= 100) {
-          showToast("已经满体力啦~", "success");
-          closeFeedModal();
-          return;
-        }
-
-        const reason = `🍖 喂食${feedSelectedCards}张（${person} 体力 ${currentRound}%→${finalRound}%）`;
-        const { data: logRow, error: logError } = await sb.from("freecard_log")
-          .insert({ operator: person, change_type: "减少", card_num: feedSelectedCards, reason })
-          .select("id")
-          .single();
-        if (logError) throw new Error("喂食记录写入失败：" + logError.message);
-        insertedLogId = logRow?.id ?? null;
-
-        staminaData[person].stamina = final;
-        staminaData[person].updated_at = new Date().toISOString();
-        staminaData[person].starved_at = null;
-        await saveStamina(person);
-
-        updateStaminaUI();
-        updateSpirits();
-        spawnParticles(1);
-        showToast(`喂食成功！${person} 体力 → ${finalRound}%`, "success");
-        closeFeedModal();
-        await loadLogs();
-      } catch (err) {
-        console.error("Feed/revive failed:", err);
-        // 恢复页面中的旧值，避免显示一个实际上没有保存成功的体力值。
-        staminaData[person] = previousState;
-        updateStaminaUI();
-        updateSpirits();
-
-        // 如果扣卡记录已插入但体力保存失败，尽力删除该笔记录，避免扣卡却未唤醒。
-        if (insertedLogId !== null) {
-          const { error: rollbackError } = await sb.from("freecard_log").delete().eq("id", insertedLogId);
-          if (rollbackError) {
-            console.error("Feed log rollback failed:", rollbackError);
-            showToast((err.message || "喂食失败") + "；且自动撤销扣卡记录失败，请检查自由卡记录", "error");
-          } else {
-            showToast(err.message || "喂食失败，已撤销本次扣卡记录", "error");
-          }
-        } else {
-          showToast(err.message || "喂食失败，请检查网络和数据库权限", "error");
-        }
-      } finally {
-        confirmBtn.disabled = false;
-        confirmBtn.textContent = "确认喂食";
-      }
-    }
-
-    function setupFeedModal() {
-      document.getElementById("feedBtnTorie").addEventListener("click", (e) => { e.stopPropagation(); openFeedModal("Torie"); });
-      document.getElementById("feedBtnJory").addEventListener("click", (e) => { e.stopPropagation(); openFeedModal("Jory"); });
-      document.querySelectorAll(".feed-card-opt").forEach(el => {
-        el.addEventListener("click", () => {
-          document.querySelectorAll(".feed-card-opt").forEach(x => x.classList.remove("selected"));
-          el.classList.add("selected");
-          feedSelectedCards = parseInt(el.dataset.cards);
-          updateFeedPreview();
-          updateFeedStarveTimer();
-        });
-      });
-      document.getElementById("feedCancelBtn").addEventListener("click", closeFeedModal);
-      document.getElementById("feedConfirmBtn").addEventListener("click", confirmFeed);
-      document.getElementById("feedOverlay").addEventListener("click", (e) => {
-        if (e.target === document.getElementById("feedOverlay")) closeFeedModal();
-      });
-    }
-
-    function initStaminaSystem() {
-      setupFeedModal();
-      loadStamina().then(() => { startStaminaTimer(); updateSpirits(); });
-      sb.channel("stamina-realtime")
-        .on("postgres_changes", { event: "*", schema: "public", table: "freecard_stamina" }, (payload) => {
-          if (payload.new && payload.new.person) {
-            // ★ FIX: 安全解析 Realtime 推送的 starved_at
-            let starvedAt = payload.new.starved_at || null;
-            if (starvedAt === "" || starvedAt === "null") starvedAt = null;
-            const person = payload.new.person;
-            const incomingUpdated = payload.new.updated_at ? new Date(payload.new.updated_at).getTime() : 0;
-            const currentUpdated = staminaData[person]?.updated_at ? new Date(staminaData[person].updated_at).getTime() : 0;
-            // 忽略较旧的 realtime 消息，避免异步写入回声覆盖当前状态。
-            if (incomingUpdated >= currentUpdated) {
-              staminaData[person] = {
-                stamina: Math.max(0, Math.min(100, Number(payload.new.stamina) || 0)),
-                updated_at: payload.new.updated_at,
-                starved_at: starvedAt && Number.isFinite(new Date(starvedAt).getTime())
-                  ? new Date(starvedAt).toISOString() : null
-              };
-              applyOfflineDecay().then(() => {
-                updateStaminaUI();
-                updateSpirits();
-                updateFeedStarveTimer();
-              });
-            }
-          }
-        })
-        .subscribe();
-    }
 
     /* ==================== PET MOOD LOGIC ==================== */
     let recentEvents = { Torie: [], Jory: [] };
@@ -1483,8 +848,6 @@
       const now = new Date();
       const hour = now.getHours();
       const events = getRecentEventCounts(person);
-      const stamina = staminaData[person] ? staminaData[person].stamina : 80;
-      if (stamina <= 0) return "starved";
       if (balance < 0) return "warning";
       if (events.punishes > 0) return "low";
       if (events.redeems > 0) return "amazing";
@@ -1509,14 +872,11 @@
         const starEyes = svg.querySelectorAll('.star-eye');
         const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
         const sadEyes = svg.querySelectorAll('.sad-eye');
-        const angryEyes = svg.querySelectorAll('.angry-eye');
         pupils.forEach(p => p.style.display = 'none');
         starEyes.forEach(p => p.style.display = 'none');
         sleepyEyes.forEach(p => p.style.display = 'none');
         sadEyes.forEach(p => p.style.display = 'none');
-        angryEyes.forEach(p => p.style.display = 'none');
-        if (state === 'starved') angryEyes.forEach(p => p.style.display = '');
-        else if (state === 'amazing' || state === 'happy') starEyes.forEach(p => p.style.display = '');
+        if (state === 'amazing' || state === 'happy') starEyes.forEach(p => p.style.display = '');
         else if (state === 'sleepy') sleepyEyes.forEach(p => p.style.display = '');
         else if (state === 'low' || state === 'warning') sadEyes.forEach(p => p.style.display = '');
         else pupils.forEach(p => p.style.display = '');
@@ -1525,31 +885,22 @@
         const happyEyes = svg.querySelectorAll('.happy-eye');
         const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
         const sadEyes = svg.querySelectorAll('.sad-eye');
-        const angryEyes = svg.querySelectorAll('.angry-eye');
         const ears = svg.querySelectorAll('.bunny-ear-l, .bunny-ear-r');
         beanEyes.forEach(e => e.style.display = 'none');
         happyEyes.forEach(e => e.style.display = 'none');
         sleepyEyes.forEach(e => e.style.display = 'none');
         sadEyes.forEach(e => e.style.display = 'none');
-        angryEyes.forEach(e => e.style.display = 'none');
         ears.forEach(e => e.classList.remove('ear-down'));
-        if (state === 'starved') { angryEyes.forEach(e => e.style.display = ''); ears.forEach(e => e.classList.add('ear-down')); }
-        else if (state === 'amazing' || state === 'happy' || state === 'good') happyEyes.forEach(e => e.style.display = '');
+        if (state === 'amazing' || state === 'happy' || state === 'good') happyEyes.forEach(e => e.style.display = '');
         else if (state === 'sleepy') sleepyEyes.forEach(e => e.style.display = '');
         else if (state === 'low' || state === 'warning') { sadEyes.forEach(e => e.style.display = ''); ears.forEach(e => e.classList.add('ear-down')); }
         else beanEyes.forEach(e => e.style.display = '');
       }
       const config = SPIRIT_STATES[state] || SPIRIT_STATES.normal;
-      if (state === 'starved') {
-        const duration = getStarvedDurationText(person);
-        const cost = getReviveCost(person);
-        document.getElementById(`spirit${person}Status`).innerHTML = `绝食${duration}...<br><span style="color:var(--red);font-size:11px">需${cost}张卡唤醒</span>`;
-      } else {
-        const todayStart = new Date(); todayStart.setHours(0,0,0,0);
-        const seed = todayStart.getDate() + person.length;
-        const textIdx = (seed + 1) % config.texts.length;
-        document.getElementById(`spirit${person}Status`).textContent = config.texts[textIdx];
-      }
+      const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+      const seed = todayStart.getDate() + person.length;
+      const textIdx = (seed + 1) % config.texts.length;
+      document.getElementById(`spirit${person}Status`).textContent = config.texts[textIdx];
     }
     function updateSpirits() { ["Torie", "Jory"].forEach(person => { const state = getPetState(person); updatePetState(person, state); }); }
 
@@ -2556,7 +1907,6 @@
     function refreshAll() {
       updateBalances();
       updateSpirits();
-      updateStaminaUI();
       updateHistoryFilterOptions();
       renderStats();
       renderHistory();
@@ -2577,31 +1927,7 @@
       if (!log) return showToast("找不到该记录", "error");
       const { error } = await sb.from("freecard_log").delete().eq("id", id);
       if (error) return showToast("删除失败", "error");
-      const feedMatch = log.reason && log.reason.match(/^🍖 喂食(\d+)张（(\w+) 体力 (\d+)%→(\d+)%）$/);
-      if (feedMatch) {
-        const person = feedMatch[2];
-        const beforeStamina = parseInt(feedMatch[3]);
-        const minutesPassed = Math.max(0, (Date.now() - new Date(log.created_at).getTime()) / 60000);
-        const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
-        const revertedStamina = Math.max(0, beforeStamina - decay);
-        staminaData[person].stamina = revertedStamina;
-        staminaData[person].updated_at = new Date().toISOString();
-        // ★ FIX: 删除喂食记录后正确处理 starved_at
-        if (revertedStamina <= 0) {
-          // 回退后体力为0，需要设置 starved_at（使用原始记录的创建时间作为绝食起点）
-          staminaData[person].starved_at = log.created_at;
-        } else {
-          // 回退后体力 > 0，清除 starved_at
-          staminaData[person].starved_at = null;
-        }
-        await saveStamina(person);
-        updateStaminaUI();
-        updateSpirits();
-        const resultPct = Math.round(staminaData[person].stamina);
-        showToast(`已删除。${person} 体力回退至 ${resultPct}%`, "success");
-      } else {
-        showToast("已删除", "success");
-      }
+      showToast("已删除", "success");
       await loadLogs();
     }
 
@@ -2631,7 +1957,6 @@
       setupSuperviseConverter();
       setupRecharge();
       checkSpecialDate();
-      initStaminaSystem();
       await loadLogs();
       await loadProducts();
       sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
