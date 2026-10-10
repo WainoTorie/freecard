@@ -1039,16 +1039,40 @@
       await Promise.all([...new Set(toSave)].map(person => saveStamina(person)));
     }
 
+    // 体力写入必须返回明确结果。以前这里只 console.error，调用方仍会提示成功，
+    // 所以数据库写入失败时页面暂时显示 10%，刷新后却又从数据库读回 0%。
     async function saveStamina(person) {
       const val = staminaData[person];
-      const { error } = await sb.from("freecard_stamina").upsert({
+      if (!val || !["Torie", "Jory"].includes(person)) {
+        throw new Error(`无效的宠物对象：${person}`);
+      }
+      const payload = {
         person,
-        stamina: Math.round(val.stamina * 100) / 100,
-        updated_at: val.updated_at,
-        // ★ FIX: 确保 starved_at 为 null 时传 null 而非 undefined
+        stamina: Math.round(Math.max(0, Math.min(100, Number(val.stamina))) * 100) / 100,
+        updated_at: val.updated_at || new Date().toISOString(),
         starved_at: val.starved_at || null
-      }, { onConflict: 'person' });
-      if (error) console.error("Stamina save error:", error);
+      };
+      const { error } = await sb.from("freecard_stamina").upsert(payload, { onConflict: "person" });
+      if (error) {
+        console.error("Stamina save error:", error);
+        throw new Error(`体力写入数据库失败：${error.message || "未知 Supabase 错误"}`);
+      }
+
+      // 回读验证，避免 upsert 请求表面完成、实际数据却未按预期保存。
+      const { data, error: readError } = await sb
+        .from("freecard_stamina")
+        .select("person, stamina, updated_at, starved_at")
+        .eq("person", person)
+        .maybeSingle();
+      if (readError) {
+        console.error("Stamina verify error:", readError);
+        throw new Error(`体力已提交但无法验证保存结果：${readError.message || "读取失败"}`);
+      }
+      // Realtime 衰减回调可能在回读前将 updated_at 推进几毫秒；验证核心体力值即可。
+      if (!data || Math.abs(Number(data.stamina) - payload.stamina) > 0.01) {
+        throw new Error("数据库中的宠物体力与本次喂食结果不一致，请检查 freecard_stamina 表和权限设置");
+      }
+      return data;
     }
 
     function getStaminaColor(val) {
@@ -1292,87 +1316,102 @@
     }
 
     async function confirmFeed() {
-      if (!feedTarget) return;
-      const current = staminaData[feedTarget].stamina;
+      if (!feedTarget || !staminaData[feedTarget]) return;
+      const person = feedTarget;
+      const current = Number(staminaData[person].stamina) || 0;
       const currentRound = Math.round(current);
-      const balance = calcBalance(feedTarget);
+      const balance = calcBalance(person);
       const isStarved = current <= 0;
       const confirmBtn = document.getElementById("feedConfirmBtn");
+      if (confirmBtn.disabled) return;
       confirmBtn.disabled = true;
       const originalBtnText = confirmBtn.textContent;
       confirmBtn.textContent = "处理中...";
 
-      if (isStarved) {
-        const reviveCost = getReviveCost(feedTarget);
-        if (balance < reviveCost) {
-          showToast("余额不足，无法唤醒", "error");
-          confirmBtn.disabled = false;
-          confirmBtn.textContent = originalBtnText;
+      // 用于失败回滚，确保 UI 与数据库一致。
+      const previousState = { ...staminaData[person] };
+      let insertedLogId = null;
+
+      try {
+        if (isStarved) {
+          const reviveCost = getReviveCost(person);
+          if (balance < reviveCost) {
+            showToast("余额不足，无法唤醒", "error");
+            return;
+          }
+          const reason = `💢 唤醒绝食的${person}（绝食${getStarvedDurationText(person)}，花费${reviveCost}张）`;
+          const { data: logRow, error: logError } = await sb.from("freecard_log")
+            .insert({ operator: person, change_type: "减少", card_num: reviveCost, reason })
+            .select("id")
+            .single();
+          if (logError) throw new Error("唤醒记录写入失败：" + logError.message);
+          insertedLogId = logRow?.id ?? null;
+
+          staminaData[person].stamina = 10;
+          staminaData[person].updated_at = new Date().toISOString();
+          staminaData[person].starved_at = null;
+          await saveStamina(person); // 写入失败会抛错，绝不再假装唤醒成功
+
+          updateStaminaUI();
+          updateSpirits();
+          spawnParticles(1);
+          showToast(`${person} 被唤醒了！体力恢复至 10%，可再次喂食补充`, "success");
+          closeFeedModal();
+          await loadLogs();
           return;
         }
-        const reason = `💢 唤醒绝食的${feedTarget}（绝食${getStarvedDurationText(feedTarget)}，花费${reviveCost}张）`;
-        const { error: logError } = await sb.from("freecard_log").insert({
-          operator: feedTarget, change_type: "减少", card_num: reviveCost, reason: reason
-        });
-        if (logError) {
-          showToast("唤醒失败：" + logError.message, "error");
-          confirmBtn.disabled = false;
-          confirmBtn.textContent = originalBtnText;
+
+        const { final, steps } = calcFeedResult(current, feedSelectedCards);
+        const finalRound = Math.round(final);
+        if (balance < feedSelectedCards) throw new Error("余额不足，无法喂食");
+        if (currentRound >= 100) {
+          showToast("已经满体力啦~", "success");
+          closeFeedModal();
           return;
         }
-        // ★ FIX: 唤醒后体力设为10%，并清除 starved_at
-        staminaData[feedTarget].stamina = 10;
-        staminaData[feedTarget].updated_at = new Date().toISOString();
-        staminaData[feedTarget].starved_at = null;
-        await saveStamina(feedTarget);
+
+        const reason = `🍖 喂食${feedSelectedCards}张（${person} 体力 ${currentRound}%→${finalRound}%）`;
+        const { data: logRow, error: logError } = await sb.from("freecard_log")
+          .insert({ operator: person, change_type: "减少", card_num: feedSelectedCards, reason })
+          .select("id")
+          .single();
+        if (logError) throw new Error("喂食记录写入失败：" + logError.message);
+        insertedLogId = logRow?.id ?? null;
+
+        staminaData[person].stamina = final;
+        staminaData[person].updated_at = new Date().toISOString();
+        staminaData[person].starved_at = null;
+        await saveStamina(person);
+
         updateStaminaUI();
         updateSpirits();
         spawnParticles(1);
-        showToast(`${feedTarget} 被唤醒了！体力恢复至 10%，可再次喂食补充`, "success");
-        confirmBtn.disabled = false;
-        confirmBtn.textContent = "确认喂食";
+        showToast(`喂食成功！${person} 体力 → ${finalRound}%`, "success");
         closeFeedModal();
         await loadLogs();
-        return;
-      }
+      } catch (err) {
+        console.error("Feed/revive failed:", err);
+        // 恢复页面中的旧值，避免显示一个实际上没有保存成功的体力值。
+        staminaData[person] = previousState;
+        updateStaminaUI();
+        updateSpirits();
 
-      const { final, steps } = calcFeedResult(current, feedSelectedCards);
-      const finalRound = Math.round(final);
-      if (balance < feedSelectedCards) {
-        showToast("余额不足，无法喂食", "error");
+        // 如果扣卡记录已插入但体力保存失败，尽力删除该笔记录，避免扣卡却未唤醒。
+        if (insertedLogId !== null) {
+          const { error: rollbackError } = await sb.from("freecard_log").delete().eq("id", insertedLogId);
+          if (rollbackError) {
+            console.error("Feed log rollback failed:", rollbackError);
+            showToast((err.message || "喂食失败") + "；且自动撤销扣卡记录失败，请检查自由卡记录", "error");
+          } else {
+            showToast(err.message || "喂食失败，已撤销本次扣卡记录", "error");
+          }
+        } else {
+          showToast(err.message || "喂食失败，请检查网络和数据库权限", "error");
+        }
+      } finally {
         confirmBtn.disabled = false;
-        confirmBtn.textContent = originalBtnText;
-        return;
+        confirmBtn.textContent = "确认喂食";
       }
-      if (currentRound >= 100) {
-        showToast("已经满体力啦~", "success");
-        closeFeedModal();
-        return;
-      }
-      const reason = `🍖 喂食${feedSelectedCards}张（${feedTarget} 体力 ${currentRound}%→${finalRound}%）`;
-      const { error: logError } = await sb.from("freecard_log").insert({
-        operator: feedTarget, change_type: "减少", card_num: feedSelectedCards, reason: reason
-      });
-      if (logError) {
-        showToast("喂食失败：" + logError.message, "error");
-        confirmBtn.disabled = false;
-        confirmBtn.textContent = originalBtnText;
-        return;
-      }
-      staminaData[feedTarget].stamina = final;
-      staminaData[feedTarget].updated_at = new Date().toISOString();
-      // ★ FIX: 正常喂食不清除 starved_at（因为此时 stamina > 0，starved_at 本应为 null）
-      // 但如果之前是绝食状态通过其他方式恢复了体力（理论上不应发生），这里也做清理
-      staminaData[feedTarget].starved_at = null;
-      await saveStamina(feedTarget);
-      updateStaminaUI();
-      updateSpirits();
-      spawnParticles(1);
-      showToast(`喂食成功！${feedTarget} 体力 → ${finalRound}%`, "success");
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = "确认喂食";
-      closeFeedModal();
-      await loadLogs();
     }
 
     function setupFeedModal() {
