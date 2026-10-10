@@ -60,6 +60,21 @@
     .spirit-card.torie::before { background: var(--torie); }
     .spirit-card.jory::before { background: var(--jory); }
     .spirit-card:active { transform: scale(0.96); }
+    
+    /* === PET ENERGY BAR STYLES === */
+    .pet-energy-wrap { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; height: 24px; }
+    .energy-bar-track { flex: 1; height: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; position: relative; }
+    .energy-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease, background 0.3s; }
+    .energy-bar-fill.torie { background: var(--torie); }
+    .energy-bar-fill.jory { background: var(--jory); }
+    .energy-bar-fill.low { background: var(--red) !important; }
+    .energy-preview { position: absolute; top: 0; left: 0; height: 100%; background: currentColor; opacity: 0.3; border-radius: 3px; pointer-events: none; transition: width 0.2s; display: none; }
+    .feed-btn { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 50%; background: var(--card); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; padding: 0; line-height: 1; }
+    .feed-btn:active { transform: scale(0.9); }
+    .feed-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .fasting-badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); background: var(--red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; z-index: 5; animation: pulse 1.5s infinite; white-space: nowrap; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
     .pet-container { height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; }
     .pet-svg { width: 64px; height: 64px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .state-amazing .pet-svg { animation: petBounce 1s ease-in-out infinite; }
@@ -69,6 +84,7 @@
     .state-warning .pet-svg { animation: petShake 0.4s ease-in-out infinite; }
     .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
     .state-sleepy .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.8; }
+    .state-fasting .pet-svg { filter: grayscale(0.8) brightness(0.7); transform: scale(0.85); }
     .pet-clicked { animation: petJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
     @keyframes petBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
     @keyframes petSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
@@ -81,7 +97,7 @@
     .ear-down.bunny-ear-l { transform: rotate(12deg) translateY(3px); }
     .ear-down.bunny-ear-r { transform: rotate(-12deg) translateY(3px); }
     .sweat { opacity: 0; transform: translateY(-5px); transition: all 0.3s; }
-    .state-warning .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
+    .state-warning .sweat, .state-fasting .sweat { opacity: 1; transform: translateY(0); animation: sweatDrop 1.5s infinite; }
     @keyframes sweatDrop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(10px); opacity: 0; } }
     .zzz { opacity: 0; transition: all 0.3s; }
     .state-sleepy .zzz { opacity: 1; animation: zzzFloat 2s ease-in-out infinite; }
@@ -296,6 +312,13 @@
     .sleep-rules-info .rule-line { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 2px; }
     .sleep-rules-info .rule-emoji { flex-shrink: 0; }
 
+    /* Feed Modal Specific */
+    .feed-modal-info { text-align: left; margin-bottom: 16px; }
+    .feed-info-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-2); margin-bottom: 6px; }
+    .feed-info-row span:last-child { font-weight: 600; color: var(--text-1); }
+    .feed-preview-bar { margin: 12px 0; }
+    .feed-preview-label { font-size: 12px; color: var(--text-3); margin-bottom: 4px; display: flex; justify-content: space-between; }
+
     @media (max-width: 480px) {
       body { padding: 16px 12px 110px; }
       .page-title { font-size: 24px; }
@@ -335,6 +358,58 @@
       <div class="redeem-title" id="redeemTitle"></div>
       <div class="redeem-sub" id="redeemSub"></div>
       <button class="redeem-close-btn" id="redeemCloseBtn">太棒了！</button>
+    </div>
+  </div>
+
+  <!-- Feed Modal -->
+  <div id="feedModal" class="modal-overlay">
+    <div class="modal-box" style="text-align: left;">
+      <div class="modal-title" style="text-align: center;" id="feedModalTitle">🍖 喂食 Torie</div>
+      <div class="feed-modal-info">
+        <div class="feed-info-row"><span>当前能量</span><span id="feedCurrentEnergy">50%</span></div>
+        <div class="feed-info-row"><span>上次喂食</span><span id="feedLastTime">刚刚</span></div>
+        <div class="feed-info-row"><span>距离饿死</span><span id="feedTimeToZero">约 8 小时</span></div>
+      </div>
+      <div class="feed-preview-bar">
+        <div class="feed-preview-label">
+          <span>能量预览</span>
+          <span id="feedPreviewText">50% → 50%</span>
+        </div>
+        <div class="energy-bar-track" style="height: 12px;">
+          <div class="energy-bar-fill torie" id="feedBarCurrent" style="width: 50%;"></div>
+          <div class="energy-preview" id="feedBarPreview" style="width: 50%; color: var(--green);"></div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="feedAmount">选择喂食张数（每张 +30%）</label>
+        <select id="feedAmount">
+          <option value="0">不喂 (0 张)</option>
+          <option value="1">1 张 (+30%)</option>
+          <option value="2">2 张 (+60%)</option>
+          <option value="3">3 张 (+90%)</option>
+          <option value="4">4 张 (+100% 封顶)</option>
+        </select>
+      </div>
+      <div id="feedCostHint" style="font-size: 12px; color: var(--text-3); margin-top: 6px; text-align: center;"></div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="feedCancel">取消</button>
+        <button class="modal-btn confirm green" id="feedConfirm" disabled>确认喂食</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fasting Recover Modal -->
+  <div id="fastingModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title" id="fastingModalTitle">😢 Torie 绝食了！</div>
+      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 16px; line-height: 1.6;">
+        宠物因为太久没被照顾进入了绝食状态。<br/>
+        需要花费 <strong style="color: var(--red);">3 张自由卡</strong> 哄开心才能恢复正常。
+      </p>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="fastingCancel">再等等</button>
+        <button class="modal-btn confirm" id="fastingConfirm">💔 花费 3 张哄好</button>
+      </div>
     </div>
   </div>
 
@@ -460,6 +535,13 @@
       <div class="spirits-container">
         <!-- Torie Pet -->
         <div class="spirit-card torie state-normal" id="spiritTorie">
+          <div class="fasting-badge" id="fastingBadgeTorie" style="display:none;">😢 绝食中</div>
+          <div class="pet-energy-wrap">
+            <div class="energy-bar-track">
+              <div class="energy-bar-fill torie" id="energyBarTorie" style="width: 50%;"></div>
+            </div>
+            <button class="feed-btn" id="feedBtnTorie" title="喂食">🍖</button>
+          </div>
           <div class="pet-container">
             <svg class="pet-svg" id="svgTorie" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
               <path d="M25 45 C25 20, 75 20, 75 45 C75 75, 65 90, 50 90 C35 90, 25 75, 25 45 Z" fill="var(--card)" />
@@ -488,6 +570,13 @@
 
         <!-- Jory Pet -->
         <div class="spirit-card jory state-normal" id="spiritJory">
+          <div class="fasting-badge" id="fastingBadgeJory" style="display:none;">😢 绝食中</div>
+          <div class="pet-energy-wrap">
+            <div class="energy-bar-track">
+              <div class="energy-bar-fill jory" id="energyBarJory" style="width: 50%;"></div>
+            </div>
+            <button class="feed-btn" id="feedBtnJory" title="喂食">🥕</button>
+          </div>
           <div class="pet-container">
             <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <ellipse cx="50" cy="65" rx="26" ry="22" fill="var(--card)" />
@@ -826,8 +915,320 @@
       normal:   { texts: ["平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中"], emoji: "😌" },
       sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重..."], emoji: "😴" },
       low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧"], emoji: "😔" },
-      warning:  { texts: ["余额告急啦...","有点小透支...","要省着点用哦","注意收支平衡","快赚点卡吧~"], emoji: "😰" }
+      warning:  { texts: ["余额告急啦...","有点小透支...","要省着点用哦","注意收支平衡","快赚点卡吧~"], emoji: "😰" },
+      fasting:  { texts: ["饿到不想动...","需要你哄哄我...","已经绝食了...","心好累...","等你回来..."], emoji: "😢" }
     };
+
+    /* ==================== PET FEEDING SYSTEM ==================== */
+    const DECAY_RATE_PER_MIN = 0.1; // 每分钟掉 0.1%
+    const FEED_PER_CARD = 30;       // 每张卡加 30%
+    const FASTING_RECOVER_COST = 3; // 绝食恢复花费
+    const FASTING_RECOVER_ENERGY = 10; // 绝食恢复后能量
+
+    let petStates = {
+      Torie: { energy: 50, last_updated: new Date().toISOString(), is_fasting: false },
+      Jory: { energy: 50, last_updated: new Date().toISOString(), is_fasting: false }
+    };
+    let feedTargetPerson = "";
+    let energyDecayTimer = null;
+
+    async function loadPetStates() {
+      const { data, error } = await sb.from("freecard_pet_state").select("*");
+      if (error) { console.error("Load pet state error:", error); return; }
+      if (data && data.length > 0) {
+        data.forEach(row => {
+          petStates[row.owner] = {
+            energy: Number(row.energy),
+            last_updated: row.last_updated,
+            is_fasting: row.is_fasting
+          };
+        });
+      }
+      // 计算离线衰减
+      ["Torie", "Jory"].forEach(person => {
+        if (!petStates[person].is_fasting) {
+          const now = Date.now();
+          const last = new Date(petStates[person].last_updated).getTime();
+          const minsPassed = Math.max(0, (now - last) / 60000);
+          const decay = minsPassed * DECAY_RATE_PER_MIN;
+          let newEnergy = petStates[person].energy - decay;
+          if (newEnergy <= 0) {
+            newEnergy = 0;
+            petStates[person].is_fasting = true;
+            // 同步绝食状态到数据库
+            sb.from("freecard_pet_state").update({ is_fasting: true, energy: 0, last_updated: new Date().toISOString() }).eq("owner", person);
+          } else {
+            petStates[person].energy = newEnergy;
+          }
+        }
+      });
+      updateEnergyUI();
+    }
+
+    async function savePetState(person) {
+      const state = petStates[person];
+      const { error } = await sb.from("freecard_pet_state").update({
+        energy: state.energy,
+        last_updated: new Date().toISOString(),
+        is_fasting: state.is_fasting
+      }).eq("owner", person);
+      if (error) console.error("Save pet state error:", error);
+    }
+
+    function startEnergyDecay() {
+      if (energyDecayTimer) clearInterval(energyDecayTimer);
+      energyDecayTimer = setInterval(() => {
+        let needSave = false;
+        ["Torie", "Jory"].forEach(person => {
+          if (petStates[person].is_fasting) return;
+          petStates[person].energy = Math.max(0, petStates[person].energy - DECAY_RATE_PER_MIN);
+          if (petStates[person].energy <= 0) {
+            petStates[person].energy = 0;
+            petStates[person].is_fasting = true;
+            needSave = true;
+            showToast(`${person} 的宠物饿到绝食了！`, "error");
+          }
+        });
+        updateEnergyUI();
+        updateSpirits();
+        // 每 5 分钟自动保存一次，减少请求
+        if (needSave || (Date.now() % 300000 < 60000)) {
+          ["Torie", "Jory"].forEach(p => savePetState(p));
+        }
+      }, 60000); // 每 1 分钟执行一次
+    }
+
+    function updateEnergyUI() {
+      ["Torie", "Jory"].forEach(person => {
+        const state = petStates[person];
+        const bar = document.getElementById(`energyBar${person}`);
+        const badge = document.getElementById(`fastingBadge${person}`);
+        const btn = document.getElementById(`feedBtn${person}`);
+        const pct = Math.max(0, Math.min(100, state.energy));
+        
+        bar.style.width = `${pct}%`;
+        bar.classList.toggle("low", pct <= 20);
+        
+        if (state.is_fasting) {
+          badge.style.display = "block";
+          btn.disabled = true;
+          btn.textContent = "😢";
+        } else {
+          badge.style.display = "none";
+          btn.disabled = false;
+          btn.textContent = person === "Torie" ? "🍖" : "🥕";
+        }
+      });
+    }
+
+    function formatTimeDiff(ms) {
+      if (ms <= 0) return "已耗尽";
+      const mins = Math.floor(ms / 60000);
+      if (mins < 60) return `约 ${mins} 分钟`;
+      const hours = Math.floor(mins / 60);
+      const remainMins = mins % 60;
+      if (hours < 24) return `约 ${hours} 小时 ${remainMins} 分钟`;
+      const days = Math.floor(hours / 24);
+      return `约 ${days} 天 ${hours % 24} 小时`;
+    }
+
+    function openFeedModal(person) {
+      const state = petStates[person];
+      if (state.is_fasting) {
+        openFastingModal(person);
+        return;
+      }
+      feedTargetPerson = person;
+      const modal = document.getElementById("feedModal");
+      const emoji = person === "Torie" ? "🍖" : "🥕";
+      document.getElementById("feedModalTitle").textContent = `${emoji} 喂食 ${person}`;
+      
+      const currentPct = Math.round(state.energy * 10) / 10;
+      document.getElementById("feedCurrentEnergy").textContent = `${currentPct}%`;
+      
+      const lastTime = new Date(state.last_updated).getTime();
+      const now = Date.now();
+      const diffMs = now - lastTime;
+      document.getElementById("feedLastTime").textContent = diffMs < 60000 ? "刚刚" : formatTimeDiff(diffMs) + "前";
+      
+      const msToZero = (state.energy / DECAY_RATE_PER_MIN) * 60000;
+      document.getElementById("feedTimeToZero").textContent = formatTimeDiff(msToZero);
+      
+      // Reset selector
+      const sel = document.getElementById("feedAmount");
+      sel.value = "0";
+      updateFeedPreview();
+      
+      modal.classList.add("show");
+    }
+
+    function updateFeedPreview() {
+      const cards = parseInt(document.getElementById("feedAmount").value) || 0;
+      const state = petStates[feedTargetPerson];
+      const currentPct = Math.round(state.energy * 10) / 10;
+      const newPct = Math.min(100, state.energy + cards * FEED_PER_CARD);
+      const newPctRound = Math.round(newPct * 10) / 10;
+      
+      const barClass = feedTargetPerson === "Torie" ? "torie" : "jory";
+      document.getElementById("feedBarCurrent").className = `energy-bar-fill ${barClass}`;
+      document.getElementById("feedBarCurrent").style.width = `${currentPct}%`;
+      
+      const preview = document.getElementById("feedBarPreview");
+      if (cards > 0 && newPct > currentPct) {
+        preview.style.display = "block";
+        preview.style.width = `${newPct}%`;
+        preview.style.color = "var(--green)";
+      } else {
+        preview.style.display = "none";
+      }
+      
+      document.getElementById("feedPreviewText").textContent = `${currentPct}% → ${newPctRound}%`;
+      
+      const balance = calcBalance(feedTargetPerson);
+      const btn = document.getElementById("feedConfirm");
+      const hint = document.getElementById("feedCostHint");
+      
+      if (cards === 0) {
+        btn.disabled = true;
+        hint.textContent = "";
+      } else if (newPct >= 100 && state.energy >= 100) {
+        btn.disabled = true;
+        hint.textContent = "⚠️ 能量已满，无需喂食";
+        hint.style.color = "var(--text-3)";
+      } else if (balance < cards) {
+        btn.disabled = true;
+        hint.textContent = `⚠️ 余额不足（需要 ${cards} 张，当前 ${balance} 张）`;
+        hint.style.color = "var(--red)";
+      } else {
+        btn.disabled = false;
+        hint.textContent = `将花费 ${cards} 张自由卡`;
+        hint.style.color = "var(--text-3)";
+      }
+    }
+
+    async function confirmFeed() {
+      const cards = parseInt(document.getElementById("feedAmount").value) || 0;
+      if (cards <= 0 || !feedTargetPerson) return;
+      
+      const state = petStates[feedTargetPerson];
+      const oldEnergy = state.energy;
+      const newEnergy = Math.min(100, oldEnergy + cards * FEED_PER_CARD);
+      const actualGain = newEnergy - oldEnergy;
+      
+      if (actualGain <= 0) return;
+      
+      const btn = document.getElementById("feedConfirm");
+      btn.disabled = true;
+      btn.textContent = "喂食中...";
+      
+      // 记录流水
+      const emoji = feedTargetPerson === "Torie" ? "🍖" : "🥕";
+      const { error } = await sb.from("freecard_log").insert({
+        operator: feedTargetPerson,
+        change_type: "减少",
+        card_num: cards,
+        reason: `${emoji} 喂食宠物（+${Math.round(actualGain)}%能量）`,
+        note: `FEED:${oldEnergy.toFixed(2)}:${newEnergy.toFixed(2)}`
+      });
+      
+      if (error) {
+        showToast("喂食失败：" + error.message, "error");
+        btn.disabled = false;
+        btn.textContent = "确认喂食";
+        return;
+      }
+      
+      // 更新本地状态
+      state.energy = newEnergy;
+      state.last_updated = new Date().toISOString();
+      await savePetState(feedTargetPerson);
+      
+      updateEnergyUI();
+      updateSpirits();
+      await loadLogs();
+      
+      document.getElementById("feedModal").classList.remove("show");
+      btn.disabled = false;
+      btn.textContent = "确认喂食";
+      showToast(`喂食成功！能量恢复到 ${Math.round(newEnergy)}%`, "success");
+      spawnParticles(1);
+    }
+
+    function openFastingModal(person) {
+      feedTargetPerson = person;
+      const modal = document.getElementById("fastingModal");
+      const emoji = person === "Torie" ? "🦉" : "🐰";
+      document.getElementById("fastingModalTitle").textContent = `${emoji} ${person} 的宠物绝食了！`;
+      
+      const balance = calcBalance(person);
+      const btn = document.getElementById("fastingConfirm");
+      if (balance < FASTING_RECOVER_COST) {
+        btn.disabled = true;
+        btn.textContent = `余额不足（需 ${FASTING_RECOVER_COST} 张）`;
+      } else {
+        btn.disabled = false;
+        btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`;
+      }
+      modal.classList.add("show");
+    }
+
+    async function confirmFastingRecover() {
+      if (!feedTargetPerson) return;
+      const btn = document.getElementById("fastingConfirm");
+      btn.disabled = true;
+      btn.textContent = "哄宠物中...";
+      
+      const emoji = feedTargetPerson === "Torie" ? "🦉" : "🐰";
+      const { error } = await sb.from("freecard_log").insert({
+        operator: feedTargetPerson,
+        change_type: "减少",
+        card_num: FASTING_RECOVER_COST,
+        reason: `${emoji} 哄绝食宠物（恢复至 ${FASTING_RECOVER_ENERGY}%）`,
+        note: `FASTING_RECOVER`
+      });
+      
+      if (error) {
+        showToast("操作失败：" + error.message, "error");
+        btn.disabled = false;
+        btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`;
+        return;
+      }
+      
+      petStates[feedTargetPerson].is_fasting = false;
+      petStates[feedTargetPerson].energy = FASTING_RECOVER_ENERGY;
+      petStates[feedTargetPerson].last_updated = new Date().toISOString();
+      await savePetState(feedTargetPerson);
+      
+      updateEnergyUI();
+      updateSpirits();
+      await loadLogs();
+      
+      document.getElementById("fastingModal").classList.remove("show");
+      btn.disabled = false;
+      btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`;
+      showToast("宠物已恢复！好好照顾它哦 💕", "success");
+    }
+
+    function setupFeedModals() {
+      document.getElementById("feedBtnTorie").addEventListener("click", (e) => { e.stopPropagation(); openFeedModal("Torie"); });
+      document.getElementById("feedBtnJory").addEventListener("click", (e) => { e.stopPropagation(); openFeedModal("Jory"); });
+      document.getElementById("feedCancel").addEventListener("click", () => document.getElementById("feedModal").classList.remove("show"));
+      document.getElementById("feedConfirm").addEventListener("click", confirmFeed);
+      document.getElementById("feedAmount").addEventListener("change", updateFeedPreview);
+      
+      document.getElementById("fastingCancel").addEventListener("click", () => document.getElementById("fastingModal").classList.remove("show"));
+      document.getElementById("fastingConfirm").addEventListener("click", confirmFastingRecover);
+      
+      // 点击宠物卡片也可以打开喂食/绝食弹窗
+      document.getElementById("spiritTorie").addEventListener("click", () => {
+        if (petStates.Torie.is_fasting) openFastingModal("Torie");
+        else openFeedModal("Torie");
+      });
+      document.getElementById("spiritJory").addEventListener("click", () => {
+        if (petStates.Jory.is_fasting) openFastingModal("Jory");
+        else openFeedModal("Jory");
+      });
+    }
 
     /* ==================== PET MOOD LOGIC ==================== */
     let recentEvents = { Torie: [], Jory: [] };
@@ -844,6 +1245,9 @@
       return { earns, redeems, punishes };
     }
     function getPetState(person) {
+      // 绝食状态优先
+      if (petStates[person] && petStates[person].is_fasting) return "fasting";
+      
       const balance = calcBalance(person);
       const now = new Date();
       const hour = now.getHours();
@@ -878,7 +1282,7 @@
         sadEyes.forEach(p => p.style.display = 'none');
         if (state === 'amazing' || state === 'happy') starEyes.forEach(p => p.style.display = '');
         else if (state === 'sleepy') sleepyEyes.forEach(p => p.style.display = '');
-        else if (state === 'low' || state === 'warning') sadEyes.forEach(p => p.style.display = '');
+        else if (state === 'low' || state === 'warning' || state === 'fasting') sadEyes.forEach(p => p.style.display = '');
         else pupils.forEach(p => p.style.display = '');
       } else {
         const beanEyes = svg.querySelectorAll('.bean-eye');
@@ -893,7 +1297,7 @@
         ears.forEach(e => e.classList.remove('ear-down'));
         if (state === 'amazing' || state === 'happy' || state === 'good') happyEyes.forEach(e => e.style.display = '');
         else if (state === 'sleepy') sleepyEyes.forEach(e => e.style.display = '');
-        else if (state === 'low' || state === 'warning') { sadEyes.forEach(e => e.style.display = ''); ears.forEach(e => e.classList.add('ear-down')); }
+        else if (state === 'low' || state === 'warning' || state === 'fasting') { sadEyes.forEach(e => e.style.display = ''); ears.forEach(e => e.classList.add('ear-down')); }
         else beanEyes.forEach(e => e.style.display = '');
       }
       const config = SPIRIT_STATES[state] || SPIRIT_STATES.normal;
@@ -906,6 +1310,7 @@
 
     /* ==================== PET CLICK INTERACTIONS ==================== */
     function initPetInteractions() {
+      // 注意：点击事件已在 setupFeedModals 中绑定，这里只保留动画效果
       document.getElementById('spiritTorie').addEventListener('click', () => {
         const svg = document.getElementById('svgTorie');
         svg.classList.add('pet-clicked');
@@ -1907,6 +2312,7 @@
     function refreshAll() {
       updateBalances();
       updateSpirits();
+      updateEnergyUI();
       updateHistoryFilterOptions();
       renderStats();
       renderHistory();
@@ -1920,15 +2326,51 @@
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
     function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
 
-    /* ==================== DELETE LOG ==================== */
+    /* ==================== DELETE LOG (WITH FEED ROLLBACK) ==================== */
     async function deleteLog(id) {
       if (!confirm("确定删除这条记录？")) return;
       const log = allLogs.find(l => String(l.id) === String(id));
       if (!log) return showToast("找不到该记录", "error");
+      
+      // 检查是否是喂食记录，如果是则需要回滚宠物能量
+      const note = log.note || "";
+      if (note.startsWith("FEED:") && log.change_type === "减少") {
+        // 解析 FEED:oldEnergy:newEnergy
+        const parts = note.split(":");
+        if (parts.length === 3) {
+          const oldEnergy = parseFloat(parts[1]);
+          const person = log.operator;
+          if (petStates[person]) {
+            // 计算从喂食到现在自然衰减了多少
+            const feedTime = new Date(log.created_at).getTime();
+            const now = Date.now();
+            const minsSinceFeed = Math.max(0, (now - feedTime) / 60000);
+            const decaySinceFeed = minsSinceFeed * DECAY_RATE_PER_MIN;
+            
+            // 回滚：恢复到喂食前的能量，再减去这段时间的自然衰减
+            let rolledBackEnergy = oldEnergy - decaySinceFeed;
+            rolledBackEnergy = Math.max(0, rolledBackEnergy);
+            
+            // 如果回滚后变成0，进入绝食
+            if (rolledBackEnergy <= 0) {
+              petStates[person].is_fasting = true;
+              petStates[person].energy = 0;
+            } else {
+              petStates[person].is_fasting = false;
+              petStates[person].energy = rolledBackEnergy;
+            }
+            petStates[person].last_updated = new Date().toISOString();
+            await savePetState(person);
+          }
+        }
+      }
+      
       const { error } = await sb.from("freecard_log").delete().eq("id", id);
       if (error) return showToast("删除失败", "error");
       showToast("已删除", "success");
       await loadLogs();
+      updateEnergyUI();
+      updateSpirits();
     }
 
     /* ==================== UTILS ==================== */
@@ -1943,6 +2385,7 @@
       initSettings();
       initRatioModals();
       initPetInteractions();
+      setupFeedModals();
       setupNav();
       setupBankNav();
       setupPeriodTabs();
@@ -1957,10 +2400,22 @@
       setupSuperviseConverter();
       setupRecharge();
       checkSpecialDate();
+      
+      // 加载宠物状态（含离线衰减计算）
+      await loadPetStates();
+      startEnergyDecay();
+      
       await loadLogs();
       await loadProducts();
       sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
       sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
+      
+      // 页面可见性变化时重新计算衰减
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+          loadPetStates();
+        }
+      });
     });
   </script>
 </body>
