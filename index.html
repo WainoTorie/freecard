@@ -219,7 +219,6 @@
     .history-header .section-title { margin: 0; }
     .history-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .history-filter { width: auto; min-width: 90px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
-    /* ★ 新增：搜索框样式 */
     .history-search { width: auto; min-width: 120px; flex: 1; max-width: 200px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 1; padding: 0 10px; }
     .history-count { font-size: 12px; font-weight: 700; color: var(--text-3); background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
     .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; position: relative; }
@@ -379,7 +378,6 @@
       .bank-sub-nav { gap: 8px; }
       .bank-sub-nav-btn { padding: 18px 8px; }
       .converter-type-grid { grid-template-columns: repeat(2, 1fr); }
-      /* ★ 新增：小屏下搜索框自适应 */
       .history-controls { flex-wrap: wrap; }
       .history-search { min-width: 100px; max-width: none; flex: 1 1 100%; order: 10; margin-top: 4px; }
     }
@@ -883,7 +881,6 @@
           <div class="history-controls">
             <span id="historyCount" class="history-count">0条</span>
             <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
-            <!-- ★ 修改1：新增搜索框 -->
             <input id="historySearch" class="history-search" type="search" placeholder="🔍 搜索原因/备注..." />
           </div>
         </div>
@@ -906,7 +903,7 @@
 
     let allLogs = [], allProducts = [];
     let currentPeriod = "today", currentHistoryFilter = "all";
-    let currentHistorySearch = ""; // ★ 修改1：搜索关键词
+    let currentHistorySearch = "";
     let currentPerspective = "torie";
     let bankPerson = "";
     let bankSection = "";
@@ -956,7 +953,6 @@
     };
 
     /* ==================== STAMINA SYSTEM ==================== */
-    // ★ 修改：staminaData 新增 starved_at 字段
     let staminaData = {
       Torie: { stamina: 80, updated_at: new Date().toISOString(), starved_at: null },
       Jory:  { stamina: 80, updated_at: new Date().toISOString(), starved_at: null }
@@ -972,11 +968,13 @@
       if (error) { console.error("Stamina load error:", error); return; }
       if (data && data.length > 0) {
         data.forEach(row => {
+          // ★ FIX: 安全解析 starved_at，兼容空字符串和null
+          let starvedAt = row.starved_at || null;
+          if (starvedAt === "" || starvedAt === "null") starvedAt = null;
           staminaData[row.person] = {
             stamina: Number(row.stamina),
             updated_at: row.updated_at,
-            // ★ 修改：加载 starved_at，兼容旧数据（数据库中可能没有此字段）
-            starved_at: row.starved_at || null
+            starved_at: starvedAt
           };
         });
       }
@@ -986,24 +984,37 @@
 
     function applyOfflineDecay() {
       const now = Date.now();
+      let needsSave = false; // ★ FIX: 追踪是否需要保存
       ["Torie", "Jory"].forEach(person => {
         const lastUpdate = new Date(staminaData[person].updated_at).getTime();
         const minutesPassed = Math.max(0, (now - lastUpdate) / 60000);
         const prevStamina = staminaData[person].stamina;
         const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
         const newStamina = Math.max(0, prevStamina - decay);
+        
+        if (Math.abs(newStamina - prevStamina) > 0.001) {
+          needsSave = true; // ★ FIX: 有变化才标记需要保存
+        }
+        
         staminaData[person].stamina = newStamina;
         staminaData[person].updated_at = new Date().toISOString();
 
-        // ★ 修改：如果体力从 >0 衰减到 <=0，记录 starved_at
+        // ★ FIX: 如果体力从 >0 衰减到 <=0，记录 starved_at
         if (prevStamina > 0 && newStamina <= 0) {
           staminaData[person].starved_at = new Date().toISOString();
+          needsSave = true;
         }
-        // ★ 修改：兼容旧数据 —— 如果体力为0但没有 starved_at，用 updated_at 兜底
+        // ★ FIX: 兼容旧数据 —— 如果体力为0但没有 starved_at，用 updated_at 兜底
         if (newStamina <= 0 && !staminaData[person].starved_at) {
           staminaData[person].starved_at = staminaData[person].updated_at;
+          needsSave = true;
         }
       });
+      // ★ FIX: 离线衰减后立即保存到数据库
+      if (needsSave) {
+        saveStamina("Torie");
+        saveStamina("Jory");
+      }
     }
 
     async function saveStamina(person) {
@@ -1012,8 +1023,8 @@
         person,
         stamina: Math.round(val.stamina * 100) / 100,
         updated_at: val.updated_at,
-        // ★ 修改：持久化 starved_at
-        starved_at: val.starved_at
+        // ★ FIX: 确保 starved_at 为 null 时传 null 而非 undefined
+        starved_at: val.starved_at || null
       }, { onConflict: 'person' });
       if (error) console.error("Stamina save error:", error);
     }
@@ -1045,12 +1056,11 @@
       return { final: Math.min(100, result), steps };
     }
 
-    /* ★ 修改：getReviveCost 使用 starved_at 计算绝食时长 */
     function getReviveCost(person) {
       const stamina = staminaData[person].stamina;
       if (stamina > 0) return 0;
       const starvedAt = staminaData[person].starved_at;
-      if (!starvedAt) return 1; // 兜底：如果没有 starved_at，最少1张
+      if (!starvedAt) return 1;
       const hoursStarved = Math.max(0, (Date.now() - new Date(starvedAt).getTime()) / (1000 * 60 * 60));
       if (hoursStarved <= 10) return 1;
       const extraHours = hoursStarved - 10;
@@ -1058,10 +1068,9 @@
       return 1 + extra;
     }
 
-    /* ★ 修改：getStarvedDurationText 使用 starved_at 计算绝食时长 */
     function getStarvedDurationText(person) {
       const starvedAt = staminaData[person].starved_at;
-      if (!starvedAt) return "0分钟"; // 兜底
+      if (!starvedAt) return "0分钟";
       const diffMs = Date.now() - new Date(starvedAt).getTime();
       const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -1130,7 +1139,7 @@
             staminaData[person].stamina = Math.max(0, staminaData[person].stamina - STAMINA_DECAY_PER_MIN);
             changed = true;
 
-            // ★ 修改：在线衰减时，体力首次降至0则记录 starved_at
+            // ★ FIX: 在线衰减时，体力首次降至0则记录 starved_at
             if (prevStamina > 0 && staminaData[person].stamina <= 0) {
               staminaData[person].starved_at = new Date().toISOString();
             }
@@ -1140,6 +1149,7 @@
           ["Torie", "Jory"].forEach(p => { staminaData[p].updated_at = new Date().toISOString(); });
           updateStaminaUI();
           updateSpirits();
+          // ★ FIX: 保存时包含 starved_at（已在 saveStamina 中修复）
           saveStamina("Torie");
           saveStamina("Jory");
         } else {
@@ -1166,7 +1176,8 @@
       updateFeedStarveTimer();
       document.getElementById("feedOverlay").classList.add("show");
       if (feedStarveTimer) clearInterval(feedStarveTimer);
-      feedStarveTimer = setInterval(updateFeedStarveTimer, 60000);
+      // ★ FIX: 缩短刷新间隔到10秒，让绝食倒计时更及时
+      feedStarveTimer = setInterval(updateFeedStarveTimer, 10000);
     }
 
     function closeFeedModal() {
@@ -1246,7 +1257,6 @@
       }
     }
 
-    /* ★ 修改：唤醒后体力设为10%，并清除 starved_at */
     async function confirmFeed() {
       if (!feedTarget) return;
       const current = staminaData[feedTarget].stamina;
@@ -1276,10 +1286,9 @@
           confirmBtn.textContent = originalBtnText;
           return;
         }
-        // ★ 修改1：唤醒后体力设为10%
+        // ★ FIX: 唤醒后体力设为10%，并清除 starved_at
         staminaData[feedTarget].stamina = 10;
         staminaData[feedTarget].updated_at = new Date().toISOString();
-        // ★ 修改2：唤醒成功后清除 starved_at
         staminaData[feedTarget].starved_at = null;
         await saveStamina(feedTarget);
         updateStaminaUI();
@@ -1318,6 +1327,9 @@
       }
       staminaData[feedTarget].stamina = final;
       staminaData[feedTarget].updated_at = new Date().toISOString();
+      // ★ FIX: 正常喂食不清除 starved_at（因为此时 stamina > 0，starved_at 本应为 null）
+      // 但如果之前是绝食状态通过其他方式恢复了体力（理论上不应发生），这里也做清理
+      staminaData[feedTarget].starved_at = null;
       await saveStamina(feedTarget);
       updateStaminaUI();
       updateSpirits();
@@ -1354,11 +1366,13 @@
       sb.channel("stamina-realtime")
         .on("postgres_changes", { event: "*", schema: "public", table: "freecard_stamina" }, (payload) => {
           if (payload.new && payload.new.person) {
+            // ★ FIX: 安全解析 Realtime 推送的 starved_at
+            let starvedAt = payload.new.starved_at || null;
+            if (starvedAt === "" || starvedAt === "null") starvedAt = null;
             staminaData[payload.new.person] = {
               stamina: Number(payload.new.stamina),
               updated_at: payload.new.updated_at,
-              // ★ 修改：实时同步时也读取 starved_at
-              starved_at: payload.new.starved_at || null
+              starved_at: starvedAt
             };
             applyOfflineDecay();
             updateStaminaUI();
@@ -1752,7 +1766,6 @@
         });
       });
     }
-    /* ★ 修改1：搜索框事件绑定 */
     function setupHistoryFilter() {
       document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();});
       document.getElementById("historySearch").addEventListener("input",(e)=>{currentHistorySearch=e.target.value.trim().toLowerCase();renderHistory();});
@@ -1863,7 +1876,6 @@
       document.querySelectorAll(".menu-btn.active").forEach(b => b.classList.remove("active"));
     }
 
-    /* ★ 修改1：renderHistory 增加搜索过滤逻辑 */
     function renderHistory() {
       const container=document.getElementById("historyList");
       const countBadge=document.getElementById("historyCount");
@@ -1883,7 +1895,6 @@
         });
       }
 
-      // ★ 修改1：在时间筛选基础上叠加搜索过滤
       if (currentHistorySearch) {
         const kw = currentHistorySearch;
         logs = logs.filter(l => {
@@ -2491,8 +2502,17 @@
         const beforeStamina = parseInt(feedMatch[3]);
         const minutesPassed = Math.max(0, (Date.now() - new Date(log.created_at).getTime()) / 60000);
         const decay = minutesPassed * STAMINA_DECAY_PER_MIN;
-        staminaData[person].stamina = Math.max(0, beforeStamina - decay);
+        const revertedStamina = Math.max(0, beforeStamina - decay);
+        staminaData[person].stamina = revertedStamina;
         staminaData[person].updated_at = new Date().toISOString();
+        // ★ FIX: 删除喂食记录后正确处理 starved_at
+        if (revertedStamina <= 0) {
+          // 回退后体力为0，需要设置 starved_at（使用原始记录的创建时间作为绝食起点）
+          staminaData[person].starved_at = log.created_at;
+        } else {
+          // 回退后体力 > 0，清除 starved_at
+          staminaData[person].starved_at = null;
+        }
         await saveStamina(person);
         updateStaminaUI();
         updateSpirits();
