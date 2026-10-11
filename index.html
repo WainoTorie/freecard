@@ -15,6 +15,7 @@
       --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
       --accent: var(--torie);
+      --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -28,16 +29,26 @@
     html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     body { background: var(--bg-tint); color: var(--text-1); font-family: var(--font); padding: 20px 16px 120px; min-height: 100vh; line-height: 1.5; transition: background 0.5s, color 0.3s; }
     button, input, select { font-family: inherit; }
+    
+    /* === LAYOUT & COMMON === */
     .container { width: min(680px, 100%); margin: 0 auto; position: relative; min-width: 0; }
-    .festival-banner { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden; }
+    .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; color: var(--text-1); }
+    .subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 24px; }
+    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
+    .card { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); min-width: 0; animation: fadeUp 0.4s var(--ease-spring) both; }
+    
+    /* === FESTIVAL BANNER === */
+    .festival-banner { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden; animation: fadeUp 0.5s var(--ease-spring); }
     .festival-emoji { font-size: 32px; display: block; margin-bottom: 8px; }
     .festival-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-1); }
     .festival-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; }
+
+    /* === SETTINGS === */
     .settings-btn { position: absolute; top: 8px; right: 0; width: 36px; height: 36px; border: none; background: var(--card); border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
     .settings-btn:active { transform: scale(0.9); }
     .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
     .overlay.show { opacity: 1; pointer-events: auto; }
-    .panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: min(400px, calc(100% - 32px)); background: var(--card); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 24px 20px 40px; z-index: 9999; transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); border: 1px solid var(--border); box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12); max-height: 85vh; overflow-y: auto; }
+    .panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: min(400px, calc(100% - 32px)); background: var(--card); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 24px 20px 40px; z-index: 9999; transition: transform 0.3s var(--ease-spring); border: 1px solid var(--border); box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12); max-height: 85vh; overflow-y: auto; }
     .panel.show { transform: translateX(-50%) translateY(0); }
     .panel-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; text-align: center; }
     .setting-row { margin-bottom: 20px; }
@@ -48,35 +59,45 @@
     .settings-recharge h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
     .settings-recharge .recharge-rate { font-size: 12px; color: var(--text-2); margin-bottom: 10px; font-weight: 600; }
     .settings-recharge .recharge-rate span { color: var(--torie); font-size: 14px; font-weight: 800; }
-    .settings-recharge .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .settings-recharge .converter-result { text-align: center; padding: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 8px 0; font-weight: 700; color: var(--green); font-size: 13px; }
-    .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; color: var(--text-1); }
-    .subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 24px; }
-    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
-    .card { background: var(--card); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); min-width: 0; }
+
+    /* === PET CARD NEW LAYOUT === */
     .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer; }
-    .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.04; pointer-events: none; transition: background 0.3s; }
+    .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 12px 14px; text-align: center; transition: all 0.3s ease; position: relative; overflow: visible; display: flex; flex-direction: column; align-items: center; }
+    .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.04; pointer-events: none; transition: background 0.3s; border-radius: var(--r-lg); }
     .spirit-card.torie::before { background: var(--torie); }
     .spirit-card.jory::before { background: var(--jory); }
-    .spirit-card:active { transform: scale(0.96); }
     
-    /* === PET ENERGY BAR STYLES === */
-    .pet-energy-wrap { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; height: 24px; }
-    .energy-bar-track { flex: 1; height: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; position: relative; }
+    /* Energy Bar on Top */
+    .pet-energy-wrap { width: 80%; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; height: 12px; z-index: 2; }
+    .energy-bar-track { flex: 1; height: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; position: relative; }
     .energy-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease, background 0.3s; }
     .energy-bar-fill.torie { background: var(--torie); }
     .energy-bar-fill.jory { background: var(--jory); }
     .energy-bar-fill.low { background: var(--red) !important; }
-    .energy-preview { position: absolute; top: 0; left: 0; height: 100%; background: currentColor; opacity: 0.3; border-radius: 3px; pointer-events: none; transition: width 0.2s; display: none; }
-    .feed-btn { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 50%; background: var(--card); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; padding: 0; line-height: 1; }
+
+    .pet-container { height: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; position: relative; cursor: pointer; }
+    .pet-svg { width: 60px; height: 60px; transition: transform 0.3s var(--ease-spring); pointer-events: none; }
+    
+    /* Status Row: Text + Feed Button */
+    .spirit-status-row { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 28px; margin-top: 2px; }
+    .spirit-name { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+    .spirit-status { font-size: 12px; font-weight: 600; color: var(--text-1); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; }
+    
+    .feed-btn { 
+      width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 50%; 
+      background: var(--card); font-size: 13px; cursor: pointer; 
+      display: flex; align-items: center; justify-content: center; 
+      transition: all 0.2s var(--ease-spring); flex-shrink: 0; padding: 0; line-height: 1;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .feed-btn:hover { transform: scale(1.1); border-color: var(--text-3); }
     .feed-btn:active { transform: scale(0.9); }
-    .feed-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .feed-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
     .fasting-badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); background: var(--red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; z-index: 5; animation: pulse 1.5s infinite; white-space: nowrap; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-    .pet-container { height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; position: relative; }
-    .pet-svg { width: 64px; height: 64px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    /* Pet Animations */
     .state-amazing .pet-svg { animation: petBounce 1s ease-in-out infinite; }
     .state-happy .pet-svg { animation: petSway 2s ease-in-out infinite; }
     .state-good .pet-svg { animation: petSway 2.5s ease-in-out infinite; }
@@ -85,12 +106,13 @@
     .state-normal .pet-svg { animation: petBreathe 3s ease-in-out infinite; }
     .state-sleepy .pet-svg { animation: petBreathe 4s ease-in-out infinite; opacity: 0.8; }
     .state-fasting .pet-svg { filter: grayscale(0.8) brightness(0.7); transform: scale(0.85); }
-    .pet-clicked { animation: petJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
-    @keyframes petBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .pet-clicked { animation: petJump 0.6s var(--ease-spring) !important; }
+    @keyframes petBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
     @keyframes petSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
     @keyframes petShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
     @keyframes petBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
-    @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-15px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
+    @keyframes petJump { 0% { transform: scale(1) translateY(0); } 30% { transform: scale(0.9, 1.1) translateY(-12px); } 60% { transform: scale(1.1, 0.9) translateY(0); } 100% { transform: scale(1) translateY(0); } }
+    
     .pet-svg * { transition: all 0.4s ease; }
     .bunny-ear-l { transform-origin: 34px 44px; }
     .bunny-ear-r { transform-origin: 66px 44px; }
@@ -102,8 +124,8 @@
     .zzz { opacity: 0; transition: all 0.3s; }
     .state-sleepy .zzz { opacity: 1; animation: zzzFloat 2s ease-in-out infinite; }
     @keyframes zzzFloat { 0%,100% { transform: translateY(0); opacity: 0.7; } 50% { transform: translateY(-6px); opacity: 1; } }
-    .spirit-name { font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .spirit-status { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.4; min-height: 36px; display: flex; align-items: center; justify-content: center; }
+
+    /* === SUMMARY & BALANCE === */
     .summary-card { background: var(--card); border: 1px solid var(--border); }
     .summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     .summary-icon { font-size: 20px; }
@@ -124,6 +146,8 @@
     .balance-box.torie .balance-number { color: var(--torie); }
     .balance-box.jory .balance-number { color: var(--jory); }
     .balance-unit { font-size: 12px; font-weight: 500; color: var(--text-3); margin-left: 2px; }
+
+    /* === FORMS === */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .form-group.full { grid-column: 1 / -1; }
@@ -135,18 +159,17 @@
     .submit-btn:disabled { background: var(--border); color: var(--text-3); cursor: not-allowed; }
     .submit-btn.danger { background: var(--red); }
     .submit-btn.green { background: var(--green); }
+
+    /* === TABS === */
     .segment { display: grid; gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
-    .segment-3 { grid-template-columns: repeat(3, 1fr); }
-    .segment-2 { grid-template-columns: repeat(2, 1fr); }
-    .seg-btn { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .seg-btn.active { background: var(--card); color: var(--text-1); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-    .perspective-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 12px; }
-    .perspective-tab { height: 36px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px; }
-    .perspective-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-    .perspective-tab .pt-emoji { font-size: 15px; }
-    .period-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 20px; }
-    .period-tab { height: 32px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-    .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .perspective-tabs, .period-tabs { display: grid; gap: 0; padding: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: 12px; }
+    .perspective-tabs { grid-template-columns: repeat(3, 1fr); }
+    .period-tabs { grid-template-columns: repeat(2, 1fr); margin-bottom: 16px; }
+    .perspective-tab, .period-tab { height: 34px; border: none; border-radius: calc(var(--r-md) - 2px); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .perspective-tab.active, .period-tab.active { background: var(--card); color: var(--text-1); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .pt-emoji { font-size: 14px; }
+
+    /* === STATS CHART === */
     .stats-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
     .summary-item { text-align: center; padding: 12px 8px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); }
     .summary-label { font-size: 11px; color: var(--text-2); font-weight: 600; margin-bottom: 2px; }
@@ -154,30 +177,21 @@
     .summary-value.plus { color: var(--green); }
     .summary-value.minus { color: var(--red); }
     .summary-value.net { color: var(--torie); }
-    .stats-group { margin-bottom: 20px; }
-    .stats-label { margin-bottom: 10px; font-size: 14px; font-weight: 700; color: var(--text-2); }
-    .bar-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) 32px; align-items: center; gap: 8px; margin: 8px 0; min-width: 0; }
-    .bar-name { font-size: 12px; font-weight: 600; color: var(--text-2); }
-    .bar-track { height: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; min-width: 0; }
-    .bar { height: 100%; border-radius: 5px; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 0; }
-    .bar.torie-bar { background: var(--torie); }
-    .bar.jory-bar { background: var(--jory); }
-    .bar-number { text-align: right; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-1); }
-    .empty-stats { padding: 16px 0; color: var(--text-3); font-size: 13px; text-align: center; }
-    .scale-chart { display: flex; align-items: center; height: 32px; margin: 16px 0 8px; position: relative; }
-    .scale-bar { height: 100%; transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); min-width: 2px; }
-    .scale-bar.spend { background: var(--red); border-radius: 0 6px 6px 0; opacity: 0.8; }
-    .scale-bar.earn { background: var(--green); border-radius: 6px 0 0 6px; opacity: 0.8; }
-    .scale-center { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--text-3); transform: translateX(-50%); z-index: 2; opacity: 0.5; }
-    .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-3); font-weight: 600; margin-top: 4px; }
-    .scale-net { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; padding: 6px; border-radius: var(--r-sm); background: var(--bg); border: 1px solid var(--border); }
+    
+    .chart-scroll-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0 8px; padding-bottom: 4px; }
+    .chart-container { position: relative; height: 220px; min-width: 100%; border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .chart-canvas { width: 100%; height: 100%; display: block; }
+    .chart-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-3); font-size: 13px; pointer-events: none; }
+    .chart-legend { display: flex; justify-content: center; gap: 16px; font-size: 11px; color: var(--text-2); margin-top: 8px; font-weight: 600; }
+    .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
+    /* === HISTORY === */
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
-    .history-header .section-title { margin: 0; }
     .history-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .history-filter { width: auto; min-width: 90px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
     .history-search { width: auto; min-width: 120px; flex: 1; max-width: 200px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 1; padding: 0 10px; }
     .history-count { font-size: 12px; font-weight: 700; color: var(--text-3); background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
-    .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; position: relative; }
+    .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; position: relative; animation: fadeIn 0.3s ease; }
     .history-item:last-child { border-bottom: none; }
     .history-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; width: 100%; flex-wrap: wrap; }
     .history-person { font-weight: 700; font-size: 14px; flex-shrink: 0; white-space: nowrap; }
@@ -197,7 +211,9 @@
     .action-menu-item.danger { color: var(--red); }
     @keyframes menuFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
     .empty-history { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
-    .list-item { padding: 16px 0; border-bottom: 1px solid var(--separator); display: flex; flex-direction: column; gap: 10px; }
+
+    /* === BANK LISTS === */
+    .list-item { padding: 16px 0; border-bottom: 1px solid var(--separator); display: flex; flex-direction: column; gap: 10px; animation: fadeIn 0.3s ease; }
     .list-item:last-child { border-bottom: none; }
     .list-item-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .list-item-name { font-size: 15px; font-weight: 600; color: var(--text-1); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -221,34 +237,39 @@
     .btn-edit { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
     .btn-del { background: var(--bg); color: var(--red); border: 1px solid var(--border); }
     .add-form { display: grid; grid-template-columns: 1fr 80px auto; gap: 8px; align-items: end; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); }
-    .add-form .form-group { gap: 2px; }
     .add-btn { height: 44px; border: none; border-radius: var(--r-sm); background: var(--text-1); color: var(--bg); font-size: 13px; font-weight: 700; cursor: pointer; padding: 0 16px; white-space: nowrap; }
     .add-btn:active { transform: scale(0.96); }
     .empty-list { padding: 32px 0; text-align: center; color: var(--text-3); font-size: 13px; }
-    .converter-unified-panel { margin-top: 12px; padding-top: 4px; }
+
+    /* === CONVERTER === */
+    .converter-unified-panel { margin-top: 12px; padding-top: 4px; animation: fadeIn 0.3s ease; }
     .converter-unified-panel .converter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
     .converter-unified-panel .converter-header h3 { font-size: 15px; font-weight: 700; color: var(--text-1); margin: 0; display: flex; align-items: center; gap: 6px; }
-    .converter-unified-panel .form-grid { margin-bottom: 12px; }
     .converter-result { text-align: center; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin: 12px 0; font-weight: 700; color: var(--green); font-size: 15px; }
     .converter-result.danger { color: var(--red); border-color: rgba(255,59,48,0.2); background: rgba(255,59,48,0.05); }
     .ratio-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-2); padding: 4px; transition: transform 0.2s; }
     .ratio-btn:active { transform: scale(0.9); }
-    .app-page { display: none; animation: fadeIn 0.2s ease; }
+    .converter-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 16px; }
+    .converter-type-btn { height: auto; padding: 10px 4px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg); color: var(--text-2); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.3; }
+    .converter-type-btn.active { background: var(--torie); color: #fff; border-color: var(--torie); }
+    .converter-type-btn:active { transform: scale(0.95); }
+    .ctb-emoji { font-size: 18px; display: block; margin-bottom: 2px; }
+
+    /* === BANK NAV === */
+    .app-page { display: none; animation: fadeIn 0.3s ease; }
     .app-page.active { display: block; }
-    .bank-sub-page { display: none; animation: fadeIn 0.2s ease; }
+    .bank-sub-page { display: none; animation: fadeIn 0.3s ease; }
     .bank-sub-page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .bank-step { display: none; animation: bankSlideIn 0.35s cubic-bezier(0.22,1,0.36,1); }
+    .bank-step { display: none; animation: bankSlideIn 0.35s var(--ease-spring); }
     .bank-step.active { display: block; }
     @keyframes bankSlideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     .person-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0 8px; }
-    .person-select-card { background: var(--card); border: 2px solid var(--border); border-radius: var(--r-lg); padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.22,1,0.36,1); position: relative; overflow: hidden; }
+    .person-select-card { background: var(--card); border: 2px solid var(--border); border-radius: var(--r-lg); padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.3s var(--ease-spring); position: relative; overflow: hidden; }
     .person-select-card:active { transform: scale(0.95); }
-    .person-select-card:hover { border-color: var(--text-3); }
-    .person-select-card .ps-pet { width: 56px; height: 56px; margin: 0 auto 12px; display: block; }
-    .person-select-card .ps-name { font-size: 18px; font-weight: 800; color: var(--text-1); margin-bottom: 4px; }
-    .person-select-card .ps-balance { font-size: 13px; color: var(--text-2); font-weight: 600; }
-    .person-select-card .ps-balance span { font-size: 20px; font-weight: 800; }
+    .ps-pet { width: 56px; height: 56px; margin: 0 auto 12px; display: block; }
+    .ps-name { font-size: 18px; font-weight: 800; color: var(--text-1); margin-bottom: 4px; }
+    .ps-balance { font-size: 13px; color: var(--text-2); font-weight: 600; }
+    .ps-balance span { font-size: 20px; font-weight: 800; }
     .person-select-card.torie-card:hover, .person-select-card.torie-card.selected { border-color: var(--torie); background: rgba(0,122,255,0.04); }
     .person-select-card.jory-card:hover, .person-select-card.jory-card.selected { border-color: var(--jory); background: rgba(255,149,0,0.04); }
     @media (prefers-color-scheme: dark) {
@@ -263,46 +284,75 @@
     .bank-sub-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
     .bank-sub-nav-btn { padding: 24px 12px; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--card); text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: var(--shadow); }
     .bank-sub-nav-btn:active { transform: scale(0.95); }
-    .bank-sub-nav-btn .bsn-emoji { font-size: 28px; display: block; margin-bottom: 8px; }
-    .bank-sub-nav-btn .bsn-label { font-size: 14px; font-weight: 700; color: var(--text-1); }
-    .bank-sub-nav-btn .bsn-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
-    .bank-sub-nav-btn:hover { border-color: var(--text-3); }
-    .converter-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 16px; }
-    .converter-type-btn { height: auto; padding: 10px 4px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg); color: var(--text-2); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.3; }
-    .converter-type-btn.active { background: var(--torie); color: #fff; border-color: var(--torie); }
-    .converter-type-btn:active { transform: scale(0.95); }
-    .converter-type-btn .ctb-emoji { font-size: 18px; display: block; margin-bottom: 2px; }
+    .bsn-emoji { font-size: 28px; display: block; margin-bottom: 8px; }
+    .bsn-label { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .bsn-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    /* === BOTTOM NAV === */
     .bottom-nav { position: fixed; z-index: 1000; left: 50%; bottom: 20px; transform: translateX(-50%); width: min(380px, calc(100% - 32px)); padding: 4px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--card-trans); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
     .nav-btn { height: 52px; border: 0; border-radius: 16px; background: transparent; color: var(--text-2); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; font-weight: 600; transition: all 0.2s; }
     .nav-btn:active { transform: scale(0.92); }
     .nav-icon { font-size: 20px; line-height: 1; }
     .nav-btn.active { background: var(--text-1); color: var(--bg); }
+
+    /* === MODALS & TOAST === */
     .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 99999; pointer-events: none; }
     .toast { padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 600; color: #fff; opacity: 0; transform: translateY(-10px); transition: all 0.3s; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { background: var(--green); }
     .toast.error { background: var(--red); }
     #celebrationCanvas { position: fixed; inset: 0; z-index: 10000; pointer-events: none; width: 100%; height: 100%; }
+    
     .modal-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .modal-overlay.show { opacity: 1; pointer-events: auto; }
-    .modal-box { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(320px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1); text-align: center; }
+    .modal-box { background: var(--card); border-radius: var(--r-lg); padding: 24px; width: min(320px, calc(100% - 40px)); box-shadow: 0 12px 40px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s var(--ease-spring); text-align: center; }
     .modal-overlay.show .modal-box { transform: scale(1); }
     .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
     .modal-actions { display: flex; gap: 8px; margin-top: 20px; }
-    .modal-btn { flex: 1; height: 40px; border: none; border-radius: var(--r-sm); font-size: 14px; font-weight: 600; cursor: pointer; }
+    .modal-btn { flex: 1; height: 40px; border: none; border-radius: var(--r-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .modal-btn.cancel { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
     .modal-btn.confirm { background: var(--red); color: #fff; }
     .modal-btn.confirm.green { background: var(--green); }
     .modal-hint { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+
     .redeem-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
     .redeem-overlay.show { opacity: 1; pointer-events: auto; }
-    .redeem-celebration { text-align: center; color: #fff; transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.22,1,0.36,1); padding: 20px; }
+    .redeem-celebration { text-align: center; color: #fff; transform: scale(0.8); transition: transform 0.5s var(--ease-spring); padding: 20px; }
     .redeem-overlay.show .redeem-celebration { transform: scale(1); }
     .redeem-emoji { font-size: 64px; margin-bottom: 16px; display: block; }
     .redeem-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
     .redeem-sub { font-size: 14px; opacity: 0.8; margin-bottom: 24px; }
     .redeem-close-btn { height: 40px; padding: 0 28px; border: none; border-radius: 20px; background: rgba(255,255,255,0.2); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s; }
+
     .bg-tint-overlay { position: fixed; inset: 0; pointer-events: none; z-index: -1; transition: background 0.6s ease; }
+    
+    /* Feed Modal Specific - Enhanced */
+    .feed-modal-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; padding: 12px; background: var(--bg); border-radius: var(--r-md); border: 1px solid var(--border); }
+    .feed-info-item { display: flex; flex-direction: column; gap: 2px; }
+    .feed-info-label { font-size: 11px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+    .feed-info-value { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .feed-info-value.warn { color: var(--red); }
+    
+    .feed-preview-section { margin: 16px 0; }
+    .feed-preview-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .feed-preview-title { font-size: 13px; font-weight: 700; color: var(--text-2); }
+    .feed-preview-numbers { font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .feed-preview-arrow { color: var(--text-3); margin: 0 4px; font-weight: 400; }
+    .feed-preview-new { color: var(--green); }
+    
+    .feed-stepper { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 20px 0 8px; }
+    .stepper-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg); color: var(--text-1); font-size: 20px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s var(--ease-spring); user-select: none; }
+    .stepper-btn:active { transform: scale(0.9); background: var(--border); }
+    .stepper-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    .stepper-display { min-width: 80px; text-align: center; }
+    .stepper-count { font-size: 32px; font-weight: 800; color: var(--text-1); line-height: 1; font-variant-numeric: tabular-nums; }
+    .stepper-unit { font-size: 12px; color: var(--text-3); font-weight: 600; margin-top: 4px; }
+    
+    .feed-cost-hint { text-align: center; font-size: 13px; font-weight: 600; color: var(--text-2); margin-top: 8px; min-height: 20px; }
+    .feed-cost-hint.error { color: var(--red); }
+    .feed-cost-hint.success { color: var(--green); }
+
+    /* Supervise Preview */
     .supervise-preview { margin-top: 12px; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); text-align: center; font-size: 14px; font-weight: 700; color: var(--text-1); display: none; }
     .supervise-preview .arrow { color: var(--text-3); margin: 0 6px; }
     .supervise-preview .victim { color: var(--red); }
@@ -312,12 +362,8 @@
     .sleep-rules-info .rule-line { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 2px; }
     .sleep-rules-info .rule-emoji { flex-shrink: 0; }
 
-    /* Feed Modal Specific */
-    .feed-modal-info { text-align: left; margin-bottom: 16px; }
-    .feed-info-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-2); margin-bottom: 6px; }
-    .feed-info-row span:last-child { font-weight: 600; color: var(--text-1); }
-    .feed-preview-bar { margin: 12px 0; }
-    .feed-preview-label { font-size: 12px; color: var(--text-3); margin-bottom: 4px; display: flex; justify-content: space-between; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     @media (max-width: 480px) {
       body { padding: 16px 12px 110px; }
@@ -334,8 +380,8 @@
       .add-btn { grid-column: 2; }
       .bottom-nav { bottom: 12px; border-radius: 18px; }
       .nav-btn { height: 48px; border-radius: 14px; }
-      .pet-svg { width: 56px; height: 56px; }
-      .spirit-status { font-size: 12px; }
+      .pet-svg { width: 52px; height: 52px; }
+      .spirit-status { font-size: 11px; max-width: 65px; }
       .person-select-card .ps-pet { width: 48px; height: 48px; }
       .person-select-card { padding: 20px 12px; }
       .bank-sub-nav { gap: 8px; }
@@ -343,6 +389,9 @@
       .converter-type-grid { grid-template-columns: repeat(2, 1fr); }
       .history-controls { flex-wrap: wrap; }
       .history-search { min-width: 100px; max-width: none; flex: 1 1 100%; order: 10; margin-top: 4px; }
+      .feed-stepper { gap: 12px; }
+      .stepper-btn { width: 40px; height: 40px; font-size: 18px; }
+      .stepper-count { font-size: 28px; }
     }
   </style>
 </head>
@@ -361,36 +410,51 @@
     </div>
   </div>
 
-  <!-- Feed Modal -->
+  <!-- Feed Modal (Enhanced) -->
   <div id="feedModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;" id="feedModalTitle">🍖 喂食 Torie</div>
+      
       <div class="feed-modal-info">
-        <div class="feed-info-row"><span>当前能量</span><span id="feedCurrentEnergy">50%</span></div>
-        <div class="feed-info-row"><span>上次喂食</span><span id="feedLastTime">刚刚</span></div>
-        <div class="feed-info-row"><span>距离饿死</span><span id="feedTimeToZero">约 8 小时</span></div>
-      </div>
-      <div class="feed-preview-bar">
-        <div class="feed-preview-label">
-          <span>能量预览</span>
-          <span id="feedPreviewText">50% → 50%</span>
+        <div class="feed-info-item">
+          <span class="feed-info-label">当前能量</span>
+          <span class="feed-info-value" id="feedCurrentEnergy">50%</span>
         </div>
-        <div class="energy-bar-track" style="height: 12px;">
-          <div class="energy-bar-fill torie" id="feedBarCurrent" style="width: 50%;"></div>
-          <div class="energy-preview" id="feedBarPreview" style="width: 50%; color: var(--green);"></div>
+        <div class="feed-info-item">
+          <span class="feed-info-label">上次喂食</span>
+          <span class="feed-info-value" id="feedLastTime">刚刚</span>
+        </div>
+        <div class="feed-info-item" style="grid-column: 1 / -1;">
+          <span class="feed-info-label">距离饿死</span>
+          <span class="feed-info-value warn" id="feedTimeToZero">约 8 小时</span>
         </div>
       </div>
-      <div class="form-group" style="margin-bottom: 0;">
-        <label for="feedAmount">选择喂食张数（每张 +30%）</label>
-        <select id="feedAmount">
-          <option value="0">不喂 (0 张)</option>
-          <option value="1">1 张 (+30%)</option>
-          <option value="2">2 张 (+60%)</option>
-          <option value="3">3 张 (+90%)</option>
-          <option value="4">4 张 (+100% 封顶)</option>
-        </select>
+
+      <div class="feed-preview-section">
+        <div class="feed-preview-header">
+          <span class="feed-preview-title">能量变化预览</span>
+          <div class="feed-preview-numbers">
+            <span id="feedPreviewOld">50%</span>
+            <span class="feed-preview-arrow">→</span>
+            <span class="feed-preview-new" id="feedPreviewNew">50%</span>
+          </div>
+        </div>
+        <div class="energy-bar-track" style="height: 14px; border-radius: 7px;">
+          <div class="energy-bar-fill torie" id="feedBarCurrent" style="width: 50%; border-radius: 7px;"></div>
+          <div id="feedBarPreview" style="position:absolute; top:0; left:0; height:100%; background:var(--green); opacity:0.3; border-radius:7px; width:50%; transition: width 0.3s ease; pointer-events:none;"></div>
+        </div>
       </div>
-      <div id="feedCostHint" style="font-size: 12px; color: var(--text-3); margin-top: 6px; text-align: center;"></div>
+
+      <div class="feed-stepper">
+        <button class="stepper-btn" id="feedMinus" disabled>−</button>
+        <div class="stepper-display">
+          <div class="stepper-count" id="feedCountDisplay">0</div>
+          <div class="stepper-unit">张自由卡</div>
+        </div>
+        <button class="stepper-btn" id="feedPlus">+</button>
+      </div>
+      <div class="feed-cost-hint" id="feedCostHint">选择喂食张数（每张 +30%）</div>
+
       <div class="modal-actions">
         <button class="modal-btn cancel" id="feedCancel">取消</button>
         <button class="modal-btn confirm green" id="feedConfirm" disabled>确认喂食</button>
@@ -409,6 +473,25 @@
       <div class="modal-actions">
         <button class="modal-btn cancel" id="fastingCancel">再等等</button>
         <button class="modal-btn confirm" id="fastingConfirm">💔 花费 3 张哄好</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Item Modal (Unified) -->
+  <div id="editModal" class="modal-overlay">
+    <div class="modal-box" style="text-align: left;">
+      <div class="modal-title" style="text-align: center;">✏️ 修改项目</div>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label for="editName">名称</label>
+        <input type="text" id="editName" maxlength="30" />
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="editCost">数值（张）</label>
+        <input type="number" id="editCost" min="1" max="999" />
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="editCancel">取消</button>
+        <button class="modal-btn confirm green" id="editSave">保存修改</button>
       </div>
     </div>
   </div>
@@ -536,13 +619,15 @@
         <!-- Torie Pet -->
         <div class="spirit-card torie state-normal" id="spiritTorie">
           <div class="fasting-badge" id="fastingBadgeTorie" style="display:none;">😢 绝食中</div>
+          
+          <!-- Energy Bar Moved to Top -->
           <div class="pet-energy-wrap">
             <div class="energy-bar-track">
               <div class="energy-bar-fill torie" id="energyBarTorie" style="width: 50%;"></div>
             </div>
-            <button class="feed-btn" id="feedBtnTorie" title="喂食">🍖</button>
           </div>
-          <div class="pet-container">
+
+          <div class="pet-container" id="petClickTorie">
             <svg class="pet-svg" id="svgTorie" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
               <path d="M25 45 C25 20, 75 20, 75 45 C75 75, 65 90, 50 90 C35 90, 25 75, 25 45 Z" fill="var(--card)" />
               <path d="M25 35 L20 20 L35 28" />
@@ -565,19 +650,26 @@
             </svg>
           </div>
           <div class="spirit-name">Torie</div>
-          <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
+          
+          <!-- Status Row with Feed Button -->
+          <div class="spirit-status-row">
+            <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
+            <button class="feed-btn" id="feedBtnTorie" title="喂食">🍖</button>
+          </div>
         </div>
 
         <!-- Jory Pet -->
         <div class="spirit-card jory state-normal" id="spiritJory">
           <div class="fasting-badge" id="fastingBadgeJory" style="display:none;">😢 绝食中</div>
+          
+          <!-- Energy Bar Moved to Top -->
           <div class="pet-energy-wrap">
             <div class="energy-bar-track">
               <div class="energy-bar-fill jory" id="energyBarJory" style="width: 50%;"></div>
             </div>
-            <button class="feed-btn" id="feedBtnJory" title="喂食">🥕</button>
           </div>
-          <div class="pet-container">
+
+          <div class="pet-container" id="petClickJory">
             <svg class="pet-svg" id="svgJory" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <ellipse cx="50" cy="65" rx="26" ry="22" fill="var(--card)" />
               <path class="bunny-ear-l" d="M28 44 C18 32, 8 16, 14 6 C20 -2, 36 14, 40 44" fill="var(--card)" />
@@ -603,7 +695,12 @@
             </svg>
           </div>
           <div class="spirit-name">Jory</div>
-          <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
+          
+          <!-- Status Row with Feed Button -->
+          <div class="spirit-status-row">
+            <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
+            <button class="feed-btn" id="feedBtnJory" title="喂食">🥕</button>
+          </div>
         </div>
       </div>
     </section>
@@ -828,19 +925,35 @@
       <div class="subtitle">看见成长的轨迹 📊</div>
       <div class="card">
         <h2 class="section-title">📈 统计概览</h2>
+        
+        <!-- Period Tabs: Only Today & History -->
+        <div class="period-tabs">
+          <button class="period-tab active" data-period="today">今日</button>
+          <button class="period-tab" data-period="all">历史统计</button>
+        </div>
+
+        <!-- Perspective Tabs -->
         <div class="perspective-tabs">
           <button class="perspective-tab active" data-perspective="torie"><span class="pt-emoji">🦉</span> Torie</button>
           <button class="perspective-tab" data-perspective="jory"><span class="pt-emoji">🐰</span> Jory</button>
           <button class="perspective-tab" data-perspective="together"><span class="pt-emoji">💑</span> Together</button>
         </div>
-        <div class="period-tabs">
-          <button class="period-tab active" data-period="today">今日</button>
-          <button class="period-tab" data-period="week">本周</button>
-          <button class="period-tab" data-period="month">本月</button>
-          <button class="period-tab" data-period="all">总计</button>
-        </div>
+
         <div id="statsSummary" class="stats-summary"></div>
-        <div id="statsContent"></div>
+        
+        <!-- Scrollable Chart Container -->
+        <div class="chart-scroll-container" id="chartScrollContainer">
+          <div class="chart-container" id="chartContainer">
+            <canvas id="statsChart" class="chart-canvas"></canvas>
+            <div id="chartEmpty" class="chart-empty" style="display:none;">暂无足够数据绘制趋势图</div>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:var(--green)"></span>余额上升</span>
+          <span><span class="legend-dot" style="background:var(--red)"></span>余额下降</span>
+        </div>
+
+        <div id="statsContent" style="margin-top: 16px;"></div>
       </div>
       <div class="card">
         <div class="history-header">
@@ -874,6 +987,8 @@
     let currentPerspective = "torie";
     let bankPerson = "";
     let bankSection = "";
+    let editingItemId = null;
+    let editingItemType = null;
 
     const DEFAULT_RATIOS = {
       calorie: { torieX: 200, torieY: 1, joryX: 100, joryY: 1 },
@@ -920,16 +1035,17 @@
     };
 
     /* ==================== PET FEEDING SYSTEM ==================== */
-    const DECAY_RATE_PER_MIN = 0.1; // 每分钟掉 0.1%
-    const FEED_PER_CARD = 30;       // 每张卡加 30%
-    const FASTING_RECOVER_COST = 3; // 绝食恢复花费
-    const FASTING_RECOVER_ENERGY = 10; // 绝食恢复后能量
+    const DECAY_RATE_PER_MIN = 0.1; 
+    const FEED_PER_CARD = 30;       
+    const FASTING_RECOVER_COST = 3; 
+    const FASTING_RECOVER_ENERGY = 10; 
 
     let petStates = {
       Torie: { energy: 50, last_updated: new Date().toISOString(), is_fasting: false },
       Jory: { energy: 50, last_updated: new Date().toISOString(), is_fasting: false }
     };
     let feedTargetPerson = "";
+    let feedCardCount = 0;
     let energyDecayTimer = null;
 
     async function loadPetStates() {
@@ -944,7 +1060,6 @@
           };
         });
       }
-      // 计算离线衰减
       ["Torie", "Jory"].forEach(person => {
         if (!petStates[person].is_fasting) {
           const now = Date.now();
@@ -955,7 +1070,6 @@
           if (newEnergy <= 0) {
             newEnergy = 0;
             petStates[person].is_fasting = true;
-            // 同步绝食状态到数据库
             sb.from("freecard_pet_state").update({ is_fasting: true, energy: 0, last_updated: new Date().toISOString() }).eq("owner", person);
           } else {
             petStates[person].energy = newEnergy;
@@ -991,11 +1105,10 @@
         });
         updateEnergyUI();
         updateSpirits();
-        // 每 5 分钟自动保存一次，减少请求
         if (needSave || (Date.now() % 300000 < 60000)) {
           ["Torie", "Jory"].forEach(p => savePetState(p));
         }
-      }, 60000); // 每 1 分钟执行一次
+      }, 60000); 
     }
 
     function updateEnergyUI() {
@@ -1039,6 +1152,7 @@
         return;
       }
       feedTargetPerson = person;
+      feedCardCount = 0;
       const modal = document.getElementById("feedModal");
       const emoji = person === "Torie" ? "🍖" : "🥕";
       document.getElementById("feedModalTitle").textContent = `${emoji} 喂食 ${person}`;
@@ -1054,65 +1168,72 @@
       const msToZero = (state.energy / DECAY_RATE_PER_MIN) * 60000;
       document.getElementById("feedTimeToZero").textContent = formatTimeDiff(msToZero);
       
-      // Reset selector
-      const sel = document.getElementById("feedAmount");
-      sel.value = "0";
-      updateFeedPreview();
-      
+      updateFeedStepperUI();
       modal.classList.add("show");
     }
 
-    function updateFeedPreview() {
-      const cards = parseInt(document.getElementById("feedAmount").value) || 0;
+    function updateFeedStepperUI() {
       const state = petStates[feedTargetPerson];
       const currentPct = Math.round(state.energy * 10) / 10;
-      const newPct = Math.min(100, state.energy + cards * FEED_PER_CARD);
+      const newPct = Math.min(100, state.energy + feedCardCount * FEED_PER_CARD);
       const newPctRound = Math.round(newPct * 10) / 10;
       
-      const barClass = feedTargetPerson === "Torie" ? "torie" : "jory";
-      document.getElementById("feedBarCurrent").className = `energy-bar-fill ${barClass}`;
-      document.getElementById("feedBarCurrent").style.width = `${currentPct}%`;
+      // Update stepper display
+      document.getElementById("feedCountDisplay").textContent = feedCardCount;
+      document.getElementById("feedMinus").disabled = feedCardCount <= 0;
+      document.getElementById("feedPlus").disabled = feedCardCount >= 4 || newPct >= 100;
       
-      const preview = document.getElementById("feedBarPreview");
-      if (cards > 0 && newPct > currentPct) {
-        preview.style.display = "block";
-        preview.style.width = `${newPct}%`;
-        preview.style.color = "var(--green)";
+      // Update preview bar
+      const barClass = feedTargetPerson === "Torie" ? "torie" : "jory";
+      const currentBar = document.getElementById("feedBarCurrent");
+      currentBar.className = `energy-bar-fill ${barClass}`;
+      currentBar.style.width = `${currentPct}%`;
+      
+      const previewBar = document.getElementById("feedBarPreview");
+      if (feedCardCount > 0 && newPct > currentPct) {
+        previewBar.style.width = `${newPct}%`;
+        previewBar.style.opacity = "0.3";
       } else {
-        preview.style.display = "none";
+        previewBar.style.width = `${currentPct}%`;
+        previewBar.style.opacity = "0";
       }
       
-      document.getElementById("feedPreviewText").textContent = `${currentPct}% → ${newPctRound}%`;
+      // Update numbers
+      document.getElementById("feedPreviewOld").textContent = `${currentPct}%`;
+      const newEl = document.getElementById("feedPreviewNew");
+      newEl.textContent = `${newPctRound}%`;
+      newEl.style.color = feedCardCount > 0 ? "var(--green)" : "var(--text-2)";
       
+      // Update hint & button
       const balance = calcBalance(feedTargetPerson);
       const btn = document.getElementById("feedConfirm");
       const hint = document.getElementById("feedCostHint");
       
-      if (cards === 0) {
+      if (feedCardCount === 0) {
         btn.disabled = true;
-        hint.textContent = "";
+        hint.textContent = "点击 + 选择喂食张数（每张 +30%）";
+        hint.className = "feed-cost-hint";
       } else if (newPct >= 100 && state.energy >= 100) {
         btn.disabled = true;
         hint.textContent = "⚠️ 能量已满，无需喂食";
-        hint.style.color = "var(--text-3)";
-      } else if (balance < cards) {
+        hint.className = "feed-cost-hint";
+      } else if (balance < feedCardCount) {
         btn.disabled = true;
-        hint.textContent = `⚠️ 余额不足（需要 ${cards} 张，当前 ${balance} 张）`;
-        hint.style.color = "var(--red)";
+        hint.textContent = `⚠️ 余额不足（需要 ${feedCardCount} 张，当前 ${balance} 张）`;
+        hint.className = "feed-cost-hint error";
       } else {
         btn.disabled = false;
-        hint.textContent = `将花费 ${cards} 张自由卡`;
-        hint.style.color = "var(--text-3)";
+        hint.textContent = `将花费 ${feedCardCount} 张自由卡`;
+        hint.className = "feed-cost-hint success";
       }
     }
 
     async function confirmFeed() {
-      const cards = parseInt(document.getElementById("feedAmount").value) || 0;
-      if (cards <= 0 || !feedTargetPerson) return;
+      if (feedCardCount <= 0 || !feedTargetPerson) return;
       
       const state = petStates[feedTargetPerson];
       const oldEnergy = state.energy;
-      const newEnergy = Math.min(100, oldEnergy + cards * FEED_PER_CARD);
+      const newEnergy = Math.min(100, oldEnergy + feedCardCount * FEED_PER_CARD);
       const actualGain = newEnergy - oldEnergy;
       
       if (actualGain <= 0) return;
@@ -1121,12 +1242,11 @@
       btn.disabled = true;
       btn.textContent = "喂食中...";
       
-      // 记录流水
       const emoji = feedTargetPerson === "Torie" ? "🍖" : "🥕";
       const { error } = await sb.from("freecard_log").insert({
         operator: feedTargetPerson,
         change_type: "减少",
-        card_num: cards,
+        card_num: feedCardCount,
         reason: `${emoji} 喂食宠物（+${Math.round(actualGain)}%能量）`,
         note: `FEED:${oldEnergy.toFixed(2)}:${newEnergy.toFixed(2)}`
       });
@@ -1138,7 +1258,6 @@
         return;
       }
       
-      // 更新本地状态
       state.energy = newEnergy;
       state.last_updated = new Date().toISOString();
       await savePetState(feedTargetPerson);
@@ -1214,20 +1333,17 @@
       document.getElementById("feedBtnJory").addEventListener("click", (e) => { e.stopPropagation(); openFeedModal("Jory"); });
       document.getElementById("feedCancel").addEventListener("click", () => document.getElementById("feedModal").classList.remove("show"));
       document.getElementById("feedConfirm").addEventListener("click", confirmFeed);
-      document.getElementById("feedAmount").addEventListener("change", updateFeedPreview);
+      
+      // Stepper buttons
+      document.getElementById("feedPlus").addEventListener("click", () => {
+        if (feedCardCount < 4) { feedCardCount++; updateFeedStepperUI(); }
+      });
+      document.getElementById("feedMinus").addEventListener("click", () => {
+        if (feedCardCount > 0) { feedCardCount--; updateFeedStepperUI(); }
+      });
       
       document.getElementById("fastingCancel").addEventListener("click", () => document.getElementById("fastingModal").classList.remove("show"));
       document.getElementById("fastingConfirm").addEventListener("click", confirmFastingRecover);
-      
-      // 点击宠物卡片也可以打开喂食/绝食弹窗
-      document.getElementById("spiritTorie").addEventListener("click", () => {
-        if (petStates.Torie.is_fasting) openFastingModal("Torie");
-        else openFeedModal("Torie");
-      });
-      document.getElementById("spiritJory").addEventListener("click", () => {
-        if (petStates.Jory.is_fasting) openFastingModal("Jory");
-        else openFeedModal("Jory");
-      });
     }
 
     /* ==================== PET MOOD LOGIC ==================== */
@@ -1245,9 +1361,7 @@
       return { earns, redeems, punishes };
     }
     function getPetState(person) {
-      // 绝食状态优先
       if (petStates[person] && petStates[person].is_fasting) return "fasting";
-      
       const balance = calcBalance(person);
       const now = new Date();
       const hour = now.getHours();
@@ -1310,13 +1424,12 @@
 
     /* ==================== PET CLICK INTERACTIONS ==================== */
     function initPetInteractions() {
-      // 注意：点击事件已在 setupFeedModals 中绑定，这里只保留动画效果
-      document.getElementById('spiritTorie').addEventListener('click', () => {
+      document.getElementById('petClickTorie').addEventListener('click', () => {
         const svg = document.getElementById('svgTorie');
         svg.classList.add('pet-clicked');
         setTimeout(() => svg.classList.remove('pet-clicked'), 600);
       });
-      document.getElementById('spiritJory').addEventListener('click', () => {
+      document.getElementById('petClickJory').addEventListener('click', () => {
         const svg = document.getElementById('svgJory');
         svg.classList.add('pet-clicked');
         svg.style.animation = 'none';
@@ -1582,11 +1695,12 @@
           window.scrollTo({top:0,behavior:"smooth"});
           if (page === "bank") resetBankToStep1();
           if (page !== "bank") applyBgTint("");
+          if (page === "data") renderStats();
         });
       });
     }
 
-    /* ==================== STATS ==================== */
+    /* ==================== STATS & CHART (REWRITTEN) ==================== */
     function setupPeriodTabs() {
       document.querySelectorAll(".period-tab").forEach((btn)=>{
         btn.addEventListener("click",()=>{
@@ -1614,68 +1728,286 @@
 
     function renderStats() {
       const filtered = filterByPeriod(allLogs, currentPeriod);
-      const pLabel = {today:"今日",week:"本周",month:"本月",all:"累计"}[currentPeriod];
+      const pLabel = {today:"今日",all:"累计"}[currentPeriod];
       let tE=0, tS=0, jE=0, jS=0;
       filtered.forEach(l => {
         const n = Number(l.card_num)||0;
         if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; }
         else { if(l.change_type==="增加") jE+=n; else jS+=n; }
       });
-      if (currentPerspective === "torie" || currentPerspective === "jory") {
-        const isTorie = currentPerspective === "torie";
-        const earn = isTorie ? tE : jE;
-        const spend = isTorie ? tS : jS;
-        const net = earn - spend;
-        const emoji = isTorie ? "🦉" : "🐰";
-        const name = isTorie ? "Torie" : "Jory";
-        document.getElementById("statsSummary").innerHTML = `
-          <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${earn}</div></div>
-          <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${spend}</div></div>
-          <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
-        `;
-        const total = earn + spend;
-        const spendPct = total > 0 ? (spend / total) * 100 : 50;
-        const earnPct = total > 0 ? (earn / total) * 100 : 50;
-        const netColor = net >= 0 ? "var(--green)" : "var(--red)";
-        const netSign = net >= 0 ? "+" : "";
-        const verdict = net > 0 ? "赚得更多 💪" : net < 0 ? "花得更多 💸" : "收支平衡 ⚖️";
-        document.getElementById("statsContent").innerHTML = `
-          <div class="stats-group">
-            <div class="stats-label">${emoji} ${name} ${pLabel}收支对比</div>
-            <div class="scale-chart">
-              <div class="scale-center"></div>
-              <div class="scale-bar earn" style="width:${earnPct}%"></div>
-              <div class="scale-bar spend" style="width:${spendPct}%"></div>
-            </div>
-            <div class="scale-labels">
-              <span style="color:var(--green)">获得 ${earn}</span>
-              <span style="color:var(--red)">消耗 ${spend}</span>
-            </div>
-            <div class="scale-net" style="color:${netColor}">
-              净积累 ${netSign}${net} · ${verdict}
-            </div>
-          </div>
-        `;
+
+      let earn = 0, spend = 0, name = "", emoji = "";
+      if (currentPerspective === "torie") { earn = tE; spend = tS; name = "Torie"; emoji = "🦉"; }
+      else if (currentPerspective === "jory") { earn = jE; spend = jS; name = "Jory"; emoji = "🐰"; }
+      else { earn = tE + jE; spend = tS + jS; name = "Together"; emoji = "💑"; }
+
+      const net = earn - spend;
+      document.getElementById("statsSummary").innerHTML = `
+        <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${earn}</div></div>
+        <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${spend}</div></div>
+        <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
+      `;
+
+      drawBalanceChart(filtered, currentPerspective);
+
+      const verdict = net > 0 ? "赚得更多 💪" : net < 0 ? "花得更多 💸" : "收支平衡 ⚖️";
+      const netColor = net >= 0 ? "var(--green)" : "var(--red)";
+      const netSign = net >= 0 ? "+" : "";
+      document.getElementById("statsContent").innerHTML = `
+        <div style="text-align:center; padding: 8px; background: var(--bg); border-radius: var(--r-sm); border: 1px solid var(--border); font-size: 13px; font-weight: 700; color: ${netColor};">
+          ${emoji} ${name} 净积累 ${netSign}${net} · ${verdict}
+        </div>
+      `;
+    }
+
+    function drawBalanceChart(logs, perspective) {
+      const scrollContainer = document.getElementById("chartScrollContainer");
+      const container = document.getElementById("chartContainer");
+      const cvs = document.getElementById("statsChart");
+      const emptyHint = document.getElementById("chartEmpty");
+      const c = cvs.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+
+      // Filter logs by perspective
+      let pLogs = logs.filter(l => {
+        if (perspective === "torie") return l.operator === "Torie";
+        if (perspective === "jory") return l.operator === "Jory";
+        return true;
+      });
+
+      // Sort chronologically
+      pLogs.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+
+      // Build data points based on period
+      let points = []; // { label, balance, delta }
+      let baseBalance = 0;
+
+      // Calculate base balance (all logs before the filtered period)
+      if (currentPeriod === "today") {
+        const todayStart = getStartOfToday();
+        const priorLogs = allLogs.filter(l => {
+          const matchPerspective = perspective === "torie" ? l.operator === "Torie" : perspective === "jory" ? l.operator === "Jory" : true;
+          return matchPerspective && new Date(l.created_at) < todayStart;
+        });
+        priorLogs.forEach(l => {
+          const n = Number(l.card_num) || 0;
+          baseBalance += l.change_type === "增加" ? n : -n;
+        });
+      }
+      // For "all", baseBalance starts at 0
+
+      if (currentPeriod === "today") {
+        // Hourly buckets, 12-hour format
+        const now = new Date();
+        const currentHour = now.getHours();
+        // Show from 6AM to current hour (or at least 6AM-10PM range)
+        const startHour = 6;
+        const endHour = Math.max(currentHour, 22);
+        
+        let runningBalance = baseBalance;
+        
+        // Create hourly buckets
+        for (let h = startHour; h <= endHour; h++) {
+          const hour12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+          const ampm = h >= 12 ? "下午" : "上午";
+          const label = `${hour12}${ampm}`;
+          
+          // Sum all logs in this hour
+          let hourDelta = 0;
+          pLogs.forEach(l => {
+            const ld = new Date(l.created_at);
+            if (ld.getHours() === h) {
+              const n = Number(l.card_num) || 0;
+              hourDelta += l.change_type === "增加" ? n : -n;
+            }
+          });
+          
+          runningBalance += hourDelta;
+          points.push({ label, balance: runningBalance, delta: hourDelta });
+        }
+        
+        // Set min-width for scrolling if many hours
+        const minW = Math.max(points.length * 50, container.parentElement.clientWidth);
+        container.style.minWidth = minW + "px";
+        
       } else {
-        const totalE = tE + jE, totalS = tS + jS, net = totalE - totalS;
-        document.getElementById("statsSummary").innerHTML = `
-          <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${totalE}</div></div>
-          <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${totalS}</div></div>
-          <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
-        `;
-        const max = Math.max(tE, tS, jE, jS, 1);
-        const group = (label) => {
-          if (max === 0) return `<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无记录</div></div>`;
-          return `<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",tE, max,"torie-bar")}${bar("Jory",jE, max,"jory-bar")}</div>`;
-        };
-        const groupSpend = (label) => {
-          if (max === 0) return `<div class="stats-group"><div class="stats-label">${label}</div><div class="empty-stats">暂无记录</div></div>`;
-          return `<div class="stats-group"><div class="stats-label">${label}</div>${bar("Torie",tS,max,"torie-bar")}${bar("Jory",jS,max,"jory-bar")}</div>`;
-        };
-        document.getElementById("statsContent").innerHTML = group("获得") + groupSpend("消耗");
+        // "all" / history: daily net accumulation
+        // Group all logs by date
+        const dayMap = {};
+        pLogs.forEach(l => {
+          const ld = new Date(l.created_at);
+          const key = `${ld.getFullYear()}-${String(ld.getMonth()+1).padStart(2,'0')}-${String(ld.getDate()).padStart(2,'0')}`;
+          if (!dayMap[key]) dayMap[key] = 0;
+          const n = Number(l.card_num) || 0;
+          dayMap[key] += l.change_type === "增加" ? n : -n;
+        });
+        
+        // Get sorted dates
+        const dates = Object.keys(dayMap).sort();
+        if (dates.length === 0) {
+          emptyHint.style.display = "flex";
+          c.clearRect(0, 0, cvs.width, cvs.height);
+          return;
+        }
+        
+        // For history view, we show daily NET as the Y value (not cumulative balance)
+        dates.forEach(key => {
+          const parts = key.split('-');
+          const label = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
+          points.push({ label, balance: dayMap[key], delta: dayMap[key] });
+        });
+        
+        const minW = Math.max(points.length * 40, container.parentElement.clientWidth);
+        container.style.minWidth = minW + "px";
+      }
+
+      if (points.length === 0) {
+        emptyHint.style.display = "flex";
+        c.clearRect(0, 0, cvs.width, cvs.height);
+        return;
+      }
+      emptyHint.style.display = "none";
+
+      // Setup canvas size
+      const rect = container.getBoundingClientRect();
+      const W = rect.width;
+      const H = rect.height;
+      cvs.width = W * dpr;
+      cvs.height = H * dpr;
+      cvs.style.width = W + "px";
+      cvs.style.height = H + "px";
+      c.scale(dpr, dpr);
+      c.clearRect(0, 0, W, H);
+
+      const padL = 40, padR = 16, padT = 24, padB = 32;
+      const chartW = W - padL - padR;
+      const chartH = H - padT - padB;
+
+      // Determine Y range
+      let values;
+      if (currentPeriod === "today") {
+        values = points.map(p => p.balance);
+      } else {
+        values = points.map(p => p.balance); // daily net
+      }
+      
+      let minVal = Math.min(...values, 0);
+      let maxVal = Math.max(...values, 1);
+      if (minVal === maxVal) { maxVal = minVal + 1; }
+      const range = maxVal - minVal;
+      const yPadding = range * 0.1;
+      minVal -= yPadding;
+      maxVal += yPadding;
+      const yRange = maxVal - minVal;
+
+      function getY(val) { return padT + chartH - ((val - minVal) / yRange) * chartH; }
+      function getX(i) { return padL + (points.length > 1 ? (i / (points.length - 1)) * chartW : chartW / 2); }
+
+      // Grid lines
+      const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || 'rgba(0,0,0,0.06)';
+      const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#aeaeb2';
+      const greenColor = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#34c759';
+      const redColor = getComputedStyle(document.documentElement).getPropertyValue('--red').trim() || '#ff3b30';
+
+      c.strokeStyle = gridColor;
+      c.lineWidth = 0.5;
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + (chartH / 4) * i;
+        c.beginPath(); c.moveTo(padL, y); c.lineTo(W - padR, y); c.stroke();
+      }
+
+      // Zero line if applicable
+      if (minVal < 0 && maxVal > 0) {
+        const zeroY = getY(0);
+        c.strokeStyle = textColor;
+        c.lineWidth = 1;
+        c.setLineDash([4, 4]);
+        c.beginPath(); c.moveTo(padL, zeroY); c.lineTo(W - padR, zeroY); c.stroke();
+        c.setLineDash([]);
+      }
+
+      // Y labels
+      c.fillStyle = textColor;
+      c.font = '10px -apple-system, sans-serif';
+      c.textAlign = 'right';
+      c.textBaseline = 'middle';
+      for (let i = 0; i <= 4; i++) {
+        const val = Math.round(maxVal - (yRange / 4) * i);
+        const y = padT + (chartH / 4) * i;
+        c.fillText(val, padL - 6, y);
+      }
+
+      // X labels
+      c.textAlign = 'center';
+      c.textBaseline = 'top';
+      const labelStep = Math.max(1, Math.floor(points.length / 8));
+      points.forEach((p, i) => {
+        if (i % labelStep === 0 || i === points.length - 1) {
+          c.fillText(p.label, getX(i), H - padB + 8);
+        }
+      });
+
+      // Draw line segments with color based on direction
+      if (points.length >= 2) {
+        c.lineWidth = 2.5;
+        c.lineJoin = 'round';
+        c.lineCap = 'round';
+
+        for (let i = 1; i < points.length; i++) {
+          const x0 = getX(i - 1), y0 = getY(values[i - 1]);
+          const x1 = getX(i), y1 = getY(values[i]);
+          const isUp = values[i] >= values[i - 1];
+          
+          c.strokeStyle = isUp ? greenColor : redColor;
+          c.beginPath();
+          c.moveTo(x0, y0);
+          c.lineTo(x1, y1);
+          c.stroke();
+        }
+
+        // Area fill (gradient)
+        c.globalAlpha = 0.06;
+        c.beginPath();
+        c.moveTo(getX(0), getY(values[0]));
+        for (let i = 1; i < points.length; i++) {
+          c.lineTo(getX(i), getY(values[i]));
+        }
+        c.lineTo(getX(points.length - 1), padT + chartH);
+        c.lineTo(getX(0), padT + chartH);
+        c.closePath();
+        c.fillStyle = currentPeriod === "today" ? greenColor : (values[values.length-1] >= 0 ? greenColor : redColor);
+        c.fill();
+        c.globalAlpha = 1;
+
+        // Dots at each point
+        points.forEach((p, i) => {
+          const x = getX(i);
+          const y = getY(values[i]);
+          const prevVal = i > 0 ? values[i-1] : values[i];
+          const isUp = values[i] >= prevVal;
+          const dotColor = isUp ? greenColor : redColor;
+          
+          c.fillStyle = dotColor;
+          c.beginPath();
+          c.arc(x, y, 3.5, 0, Math.PI * 2);
+          c.fill();
+          
+          // White center for contrast
+          c.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff';
+          c.beginPath();
+          c.arc(x, y, 1.5, 0, Math.PI * 2);
+          c.fill();
+        });
+      } else if (points.length === 1) {
+        // Single point
+        const x = getX(0);
+        const y = getY(values[0]);
+        c.fillStyle = greenColor;
+        c.beginPath();
+        c.arc(x, y, 4, 0, Math.PI * 2);
+        c.fill();
       }
     }
-    function bar(name,val,max,cls) { return `<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar ${cls}" style="width:${max===0?0:(val/max)*100}%"></div></div><div class="bar-number">${val}</div></div>`; }
 
     /* ==================== HISTORY ==================== */
     function updateHistoryFilterOptions() {
@@ -1809,6 +2141,48 @@
       return "shop";
     }
     function getDisplayName(p) { return p.name.replace(TYPE_PREFIX.earn, "").replace(TYPE_PREFIX.punish, ""); }
+    
+    function openEditModal(id, type) {
+      const p = allProducts.find(x => String(x.id) === String(id));
+      if (!p) return;
+      editingItemId = id;
+      editingItemType = type;
+      document.getElementById("editName").value = getDisplayName(p);
+      document.getElementById("editCost").value = p.cost;
+      document.getElementById("editModal").classList.add("show");
+    }
+
+    function setupEditModal() {
+      document.getElementById("editCancel").addEventListener("click", () => {
+        document.getElementById("editModal").classList.remove("show");
+        editingItemId = null;
+        editingItemType = null;
+      });
+      document.getElementById("editSave").addEventListener("click", async () => {
+        if (!editingItemId || !editingItemType) return;
+        const newName = document.getElementById("editName").value.trim();
+        const newCost = parseInt(document.getElementById("editCost").value);
+        if (!newName || !newCost || newCost < 1) {
+          showToast("输入无效", "error");
+          return;
+        }
+        const prefix = editingItemType === "earn" ? TYPE_PREFIX.earn : editingItemType === "punish" ? TYPE_PREFIX.punish : "";
+        const btn = document.getElementById("editSave");
+        btn.disabled = true; btn.textContent = "保存中...";
+        const { error } = await sb.from("freecard_shop").update({ name: prefix + newName, cost: newCost }).eq("id", editingItemId);
+        btn.disabled = false; btn.textContent = "保存修改";
+        if (error) {
+          showToast("修改失败", "error");
+          return;
+        }
+        document.getElementById("editModal").classList.remove("show");
+        showToast("已更新", "success");
+        editingItemId = null;
+        editingItemType = null;
+        await loadProducts();
+      });
+    }
+
     function renderList(containerId, type) {
       const container = document.getElementById(containerId);
       let items = allProducts.filter(p => p.owner === bankPerson && classifyProduct(p) === type);
@@ -1849,7 +2223,7 @@
           ${progressHTML}
           <div class="list-actions">
             ${actionBtn}
-            <button class="action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}">编辑</button>
+            <button class="action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}" data-type="${type}">编辑</button>
             <button class="action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button>
           </div>
         </div>`;
@@ -1870,12 +2244,7 @@
         showToast("已下架", "success"); await loadProducts(); 
       } 
       else if(action === "edit") { 
-        const newName = prompt("修改名称：", displayName); if(newName===null) return; 
-        const newCost = prompt("修改数值（张）：", p.cost); if(newCost===null) return; 
-        const cost = parseInt(newCost); if(!newName.trim() || !cost || cost<1) return showToast("输入无效", "error"); 
-        const prefix = type === "earn" ? TYPE_PREFIX.earn : type === "punish" ? TYPE_PREFIX.punish : "";
-        const {error} = await sb.from("freecard_shop").update({name: prefix + newName.trim(), cost}).eq("id", id); 
-        if(error) return showToast("修改失败", "error"); showToast("已更新", "success"); await loadProducts(); 
+        openEditModal(id, type);
       }
       else if(action === "redeem") { 
         if(calcBalance(bankPerson) < p.cost) return showToast("余额不足", "error"); 
@@ -2332,26 +2701,21 @@
       const log = allLogs.find(l => String(l.id) === String(id));
       if (!log) return showToast("找不到该记录", "error");
       
-      // 检查是否是喂食记录，如果是则需要回滚宠物能量
       const note = log.note || "";
       if (note.startsWith("FEED:") && log.change_type === "减少") {
-        // 解析 FEED:oldEnergy:newEnergy
         const parts = note.split(":");
         if (parts.length === 3) {
           const oldEnergy = parseFloat(parts[1]);
           const person = log.operator;
           if (petStates[person]) {
-            // 计算从喂食到现在自然衰减了多少
             const feedTime = new Date(log.created_at).getTime();
             const now = Date.now();
             const minsSinceFeed = Math.max(0, (now - feedTime) / 60000);
             const decaySinceFeed = minsSinceFeed * DECAY_RATE_PER_MIN;
             
-            // 回滚：恢复到喂食前的能量，再减去这段时间的自然衰减
             let rolledBackEnergy = oldEnergy - decaySinceFeed;
             rolledBackEnergy = Math.max(0, rolledBackEnergy);
             
-            // 如果回滚后变成0，进入绝食
             if (rolledBackEnergy <= 0) {
               petStates[person].is_fasting = true;
               petStates[person].energy = 0;
@@ -2386,6 +2750,7 @@
       initRatioModals();
       initPetInteractions();
       setupFeedModals();
+      setupEditModal();
       setupNav();
       setupBankNav();
       setupPeriodTabs();
@@ -2401,7 +2766,6 @@
       setupRecharge();
       checkSpecialDate();
       
-      // 加载宠物状态（含离线衰减计算）
       await loadPetStates();
       startEnergyDecay();
       
@@ -2410,11 +2774,21 @@
       sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
       sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
       
-      // 页面可见性变化时重新计算衰减
       document.addEventListener("visibilitychange", () => {
         if (!document.hidden) {
           loadPetStates();
         }
+      });
+
+      // Resize chart on window resize
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (document.getElementById("page-data").classList.contains("active")) {
+            renderStats();
+          }
+        }, 200);
       });
     });
   </script>
