@@ -189,8 +189,9 @@
     .chart-tooltip {
       position: absolute; pointer-events: none; background: var(--card); border: 1px solid var(--border);
       border-radius: var(--r-sm); padding: 8px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      font-size: 12px; z-index: 100; white-space: nowrap; transform: translate(-50%, -100%);
-      opacity: 0; transition: opacity 0.15s; margin-top: -12px;
+      font-size: 12px; z-index: 100; white-space: nowrap; 
+      opacity: 0; transition: opacity 0.15s, transform 0.15s; 
+      /* Removed default transform here to handle it in JS */
     }
     .chart-tooltip.show { opacity: 1; }
     .chart-tooltip .tt-time { color: var(--text-3); font-size: 10px; margin-bottom: 2px; }
@@ -1127,7 +1128,7 @@
       }, 60000); 
     }
 
-    // 【修复1】绝食状态下强制能量条为空
+    // 【修复1】绝食状态下允许点击按钮以打开哄一哄弹窗
     function updateEnergyUI() {
       ["Torie", "Jory"].forEach(person => {
         const state = petStates[person];
@@ -1135,13 +1136,13 @@
         const badge = document.getElementById(`fastingBadge${person}`);
         const btn = document.getElementById(`feedBtn${person}`);
         
-        // 如果处于绝食状态，强制显示为0%且变红
         if (state.is_fasting) {
           bar.style.width = "0%";
           bar.classList.add("low");
           badge.style.display = "block";
-          btn.disabled = true;
-          btn.textContent = "😢";
+          // 关键修改：不禁用按钮，改为显示求助表情，点击后触发 openFeedModal -> openFastingModal
+          btn.disabled = false; 
+          btn.textContent = "🥺"; 
         } else {
           const pct = Math.max(0, Math.min(100, state.energy));
           bar.style.width = `${pct}%`;
@@ -1166,6 +1167,7 @@
 
     function openFeedModal(person) {
       const state = petStates[person];
+      // 如果是绝食状态，直接打开恢复弹窗
       if (state.is_fasting) {
         openFastingModal(person);
         return;
@@ -1719,8 +1721,8 @@
       });
     }
 
-    /* ==================== STATS & CHART (REWRITTEN FOR ISSUE #2) ==================== */
-    let chartPointsCache = []; // Store points for tooltip interaction
+    /* ==================== STATS & CHART ==================== */
+    let chartPointsCache = []; 
 
     function setupPeriodTabs() {
       document.querySelectorAll(".period-tab").forEach((btn)=>{
@@ -1789,20 +1791,17 @@
       const c = cvs.getContext("2d");
       const dpr = window.devicePixelRatio || 1;
 
-      // Filter logs by perspective
       let pLogs = logs.filter(l => {
         if (perspective === "torie") return l.operator === "Torie";
         if (perspective === "jory") return l.operator === "Jory";
         return true;
       });
 
-      // Sort chronologically (ascending)
       pLogs.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
 
-      let points = []; // { x, y, label, balance, delta, logData }
+      let points = []; 
       let baseBalance = 0;
 
-      // Calculate base balance (all logs before the filtered period)
       if (currentPeriod === "today") {
         const todayStart = getStartOfToday();
         const priorLogs = allLogs.filter(l => {
@@ -1815,11 +1814,8 @@
         });
       }
 
-      // 【修复2】构建逐笔数据点
       if (currentPeriod === "today") {
         let runningBalance = baseBalance;
-        
-        // Add starting point (0 balance at start of day)
         points.push({ 
           label: "0点", 
           balance: baseBalance, 
@@ -1832,10 +1828,8 @@
           const n = Number(l.card_num) || 0;
           const delta = l.change_type === "增加" ? n : -n;
           runningBalance += delta;
-          
           const d = new Date(l.created_at);
           const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-          
           points.push({
             label: timeStr,
             balance: runningBalance,
@@ -1844,15 +1838,11 @@
             timeStr: timeStr
           });
         });
-
-        // Dynamic width based on number of points (min 60px per point)
         const minW = Math.max(points.length * 60, container.parentElement.clientWidth);
         container.style.minWidth = minW + "px";
-        
       } else {
-        // "all" / history: daily net accumulation
         const dayMap = {};
-        const dayLogs = {}; // Store logs for each day for tooltip
+        const dayLogs = {}; 
         pLogs.forEach(l => {
           const ld = new Date(l.created_at);
           const key = `${ld.getFullYear()}-${String(ld.getMonth()+1).padStart(2,'0')}-${String(ld.getDate()).padStart(2,'0')}`;
@@ -1861,7 +1851,6 @@
           dayMap[key] += l.change_type === "增加" ? n : -n;
           dayLogs[key].push(l);
         });
-        
         const dates = Object.keys(dayMap).sort();
         if (dates.length === 0) {
           emptyHint.style.display = "flex";
@@ -1869,7 +1858,6 @@
           chartPointsCache = [];
           return;
         }
-        
         dates.forEach(key => {
           const parts = key.split('-');
           const label = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
@@ -1877,12 +1865,11 @@
             label, 
             balance: dayMap[key], 
             delta: dayMap[key],
-            logData: null, // Multiple logs per day in history mode
+            logData: null, 
             dayLogs: dayLogs[key],
             dateKey: key
           });
         });
-        
         const minW = Math.max(points.length * 40, container.parentElement.clientWidth);
         container.style.minWidth = minW + "px";
       }
@@ -1895,7 +1882,6 @@
       }
       emptyHint.style.display = "none";
 
-      // Setup canvas size
       const rect = container.getBoundingClientRect();
       const W = rect.width;
       const H = rect.height;
@@ -1910,12 +1896,11 @@
       const chartW = W - padL - padR;
       const chartH = H - padT - padB;
 
-      // Determine Y range
       let values;
       if (currentPeriod === "today") {
         values = points.map(p => p.balance);
       } else {
-        values = points.map(p => p.balance); // daily net
+        values = points.map(p => p.balance); 
       }
       
       let minVal = Math.min(...values, 0);
@@ -1930,7 +1915,6 @@
       function getY(val) { return padT + chartH - ((val - minVal) / yRange) * chartH; }
       function getX(i) { return padL + (points.length > 1 ? (i / (points.length - 1)) * chartW : chartW / 2); }
 
-      // Grid lines
       const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || 'rgba(0,0,0,0.06)';
       const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#aeaeb2';
       const greenColor = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#34c759';
@@ -1943,7 +1927,6 @@
         c.beginPath(); c.moveTo(padL, y); c.lineTo(W - padR, y); c.stroke();
       }
 
-      // Zero line if applicable
       if (minVal < 0 && maxVal > 0) {
         const zeroY = getY(0);
         c.strokeStyle = textColor;
@@ -1953,7 +1936,6 @@
         c.setLineDash([]);
       }
 
-      // Y labels
       c.fillStyle = textColor;
       c.font = '10px -apple-system, sans-serif';
       c.textAlign = 'right';
@@ -1964,7 +1946,6 @@
         c.fillText(val, padL - 6, y);
       }
 
-      // X labels
       c.textAlign = 'center';
       c.textBaseline = 'top';
       const labelStep = Math.max(1, Math.floor(points.length / 8));
@@ -1974,14 +1955,12 @@
         }
       });
 
-      // Cache points for tooltip interaction
       chartPointsCache = points.map((p, i) => ({
         x: getX(i),
         y: getY(currentPeriod === "today" ? p.balance : p.balance),
         point: p
       }));
 
-      // Draw line segments with color based on direction
       if (points.length >= 2) {
         c.lineWidth = 2.5;
         c.lineJoin = 'round';
@@ -1991,7 +1970,6 @@
           const x0 = getX(i - 1), y0 = getY(values[i - 1]);
           const x1 = getX(i), y1 = getY(values[i]);
           const isUp = values[i] >= values[i - 1];
-          
           c.strokeStyle = isUp ? greenColor : redColor;
           c.beginPath();
           c.moveTo(x0, y0);
@@ -1999,7 +1977,6 @@
           c.stroke();
         }
 
-        // Area fill (gradient)
         c.globalAlpha = 0.06;
         c.beginPath();
         c.moveTo(getX(0), getY(values[0]));
@@ -2013,18 +1990,14 @@
         c.fill();
         c.globalAlpha = 1;
 
-        // Dots at each point
         chartPointsCache.forEach((cp, i) => {
           const prevVal = i > 0 ? values[i-1] : values[i];
           const isUp = values[i] >= prevVal;
           const dotColor = isUp ? greenColor : redColor;
-          
           c.fillStyle = dotColor;
           c.beginPath();
           c.arc(cp.x, cp.y, 4, 0, Math.PI * 2);
           c.fill();
-          
-          // White center for contrast
           c.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff';
           c.beginPath();
           c.arc(cp.x, cp.y, 2, 0, Math.PI * 2);
@@ -2039,7 +2012,7 @@
       }
     }
 
-    // 【修复2续】Chart Tooltip Interaction
+    // 【修复2】Tooltip 智能定位逻辑
     function setupChartInteraction() {
       const container = document.getElementById("chartContainer");
       const tooltip = document.getElementById("chartTooltip");
@@ -2054,7 +2027,6 @@
         const x = clientX - rect.left;
         const y = clientY - rect.top;
 
-        // Find nearest point
         let nearest = null;
         let minDist = Infinity;
         chartPointsCache.forEach(cp => {
@@ -2065,7 +2037,6 @@
           }
         });
 
-        // Show tooltip if within threshold (30px)
         if (nearest && minDist < 30) {
           const p = nearest.point;
           let html = '';
@@ -2081,14 +2052,12 @@
               <div class="tt-bal">余额: ${p.balance}</div>
             `;
           } else if (currentPeriod === "today" && !p.logData) {
-            // Starting point
             html = `
               <div class="tt-time">${p.timeStr}</div>
               <div class="tt-reason">今日起始余额</div>
               <div class="tt-bal">余额: ${p.balance}</div>
             `;
           } else {
-            // History mode - show daily summary
             const isPlus = p.delta >= 0;
             const sign = isPlus ? "+" : "−";
             const cls = isPlus ? "plus" : "minus";
@@ -2100,8 +2069,39 @@
           }
 
           tooltip.innerHTML = html;
-          tooltip.style.left = nearest.x + 'px';
-          tooltip.style.top = nearest.y + 'px';
+          
+          // 智能定位计算
+          const ttHeight = tooltip.offsetHeight || 60; // 预估高度
+          const ttWidth = tooltip.offsetWidth || 120;
+          const containerRect = container.getBoundingClientRect();
+          
+          // 垂直方向：如果点在顶部区域（距顶部 < 60px），则显示在点下方
+          let topPos = nearest.y;
+          let transformY = '-100%'; // 默认在上方
+          let marginTop = -12;
+          
+          if (nearest.y < 60) {
+             transformY = '0'; // 在下方
+             marginTop = 12;
+          }
+          
+          // 水平方向：防止溢出左右边界
+          let leftPos = nearest.x;
+          let transformX = '-50%'; // 默认居中
+          
+          // 简单的边界检查（可选优化）
+          if (leftPos < ttWidth / 2) {
+             transformX = '0';
+             leftPos = 0;
+          } else if (leftPos > containerRect.width - ttWidth / 2) {
+             transformX = '-100%';
+          }
+
+          tooltip.style.left = leftPos + 'px';
+          tooltip.style.top = topPos + 'px';
+          tooltip.style.transform = `translate(${transformX}, ${transformY})`;
+          tooltip.style.marginTop = marginTop + 'px';
+          
           tooltip.classList.add("show");
         } else {
           tooltip.classList.remove("show");
@@ -2112,11 +2112,8 @@
         tooltip.classList.remove("show");
       }
 
-      // Mouse events
       cvs.addEventListener("mousemove", handlePointer);
       cvs.addEventListener("mouseleave", hideTooltip);
-      
-      // Touch events
       cvs.addEventListener("touchstart", (e) => { handlePointer(e); }, { passive: true });
       cvs.addEventListener("touchmove", (e) => { handlePointer(e); }, { passive: true });
       cvs.addEventListener("touchend", () => { setTimeout(hideTooltip, 1500); });
@@ -2877,7 +2874,7 @@
       setupLateConverter();
       setupSuperviseConverter();
       setupRecharge();
-      setupChartInteraction(); // Initialize chart tooltip
+      setupChartInteraction(); 
       checkSpecialDate();
       
       await loadPetStates();
@@ -2894,7 +2891,6 @@
         }
       });
 
-      // Resize chart on window resize
       let resizeTimer;
       window.addEventListener("resize", () => {
         clearTimeout(resizeTimer);
