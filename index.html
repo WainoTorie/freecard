@@ -191,7 +191,6 @@
       border-radius: var(--r-sm); padding: 8px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       font-size: 12px; z-index: 100; white-space: nowrap; 
       opacity: 0; transition: opacity 0.15s, transform 0.15s; 
-      /* Removed default transform here to handle it in JS */
     }
     .chart-tooltip.show { opacity: 1; }
     .chart-tooltip .tt-time { color: var(--text-3); font-size: 10px; margin-bottom: 2px; }
@@ -205,6 +204,8 @@
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
     .history-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .history-filter { width: auto; min-width: 90px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
+    /* ★ 新增：人物筛选器样式 */
+    .history-person-filter { width: auto; min-width: 76px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; font-weight: 700; }
     .history-search { width: auto; min-width: 120px; flex: 1; max-width: 200px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 1; padding: 0 10px; }
     .history-count { font-size: 12px; font-weight: 700; color: var(--text-3); background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
     .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; position: relative; animation: fadeIn 0.3s ease; }
@@ -977,6 +978,12 @@
           <h2 class="section-title">🧾 流水明细</h2>
           <div class="history-controls">
             <span id="historyCount" class="history-count">0条</span>
+            <!-- ★ 新增：人物筛选器 -->
+            <select id="historyPersonFilter" class="history-person-filter">
+              <option value="all">👥 全部</option>
+              <option value="Torie">🦉 Torie</option>
+              <option value="Jory">🐰 Jory</option>
+            </select>
             <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
             <input id="historySearch" class="history-search" type="search" placeholder="🔍 搜索原因/备注..." />
           </div>
@@ -1001,6 +1008,7 @@
     let allLogs = [], allProducts = [];
     let currentPeriod = "today", currentHistoryFilter = "all";
     let currentHistorySearch = "";
+    let currentHistoryPerson = "all"; /* ★ 新增：人物筛选状态 */
     let currentPerspective = "torie";
     let bankPerson = "";
     let bankSection = "";
@@ -1034,21 +1042,106 @@
       { month: 11, day: 23, emoji: "🎀", title: "Torie 生日快乐！", sub: "被爱包围的你，值得世间所有美好 🌸", tier: 3 }
     ];
 
-    const PRAISE = ["两个人都在闪闪发光，离大心愿又近了一步！🌟","双剑合璧！你们的努力让爱的账户越来越充实 💰","这周表现太棒了，每一张卡都是坚持的证明 🏆","并肩作战的感觉，比什么都珍贵，继续保持 🤝"];
-    const ENCOURAGE = ["按自己的节奏慢慢来，每一张卡都算数 🌱","不慌不忙，你们正在自己的节奏里发光 ✨","平凡日子里的坚持，最了不起 🌿","攒下的不只是卡片，更是彼此的用心 💗"];
-    const URGE = ["这周稍微有点安静哦，下周要不要一起冲个任务？👀","一个人领跑也没关系，另一个人在蓄力呢 🔄","别灰心，哪怕一小步也是在前进，加油 🐾","休息好了就出发吧，下周期待你们的爆发 🔋"];
-    const WARN = ["这周花得有点猛啦，小心透支，下周赶紧补回来！⚠️","偶尔透支没关系，但下周要一起努力填坑哦 💪","花钱的时候开心了吗？开心了就值得，但下次注意 🎁","入不敷出了哦，快踩踩刹车，多赚点卡吧 🛑"];
+    /* ==================== ★ 大幅扩充评语语库（每类 12 条） ==================== */
+    const PRAISE = [
+      "两个人都在闪闪发光，离大心愿又近了一步！🌟",
+      "双剑合璧！你们的努力让爱的账户越来越充实 💰",
+      "这周表现太棒了，每一张卡都是坚持的证明 🏆",
+      "并肩作战的感觉，比什么都珍贵，继续保持 🤝",
+      "越努力越幸运，你们正在用行动书写最好的故事 📖",
+      "这波操作太秀了！互相成就的感觉真好 ✨",
+      "看着余额一点点涨起来，这就是爱情的复利吧 💕",
+      "两个人一起变好的样子，就是最美的风景 🌈",
+      "自律又自由的你们，真的让人羡慕呀 🎯",
+      "每一次坚持都在给未来的自己写情书 💌",
+      "优秀的两个人互相拉扯着向上，这就是最好的关系 🚀",
+      "攒下的不只是自由卡，是两个人共同的底气和浪漫 🌙"
+    ];
+    const ENCOURAGE = [
+      "按自己的节奏慢慢来，每一张卡都算数 🌱",
+      "不慌不忙，你们正在自己的节奏里发光 ✨",
+      "平凡日子里的坚持，最了不起 🌿",
+      "攒下的不只是卡片，更是彼此的用心 💗",
+      "种子已经埋好了，等一个春暖花开 🌸",
+      "不必每天都完美，有进展就已经很好了 🍃",
+      "慢慢来比较快，你们的每一步都踩在了对的地方 👣",
+      "小小的积累，终会变成大大的惊喜 🎁",
+      "今天也在认真生活呢，这本身就很棒 ☀️",
+      "好的关系不是一起飞，而是一起走，你们走得稳稳的 🐢",
+      "日子不必每天都轰轰烈烈，温暖地过着就很美好 🫧",
+      "你们的故事还在写着呢，下一章一定更精彩 📝"
+    ];
+    const URGE = [
+      "这周稍微有点安静哦，下周要不要一起冲个任务？👀",
+      "一个人领跑也没关系，另一个人在蓄力呢 🔄",
+      "别灰心，哪怕一小步也是在前进，加油 🐾",
+      "休息好了就出发吧，下周期待你们的爆发 🔋",
+      "沉寂是为了更好的绽放，我相信你们 💫",
+      "偶尔偷个懒也没关系，但别忘了你们的约定哦 🤙",
+      "风平浪静的日子里，也要记得给彼此加点油 ⛽",
+      "任务列表在等你们翻牌呢，看看哪个最顺手？🃏",
+      "能量在蓄积，灵感在路上，很快就会有行动的 💡",
+      "不着急不着急，但可以先定一个小目标？🎯",
+      "两个人一起动起来，哪怕只是散步也算运动呀 🚶",
+      "安静的一周也有安静的意义，但下周该冲啦 📈"
+    ];
+    const WARN = [
+      "这周花得有点猛啦，小心透支，下周赶紧补回来！⚠️",
+      "偶尔透支没关系，但下周要一起努力填坑哦 💪",
+      "花钱的时候开心了吗？开心了就值得，但下次注意 🎁",
+      "入不敷出了哦，快踩踩刹车，多赚点卡吧 🛑",
+      "账户在发出求救信号！SOS！快去赚卡救它 🆘",
+      "红色警报！但别慌，亡羊补牢为时未晚 🔔",
+      "欲望的小马车跑太快了，该拉一下缰绳了 🐎",
+      "先别急着兑换，看看任务列表有没有容易完成的 📋",
+      "透支不可怕，可怕的是不想补救，你们不会的对吧？😉",
+      "这周的钱包在哭泣，下周让它笑起来吧 😢→😊",
+      "冷静冷静，冲动消费是自由卡的天敌 🧊",
+      "消费一时爽，余额火葬场…开个玩笑，赶紧赚回来就好 🔥"
+    ];
 
-    /* ==================== PET STATE SYSTEM ==================== */
+    /* ==================== ★ 大幅扩充宠物状态语库（每种 14~15 条） ==================== */
     const SPIRIT_STATES = {
-      amazing:  { texts: ["超神了！！","状态爆棚！","闪闪发光~","简直太强啦！","为你骄傲！"], emoji: "🤩" },
-      happy:    { texts: ["今天很开心~","嘻嘻心情好","美滋滋的~","有点小兴奋","快乐加倍！"], emoji: "😊" },
-      good:     { texts: ["今天很棒哦~","稳稳的幸福","继续加油呀！","心情美美哒","表现不错呢！"], emoji: "😄" },
-      normal:   { texts: ["平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中"], emoji: "😌" },
-      sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重..."], emoji: "😴" },
-      low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧"], emoji: "😔" },
-      warning:  { texts: ["余额告急啦...","有点小透支...","要省着点用哦","注意收支平衡","快赚点卡吧~"], emoji: "😰" },
-      fasting:  { texts: ["饿到不想动...","需要你哄哄我...","已经绝食了...","心好累...","等你回来..."], emoji: "😢" }
+      amazing:  { texts: [
+        "超神了！！","状态爆棚！","闪闪发光~","简直太强啦！","为你骄傲！",
+        "今天就是主角！","全场最佳！","无人能挡！","太耀眼了！","开挂了吧！",
+        "巅峰状态！","这就是传说中的大佬！","今天的你自带光芒！","连空气都在为你鼓掌！","超水平发挥！"
+      ], emoji: "🤩" },
+      happy:    { texts: [
+        "今天很开心~","嘻嘻心情好","美滋滋的~","有点小兴奋","快乐加倍！",
+        "心情像彩虹一样","嘴角在上扬~","快乐能量满格！","甜甜的一天","幸福感爆棚~",
+        "好事在发生呢","今天运气不错哦","被快乐包围中","心情好到想跳舞~","世界都变亮了"
+      ], emoji: "😊" },
+      good:     { texts: [
+        "今天很棒哦~","稳稳的幸福","继续加油呀！","心情美美哒","表现不错呢！",
+        "一切都在正轨上","按部就班的好","稳定发挥中~","踏实的一天","节奏刚刚好",
+        "今天也值得记录","平凡但充实！","稳步前进中","小确幸在发生","状态在线！"
+      ], emoji: "😄" },
+      normal:   { texts: [
+        "平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中",
+        "今天不赶时间","佛系运转中~","安静地存在","日常模式启动","平淡也挺好的",
+        "在发呆...","什么都没想~","放空一会儿","岁月静好中","摸鱼也是生活"
+      ], emoji: "😌" },
+      sleepy:   { texts: [
+        "有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重...",
+        "梦在召唤我...","好困好困...","需要一张床...","困到模糊了","月亮都困了",
+        "意识在飘...","已经半梦半醒","别跟我说话...zzZ","枕头在哪...","关机倒计时..."
+      ], emoji: "😴" },
+      low:      { texts: [
+        "今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧",
+        "电量不足...","有点蔫了","需要安慰...","今天不太行","想被抱一下",
+        "低能量模式...","提不起精神","有点丧...","需要一个拥抱","缓缓吧..."
+      ], emoji: "😔" },
+      warning:  { texts: [
+        "余额告急啦...","有点小透支...","要省着点用哦","注意收支平衡","快赚点卡吧~",
+        "账本在哭...","钱包空空...","红色预警！","不能再花了","得想办法赚回来",
+        "透支警告！","余额在发抖...","紧急求助中","需要充值！","快来救救我~"
+      ], emoji: "😰" },
+      fasting:  { texts: [
+        "饿到不想动...","需要你哄哄我...","已经绝食了...","心好累...","等你回来...",
+        "你忘了我吗...","我已经放弃了...","最后的倔强...","快回来喂我...","奄奄一息...",
+        "再不来就真生气了","我的眼泪在打转","你忍心吗...","心碎的声音听到了吗","最后一次机会..."
+      ], emoji: "😢" }
     };
 
     /* ==================== PET FEEDING SYSTEM ==================== */
@@ -1128,7 +1221,6 @@
       }, 60000); 
     }
 
-    // 【修复1】绝食状态下允许点击按钮以打开哄一哄弹窗
     function updateEnergyUI() {
       ["Torie", "Jory"].forEach(person => {
         const state = petStates[person];
@@ -1140,7 +1232,6 @@
           bar.style.width = "0%";
           bar.classList.add("low");
           badge.style.display = "block";
-          // 关键修改：不禁用按钮，改为显示求助表情，点击后触发 openFeedModal -> openFastingModal
           btn.disabled = false; 
           btn.textContent = "🥺"; 
         } else {
@@ -1167,7 +1258,6 @@
 
     function openFeedModal(person) {
       const state = petStates[person];
-      // 如果是绝食状态，直接打开恢复弹窗
       if (state.is_fasting) {
         openFastingModal(person);
         return;
@@ -1199,12 +1289,10 @@
       const newPct = Math.min(100, state.energy + feedCardCount * FEED_PER_CARD);
       const newPctRound = Math.round(newPct * 10) / 10;
       
-      // Update stepper display
       document.getElementById("feedCountDisplay").textContent = feedCardCount;
       document.getElementById("feedMinus").disabled = feedCardCount <= 0;
       document.getElementById("feedPlus").disabled = feedCardCount >= 4 || newPct >= 100;
       
-      // Update preview bar
       const barClass = feedTargetPerson === "Torie" ? "torie" : "jory";
       const currentBar = document.getElementById("feedBarCurrent");
       currentBar.className = `energy-bar-fill ${barClass}`;
@@ -1219,13 +1307,11 @@
         previewBar.style.opacity = "0";
       }
       
-      // Update numbers
       document.getElementById("feedPreviewOld").textContent = `${currentPct}%`;
       const newEl = document.getElementById("feedPreviewNew");
       newEl.textContent = `${newPctRound}%`;
       newEl.style.color = feedCardCount > 0 ? "var(--green)" : "var(--text-2)";
       
-      // Update hint & button
       const balance = calcBalance(feedTargetPerson);
       const btn = document.getElementById("feedConfirm");
       const hint = document.getElementById("feedCostHint");
@@ -1355,7 +1441,6 @@
       document.getElementById("feedCancel").addEventListener("click", () => document.getElementById("feedModal").classList.remove("show"));
       document.getElementById("feedConfirm").addEventListener("click", confirmFeed);
       
-      // Stepper buttons
       document.getElementById("feedPlus").addEventListener("click", () => {
         if (feedCardCount < 4) { feedCardCount++; updateFeedStepperUI(); }
       });
@@ -1740,7 +1825,13 @@
         });
       });
     }
+
+    /* ★ 新增：人物筛选器事件绑定 */
     function setupHistoryFilter() {
+      document.getElementById("historyPersonFilter").addEventListener("change",(e)=>{
+        currentHistoryPerson = e.target.value;
+        renderHistory();
+      });
       document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();});
       document.getElementById("historySearch").addEventListener("input",(e)=>{currentHistorySearch=e.target.value.trim().toLowerCase();renderHistory();});
     }
@@ -2012,7 +2103,6 @@
       }
     }
 
-    // 【修复2】Tooltip 智能定位逻辑
     function setupChartInteraction() {
       const container = document.getElementById("chartContainer");
       const tooltip = document.getElementById("chartTooltip");
@@ -2070,26 +2160,22 @@
 
           tooltip.innerHTML = html;
           
-          // 智能定位计算
-          const ttHeight = tooltip.offsetHeight || 60; // 预估高度
+          const ttHeight = tooltip.offsetHeight || 60;
           const ttWidth = tooltip.offsetWidth || 120;
           const containerRect = container.getBoundingClientRect();
           
-          // 垂直方向：如果点在顶部区域（距顶部 < 60px），则显示在点下方
           let topPos = nearest.y;
-          let transformY = '-100%'; // 默认在上方
+          let transformY = '-100%';
           let marginTop = -12;
           
           if (nearest.y < 60) {
-             transformY = '0'; // 在下方
+             transformY = '0';
              marginTop = 12;
           }
           
-          // 水平方向：防止溢出左右边界
           let leftPos = nearest.x;
-          let transformX = '-50%'; // 默认居中
+          let transformX = '-50%';
           
-          // 简单的边界检查（可选优化）
           if (leftPos < ttWidth / 2) {
              transformX = '0';
              leftPos = 0;
@@ -2172,6 +2258,11 @@
           const d=new Date(l.created_at);
           return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;
         });
+      }
+
+      /* ★ 新增：人物筛选过滤 */
+      if (currentHistoryPerson !== "all") {
+        logs = logs.filter(l => l.operator === currentHistoryPerson);
       }
 
       if (currentHistorySearch) {
