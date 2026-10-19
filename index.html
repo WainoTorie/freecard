@@ -204,7 +204,6 @@
     .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
     .history-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .history-filter { width: auto; min-width: 90px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
-    /* ★ 新增：人物筛选器样式 */
     .history-person-filter { width: auto; min-width: 76px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; font-weight: 700; }
     .history-search { width: auto; min-width: 120px; flex: 1; max-width: 200px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 1; padding: 0 10px; }
     .history-count { font-size: 12px; font-weight: 700; color: var(--text-3); background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
@@ -637,7 +636,6 @@
         <div class="spirit-card torie state-normal" id="spiritTorie">
           <div class="fasting-badge" id="fastingBadgeTorie" style="display:none;">😢 绝食中</div>
           
-          <!-- Energy Bar Moved to Top -->
           <div class="pet-energy-wrap">
             <div class="energy-bar-track">
               <div class="energy-bar-fill torie" id="energyBarTorie" style="width: 50%;"></div>
@@ -668,7 +666,6 @@
           </div>
           <div class="spirit-name">Torie</div>
           
-          <!-- Status Row with Feed Button -->
           <div class="spirit-status-row">
             <div class="spirit-status" id="spiritTorieStatus">加载中...</div>
             <button class="feed-btn" id="feedBtnTorie" title="喂食">🍖</button>
@@ -679,7 +676,6 @@
         <div class="spirit-card jory state-normal" id="spiritJory">
           <div class="fasting-badge" id="fastingBadgeJory" style="display:none;">😢 绝食中</div>
           
-          <!-- Energy Bar Moved to Top -->
           <div class="pet-energy-wrap">
             <div class="energy-bar-track">
               <div class="energy-bar-fill jory" id="energyBarJory" style="width: 50%;"></div>
@@ -713,7 +709,6 @@
           </div>
           <div class="spirit-name">Jory</div>
           
-          <!-- Status Row with Feed Button -->
           <div class="spirit-status-row">
             <div class="spirit-status" id="spiritJoryStatus">加载中...</div>
             <button class="feed-btn" id="feedBtnJory" title="喂食">🥕</button>
@@ -943,13 +938,11 @@
       <div class="card">
         <h2 class="section-title">📈 统计概览</h2>
         
-        <!-- Period Tabs: Only Today & History -->
         <div class="period-tabs">
           <button class="period-tab active" data-period="today">今日</button>
           <button class="period-tab" data-period="all">历史统计</button>
         </div>
 
-        <!-- Perspective Tabs -->
         <div class="perspective-tabs">
           <button class="perspective-tab active" data-perspective="torie"><span class="pt-emoji">🦉</span> Torie</button>
           <button class="perspective-tab" data-perspective="jory"><span class="pt-emoji">🐰</span> Jory</button>
@@ -958,7 +951,6 @@
 
         <div id="statsSummary" class="stats-summary"></div>
         
-        <!-- Scrollable Chart Container -->
         <div class="chart-scroll-container" id="chartScrollContainer">
           <div class="chart-container" id="chartContainer">
             <canvas id="statsChart" class="chart-canvas"></canvas>
@@ -978,7 +970,6 @@
           <h2 class="section-title">🧾 流水明细</h2>
           <div class="history-controls">
             <span id="historyCount" class="history-count">0条</span>
-            <!-- ★ 新增：人物筛选器 -->
             <select id="historyPersonFilter" class="history-person-filter">
               <option value="all">👥 全部</option>
               <option value="Torie">🦉 Torie</option>
@@ -1008,7 +999,7 @@
     let allLogs = [], allProducts = [];
     let currentPeriod = "today", currentHistoryFilter = "all";
     let currentHistorySearch = "";
-    let currentHistoryPerson = "all"; /* ★ 新增：人物筛选状态 */
+    let currentHistoryPerson = "all";
     let currentPerspective = "torie";
     let bankPerson = "";
     let bankSection = "";
@@ -1042,7 +1033,7 @@
       { month: 11, day: 23, emoji: "🎀", title: "Torie 生日快乐！", sub: "被爱包围的你，值得世间所有美好 🌸", tier: 3 }
     ];
 
-    /* ==================== ★ 大幅扩充评语语库（每类 12 条） ==================== */
+    /* ==================== PRAISE / ENCOURAGE / URGE / WARN ==================== */
     const PRAISE = [
       "两个人都在闪闪发光，离大心愿又近了一步！🌟",
       "双剑合璧！你们的努力让爱的账户越来越充实 💰",
@@ -1100,7 +1091,7 @@
       "消费一时爽，余额火葬场…开个玩笑，赶紧赚回来就好 🔥"
     ];
 
-    /* ==================== ★ 大幅扩充宠物状态语库（每种 14~15 条） ==================== */
+    /* ==================== PET STATE TEXTS ==================== */
     const SPIRIT_STATES = {
       amazing:  { texts: [
         "超神了！！","状态爆棚！","闪闪发光~","简直太强啦！","为你骄傲！",
@@ -1144,20 +1135,71 @@
       ], emoji: "😢" }
     };
 
-    /* ==================== PET FEEDING SYSTEM ==================== */
-    const DECAY_RATE_PER_MIN = 0.1; 
-    const FEED_PER_CARD = 30;       
-    const FASTING_RECOVER_COST = 3; 
-    const FASTING_RECOVER_ENERGY = 10; 
+    /* ==================================================================
+       ★ 重写宠物能量系统 —— 完全基于时间戳计算，杜绝双重扣除
+       ================================================================== */
+    const DECAY_RATE_PER_MIN = 0.1;   // 每分钟衰减 0.1%
+    const FEED_PER_CARD = 30;          // 每张自由卡恢复 30% 能量
+    const FASTING_RECOVER_COST = 3;    // 哄好绝食宠物需要 3 张
+    const FASTING_RECOVER_ENERGY = 10; // 哄好后恢复到 10%
+    const ENERGY_SAVE_INTERVAL_MS = 60000; // 每 60 秒回写一次 DB
 
+    // 内存中的宠物状态
     let petStates = {
       Torie: { energy: 50, last_updated: new Date().toISOString(), is_fasting: false },
       Jory: { energy: 50, last_updated: new Date().toISOString(), is_fasting: false }
     };
     let feedTargetPerson = "";
     let feedCardCount = 0;
-    let energyDecayTimer = null;
 
+    /**
+     * ★ 核心函数：根据 DB 中的 last_updated 和 energy，
+     *   实时计算「现在」应该剩余多少能量。
+     *   不再依赖 setInterval 逐分钟扣减，避免浏览器节流导致的多扣/少扣。
+     */
+    function computeCurrentEnergy(person) {
+      const state = petStates[person];
+      if (state.is_fasting) {
+        return { energy: 0, is_fasting: true, justEntered: false };
+      }
+      const now = Date.now();
+      const lastMs = new Date(state.last_updated).getTime();
+      const minsPassed = Math.max(0, (now - lastMs) / 60000);
+      const decay = minsPassed * DECAY_RATE_PER_MIN;
+      let newEnergy = state.energy - decay;
+      let justEntered = false;
+      if (newEnergy <= 0) {
+        newEnergy = 0;
+        justEntered = !state.is_fasting; // 刚刚进入绝食
+        return { energy: 0, is_fasting: true, justEntered };
+      }
+      return { energy: newEnergy, is_fasting: false, justEntered: false };
+    }
+
+    /**
+     * ★ 将计算结果同步回内存（不自动写 DB，由 saveAllPetStates 负责）
+     */
+    function syncEnergyToMemory(person) {
+      const result = computeCurrentEnergy(person);
+      const state = petStates[person];
+      if (result.is_fasting && !state.is_fasting) {
+        // 刚刚进入绝食
+        state.energy = 0;
+        state.is_fasting = true;
+        state.last_updated = new Date().toISOString();
+        return true; // 返回 true 表示状态变化了
+      }
+      if (!result.is_fasting) {
+        state.energy = result.energy;
+        // ★ 关键：更新 last_updated 到当前时间，这样下次计算就从这里开始
+        state.last_updated = new Date().toISOString();
+      }
+      return false;
+    }
+
+    /**
+     * 从 DB 加载宠物状态，并用时间戳计算真实能量
+     */
     async function loadPetStates() {
       const { data, error } = await sb.from("freecard_pet_state").select("*");
       if (error) { console.error("Load pet state error:", error); return; }
@@ -1170,60 +1212,105 @@
           };
         });
       }
+      // ★ 用时间戳计算真实能量，并检查是否进入了绝食
+      let needSave = false;
       ["Torie", "Jory"].forEach(person => {
-        if (!petStates[person].is_fasting) {
-          const now = Date.now();
-          const last = new Date(petStates[person].last_updated).getTime();
-          const minsPassed = Math.max(0, (now - last) / 60000);
-          const decay = minsPassed * DECAY_RATE_PER_MIN;
-          let newEnergy = petStates[person].energy - decay;
-          if (newEnergy <= 0) {
-            newEnergy = 0;
-            petStates[person].is_fasting = true;
-            sb.from("freecard_pet_state").update({ is_fasting: true, energy: 0, last_updated: new Date().toISOString() }).eq("owner", person);
-          } else {
-            petStates[person].energy = newEnergy;
-          }
+        const changed = syncEnergyToMemory(person);
+        if (changed) {
+          needSave = true;
+          showToast(`${person} 的宠物饿到绝食了！`, "error");
         }
       });
       updateEnergyUI();
+      if (needSave) {
+        saveAllPetStates();
+      }
+    }
+
+    /**
+     * ★ 保存所有宠物状态到 DB
+     */
+    async function saveAllPetStates() {
+      for (const person of ["Torie", "Jory"]) {
+        await savePetState(person);
+      }
     }
 
     async function savePetState(person) {
       const state = petStates[person];
       const { error } = await sb.from("freecard_pet_state").update({
-        energy: state.energy,
-        last_updated: new Date().toISOString(),
+        energy: Math.round(state.energy * 100) / 100,
+        last_updated: state.last_updated,
         is_fasting: state.is_fasting
       }).eq("owner", person);
       if (error) console.error("Save pet state error:", error);
     }
 
-    function startEnergyDecay() {
-      if (energyDecayTimer) clearInterval(energyDecayTimer);
-      energyDecayTimer = setInterval(() => {
-        let needSave = false;
+    /**
+     * ★ 定期同步定时器：
+     *   每隔一段时间，用时间戳重新计算能量 → 更新内存 → 回写 DB
+     *   即使浏览器节流了这个定时器（后台1次/分甚至暂停），
+     *   下次触发时仍然会用真实时间差正确计算，不会多扣！
+     */
+    let energySyncTimer = null;
+    function startEnergySync() {
+      if (energySyncTimer) clearInterval(energySyncTimer);
+      energySyncTimer = setInterval(() => {
+        let anyChanged = false;
         ["Torie", "Jory"].forEach(person => {
-          if (petStates[person].is_fasting) return;
-          petStates[person].energy = Math.max(0, petStates[person].energy - DECAY_RATE_PER_MIN);
-          if (petStates[person].energy <= 0) {
-            petStates[person].energy = 0;
-            petStates[person].is_fasting = true;
-            needSave = true;
+          if (petStates[person].is_fasting) return; // 绝食中不需要计算
+          const changed = syncEnergyToMemory(person);
+          if (changed) {
+            anyChanged = true;
             showToast(`${person} 的宠物饿到绝食了！`, "error");
           }
         });
         updateEnergyUI();
         updateSpirits();
-        if (needSave || (Date.now() % 300000 < 60000)) {
-          ["Torie", "Jory"].forEach(p => savePetState(p));
+        // ★ 每次都回写 DB，确保 last_updated 保持最新
+        saveAllPetStates();
+      }, ENERGY_SAVE_INTERVAL_MS);
+    }
+
+    /**
+     * ★ 页面可见性变化时，立即重新计算能量
+     *   这是修复的核心：用户从后台切回前台时，
+     *   用时间戳一次性算出正确能量，不依赖被节流的定时器
+     */
+    function handleVisibilityChange() {
+      if (!document.hidden) {
+        let anyChanged = false;
+        ["Torie", "Jory"].forEach(person => {
+          if (petStates[person].is_fasting) return;
+          const changed = syncEnergyToMemory(person);
+          if (changed) {
+            anyChanged = true;
+            showToast(`${person} 的宠物饿到绝食了！`, "error");
+          }
+        });
+        updateEnergyUI();
+        updateSpirits();
+        if (anyChanged) {
+          saveAllPetStates();
         }
-      }, 60000); 
+      }
     }
 
     function updateEnergyUI() {
       ["Torie", "Jory"].forEach(person => {
+        // ★ 每次更新 UI 前先实时计算
+        const computed = computeCurrentEnergy(person);
         const state = petStates[person];
+        
+        // 同步到内存（如果还没同步的话）
+        if (computed.is_fasting && !state.is_fasting) {
+          state.energy = 0;
+          state.is_fasting = true;
+          state.last_updated = new Date().toISOString();
+        } else if (!computed.is_fasting) {
+          state.energy = computed.energy;
+        }
+        
         const bar = document.getElementById(`energyBar${person}`);
         const badge = document.getElementById(`fastingBadge${person}`);
         const btn = document.getElementById(`feedBtn${person}`);
@@ -1258,10 +1345,19 @@
 
     function openFeedModal(person) {
       const state = petStates[person];
-      if (state.is_fasting) {
+      // ★ 先实时计算当前能量
+      const computed = computeCurrentEnergy(person);
+      if (computed.is_fasting || state.is_fasting) {
+        // 同步绝食状态
+        state.energy = 0;
+        state.is_fasting = true;
         openFastingModal(person);
         return;
       }
+      // 更新内存中的能量为实时值
+      state.energy = computed.energy;
+      state.last_updated = new Date().toISOString();
+      
       feedTargetPerson = person;
       feedCardCount = 0;
       const modal = document.getElementById("feedModal");
@@ -1339,7 +1435,17 @@
       if (feedCardCount <= 0 || !feedTargetPerson) return;
       
       const state = petStates[feedTargetPerson];
-      const oldEnergy = state.energy;
+      
+      // ★ 喂食前先实时计算当前能量
+      const computed = computeCurrentEnergy(feedTargetPerson);
+      if (computed.is_fasting) {
+        document.getElementById("feedModal").classList.remove("show");
+        openFastingModal(feedTargetPerson);
+        return;
+      }
+      
+      // 使用实时计算的能量作为基准
+      const oldEnergy = computed.energy;
       const newEnergy = Math.min(100, oldEnergy + feedCardCount * FEED_PER_CARD);
       const actualGain = newEnergy - oldEnergy;
       
@@ -1365,8 +1471,13 @@
         return;
       }
       
+      // ★ 关键修复：喂食后立即更新内存中的 energy 和 last_updated
+      const nowISO = new Date().toISOString();
       state.energy = newEnergy;
-      state.last_updated = new Date().toISOString();
+      state.last_updated = nowISO;
+      state.is_fasting = false;
+      
+      // ★ 立即保存到 DB，确保 last_updated 不会丢失
       await savePetState(feedTargetPerson);
       
       updateEnergyUI();
@@ -1420,9 +1531,11 @@
         return;
       }
       
+      // ★ 恢复后立即设置正确的 last_updated
+      const nowISO = new Date().toISOString();
       petStates[feedTargetPerson].is_fasting = false;
       petStates[feedTargetPerson].energy = FASTING_RECOVER_ENERGY;
-      petStates[feedTargetPerson].last_updated = new Date().toISOString();
+      petStates[feedTargetPerson].last_updated = nowISO;
       await savePetState(feedTargetPerson);
       
       updateEnergyUI();
@@ -1826,7 +1939,6 @@
       });
     }
 
-    /* ★ 新增：人物筛选器事件绑定 */
     function setupHistoryFilter() {
       document.getElementById("historyPersonFilter").addEventListener("change",(e)=>{
         currentHistoryPerson = e.target.value;
@@ -2260,7 +2372,6 @@
         });
       }
 
-      /* ★ 新增：人物筛选过滤 */
       if (currentHistoryPerson !== "all") {
         logs = logs.filter(l => l.operator === currentHistoryPerson);
       }
@@ -2968,19 +3079,17 @@
       setupChartInteraction(); 
       checkSpecialDate();
       
+      // ★ 新的宠物能量系统初始化
       await loadPetStates();
-      startEnergyDecay();
+      startEnergySync();
       
       await loadLogs();
       await loadProducts();
       sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
       sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
       
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) {
-          loadPetStates();
-        }
-      });
+      // ★ 页面可见性变化时，立即用时间戳重新计算能量（核心修复）
+      document.addEventListener("visibilitychange", handleVisibilityChange);
 
       let resizeTimer;
       window.addEventListener("resize", () => {
