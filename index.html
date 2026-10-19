@@ -43,22 +43,59 @@
     .festival-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-1); }
     .festival-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; }
 
-    /* === SETTINGS === */
+    /* === SETTINGS (REDESIGNED) === */
     .settings-btn { position: absolute; top: 8px; right: 0; width: 36px; height: 36px; border: none; background: var(--card); border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
     .settings-btn:active { transform: scale(0.9); }
     .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
     .overlay.show { opacity: 1; pointer-events: auto; }
-    .panel { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: min(400px, calc(100% - 32px)); background: var(--card); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 24px 20px 40px; z-index: 9999; transition: transform 0.3s var(--ease-spring); border: 1px solid var(--border); box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12); max-height: 85vh; overflow-y: auto; }
+    
+    .panel { 
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); 
+      width: min(420px, calc(100% - 32px)); background: var(--bg); 
+      border-radius: var(--r-lg) var(--r-lg) 0 0; 
+      padding: 0 0 40px; z-index: 9999; 
+      transition: transform 0.3s var(--ease-spring); 
+      border-top: 1px solid var(--border); 
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12); 
+      max-height: 85vh; overflow-y: auto; 
+      display: flex; flex-direction: column;
+    }
     .panel.show { transform: translateX(-50%) translateY(0); }
-    .panel-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; text-align: center; }
-    .setting-row { margin-bottom: 20px; }
-    .setting-label { font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; display: flex; justify-content: space-between; }
+    
+    .panel-header { padding: 20px 20px 12px; text-align: center; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 2; }
+    .panel-title { font-size: 17px; font-weight: 700; color: var(--text-1); }
+    
+    .settings-content { padding: 16px; display: flex; flex-direction: column; gap: 20px; }
+    
+    .setting-group { background: var(--card); border-radius: var(--r-md); border: 1px solid var(--border); overflow: hidden; }
+    .setting-group-title { font-size: 12px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 16px 4px; margin-top: 4px; }
+    
+    .setting-item { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--separator); }
+    .setting-item:last-child { border-bottom: none; }
+    .setting-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .setting-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+    .setting-label { font-size: 15px; font-weight: 500; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .setting-value { font-size: 14px; color: var(--text-2); font-weight: 500; flex-shrink: 0; }
+    
+    /* Range Slider in Settings */
+    .range-wrap { flex: 1; max-width: 140px; display: flex; align-items: center; gap: 8px; }
     input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
-    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--torie); cursor: pointer; }
-    .settings-recharge { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 8px; }
-    .settings-recharge h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-    .settings-recharge .recharge-rate { font-size: 12px; color: var(--text-2); margin-bottom: 10px; font-weight: 600; }
-    .settings-recharge .recharge-rate span { color: var(--torie); font-size: 14px; font-weight: 800; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--torie); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    .range-val { font-size: 12px; color: var(--text-3); min-width: 32px; text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* Recharge Section in Settings */
+    .recharge-section { padding: 16px; background: var(--card); border-radius: var(--r-md); border: 1px solid var(--border); }
+    .recharge-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .recharge-title { font-size: 15px; font-weight: 700; color: var(--text-1); }
+    .recharge-rate { font-size: 12px; color: var(--text-2); background: var(--bg); padding: 4px 8px; border-radius: 6px; font-weight: 600; }
+    .recharge-rate span { color: var(--torie); font-weight: 800; }
+    .recharge-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .recharge-result { font-size: 13px; font-weight: 700; color: var(--green); text-align: center; padding: 8px; background: rgba(52, 199, 89, 0.08); border-radius: var(--r-sm); margin-bottom: 10px; display: none; }
+
+    /* About Section */
+    .about-section { text-align: center; padding: 16px; color: var(--text-3); font-size: 12px; line-height: 1.6; }
+    .app-version { font-weight: 700; color: var(--text-2); font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .version-badge { background: var(--torie); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
 
     /* === PET CARD NEW LAYOUT === */
     .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
@@ -67,7 +104,6 @@
     .spirit-card.torie::before { background: var(--torie); }
     .spirit-card.jory::before { background: var(--jory); }
     
-    /* Energy Bar on Top */
     .pet-energy-wrap { width: 80%; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; height: 12px; z-index: 2; }
     .energy-bar-track { flex: 1; height: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; position: relative; }
     .energy-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease, background 0.3s; }
@@ -78,7 +114,6 @@
     .pet-container { height: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; position: relative; cursor: pointer; }
     .pet-svg { width: 60px; height: 60px; transition: transform 0.3s var(--ease-spring); pointer-events: none; }
     
-    /* Status Row: Text + Feed Button */
     .spirit-status-row { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 28px; margin-top: 2px; }
     .spirit-name { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
     .spirit-status { font-size: 12px; font-weight: 600; color: var(--text-1); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; }
@@ -97,7 +132,6 @@
     .fasting-badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); background: var(--red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; z-index: 5; animation: pulse 1.5s infinite; white-space: nowrap; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-    /* Pet Animations */
     .state-amazing .pet-svg { animation: petBounce 1s ease-in-out infinite; }
     .state-happy .pet-svg { animation: petSway 2s ease-in-out infinite; }
     .state-good .pet-svg { animation: petSway 2.5s ease-in-out infinite; }
@@ -185,7 +219,6 @@
     .chart-legend { display: flex; justify-content: center; gap: 16px; font-size: 11px; color: var(--text-2); margin-top: 8px; font-weight: 600; }
     .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
 
-    /* Chart Tooltip */
     .chart-tooltip {
       position: absolute; pointer-events: none; background: var(--card); border: 1px solid var(--border);
       border-radius: var(--r-sm); padding: 8px 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -342,7 +375,7 @@
 
     .bg-tint-overlay { position: fixed; inset: 0; pointer-events: none; z-index: -1; transition: background 0.6s ease; }
     
-    /* Feed Modal Specific - Enhanced */
+    /* Feed Modal Specific */
     .feed-modal-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; padding: 12px; background: var(--bg); border-radius: var(--r-md); border: 1px solid var(--border); }
     .feed-info-item { display: flex; flex-direction: column; gap: 2px; }
     .feed-info-label { font-size: 11px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
@@ -368,11 +401,12 @@
     .feed-cost-hint.error { color: var(--red); }
     .feed-cost-hint.success { color: var(--green); }
 
-    /* Supervise Preview */
-    .supervise-preview { margin-top: 12px; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); text-align: center; font-size: 14px; font-weight: 700; color: var(--text-1); display: none; }
-    .supervise-preview .arrow { color: var(--text-3); margin: 0 6px; }
-    .supervise-preview .victim { color: var(--red); }
-    .supervise-preview .supervisor { color: var(--green); }
+    /* Supervise & Transfer Preview */
+    .transfer-preview { margin-top: 12px; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); text-align: center; font-size: 14px; font-weight: 700; color: var(--text-1); display: none; }
+    .transfer-preview .arrow { color: var(--text-3); margin: 0 6px; }
+    .transfer-preview .from { color: var(--red); }
+    .transfer-preview .to { color: var(--green); }
+    
     .sleep-no-watch-hint { font-size: 11px; color: var(--text-3); margin-top: 2px; font-style: italic; }
     .sleep-rules-info { padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-sm); margin-top: 12px; font-size: 12px; color: var(--text-2); line-height: 1.8; }
     .sleep-rules-info .rule-line { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 2px; }
@@ -426,7 +460,7 @@
     </div>
   </div>
 
-  <!-- Feed Modal (Enhanced) -->
+  <!-- Feed Modal -->
   <div id="feedModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;" id="feedModalTitle">🍖 喂食 Torie</div>
@@ -493,7 +527,7 @@
     </div>
   </div>
 
-  <!-- Edit Item Modal (Unified) -->
+  <!-- Edit Item Modal -->
   <div id="editModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
       <div class="modal-title" style="text-align: center;">✏️ 修改项目</div>
@@ -574,35 +608,74 @@
     </div>
   </div>
 
-  <!-- Settings Panel -->
+  <!-- ★ REDESIGNED SETTINGS PANEL -->
   <div id="settingsOverlay" class="overlay"></div>
   <div id="settingsPanel" class="panel">
-    <div class="panel-title">⚙️ 设置</div>
-    <div class="setting-row">
-      <div class="setting-label">毛玻璃强度 <span id="blurValue">20px</span></div>
-      <input type="range" id="blurSlider" min="0" max="30" value="20" />
+    <div class="panel-header">
+      <div class="panel-title">⚙️ 设置</div>
     </div>
-    <div class="setting-row">
-      <div class="setting-label" style="margin-bottom:0">深色模式</div>
-      <span style="font-size: 12px; color: var(--text-3);">自动跟随系统 🌓</span>
-    </div>
-
-    <!-- Recharge -->
-    <div class="settings-recharge">
-      <h3>💰 充值自由卡</h3>
-      <div class="recharge-rate">汇率：<span>10¥</span> = 1 张自由卡（充入小荷包）</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="rechargePerson">谁充值</label>
-          <select id="rechargePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+    
+    <div class="settings-content">
+      <!-- Group 1: Appearance -->
+      <div class="setting-group-title">外观与显示</div>
+      <div class="setting-group">
+        <div class="setting-item">
+          <div class="setting-item-left">
+            <span class="setting-icon">🌓</span>
+            <span class="setting-label">深色模式</span>
+          </div>
+          <span class="setting-value">跟随系统</span>
         </div>
-        <div class="form-group">
-          <label for="rechargeAmount">金额（¥）</label>
-          <input id="rechargeAmount" type="number" min="10" step="10" placeholder="10" />
+        <div class="setting-item">
+          <div class="setting-item-left">
+            <span class="setting-icon">✨</span>
+            <span class="setting-label">毛玻璃强度</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="blurSlider" min="0" max="30" value="20" />
+            <span class="range-val" id="blurValue">20px</span>
+          </div>
         </div>
       </div>
-      <div id="rechargeResult" class="converter-result" style="display:none"></div>
-      <button id="rechargeSubmitBtn" class="submit-btn green" style="margin-top:10px" disabled>确认充值并入账</button>
+
+      <!-- Group 2: Wallet -->
+      <div class="setting-group-title">钱包管理</div>
+      <div class="recharge-section">
+        <div class="recharge-header">
+          <span class="recharge-title">💰 充值自由卡</span>
+          <span class="recharge-rate">汇率：<span>10¥</span> = 1 张</span>
+        </div>
+        <div class="recharge-form">
+          <div class="form-group">
+            <label for="rechargePerson">谁充值</label>
+            <select id="rechargePerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+          </div>
+          <div class="form-group">
+            <label for="rechargeAmount">金额（¥）</label>
+            <input id="rechargeAmount" type="number" min="10" step="10" placeholder="10" />
+          </div>
+        </div>
+        <div id="rechargeResult" class="recharge-result"></div>
+        <button id="rechargeSubmitBtn" class="submit-btn green" style="margin-top:0" disabled>确认充值并入账</button>
+      </div>
+
+      <!-- Group 3: About -->
+      <div class="setting-group-title">关于</div>
+      <div class="setting-group">
+        <div class="setting-item">
+          <div class="setting-item-left">
+            <span class="setting-icon">📱</span>
+            <span class="setting-label">版本号</span>
+          </div>
+          <span class="setting-value">v3.0</span>
+        </div>
+      </div>
+      
+      <div class="about-section">
+        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.0</span></div>
+        <div>记录每一次获得，也记录每一次自由 ✨</div>
+        <div style="margin-top:4px; opacity:0.7;">Made with ❤️ for Torie & Jory</div>
+      </div>
     </div>
   </div>
 
@@ -788,6 +861,8 @@
             <button class="converter-type-btn" data-ctype="late"><span class="ctb-emoji">⏰</span>迟到换算</button>
             <button class="converter-type-btn" data-ctype="sleep"><span class="ctb-emoji">😴</span>睡眠</button>
             <button class="converter-type-btn" data-ctype="supervise"><span class="ctb-emoji">👀</span>监督</button>
+            <!-- ★ NEW: Transfer Button -->
+            <button class="converter-type-btn" data-ctype="transfer"><span class="ctb-emoji">🔄</span>转移</button>
           </div>
 
           <div id="bankConverterPanel" class="converter-unified-panel">
@@ -883,8 +958,35 @@
                 <input id="superviseCards" type="number" min="1" max="99" placeholder="1" />
               </div>
             </div>
-            <div id="supervisePreview" class="supervise-preview"></div>
+            <div id="supervisePreview" class="transfer-preview"></div>
             <button id="superviseSubmitBtn" class="submit-btn" disabled>确认监督</button>
+          </div>
+
+          <!-- ★ NEW: TRANSFER PANEL -->
+          <div id="bankTransferPanel" class="converter-unified-panel" style="display:none">
+            <div class="converter-header">
+              <h3 class="section-title" style="margin:0">🔄 自由卡转移</h3>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="transferFrom">转出方</label>
+                <select id="transferFrom"><option value="Torie">Torie</option><option value="Jory">Jory</option></select>
+              </div>
+              <div class="form-group">
+                <label for="transferTo">接收方 (自动)</label>
+                <input id="transferTo" type="text" readonly value="Jory" style="background:var(--bg);color:var(--text-2);cursor:not-allowed;" />
+              </div>
+              <div class="form-group full">
+                <label for="transferReason">转移原因</label>
+                <input id="transferReason" type="text" placeholder="例如：帮忙拿快递 / 借款" maxlength="30" />
+              </div>
+              <div class="form-group">
+                <label for="transferCards">转移张数</label>
+                <input id="transferCards" type="number" min="1" max="999" placeholder="1" />
+              </div>
+            </div>
+            <div id="transferPreview" class="transfer-preview"></div>
+            <button id="transferSubmitBtn" class="submit-btn" disabled>确认转移</button>
           </div>
 
         </div>
@@ -1093,58 +1195,25 @@
 
     /* ==================== PET STATE TEXTS ==================== */
     const SPIRIT_STATES = {
-      amazing:  { texts: [
-        "超神了！！","状态爆棚！","闪闪发光~","简直太强啦！","为你骄傲！",
-        "今天就是主角！","全场最佳！","无人能挡！","太耀眼了！","开挂了吧！",
-        "巅峰状态！","这就是传说中的大佬！","今天的你自带光芒！","连空气都在为你鼓掌！","超水平发挥！"
-      ], emoji: "🤩" },
-      happy:    { texts: [
-        "今天很开心~","嘻嘻心情好","美滋滋的~","有点小兴奋","快乐加倍！",
-        "心情像彩虹一样","嘴角在上扬~","快乐能量满格！","甜甜的一天","幸福感爆棚~",
-        "好事在发生呢","今天运气不错哦","被快乐包围中","心情好到想跳舞~","世界都变亮了"
-      ], emoji: "😊" },
-      good:     { texts: [
-        "今天很棒哦~","稳稳的幸福","继续加油呀！","心情美美哒","表现不错呢！",
-        "一切都在正轨上","按部就班的好","稳定发挥中~","踏实的一天","节奏刚刚好",
-        "今天也值得记录","平凡但充实！","稳步前进中","小确幸在发生","状态在线！"
-      ], emoji: "😄" },
-      normal:   { texts: [
-        "平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中",
-        "今天不赶时间","佛系运转中~","安静地存在","日常模式启动","平淡也挺好的",
-        "在发呆...","什么都没想~","放空一会儿","岁月静好中","摸鱼也是生活"
-      ], emoji: "😌" },
-      sleepy:   { texts: [
-        "有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重...",
-        "梦在召唤我...","好困好困...","需要一张床...","困到模糊了","月亮都困了",
-        "意识在飘...","已经半梦半醒","别跟我说话...zzZ","枕头在哪...","关机倒计时..."
-      ], emoji: "😴" },
-      low:      { texts: [
-        "今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧",
-        "电量不足...","有点蔫了","需要安慰...","今天不太行","想被抱一下",
-        "低能量模式...","提不起精神","有点丧...","需要一个拥抱","缓缓吧..."
-      ], emoji: "😔" },
-      warning:  { texts: [
-        "余额告急啦...","有点小透支...","要省着点用哦","注意收支平衡","快赚点卡吧~",
-        "账本在哭...","钱包空空...","红色预警！","不能再花了","得想办法赚回来",
-        "透支警告！","余额在发抖...","紧急求助中","需要充值！","快来救救我~"
-      ], emoji: "😰" },
-      fasting:  { texts: [
-        "饿到不想动...","需要你哄哄我...","已经绝食了...","心好累...","等你回来...",
-        "你忘了我吗...","我已经放弃了...","最后的倔强...","快回来喂我...","奄奄一息...",
-        "再不来就真生气了","我的眼泪在打转","你忍心吗...","心碎的声音听到了吗","最后一次机会..."
-      ], emoji: "😢" }
+      amazing:  { texts: ["超神了！！","状态爆棚！","闪闪发光~","简直太强啦！","为你骄傲！","今天就是主角！","全场最佳！","无人能挡！","太耀眼了！","开挂了吧！","巅峰状态！","这就是传说中的大佬！","今天的你自带光芒！","连空气都在为你鼓掌！","超水平发挥！"], emoji: "🤩" },
+      happy:    { texts: ["今天很开心~","嘻嘻心情好","美滋滋的~","有点小兴奋","快乐加倍！","心情像彩虹一样","嘴角在上扬~","快乐能量满格！","甜甜的一天","幸福感爆棚~","好事在发生呢","今天运气不错哦","被快乐包围中","心情好到想跳舞~","世界都变亮了"], emoji: "😊" },
+      good:     { texts: ["今天很棒哦~","稳稳的幸福","继续加油呀！","心情美美哒","表现不错呢！","一切都在正轨上","按部就班的好","稳定发挥中~","踏实的一天","节奏刚刚好","今天也值得记录","平凡但充实！","稳步前进中","小确幸在发生","状态在线！"], emoji: "😄" },
+      normal:   { texts: ["平静的一天~","在蓄力中...","慢慢来也好","休息一下下","稳扎稳打中","今天不赶时间","佛系运转中~","安静地存在","日常模式启动","平淡也挺好的","在发呆...","什么都没想~","放空一会儿","岁月静好中","摸鱼也是生活"], emoji: "😌" },
+      sleepy:   { texts: ["有点困了...","打哈欠中...","zzZ...","夜深了想睡觉","眼皮好重...","梦在召唤我...","好困好困...","需要一张床...","困到模糊了","月亮都困了","意识在飘...","已经半梦半醒","别跟我说话...zzZ","枕头在哪...","关机倒计时..."], emoji: "😴" },
+      low:      { texts: ["今天有点累...","需要充充电","明天会更好","抱抱你~","没关系，歇歇吧","电量不足...","有点蔫了","需要安慰...","今天不太行","想被抱一下","低能量模式...","提不起精神","有点丧...","需要一个拥抱","缓缓吧..."], emoji: "😔" },
+      warning:  { texts: ["余额告急啦...","有点小透支...","要省着点用哦","注意收支平衡","快赚点卡吧~","账本在哭...","钱包空空...","红色预警！","不能再花了","得想办法赚回来","透支警告！","余额在发抖...","紧急求助中","需要充值！","快来救救我~"], emoji: "😰" },
+      fasting:  { texts: ["饿到不想动...","需要你哄哄我...","已经绝食了...","心好累...","等你回来...","你忘了我吗...","我已经放弃了...","最后的倔强...","快回来喂我...","奄奄一息...","再不来就真生气了","我的眼泪在打转","你忍心吗...","心碎的声音听到了吗","最后一次机会..."], emoji: "😢" }
     };
 
     /* ==================================================================
-       ★ 重写宠物能量系统 —— 完全基于时间戳计算，杜绝双重扣除
+       ★ PET ENERGY SYSTEM
        ================================================================== */
-    const DECAY_RATE_PER_MIN = 0.1;   // 每分钟衰减 0.1%
-    const FEED_PER_CARD = 30;          // 每张自由卡恢复 30% 能量
-    const FASTING_RECOVER_COST = 3;    // 哄好绝食宠物需要 3 张
-    const FASTING_RECOVER_ENERGY = 10; // 哄好后恢复到 10%
-    const ENERGY_SAVE_INTERVAL_MS = 60000; // 每 60 秒回写一次 DB
+    const DECAY_RATE_PER_MIN = 0.1;   
+    const FEED_PER_CARD = 30;          
+    const FASTING_RECOVER_COST = 3;    
+    const FASTING_RECOVER_ENERGY = 10; 
+    const ENERGY_SAVE_INTERVAL_MS = 60000; 
 
-    // 内存中的宠物状态
     let petStates = {
       Torie: { energy: 50, last_updated: new Date().toISOString(), is_fasting: false },
       Jory: { energy: 50, last_updated: new Date().toISOString(), is_fasting: false }
@@ -1152,16 +1221,9 @@
     let feedTargetPerson = "";
     let feedCardCount = 0;
 
-    /**
-     * ★ 核心函数：根据 DB 中的 last_updated 和 energy，
-     *   实时计算「现在」应该剩余多少能量。
-     *   不再依赖 setInterval 逐分钟扣减，避免浏览器节流导致的多扣/少扣。
-     */
     function computeCurrentEnergy(person) {
       const state = petStates[person];
-      if (state.is_fasting) {
-        return { energy: 0, is_fasting: true, justEntered: false };
-      }
+      if (state.is_fasting) return { energy: 0, is_fasting: true, justEntered: false };
       const now = Date.now();
       const lastMs = new Date(state.last_updated).getTime();
       const minsPassed = Math.max(0, (now - lastMs) / 60000);
@@ -1170,36 +1232,28 @@
       let justEntered = false;
       if (newEnergy <= 0) {
         newEnergy = 0;
-        justEntered = !state.is_fasting; // 刚刚进入绝食
+        justEntered = !state.is_fasting;
         return { energy: 0, is_fasting: true, justEntered };
       }
       return { energy: newEnergy, is_fasting: false, justEntered: false };
     }
 
-    /**
-     * ★ 将计算结果同步回内存（不自动写 DB，由 saveAllPetStates 负责）
-     */
     function syncEnergyToMemory(person) {
       const result = computeCurrentEnergy(person);
       const state = petStates[person];
       if (result.is_fasting && !state.is_fasting) {
-        // 刚刚进入绝食
         state.energy = 0;
         state.is_fasting = true;
         state.last_updated = new Date().toISOString();
-        return true; // 返回 true 表示状态变化了
+        return true;
       }
       if (!result.is_fasting) {
         state.energy = result.energy;
-        // ★ 关键：更新 last_updated 到当前时间，这样下次计算就从这里开始
         state.last_updated = new Date().toISOString();
       }
       return false;
     }
 
-    /**
-     * 从 DB 加载宠物状态，并用时间戳计算真实能量
-     */
     async function loadPetStates() {
       const { data, error } = await sb.from("freecard_pet_state").select("*");
       if (error) { console.error("Load pet state error:", error); return; }
@@ -1212,28 +1266,17 @@
           };
         });
       }
-      // ★ 用时间戳计算真实能量，并检查是否进入了绝食
       let needSave = false;
       ["Torie", "Jory"].forEach(person => {
         const changed = syncEnergyToMemory(person);
-        if (changed) {
-          needSave = true;
-          showToast(`${person} 的宠物饿到绝食了！`, "error");
-        }
+        if (changed) { needSave = true; showToast(`${person} 的宠物饿到绝食了！`, "error"); }
       });
       updateEnergyUI();
-      if (needSave) {
-        saveAllPetStates();
-      }
+      if (needSave) saveAllPetStates();
     }
 
-    /**
-     * ★ 保存所有宠物状态到 DB
-     */
     async function saveAllPetStates() {
-      for (const person of ["Torie", "Jory"]) {
-        await savePetState(person);
-      }
+      for (const person of ["Torie", "Jory"]) await savePetState(person);
     }
 
     async function savePetState(person) {
@@ -1246,87 +1289,55 @@
       if (error) console.error("Save pet state error:", error);
     }
 
-    /**
-     * ★ 定期同步定时器：
-     *   每隔一段时间，用时间戳重新计算能量 → 更新内存 → 回写 DB
-     *   即使浏览器节流了这个定时器（后台1次/分甚至暂停），
-     *   下次触发时仍然会用真实时间差正确计算，不会多扣！
-     */
     let energySyncTimer = null;
     function startEnergySync() {
       if (energySyncTimer) clearInterval(energySyncTimer);
       energySyncTimer = setInterval(() => {
         let anyChanged = false;
         ["Torie", "Jory"].forEach(person => {
-          if (petStates[person].is_fasting) return; // 绝食中不需要计算
+          if (petStates[person].is_fasting) return;
           const changed = syncEnergyToMemory(person);
-          if (changed) {
-            anyChanged = true;
-            showToast(`${person} 的宠物饿到绝食了！`, "error");
-          }
+          if (changed) { anyChanged = true; showToast(`${person} 的宠物饿到绝食了！`, "error"); }
         });
         updateEnergyUI();
         updateSpirits();
-        // ★ 每次都回写 DB，确保 last_updated 保持最新
         saveAllPetStates();
       }, ENERGY_SAVE_INTERVAL_MS);
     }
 
-    /**
-     * ★ 页面可见性变化时，立即重新计算能量
-     *   这是修复的核心：用户从后台切回前台时，
-     *   用时间戳一次性算出正确能量，不依赖被节流的定时器
-     */
     function handleVisibilityChange() {
       if (!document.hidden) {
         let anyChanged = false;
         ["Torie", "Jory"].forEach(person => {
           if (petStates[person].is_fasting) return;
           const changed = syncEnergyToMemory(person);
-          if (changed) {
-            anyChanged = true;
-            showToast(`${person} 的宠物饿到绝食了！`, "error");
-          }
+          if (changed) { anyChanged = true; showToast(`${person} 的宠物饿到绝食了！`, "error"); }
         });
         updateEnergyUI();
         updateSpirits();
-        if (anyChanged) {
-          saveAllPetStates();
-        }
+        if (anyChanged) saveAllPetStates();
       }
     }
 
     function updateEnergyUI() {
       ["Torie", "Jory"].forEach(person => {
-        // ★ 每次更新 UI 前先实时计算
         const computed = computeCurrentEnergy(person);
         const state = petStates[person];
-        
-        // 同步到内存（如果还没同步的话）
         if (computed.is_fasting && !state.is_fasting) {
-          state.energy = 0;
-          state.is_fasting = true;
-          state.last_updated = new Date().toISOString();
-        } else if (!computed.is_fasting) {
-          state.energy = computed.energy;
-        }
+          state.energy = 0; state.is_fasting = true; state.last_updated = new Date().toISOString();
+        } else if (!computed.is_fasting) { state.energy = computed.energy; }
         
         const bar = document.getElementById(`energyBar${person}`);
         const badge = document.getElementById(`fastingBadge${person}`);
         const btn = document.getElementById(`feedBtn${person}`);
         
         if (state.is_fasting) {
-          bar.style.width = "0%";
-          bar.classList.add("low");
-          badge.style.display = "block";
-          btn.disabled = false; 
-          btn.textContent = "🥺"; 
+          bar.style.width = "0%"; bar.classList.add("low"); badge.style.display = "block";
+          btn.disabled = false; btn.textContent = "🥺"; 
         } else {
           const pct = Math.max(0, Math.min(100, state.energy));
-          bar.style.width = `${pct}%`;
-          bar.classList.toggle("low", pct <= 20);
-          badge.style.display = "none";
-          btn.disabled = false;
+          bar.style.width = `${pct}%`; bar.classList.toggle("low", pct <= 20);
+          badge.style.display = "none"; btn.disabled = false;
           btn.textContent = person === "Torie" ? "🍖" : "🥕";
         }
       });
@@ -1345,36 +1356,23 @@
 
     function openFeedModal(person) {
       const state = petStates[person];
-      // ★ 先实时计算当前能量
       const computed = computeCurrentEnergy(person);
       if (computed.is_fasting || state.is_fasting) {
-        // 同步绝食状态
-        state.energy = 0;
-        state.is_fasting = true;
-        openFastingModal(person);
-        return;
+        state.energy = 0; state.is_fasting = true; openFastingModal(person); return;
       }
-      // 更新内存中的能量为实时值
-      state.energy = computed.energy;
-      state.last_updated = new Date().toISOString();
-      
-      feedTargetPerson = person;
-      feedCardCount = 0;
+      state.energy = computed.energy; state.last_updated = new Date().toISOString();
+      feedTargetPerson = person; feedCardCount = 0;
       const modal = document.getElementById("feedModal");
       const emoji = person === "Torie" ? "🍖" : "🥕";
       document.getElementById("feedModalTitle").textContent = `${emoji} 喂食 ${person}`;
-      
       const currentPct = Math.round(state.energy * 10) / 10;
       document.getElementById("feedCurrentEnergy").textContent = `${currentPct}%`;
-      
       const lastTime = new Date(state.last_updated).getTime();
       const now = Date.now();
       const diffMs = now - lastTime;
       document.getElementById("feedLastTime").textContent = diffMs < 60000 ? "刚刚" : formatTimeDiff(diffMs) + "前";
-      
       const msToZero = (state.energy / DECAY_RATE_PER_MIN) * 60000;
       document.getElementById("feedTimeToZero").textContent = formatTimeDiff(msToZero);
-      
       updateFeedStepperUI();
       modal.classList.add("show");
     }
@@ -1384,111 +1382,51 @@
       const currentPct = Math.round(state.energy * 10) / 10;
       const newPct = Math.min(100, state.energy + feedCardCount * FEED_PER_CARD);
       const newPctRound = Math.round(newPct * 10) / 10;
-      
       document.getElementById("feedCountDisplay").textContent = feedCardCount;
       document.getElementById("feedMinus").disabled = feedCardCount <= 0;
       document.getElementById("feedPlus").disabled = feedCardCount >= 4 || newPct >= 100;
-      
       const barClass = feedTargetPerson === "Torie" ? "torie" : "jory";
       const currentBar = document.getElementById("feedBarCurrent");
-      currentBar.className = `energy-bar-fill ${barClass}`;
-      currentBar.style.width = `${currentPct}%`;
-      
+      currentBar.className = `energy-bar-fill ${barClass}`; currentBar.style.width = `${currentPct}%`;
       const previewBar = document.getElementById("feedBarPreview");
-      if (feedCardCount > 0 && newPct > currentPct) {
-        previewBar.style.width = `${newPct}%`;
-        previewBar.style.opacity = "0.3";
-      } else {
-        previewBar.style.width = `${currentPct}%`;
-        previewBar.style.opacity = "0";
-      }
-      
+      if (feedCardCount > 0 && newPct > currentPct) { previewBar.style.width = `${newPct}%`; previewBar.style.opacity = "0.3"; }
+      else { previewBar.style.width = `${currentPct}%`; previewBar.style.opacity = "0"; }
       document.getElementById("feedPreviewOld").textContent = `${currentPct}%`;
       const newEl = document.getElementById("feedPreviewNew");
-      newEl.textContent = `${newPctRound}%`;
-      newEl.style.color = feedCardCount > 0 ? "var(--green)" : "var(--text-2)";
-      
+      newEl.textContent = `${newPctRound}%`; newEl.style.color = feedCardCount > 0 ? "var(--green)" : "var(--text-2)";
       const balance = calcBalance(feedTargetPerson);
       const btn = document.getElementById("feedConfirm");
       const hint = document.getElementById("feedCostHint");
-      
-      if (feedCardCount === 0) {
-        btn.disabled = true;
-        hint.textContent = "点击 + 选择喂食张数（每张 +30%）";
-        hint.className = "feed-cost-hint";
-      } else if (newPct >= 100 && state.energy >= 100) {
-        btn.disabled = true;
-        hint.textContent = "⚠️ 能量已满，无需喂食";
-        hint.className = "feed-cost-hint";
-      } else if (balance < feedCardCount) {
-        btn.disabled = true;
-        hint.textContent = `⚠️ 余额不足（需要 ${feedCardCount} 张，当前 ${balance} 张）`;
-        hint.className = "feed-cost-hint error";
-      } else {
-        btn.disabled = false;
-        hint.textContent = `将花费 ${feedCardCount} 张自由卡`;
-        hint.className = "feed-cost-hint success";
-      }
+      if (feedCardCount === 0) { btn.disabled = true; hint.textContent = "点击 + 选择喂食张数（每张 +30%）"; hint.className = "feed-cost-hint"; }
+      else if (newPct >= 100 && state.energy >= 100) { btn.disabled = true; hint.textContent = "⚠️ 能量已满，无需喂食"; hint.className = "feed-cost-hint"; }
+      else if (balance < feedCardCount) { btn.disabled = true; hint.textContent = `⚠️ 余额不足（需要 ${feedCardCount} 张，当前 ${balance} 张）`; hint.className = "feed-cost-hint error"; }
+      else { btn.disabled = false; hint.textContent = `将花费 ${feedCardCount} 张自由卡`; hint.className = "feed-cost-hint success"; }
     }
 
     async function confirmFeed() {
       if (feedCardCount <= 0 || !feedTargetPerson) return;
-      
       const state = petStates[feedTargetPerson];
-      
-      // ★ 喂食前先实时计算当前能量
       const computed = computeCurrentEnergy(feedTargetPerson);
-      if (computed.is_fasting) {
-        document.getElementById("feedModal").classList.remove("show");
-        openFastingModal(feedTargetPerson);
-        return;
-      }
-      
-      // 使用实时计算的能量作为基准
+      if (computed.is_fasting) { document.getElementById("feedModal").classList.remove("show"); openFastingModal(feedTargetPerson); return; }
       const oldEnergy = computed.energy;
       const newEnergy = Math.min(100, oldEnergy + feedCardCount * FEED_PER_CARD);
       const actualGain = newEnergy - oldEnergy;
-      
       if (actualGain <= 0) return;
-      
       const btn = document.getElementById("feedConfirm");
-      btn.disabled = true;
-      btn.textContent = "喂食中...";
-      
+      btn.disabled = true; btn.textContent = "喂食中...";
       const emoji = feedTargetPerson === "Torie" ? "🍖" : "🥕";
       const { error } = await sb.from("freecard_log").insert({
-        operator: feedTargetPerson,
-        change_type: "减少",
-        card_num: feedCardCount,
-        reason: `${emoji} 喂食宠物（+${Math.round(actualGain)}%能量）`,
-        note: `FEED:${oldEnergy.toFixed(2)}:${newEnergy.toFixed(2)}`
+        operator: feedTargetPerson, change_type: "减少", card_num: feedCardCount,
+        reason: `${emoji} 喂食宠物（+${Math.round(actualGain)}%能量）`, note: `FEED:${oldEnergy.toFixed(2)}:${newEnergy.toFixed(2)}`
       });
-      
-      if (error) {
-        showToast("喂食失败：" + error.message, "error");
-        btn.disabled = false;
-        btn.textContent = "确认喂食";
-        return;
-      }
-      
-      // ★ 关键修复：喂食后立即更新内存中的 energy 和 last_updated
+      if (error) { showToast("喂食失败：" + error.message, "error"); btn.disabled = false; btn.textContent = "确认喂食"; return; }
       const nowISO = new Date().toISOString();
-      state.energy = newEnergy;
-      state.last_updated = nowISO;
-      state.is_fasting = false;
-      
-      // ★ 立即保存到 DB，确保 last_updated 不会丢失
+      state.energy = newEnergy; state.last_updated = nowISO; state.is_fasting = false;
       await savePetState(feedTargetPerson);
-      
-      updateEnergyUI();
-      updateSpirits();
-      await loadLogs();
-      
+      updateEnergyUI(); updateSpirits(); await loadLogs();
       document.getElementById("feedModal").classList.remove("show");
-      btn.disabled = false;
-      btn.textContent = "确认喂食";
-      showToast(`喂食成功！能量恢复到 ${Math.round(newEnergy)}%`, "success");
-      spawnParticles(1);
+      btn.disabled = false; btn.textContent = "确认喂食";
+      showToast(`喂食成功！能量恢复到 ${Math.round(newEnergy)}%`, "success"); spawnParticles(1);
     }
 
     function openFastingModal(person) {
@@ -1496,55 +1434,31 @@
       const modal = document.getElementById("fastingModal");
       const emoji = person === "Torie" ? "🦉" : "🐰";
       document.getElementById("fastingModalTitle").textContent = `${emoji} ${person} 的宠物绝食了！`;
-      
       const balance = calcBalance(person);
       const btn = document.getElementById("fastingConfirm");
-      if (balance < FASTING_RECOVER_COST) {
-        btn.disabled = true;
-        btn.textContent = `余额不足（需 ${FASTING_RECOVER_COST} 张）`;
-      } else {
-        btn.disabled = false;
-        btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`;
-      }
+      if (balance < FASTING_RECOVER_COST) { btn.disabled = true; btn.textContent = `余额不足（需 ${FASTING_RECOVER_COST} 张）`; }
+      else { btn.disabled = false; btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`; }
       modal.classList.add("show");
     }
 
     async function confirmFastingRecover() {
       if (!feedTargetPerson) return;
       const btn = document.getElementById("fastingConfirm");
-      btn.disabled = true;
-      btn.textContent = "哄宠物中...";
-      
+      btn.disabled = true; btn.textContent = "哄宠物中...";
       const emoji = feedTargetPerson === "Torie" ? "🦉" : "🐰";
       const { error } = await sb.from("freecard_log").insert({
-        operator: feedTargetPerson,
-        change_type: "减少",
-        card_num: FASTING_RECOVER_COST,
-        reason: `${emoji} 哄绝食宠物（恢复至 ${FASTING_RECOVER_ENERGY}%）`,
-        note: `FASTING_RECOVER`
+        operator: feedTargetPerson, change_type: "减少", card_num: FASTING_RECOVER_COST,
+        reason: `${emoji} 哄绝食宠物（恢复至 ${FASTING_RECOVER_ENERGY}%）`, note: `FASTING_RECOVER`
       });
-      
-      if (error) {
-        showToast("操作失败：" + error.message, "error");
-        btn.disabled = false;
-        btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`;
-        return;
-      }
-      
-      // ★ 恢复后立即设置正确的 last_updated
+      if (error) { showToast("操作失败：" + error.message, "error"); btn.disabled = false; btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`; return; }
       const nowISO = new Date().toISOString();
       petStates[feedTargetPerson].is_fasting = false;
       petStates[feedTargetPerson].energy = FASTING_RECOVER_ENERGY;
       petStates[feedTargetPerson].last_updated = nowISO;
       await savePetState(feedTargetPerson);
-      
-      updateEnergyUI();
-      updateSpirits();
-      await loadLogs();
-      
+      updateEnergyUI(); updateSpirits(); await loadLogs();
       document.getElementById("fastingModal").classList.remove("show");
-      btn.disabled = false;
-      btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`;
+      btn.disabled = false; btn.textContent = `💔 花费 ${FASTING_RECOVER_COST} 张哄好`;
       showToast("宠物已恢复！好好照顾它哦 💕", "success");
     }
 
@@ -1553,14 +1467,8 @@
       document.getElementById("feedBtnJory").addEventListener("click", (e) => { e.stopPropagation(); openFeedModal("Jory"); });
       document.getElementById("feedCancel").addEventListener("click", () => document.getElementById("feedModal").classList.remove("show"));
       document.getElementById("feedConfirm").addEventListener("click", confirmFeed);
-      
-      document.getElementById("feedPlus").addEventListener("click", () => {
-        if (feedCardCount < 4) { feedCardCount++; updateFeedStepperUI(); }
-      });
-      document.getElementById("feedMinus").addEventListener("click", () => {
-        if (feedCardCount > 0) { feedCardCount--; updateFeedStepperUI(); }
-      });
-      
+      document.getElementById("feedPlus").addEventListener("click", () => { if (feedCardCount < 4) { feedCardCount++; updateFeedStepperUI(); } });
+      document.getElementById("feedMinus").addEventListener("click", () => { if (feedCardCount > 0) { feedCardCount--; updateFeedStepperUI(); } });
       document.getElementById("fastingCancel").addEventListener("click", () => document.getElementById("fastingModal").classList.remove("show"));
       document.getElementById("fastingConfirm").addEventListener("click", confirmFastingRecover);
     }
@@ -1582,8 +1490,7 @@
     function getPetState(person) {
       if (petStates[person] && petStates[person].is_fasting) return "fasting";
       const balance = calcBalance(person);
-      const now = new Date();
-      const hour = now.getHours();
+      const now = new Date(); const hour = now.getHours();
       const events = getRecentEventCounts(person);
       if (balance < 0) return "warning";
       if (events.punishes > 0) return "low";
@@ -1605,28 +1512,20 @@
       card.className = `spirit-card ${person.toLowerCase()} state-${state}`;
       const svg = document.getElementById(`svg${person}`);
       if (person === "Torie") {
-        const pupils = svg.querySelectorAll('.pupil');
-        const starEyes = svg.querySelectorAll('.star-eye');
-        const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
-        const sadEyes = svg.querySelectorAll('.sad-eye');
-        pupils.forEach(p => p.style.display = 'none');
-        starEyes.forEach(p => p.style.display = 'none');
-        sleepyEyes.forEach(p => p.style.display = 'none');
-        sadEyes.forEach(p => p.style.display = 'none');
+        const pupils = svg.querySelectorAll('.pupil'); const starEyes = svg.querySelectorAll('.star-eye');
+        const sleepyEyes = svg.querySelectorAll('.sleepy-eye'); const sadEyes = svg.querySelectorAll('.sad-eye');
+        pupils.forEach(p => p.style.display = 'none'); starEyes.forEach(p => p.style.display = 'none');
+        sleepyEyes.forEach(p => p.style.display = 'none'); sadEyes.forEach(p => p.style.display = 'none');
         if (state === 'amazing' || state === 'happy') starEyes.forEach(p => p.style.display = '');
         else if (state === 'sleepy') sleepyEyes.forEach(p => p.style.display = '');
         else if (state === 'low' || state === 'warning' || state === 'fasting') sadEyes.forEach(p => p.style.display = '');
         else pupils.forEach(p => p.style.display = '');
       } else {
-        const beanEyes = svg.querySelectorAll('.bean-eye');
-        const happyEyes = svg.querySelectorAll('.happy-eye');
-        const sleepyEyes = svg.querySelectorAll('.sleepy-eye');
-        const sadEyes = svg.querySelectorAll('.sad-eye');
+        const beanEyes = svg.querySelectorAll('.bean-eye'); const happyEyes = svg.querySelectorAll('.happy-eye');
+        const sleepyEyes = svg.querySelectorAll('.sleepy-eye'); const sadEyes = svg.querySelectorAll('.sad-eye');
         const ears = svg.querySelectorAll('.bunny-ear-l, .bunny-ear-r');
-        beanEyes.forEach(e => e.style.display = 'none');
-        happyEyes.forEach(e => e.style.display = 'none');
-        sleepyEyes.forEach(e => e.style.display = 'none');
-        sadEyes.forEach(e => e.style.display = 'none');
+        beanEyes.forEach(e => e.style.display = 'none'); happyEyes.forEach(e => e.style.display = 'none');
+        sleepyEyes.forEach(e => e.style.display = 'none'); sadEyes.forEach(e => e.style.display = 'none');
         ears.forEach(e => e.classList.remove('ear-down'));
         if (state === 'amazing' || state === 'happy' || state === 'good') happyEyes.forEach(e => e.style.display = '');
         else if (state === 'sleepy') sleepyEyes.forEach(e => e.style.display = '');
@@ -1645,30 +1544,17 @@
     function initPetInteractions() {
       document.getElementById('petClickTorie').addEventListener('click', () => {
         const svg = document.getElementById('svgTorie');
-        svg.classList.add('pet-clicked');
-        setTimeout(() => svg.classList.remove('pet-clicked'), 600);
+        svg.classList.add('pet-clicked'); setTimeout(() => svg.classList.remove('pet-clicked'), 600);
       });
       document.getElementById('petClickJory').addEventListener('click', () => {
         const svg = document.getElementById('svgJory');
-        svg.classList.add('pet-clicked');
-        svg.style.animation = 'none';
-        svg.offsetHeight;
+        svg.classList.add('pet-clicked'); svg.style.animation = 'none'; svg.offsetHeight;
         svg.style.animation = 'mochiSquish 0.5s ease forwards';
         setTimeout(() => { svg.style.animation = ''; svg.classList.remove('pet-clicked'); }, 500);
       });
       if (!document.getElementById('mochi-style')) {
-        const style = document.createElement('style');
-        style.id = 'mochi-style';
-        style.textContent = `
-          @keyframes mochiSquish {
-            0% { transform: scale(1, 1) translateY(0); }
-            20% { transform: scale(1.15, 0.85) translateY(4px); }
-            40% { transform: scale(0.9, 1.1) translateY(-8px); }
-            60% { transform: scale(1.05, 0.95) translateY(2px); }
-            80% { transform: scale(0.98, 1.02) translateY(-1px); }
-            100% { transform: scale(1, 1) translateY(0); }
-          }
-        `;
+        const style = document.createElement('style'); style.id = 'mochi-style';
+        style.textContent = `@keyframes mochiSquish { 0% { transform: scale(1, 1) translateY(0); } 20% { transform: scale(1.15, 0.85) translateY(4px); } 40% { transform: scale(0.9, 1.1) translateY(-8px); } 60% { transform: scale(1.05, 0.95) translateY(2px); } 80% { transform: scale(0.98, 1.02) translateY(-1px); } 100% { transform: scale(1, 1) translateY(0); } }`;
         document.head.appendChild(style);
       }
     }
@@ -1685,28 +1571,19 @@
     /* ==================== WEEKLY SUMMARY ==================== */
     function getStartOfWeekDate() { const d = new Date(); d.setHours(0,0,0,0); const day = d.getDay(); d.setDate(d.getDate() - (day === 0 ? 6 : day - 1)); return d; }
     function getSoulComment(tE, jE, tS, jS) {
-      const net = (tE + jE) - (tS + jS);
-      const bothActive = tE > 0 && jE > 0;
-      if (net < 0) return pick(WARN);
-      if (tE + jE === 0) return pick(URGE);
+      const net = (tE + jE) - (tS + jS); const bothActive = tE > 0 && jE > 0;
+      if (net < 0) return pick(WARN); if (tE + jE === 0) return pick(URGE);
       if (!bothActive && (tE + jE) < 5) return pick(URGE);
-      if (net >= 10 || (bothActive && net > 0)) return pick(PRAISE);
-      return pick(ENCOURAGE);
+      if (net >= 10 || (bothActive && net > 0)) return pick(PRAISE); return pick(ENCOURAGE);
     }
     function generateWeeklySummary() {
-      const now = new Date();
-      const isSunday = now.getDay() === 0;
-      const hour = now.getHours();
+      const now = new Date(); const isSunday = now.getDay() === 0; const hour = now.getHours();
       if (!isSunday || hour < 18) return null;
       const weekStart = getStartOfWeekDate();
       const weekLogs = allLogs.filter((l) => new Date(l.created_at) >= weekStart);
       if (weekLogs.length === 0) return null;
       let tE=0, tS=0, jE=0, jS=0;
-      weekLogs.forEach((l) => {
-        const n = Number(l.card_num)||0;
-        if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; }
-        else { if(l.change_type==="增加") jE+=n; else jS+=n; }
-      });
+      weekLogs.forEach((l) => { const n = Number(l.card_num)||0; if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; } else { if(l.change_type==="增加") jE+=n; else jS+=n; } });
       const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate()+6);
       const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
       const dateRange = `${fmt(weekStart)} - ${fmt(weekEnd)}`;
@@ -1722,19 +1599,13 @@
       return { title: "💌 一周小结", body: dataStr + getSoulComment(tE, jE, tS, jS), dateRange };
     }
     function generateRecentTrend() {
-      const now = new Date();
-      const threeDaysAgo = new Date(now); threeDaysAgo.setDate(threeDaysAgo.getDate() - 2); threeDaysAgo.setHours(0,0,0,0);
+      const now = new Date(); const threeDaysAgo = new Date(now); threeDaysAgo.setDate(threeDaysAgo.getDate() - 2); threeDaysAgo.setHours(0,0,0,0);
       const recentLogs = allLogs.filter((l) => new Date(l.created_at) >= threeDaysAgo);
       if (recentLogs.length === 0) return null;
       let tE=0, tS=0, jE=0, jS=0;
-      recentLogs.forEach((l) => {
-        const n = Number(l.card_num)||0;
-        if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; }
-        else { if(l.change_type==="增加") jE+=n; else jS+=n; }
-      });
+      recentLogs.forEach((l) => { const n = Number(l.card_num)||0; if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; } else { if(l.change_type==="增加") jE+=n; else jS+=n; } });
       const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
-      const todayStr = fmt(now);
-      const startStr = fmt(threeDaysAgo);
+      const todayStr = fmt(now); const startStr = fmt(threeDaysAgo);
       const dateRange = startStr === todayStr ? todayStr : `${startStr} - ${todayStr}`;
       let dataStr = "近三天 ";
       if(tE>0 && jE>0) dataStr += `<span class="torie-hl">Torie</span> +${tE}，<span class="jory-hl">Jory</span> +${jE}`;
@@ -1921,7 +1792,6 @@
 
     /* ==================== STATS & CHART ==================== */
     let chartPointsCache = []; 
-
     function setupPeriodTabs() {
       document.querySelectorAll(".period-tab").forEach((btn)=>{
         btn.addEventListener("click",()=>{
@@ -1938,16 +1808,11 @@
         });
       });
     }
-
     function setupHistoryFilter() {
-      document.getElementById("historyPersonFilter").addEventListener("change",(e)=>{
-        currentHistoryPerson = e.target.value;
-        renderHistory();
-      });
+      document.getElementById("historyPersonFilter").addEventListener("change",(e)=>{ currentHistoryPerson = e.target.value; renderHistory(); });
       document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();});
       document.getElementById("historySearch").addEventListener("input",(e)=>{currentHistorySearch=e.target.value.trim().toLowerCase();renderHistory();});
     }
-
     function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
     function getStartOfMonth() { const d=new Date(); d.setHours(0,0,0,0); d.setDate(1); return d; }
     function filterByPeriod(logs,period) { if(period==="all") return logs; const map={today:getStartOfToday,week:getStartOfWeekDate,month:getStartOfMonth}; return logs.filter((l)=>new Date(l.created_at)>=map[period]()); }
@@ -1956,26 +1821,18 @@
       const filtered = filterByPeriod(allLogs, currentPeriod);
       const pLabel = {today:"今日",all:"累计"}[currentPeriod];
       let tE=0, tS=0, jE=0, jS=0;
-      filtered.forEach(l => {
-        const n = Number(l.card_num)||0;
-        if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; }
-        else { if(l.change_type==="增加") jE+=n; else jS+=n; }
-      });
-
+      filtered.forEach(l => { const n = Number(l.card_num)||0; if(l.operator==="Torie"){ if(l.change_type==="增加") tE+=n; else tS+=n; } else { if(l.change_type==="增加") jE+=n; else jS+=n; } });
       let earn = 0, spend = 0, name = "", emoji = "";
       if (currentPerspective === "torie") { earn = tE; spend = tS; name = "Torie"; emoji = "🦉"; }
       else if (currentPerspective === "jory") { earn = jE; spend = jS; name = "Jory"; emoji = "🐰"; }
       else { earn = tE + jE; spend = tS + jS; name = "Together"; emoji = "💑"; }
-
       const net = earn - spend;
       document.getElementById("statsSummary").innerHTML = `
         <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${earn}</div></div>
         <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${spend}</div></div>
         <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
       `;
-
       drawBalanceChart(filtered, currentPerspective);
-
       const verdict = net > 0 ? "赚得更多 💪" : net < 0 ? "花得更多 💸" : "收支平衡 ⚖️";
       const netColor = net >= 0 ? "var(--green)" : "var(--red)";
       const netSign = net >= 0 ? "+" : "";
@@ -1993,325 +1850,85 @@
       const emptyHint = document.getElementById("chartEmpty");
       const c = cvs.getContext("2d");
       const dpr = window.devicePixelRatio || 1;
-
-      let pLogs = logs.filter(l => {
-        if (perspective === "torie") return l.operator === "Torie";
-        if (perspective === "jory") return l.operator === "Jory";
-        return true;
-      });
-
+      let pLogs = logs.filter(l => { if (perspective === "torie") return l.operator === "Torie"; if (perspective === "jory") return l.operator === "Jory"; return true; });
       pLogs.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-
-      let points = []; 
-      let baseBalance = 0;
-
+      let points = []; let baseBalance = 0;
       if (currentPeriod === "today") {
         const todayStart = getStartOfToday();
-        const priorLogs = allLogs.filter(l => {
-          const matchPerspective = perspective === "torie" ? l.operator === "Torie" : perspective === "jory" ? l.operator === "Jory" : true;
-          return matchPerspective && new Date(l.created_at) < todayStart;
-        });
-        priorLogs.forEach(l => {
-          const n = Number(l.card_num) || 0;
-          baseBalance += l.change_type === "增加" ? n : -n;
-        });
+        const priorLogs = allLogs.filter(l => { const matchPerspective = perspective === "torie" ? l.operator === "Torie" : perspective === "jory" ? l.operator === "Jory" : true; return matchPerspective && new Date(l.created_at) < todayStart; });
+        priorLogs.forEach(l => { const n = Number(l.card_num) || 0; baseBalance += l.change_type === "增加" ? n : -n; });
       }
-
       if (currentPeriod === "today") {
         let runningBalance = baseBalance;
-        points.push({ 
-          label: "0点", 
-          balance: baseBalance, 
-          delta: 0,
-          logData: null,
-          timeStr: "00:00"
-        });
-
-        pLogs.forEach(l => {
-          const n = Number(l.card_num) || 0;
-          const delta = l.change_type === "增加" ? n : -n;
-          runningBalance += delta;
-          const d = new Date(l.created_at);
-          const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-          points.push({
-            label: timeStr,
-            balance: runningBalance,
-            delta: delta,
-            logData: l,
-            timeStr: timeStr
-          });
-        });
-        const minW = Math.max(points.length * 60, container.parentElement.clientWidth);
-        container.style.minWidth = minW + "px";
+        points.push({ label: "0点", balance: baseBalance, delta: 0, logData: null, timeStr: "00:00" });
+        pLogs.forEach(l => { const n = Number(l.card_num) || 0; const delta = l.change_type === "增加" ? n : -n; runningBalance += delta; const d = new Date(l.created_at); const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; points.push({ label: timeStr, balance: runningBalance, delta: delta, logData: l, timeStr: timeStr }); });
+        const minW = Math.max(points.length * 60, container.parentElement.clientWidth); container.style.minWidth = minW + "px";
       } else {
-        const dayMap = {};
-        const dayLogs = {}; 
-        pLogs.forEach(l => {
-          const ld = new Date(l.created_at);
-          const key = `${ld.getFullYear()}-${String(ld.getMonth()+1).padStart(2,'0')}-${String(ld.getDate()).padStart(2,'0')}`;
-          if (!dayMap[key]) { dayMap[key] = 0; dayLogs[key] = []; }
-          const n = Number(l.card_num) || 0;
-          dayMap[key] += l.change_type === "增加" ? n : -n;
-          dayLogs[key].push(l);
-        });
+        const dayMap = {}; const dayLogs = {}; 
+        pLogs.forEach(l => { const ld = new Date(l.created_at); const key = `${ld.getFullYear()}-${String(ld.getMonth()+1).padStart(2,'0')}-${String(ld.getDate()).padStart(2,'0')}`; if (!dayMap[key]) { dayMap[key] = 0; dayLogs[key] = []; } const n = Number(l.card_num) || 0; dayMap[key] += l.change_type === "增加" ? n : -n; dayLogs[key].push(l); });
         const dates = Object.keys(dayMap).sort();
-        if (dates.length === 0) {
-          emptyHint.style.display = "flex";
-          c.clearRect(0, 0, cvs.width, cvs.height);
-          chartPointsCache = [];
-          return;
-        }
-        dates.forEach(key => {
-          const parts = key.split('-');
-          const label = `${parseInt(parts[1])}/${parseInt(parts[2])}`;
-          points.push({ 
-            label, 
-            balance: dayMap[key], 
-            delta: dayMap[key],
-            logData: null, 
-            dayLogs: dayLogs[key],
-            dateKey: key
-          });
-        });
-        const minW = Math.max(points.length * 40, container.parentElement.clientWidth);
-        container.style.minWidth = minW + "px";
+        if (dates.length === 0) { emptyHint.style.display = "flex"; c.clearRect(0, 0, cvs.width, cvs.height); chartPointsCache = []; return; }
+        dates.forEach(key => { const parts = key.split('-'); const label = `${parseInt(parts[1])}/${parseInt(parts[2])}`; points.push({ label, balance: dayMap[key], delta: dayMap[key], logData: null, dayLogs: dayLogs[key], dateKey: key }); });
+        const minW = Math.max(points.length * 40, container.parentElement.clientWidth); container.style.minWidth = minW + "px";
       }
-
-      if (points.length === 0) {
-        emptyHint.style.display = "flex";
-        c.clearRect(0, 0, cvs.width, cvs.height);
-        chartPointsCache = [];
-        return;
-      }
+      if (points.length === 0) { emptyHint.style.display = "flex"; c.clearRect(0, 0, cvs.width, cvs.height); chartPointsCache = []; return; }
       emptyHint.style.display = "none";
-
-      const rect = container.getBoundingClientRect();
-      const W = rect.width;
-      const H = rect.height;
-      cvs.width = W * dpr;
-      cvs.height = H * dpr;
-      cvs.style.width = W + "px";
-      cvs.style.height = H + "px";
-      c.scale(dpr, dpr);
-      c.clearRect(0, 0, W, H);
-
-      const padL = 40, padR = 16, padT = 24, padB = 32;
-      const chartW = W - padL - padR;
-      const chartH = H - padT - padB;
-
-      let values;
-      if (currentPeriod === "today") {
-        values = points.map(p => p.balance);
-      } else {
-        values = points.map(p => p.balance); 
-      }
-      
-      let minVal = Math.min(...values, 0);
-      let maxVal = Math.max(...values, 1);
+      const rect = container.getBoundingClientRect(); const W = rect.width; const H = rect.height;
+      cvs.width = W * dpr; cvs.height = H * dpr; cvs.style.width = W + "px"; cvs.style.height = H + "px";
+      c.scale(dpr, dpr); c.clearRect(0, 0, W, H);
+      const padL = 40, padR = 16, padT = 24, padB = 32; const chartW = W - padL - padR; const chartH = H - padT - padB;
+      let values = points.map(p => p.balance);
+      let minVal = Math.min(...values, 0); let maxVal = Math.max(...values, 1);
       if (minVal === maxVal) { maxVal = minVal + 1; }
-      const range = maxVal - minVal;
-      const yPadding = range * 0.15;
-      minVal -= yPadding;
-      maxVal += yPadding;
-      const yRange = maxVal - minVal;
-
+      const range = maxVal - minVal; const yPadding = range * 0.15; minVal -= yPadding; maxVal += yPadding; const yRange = maxVal - minVal;
       function getY(val) { return padT + chartH - ((val - minVal) / yRange) * chartH; }
       function getX(i) { return padL + (points.length > 1 ? (i / (points.length - 1)) * chartW : chartW / 2); }
-
       const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || 'rgba(0,0,0,0.06)';
       const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#aeaeb2';
       const greenColor = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#34c759';
       const redColor = getComputedStyle(document.documentElement).getPropertyValue('--red').trim() || '#ff3b30';
-
-      c.strokeStyle = gridColor;
-      c.lineWidth = 0.5;
-      for (let i = 0; i <= 4; i++) {
-        const y = padT + (chartH / 4) * i;
-        c.beginPath(); c.moveTo(padL, y); c.lineTo(W - padR, y); c.stroke();
-      }
-
-      if (minVal < 0 && maxVal > 0) {
-        const zeroY = getY(0);
-        c.strokeStyle = textColor;
-        c.lineWidth = 1;
-        c.setLineDash([4, 4]);
-        c.beginPath(); c.moveTo(padL, zeroY); c.lineTo(W - padR, zeroY); c.stroke();
-        c.setLineDash([]);
-      }
-
-      c.fillStyle = textColor;
-      c.font = '10px -apple-system, sans-serif';
-      c.textAlign = 'right';
-      c.textBaseline = 'middle';
-      for (let i = 0; i <= 4; i++) {
-        const val = Math.round(maxVal - (yRange / 4) * i);
-        const y = padT + (chartH / 4) * i;
-        c.fillText(val, padL - 6, y);
-      }
-
-      c.textAlign = 'center';
-      c.textBaseline = 'top';
+      c.strokeStyle = gridColor; c.lineWidth = 0.5;
+      for (let i = 0; i <= 4; i++) { const y = padT + (chartH / 4) * i; c.beginPath(); c.moveTo(padL, y); c.lineTo(W - padR, y); c.stroke(); }
+      if (minVal < 0 && maxVal > 0) { const zeroY = getY(0); c.strokeStyle = textColor; c.lineWidth = 1; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(padL, zeroY); c.lineTo(W - padR, zeroY); c.stroke(); c.setLineDash([]); }
+      c.fillStyle = textColor; c.font = '10px -apple-system, sans-serif'; c.textAlign = 'right'; c.textBaseline = 'middle';
+      for (let i = 0; i <= 4; i++) { const val = Math.round(maxVal - (yRange / 4) * i); const y = padT + (chartH / 4) * i; c.fillText(val, padL - 6, y); }
+      c.textAlign = 'center'; c.textBaseline = 'top';
       const labelStep = Math.max(1, Math.floor(points.length / 8));
-      points.forEach((p, i) => {
-        if (i % labelStep === 0 || i === points.length - 1) {
-          c.fillText(p.label, getX(i), H - padB + 8);
-        }
-      });
-
-      chartPointsCache = points.map((p, i) => ({
-        x: getX(i),
-        y: getY(currentPeriod === "today" ? p.balance : p.balance),
-        point: p
-      }));
-
+      points.forEach((p, i) => { if (i % labelStep === 0 || i === points.length - 1) { c.fillText(p.label, getX(i), H - padB + 8); } });
+      chartPointsCache = points.map((p, i) => ({ x: getX(i), y: getY(currentPeriod === "today" ? p.balance : p.balance), point: p }));
       if (points.length >= 2) {
-        c.lineWidth = 2.5;
-        c.lineJoin = 'round';
-        c.lineCap = 'round';
-
-        for (let i = 1; i < points.length; i++) {
-          const x0 = getX(i - 1), y0 = getY(values[i - 1]);
-          const x1 = getX(i), y1 = getY(values[i]);
-          const isUp = values[i] >= values[i - 1];
-          c.strokeStyle = isUp ? greenColor : redColor;
-          c.beginPath();
-          c.moveTo(x0, y0);
-          c.lineTo(x1, y1);
-          c.stroke();
-        }
-
-        c.globalAlpha = 0.06;
-        c.beginPath();
-        c.moveTo(getX(0), getY(values[0]));
-        for (let i = 1; i < points.length; i++) {
-          c.lineTo(getX(i), getY(values[i]));
-        }
-        c.lineTo(getX(points.length - 1), padT + chartH);
-        c.lineTo(getX(0), padT + chartH);
-        c.closePath();
-        c.fillStyle = currentPeriod === "today" ? greenColor : (values[values.length-1] >= 0 ? greenColor : redColor);
-        c.fill();
-        c.globalAlpha = 1;
-
-        chartPointsCache.forEach((cp, i) => {
-          const prevVal = i > 0 ? values[i-1] : values[i];
-          const isUp = values[i] >= prevVal;
-          const dotColor = isUp ? greenColor : redColor;
-          c.fillStyle = dotColor;
-          c.beginPath();
-          c.arc(cp.x, cp.y, 4, 0, Math.PI * 2);
-          c.fill();
-          c.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff';
-          c.beginPath();
-          c.arc(cp.x, cp.y, 2, 0, Math.PI * 2);
-          c.fill();
-        });
-      } else if (points.length === 1) {
-        const cp = chartPointsCache[0];
-        c.fillStyle = greenColor;
-        c.beginPath();
-        c.arc(cp.x, cp.y, 4, 0, Math.PI * 2);
-        c.fill();
-      }
+        c.lineWidth = 2.5; c.lineJoin = 'round'; c.lineCap = 'round';
+        for (let i = 1; i < points.length; i++) { const x0 = getX(i - 1), y0 = getY(values[i - 1]); const x1 = getX(i), y1 = getY(values[i]); const isUp = values[i] >= values[i - 1]; c.strokeStyle = isUp ? greenColor : redColor; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); }
+        c.globalAlpha = 0.06; c.beginPath(); c.moveTo(getX(0), getY(values[0])); for (let i = 1; i < points.length; i++) { c.lineTo(getX(i), getY(values[i])); } c.lineTo(getX(points.length - 1), padT + chartH); c.lineTo(getX(0), padT + chartH); c.closePath(); c.fillStyle = currentPeriod === "today" ? greenColor : (values[values.length-1] >= 0 ? greenColor : redColor); c.fill(); c.globalAlpha = 1;
+        chartPointsCache.forEach((cp, i) => { const prevVal = i > 0 ? values[i-1] : values[i]; const isUp = values[i] >= prevVal; const dotColor = isUp ? greenColor : redColor; c.fillStyle = dotColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); c.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff'; c.beginPath(); c.arc(cp.x, cp.y, 2, 0, Math.PI * 2); c.fill(); });
+      } else if (points.length === 1) { const cp = chartPointsCache[0]; c.fillStyle = greenColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); }
     }
 
     function setupChartInteraction() {
-      const container = document.getElementById("chartContainer");
-      const tooltip = document.getElementById("chartTooltip");
-      const cvs = document.getElementById("statsChart");
-
+      const container = document.getElementById("chartContainer"); const tooltip = document.getElementById("chartTooltip"); const cvs = document.getElementById("statsChart");
       function handlePointer(e) {
         if (chartPointsCache.length === 0) return;
-        
-        const rect = cvs.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-
-        let nearest = null;
-        let minDist = Infinity;
-        chartPointsCache.forEach(cp => {
-          const dist = Math.sqrt((cp.x - x) ** 2 + (cp.y - y) ** 2);
-          if (dist < minDist) {
-            minDist = dist;
-            nearest = cp;
-          }
-        });
-
+        const rect = cvs.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const x = clientX - rect.left; const y = clientY - rect.top;
+        let nearest = null; let minDist = Infinity;
+        chartPointsCache.forEach(cp => { const dist = Math.sqrt((cp.x - x) ** 2 + (cp.y - y) ** 2); if (dist < minDist) { minDist = dist; nearest = cp; } });
         if (nearest && minDist < 30) {
-          const p = nearest.point;
-          let html = '';
-          
-          if (currentPeriod === "today" && p.logData) {
-            const isPlus = p.logData.change_type === "增加";
-            const sign = isPlus ? "+" : "−";
-            const cls = isPlus ? "plus" : "minus";
-            html = `
-              <div class="tt-time">${p.timeStr}</div>
-              <div class="tt-reason">${esc(p.logData.reason || '—')}</div>
-              <div class="tt-val ${cls}">${sign}${Number(p.logData.card_num)}</div>
-              <div class="tt-bal">余额: ${p.balance}</div>
-            `;
-          } else if (currentPeriod === "today" && !p.logData) {
-            html = `
-              <div class="tt-time">${p.timeStr}</div>
-              <div class="tt-reason">今日起始余额</div>
-              <div class="tt-bal">余额: ${p.balance}</div>
-            `;
-          } else {
-            const isPlus = p.delta >= 0;
-            const sign = isPlus ? "+" : "−";
-            const cls = isPlus ? "plus" : "minus";
-            html = `
-              <div class="tt-time">${p.label}</div>
-              <div class="tt-reason">日净积累</div>
-              <div class="tt-val ${cls}">${sign}${Math.abs(p.delta)}</div>
-            `;
-          }
-
+          const p = nearest.point; let html = '';
+          if (currentPeriod === "today" && p.logData) { const isPlus = p.logData.change_type === "增加"; const sign = isPlus ? "+" : "−"; const cls = isPlus ? "plus" : "minus"; html = `<div class="tt-time">${p.timeStr}</div><div class="tt-reason">${esc(p.logData.reason || '—')}</div><div class="tt-val ${cls}">${sign}${Number(p.logData.card_num)}</div><div class="tt-bal">余额: ${p.balance}</div>`; }
+          else if (currentPeriod === "today" && !p.logData) { html = `<div class="tt-time">${p.timeStr}</div><div class="tt-reason">今日起始余额</div><div class="tt-bal">余额: ${p.balance}</div>`; }
+          else { const isPlus = p.delta >= 0; const sign = isPlus ? "+" : "−"; const cls = isPlus ? "plus" : "minus"; html = `<div class="tt-time">${p.label}</div><div class="tt-reason">日净积累</div><div class="tt-val ${cls}">${sign}${Math.abs(p.delta)}</div>`; }
           tooltip.innerHTML = html;
-          
-          const ttHeight = tooltip.offsetHeight || 60;
-          const ttWidth = tooltip.offsetWidth || 120;
-          const containerRect = container.getBoundingClientRect();
-          
-          let topPos = nearest.y;
-          let transformY = '-100%';
-          let marginTop = -12;
-          
-          if (nearest.y < 60) {
-             transformY = '0';
-             marginTop = 12;
-          }
-          
-          let leftPos = nearest.x;
-          let transformX = '-50%';
-          
-          if (leftPos < ttWidth / 2) {
-             transformX = '0';
-             leftPos = 0;
-          } else if (leftPos > containerRect.width - ttWidth / 2) {
-             transformX = '-100%';
-          }
-
-          tooltip.style.left = leftPos + 'px';
-          tooltip.style.top = topPos + 'px';
-          tooltip.style.transform = `translate(${transformX}, ${transformY})`;
-          tooltip.style.marginTop = marginTop + 'px';
-          
+          const ttHeight = tooltip.offsetHeight || 60; const ttWidth = tooltip.offsetWidth || 120; const containerRect = container.getBoundingClientRect();
+          let topPos = nearest.y; let transformY = '-100%'; let marginTop = -12;
+          if (nearest.y < 60) { transformY = '0'; marginTop = 12; }
+          let leftPos = nearest.x; let transformX = '-50%';
+          if (leftPos < ttWidth / 2) { transformX = '0'; leftPos = 0; } else if (leftPos > containerRect.width - ttWidth / 2) { transformX = '-100%'; }
+          tooltip.style.left = leftPos + 'px'; tooltip.style.top = topPos + 'px'; tooltip.style.transform = `translate(${transformX}, ${transformY})`; tooltip.style.marginTop = marginTop + 'px';
           tooltip.classList.add("show");
-        } else {
-          tooltip.classList.remove("show");
-        }
+        } else { tooltip.classList.remove("show"); }
       }
-
-      function hideTooltip() {
-        tooltip.classList.remove("show");
-      }
-
-      cvs.addEventListener("mousemove", handlePointer);
-      cvs.addEventListener("mouseleave", hideTooltip);
+      function hideTooltip() { tooltip.classList.remove("show"); }
+      cvs.addEventListener("mousemove", handlePointer); cvs.addEventListener("mouseleave", hideTooltip);
       cvs.addEventListener("touchstart", (e) => { handlePointer(e); }, { passive: true });
       cvs.addEventListener("touchmove", (e) => { handlePointer(e); }, { passive: true });
       cvs.addEventListener("touchend", () => { setTimeout(hideTooltip, 1500); });
@@ -2322,275 +1939,100 @@
       const select=document.getElementById("historyFilter"), months=new Set();
       allLogs.forEach((l)=>{const d=new Date(l.created_at);months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);});
       const sorted=[...months].sort((a,b)=>b.localeCompare(a)), current=currentHistoryFilter;
-      let html = '<option value="all">全部</option>';
-      html += '<option value="today">今日</option>';
-      html += '<option value="week">本周</option>';
-      sorted.forEach((key)=>{
-        const[y,m]=key.split("-");
-        html += `<option value="${key}">${y}年${Number(m)}月</option>`;
-      });
+      let html = '<option value="all">全部</option>'; html += '<option value="today">今日</option>'; html += '<option value="week">本周</option>';
+      sorted.forEach((key)=>{const[y,m]=key.split("-");html += `<option value="${key}">${y}年${Number(m)}月</option>`;});
       select.innerHTML = html;
-      if([...select.options].some((o)=>o.value===current)) select.value=current; 
-      else { currentHistoryFilter="all"; select.value="all"; }
+      if([...select.options].some((o)=>o.value===current)) select.value=current; else { currentHistoryFilter="all"; select.value="all"; }
     }
-
     async function editNote(id, currentNote) {
-      const newNote = prompt("编辑备注：", currentNote || "");
-      if (newNote === null) return; 
+      const newNote = prompt("编辑备注：", currentNote || ""); if (newNote === null) return; 
       const { error } = await sb.from("freecard_log").update({ note: newNote }).eq("id", id);
-      if (error) {
-        showToast("备注更新失败", "error");
-        return;
-      }
-      const log = allLogs.find(l => String(l.id) === String(id));
-      if (log) log.note = newNote;
-      renderHistory(); 
-      showToast("备注已更新", "success");
+      if (error) { showToast("备注更新失败", "error"); return; }
+      const log = allLogs.find(l => String(l.id) === String(id)); if (log) log.note = newNote;
+      renderHistory(); showToast("备注已更新", "success");
     }
-
-    function closeAllMenus() {
-      document.querySelectorAll(".action-menu.show").forEach(m => m.classList.remove("show"));
-      document.querySelectorAll(".menu-btn.active").forEach(b => b.classList.remove("active"));
-    }
-
+    function closeAllMenus() { document.querySelectorAll(".action-menu.show").forEach(m => m.classList.remove("show")); document.querySelectorAll(".menu-btn.active").forEach(b => b.classList.remove("active")); }
     function renderHistory() {
-      const container=document.getElementById("historyList");
-      const countBadge=document.getElementById("historyCount");
+      const container=document.getElementById("historyList"); const countBadge=document.getElementById("historyCount");
       let logs;
-      if (currentHistoryFilter === "all") {
-        logs = allLogs;
-      } else if (currentHistoryFilter === "today") {
-        const todayStart = getStartOfToday();
-        logs = allLogs.filter(l => new Date(l.created_at) >= todayStart);
-      } else if (currentHistoryFilter === "week") {
-        const weekStart = getStartOfWeekDate();
-        logs = allLogs.filter(l => new Date(l.created_at) >= weekStart);
-      } else {
-        logs = allLogs.filter((l)=>{
-          const d=new Date(l.created_at);
-          return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;
-        });
-      }
-
-      if (currentHistoryPerson !== "all") {
-        logs = logs.filter(l => l.operator === currentHistoryPerson);
-      }
-
-      if (currentHistorySearch) {
-        const kw = currentHistorySearch;
-        logs = logs.filter(l => {
-          const reason = (l.reason || "").toLowerCase();
-          const note = (l.note || "").toLowerCase();
-          const operator = (l.operator || "").toLowerCase();
-          return reason.includes(kw) || note.includes(kw) || operator.includes(kw);
-        });
-      }
-
+      if (currentHistoryFilter === "all") { logs = allLogs; }
+      else if (currentHistoryFilter === "today") { const todayStart = getStartOfToday(); logs = allLogs.filter(l => new Date(l.created_at) >= todayStart); }
+      else if (currentHistoryFilter === "week") { const weekStart = getStartOfWeekDate(); logs = allLogs.filter(l => new Date(l.created_at) >= weekStart); }
+      else { logs = allLogs.filter((l)=>{const d=new Date(l.created_at);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;}); }
+      if (currentHistoryPerson !== "all") { logs = logs.filter(l => l.operator === currentHistoryPerson); }
+      if (currentHistorySearch) { const kw = currentHistorySearch; logs = logs.filter(l => { const reason = (l.reason || "").toLowerCase(); const note = (l.note || "").toLowerCase(); const operator = (l.operator || "").toLowerCase(); return reason.includes(kw) || note.includes(kw) || operator.includes(kw); }); }
       if (countBadge) countBadge.textContent = `${logs.length}条`;
-      if(!logs.length){
-        container.innerHTML = currentHistorySearch
-          ? '<div class="empty-history">没有匹配的记录 🔍</div>'
-          : '<div class="empty-history">暂无记录 🍃</div>';
-        return;
-      }
+      if(!logs.length){ container.innerHTML = currentHistorySearch ? '<div class="empty-history">没有匹配的记录 🔍</div>' : '<div class="empty-history">暂无记录 🍃</div>'; return; }
       container.innerHTML=logs.map((l)=>{
         const d=new Date(l.created_at),time=fmtDate(d),plus=l.change_type==="增加",symbol=plus?"+":"−";
         const note = l.note ? `<div class="history-note">📝 ${esc(l.note)}</div>` : '';
-        return `<div class="history-item">
-          <div>
-            <div class="history-top">
-              <span class="history-person">${esc(l.operator)}</span>
-              <span class="history-reason">${esc(l.reason||"—")}</span>
-            </div>
-            ${note}
-            <div class="history-time">${time}</div>
-          </div>
-          <div class="history-right">
-            <div class="history-change ${plus?"plus":"minus"}">${symbol}${Number(l.card_num)}</div>
-            <button class="menu-btn" data-menu-id="${escAttr(l.id)}" data-note="${escAttr(l.note || '')}">···</button>
-            <div class="action-menu" id="menu-${escAttr(l.id)}">
-              <button class="action-menu-item" data-action="note" data-id="${escAttr(l.id)}">📝 备注</button>
-              <button class="action-menu-item danger" data-action="del" data-id="${escAttr(l.id)}">🗑️ 删除</button>
-            </div>
-          </div>
-        </div>`;
+        return `<div class="history-item"><div><div class="history-top"><span class="history-person">${esc(l.operator)}</span><span class="history-reason">${esc(l.reason||"—")}</span></div>${note}<div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${plus?"plus":"minus"}">${symbol}${Number(l.card_num)}</div><button class="menu-btn" data-menu-id="${escAttr(l.id)}" data-note="${escAttr(l.note || '')}">···</button><div class="action-menu" id="menu-${escAttr(l.id)}"><button class="action-menu-item" data-action="note" data-id="${escAttr(l.id)}">📝 备注</button><button class="action-menu-item danger" data-action="del" data-id="${escAttr(l.id)}">🗑️ 删除</button></div></div></div>`;
       }).join("");
-      container.querySelectorAll(".menu-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.menuId;
-          const menu = document.getElementById(`menu-${id}`);
-          const isOpen = menu.classList.contains("show");
-          closeAllMenus();
-          if (!isOpen) {
-            menu.classList.add("show");
-            btn.classList.add("active");
-          }
-        });
-      });
-      container.querySelectorAll("[data-action='del']").forEach(b => {
-        b.addEventListener("click", (e) => {
-          e.stopPropagation();
-          closeAllMenus();
-          deleteLog(b.dataset.id);
-        });
-      });
-      container.querySelectorAll("[data-action='note']").forEach(b => {
-        b.addEventListener("click", (e) => {
-          e.stopPropagation();
-          closeAllMenus();
-          const log = allLogs.find(l => String(l.id) === String(b.dataset.id));
-          editNote(b.dataset.id, log ? log.note : "");
-        });
-      });
+      container.querySelectorAll(".menu-btn").forEach(btn => { btn.addEventListener("click", (e) => { e.stopPropagation(); const id = btn.dataset.menuId; const menu = document.getElementById(`menu-${id}`); const isOpen = menu.classList.contains("show"); closeAllMenus(); if (!isOpen) { menu.classList.add("show"); btn.classList.add("active"); } }); });
+      container.querySelectorAll("[data-action='del']").forEach(b => { b.addEventListener("click", (e) => { e.stopPropagation(); closeAllMenus(); deleteLog(b.dataset.id); }); });
+      container.querySelectorAll("[data-action='note']").forEach(b => { b.addEventListener("click", (e) => { e.stopPropagation(); closeAllMenus(); const log = allLogs.find(l => String(l.id) === String(b.dataset.id)); editNote(b.dataset.id, log ? log.note : ""); }); });
     }
     document.addEventListener("click", () => closeAllMenus());
 
     /* ==================== SHOP / EARN / PUNISH LISTS ==================== */
-    function classifyProduct(p) {
-      if (p.name.startsWith(TYPE_PREFIX.earn)) return "earn";
-      if (p.name.startsWith(TYPE_PREFIX.punish)) return "punish";
-      return "shop";
-    }
+    function classifyProduct(p) { if (p.name.startsWith(TYPE_PREFIX.earn)) return "earn"; if (p.name.startsWith(TYPE_PREFIX.punish)) return "punish"; return "shop"; }
     function getDisplayName(p) { return p.name.replace(TYPE_PREFIX.earn, "").replace(TYPE_PREFIX.punish, ""); }
-    
     function openEditModal(id, type) {
-      const p = allProducts.find(x => String(x.id) === String(id));
-      if (!p) return;
-      editingItemId = id;
-      editingItemType = type;
-      document.getElementById("editName").value = getDisplayName(p);
-      document.getElementById("editCost").value = p.cost;
+      const p = allProducts.find(x => String(x.id) === String(id)); if (!p) return;
+      editingItemId = id; editingItemType = type;
+      document.getElementById("editName").value = getDisplayName(p); document.getElementById("editCost").value = p.cost;
       document.getElementById("editModal").classList.add("show");
     }
-
     function setupEditModal() {
-      document.getElementById("editCancel").addEventListener("click", () => {
-        document.getElementById("editModal").classList.remove("show");
-        editingItemId = null;
-        editingItemType = null;
-      });
+      document.getElementById("editCancel").addEventListener("click", () => { document.getElementById("editModal").classList.remove("show"); editingItemId = null; editingItemType = null; });
       document.getElementById("editSave").addEventListener("click", async () => {
         if (!editingItemId || !editingItemType) return;
-        const newName = document.getElementById("editName").value.trim();
-        const newCost = parseInt(document.getElementById("editCost").value);
-        if (!newName || !newCost || newCost < 1) {
-          showToast("输入无效", "error");
-          return;
-        }
+        const newName = document.getElementById("editName").value.trim(); const newCost = parseInt(document.getElementById("editCost").value);
+        if (!newName || !newCost || newCost < 1) { showToast("输入无效", "error"); return; }
         const prefix = editingItemType === "earn" ? TYPE_PREFIX.earn : editingItemType === "punish" ? TYPE_PREFIX.punish : "";
-        const btn = document.getElementById("editSave");
-        btn.disabled = true; btn.textContent = "保存中...";
+        const btn = document.getElementById("editSave"); btn.disabled = true; btn.textContent = "保存中...";
         const { error } = await sb.from("freecard_shop").update({ name: prefix + newName, cost: newCost }).eq("id", editingItemId);
         btn.disabled = false; btn.textContent = "保存修改";
-        if (error) {
-          showToast("修改失败", "error");
-          return;
-        }
-        document.getElementById("editModal").classList.remove("show");
-        showToast("已更新", "success");
-        editingItemId = null;
-        editingItemType = null;
-        await loadProducts();
+        if (error) { showToast("修改失败", "error"); return; }
+        document.getElementById("editModal").classList.remove("show"); showToast("已更新", "success");
+        editingItemId = null; editingItemType = null; await loadProducts();
       });
     }
-
     function renderList(containerId, type) {
       const container = document.getElementById(containerId);
       let items = allProducts.filter(p => p.owner === bankPerson && classifyProduct(p) === type);
       const balance = calcBalance(bankPerson);
-      if(type === "shop") {
-        items.sort((a, b) => {
-          const aReady = balance >= a.cost ? 1 : 0;
-          const bReady = balance >= b.cost ? 1 : 0;
-          if(aReady !== bReady) return bReady - aReady;
-          return (balance / b.cost) - (balance / a.cost);
-        });
-      } else if(type === "earn") items.sort((a, b) => b.cost - a.cost);
+      if(type === "shop") { items.sort((a, b) => { const aReady = balance >= a.cost ? 1 : 0; const bReady = balance >= b.cost ? 1 : 0; if(aReady !== bReady) return bReady - aReady; return (balance / b.cost) - (balance / a.cost); }); }
+      else if(type === "earn") items.sort((a, b) => b.cost - a.cost);
       else if(type === "punish") items.sort((a, b) => a.cost - b.cost);
-      if(!items.length) { 
-        container.innerHTML = `<div class="empty-list">还没有${type==='shop'?'心愿':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; 
-        return; 
-      }
+      if(!items.length) { container.innerHTML = `<div class="empty-list">还没有${type==='shop'?'心愿':type==='earn'?'任务':'惩罚'}，快来添加吧</div>`; return; }
       container.innerHTML = items.map(p => {
-        const isPunish = type === "punish", isEarn = type === "earn";
-        const displayName = getDisplayName(p);
+        const isPunish = type === "punish", isEarn = type === "earn"; const displayName = getDisplayName(p);
         const pct = Math.min(100, Math.round((balance / p.cost) * 100)), canRedeem = balance >= p.cost;
         let progressHTML = "", actionBtn = "";
         if (isPunish) actionBtn = `<button class="action-btn btn-punish" data-action="punish" data-id="${escAttr(p.id)}">⚠️ 触发扣除</button>`; 
         else if (isEarn) actionBtn = `<button class="action-btn btn-earn" data-action="earn" data-id="${escAttr(p.id)}">✅ 完成领取</button>`; 
-        else {
-          const barClass = canRedeem ? "full" : bankPerson.toLowerCase();
-          const pText = canRedeem ? `<span style="color:var(--green)">✅ 已达成！</span><span>${balance} / ${p.cost}</span>` : `<span>${balance} / ${p.cost}</span><span>差 ${p.cost-balance}</span>`;
-          progressHTML = `<div class="progress-wrap"><div class="progress-text">${pText}</div><div class="progress-bar-track"><div class="progress-bar ${barClass}" style="width:${pct}%"></div></div></div>`;
-          actionBtn = `<button class="action-btn btn-redeem" ${canRedeem?"":"disabled"} data-action="redeem" data-id="${escAttr(p.id)}">${canRedeem?"🎁 兑换":"余额不足"}</button>`;
-        }
-        const costClass = isPunish ? "punish" : isEarn ? "earn" : "";
-        const costPrefix = isPunish ? "扣除 " : isEarn ? "奖励 " : "";
-        return `<div class="list-item">
-          <div class="list-item-header">
-            <div class="list-item-name">${esc(displayName)}</div>
-            <div class="list-item-cost ${costClass}">${costPrefix}${p.cost} 张</div>
-          </div>
-          ${progressHTML}
-          <div class="list-actions">
-            ${actionBtn}
-            <button class="action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}" data-type="${type}">编辑</button>
-            <button class="action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button>
-          </div>
-        </div>`;
+        else { const barClass = canRedeem ? "full" : bankPerson.toLowerCase(); const pText = canRedeem ? `<span style="color:var(--green)">✅ 已达成！</span><span>${balance} / ${p.cost}</span>` : `<span>${balance} / ${p.cost}</span><span>差 ${p.cost-balance}</span>`; progressHTML = `<div class="progress-wrap"><div class="progress-text">${pText}</div><div class="progress-bar-track"><div class="progress-bar ${barClass}" style="width:${pct}%"></div></div></div>`; actionBtn = `<button class="action-btn btn-redeem" ${canRedeem?"":"disabled"} data-action="redeem" data-id="${escAttr(p.id)}">${canRedeem?"🎁 兑换":"余额不足"}</button>`; }
+        const costClass = isPunish ? "punish" : isEarn ? "earn" : ""; const costPrefix = isPunish ? "扣除 " : isEarn ? "奖励 " : "";
+        return `<div class="list-item"><div class="list-item-header"><div class="list-item-name">${esc(displayName)}</div><div class="list-item-cost ${costClass}">${costPrefix}${p.cost} 张</div></div>${progressHTML}<div class="list-actions">${actionBtn}<button class="action-btn btn-edit" data-action="edit" data-id="${escAttr(p.id)}" data-type="${type}">编辑</button><button class="action-btn btn-del" data-action="del" data-id="${escAttr(p.id)}">下架</button></div></div>`;
       }).join("");
       container.querySelectorAll("[data-action]").forEach(b => b.addEventListener("click", () => handleListAction(b.dataset.action, b.dataset.id, type)));
     }
     function renderShop() { renderList("shopList", "shop"); }
     function renderEarnList() { renderList("earnList", "earn"); }
     function renderPunishList() { renderList("punishList", "punish"); }
-
     async function handleListAction(action, id, type) {
-      const p = allProducts.find(x => String(x.id) === String(id)); if(!p) return;
-      const displayName = getDisplayName(p);
-      if(action === "del") { 
-        if(!confirm("确定下架此项目？")) return; 
-        const {error} = await sb.from("freecard_shop").delete().eq("id", id); 
-        if(error) return showToast("下架失败", "error"); 
-        showToast("已下架", "success"); await loadProducts(); 
-      } 
-      else if(action === "edit") { 
-        openEditModal(id, type);
-      }
-      else if(action === "redeem") { 
-        if(calcBalance(bankPerson) < p.cost) return showToast("余额不足", "error"); 
-        if(!confirm(`确认花费 ${p.cost} 张兑换「${displayName}」？`)) return; 
-        const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${displayName}`}); 
-        if(error) return showToast("兑换失败", "error"); 
-        trackEvent(bankPerson, 'redeem');
-        showRedeemCeremony(p, p.cost); await loadLogs(); 
-      }
-      else if(action === "earn") { 
-        const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"增加", card_num:p.cost, reason:`💪 任务：${displayName}`}); 
-        if(error) return showToast("领取失败", "error"); 
-        trackEvent(bankPerson, 'earn');
-        showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); 
-      }
-      else if(action === "punish") { 
-        if(calcBalance(bankPerson) < p.cost) { 
-          if(!confirm(`${bankPerson} 余额不足，是否允许透支扣除？`)) return; 
-        } else { 
-          if(!confirm(`确认扣除 ${p.cost} 张自由卡（${displayName}）？`)) return; 
-        } 
-        const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${displayName}`}); 
-        if(error) return showToast("扣除失败", "error"); 
-        trackEvent(bankPerson, 'punish');
-        showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); 
-        if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); 
-      }
+      const p = allProducts.find(x => String(x.id) === String(id)); if(!p) return; const displayName = getDisplayName(p);
+      if(action === "del") { if(!confirm("确定下架此项目？")) return; const {error} = await sb.from("freecard_shop").delete().eq("id", id); if(error) return showToast("下架失败", "error"); showToast("已下架", "success"); await loadProducts(); } 
+      else if(action === "edit") { openEditModal(id, type); }
+      else if(action === "redeem") { if(calcBalance(bankPerson) < p.cost) return showToast("余额不足", "error"); if(!confirm(`确认花费 ${p.cost} 张兑换「${displayName}」？`)) return; const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${displayName}`}); if(error) return showToast("兑换失败", "error"); trackEvent(bankPerson, 'redeem'); showRedeemCeremony(p, p.cost); await loadLogs(); }
+      else if(action === "earn") { const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"增加", card_num:p.cost, reason:`💪 任务：${displayName}`}); if(error) return showToast("领取失败", "error"); trackEvent(bankPerson, 'earn'); showToast(`成功领取 ${p.cost} 张！`, "success"); spawnParticles(1); await loadLogs(); }
+      else if(action === "punish") { if(calcBalance(bankPerson) < p.cost) { if(!confirm(`${bankPerson} 余额不足，是否允许透支扣除？`)) return; } else { if(!confirm(`确认扣除 ${p.cost} 张自由卡（${displayName}）？`)) return; } const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"减少", card_num:p.cost, reason:`⚠️ 惩罚：${displayName}`}); if(error) return showToast("扣除失败", "error"); trackEvent(bankPerson, 'punish'); showToast(`已扣除 ${p.cost} 张，下次注意哦`, "error"); if(navigator.vibrate) navigator.vibrate(200); await loadLogs(); }
     }
     function setupAdd(type, nameId, costId, btnId) {
       document.getElementById(btnId).addEventListener("click", async () => {
-        const rawName = document.getElementById(nameId).value.trim();
-        const cost = parseInt(document.getElementById(costId).value);
-        if(!rawName) return showToast("请输入名称", "error"); 
-        if(!cost || cost<1) return showToast("数值至少为 1", "error");
+        const rawName = document.getElementById(nameId).value.trim(); const cost = parseInt(document.getElementById(costId).value);
+        if(!rawName) return showToast("请输入名称", "error"); if(!cost || cost<1) return showToast("数值至少为 1", "error");
         const btn = document.getElementById(btnId); btn.disabled = true; btn.textContent = "...";
         const prefix = type === "earn" ? TYPE_PREFIX.earn : type === "punish" ? TYPE_PREFIX.punish : "";
         const finalName = prefix + rawName;
@@ -2617,120 +2059,75 @@
     let currentConverterType = "calorie";
     function getConverterCards(type, val, person) {
       const ratios = converterRatios[type] || DEFAULT_RATIOS[type];
-      const x = person === "Torie" ? ratios.torieX : ratios.joryX;
-      const y = person === "Torie" ? ratios.torieY : ratios.joryY;
-      const cards = Math.floor((val / x) * y);
-      return { cards, desc: `每${x}${CONVERTER_TYPES[type].unit} = ${y}张` };
+      const x = person === "Torie" ? ratios.torieX : ratios.joryX; const y = person === "Torie" ? ratios.torieY : ratios.joryY;
+      const cards = Math.floor((val / x) * y); return { cards, desc: `每${x}${CONVERTER_TYPES[type].unit} = ${y}张` };
     }
     function setupUniversalConverter() {
-      const grid = document.getElementById("converterTypeGrid");
-      const input = document.getElementById("converterInput");
-      const person = document.getElementById("converterPerson");
-      const result = document.getElementById("converterResult");
-      const btn = document.getElementById("converterSubmitBtn");
-      const inputLabel = document.getElementById("converterInputLabel");
+      const grid = document.getElementById("converterTypeGrid"); const input = document.getElementById("converterInput");
+      const person = document.getElementById("converterPerson"); const result = document.getElementById("converterResult");
+      const btn = document.getElementById("converterSubmitBtn"); const inputLabel = document.getElementById("converterInputLabel");
       const panelTitle = document.getElementById("converterPanelTitle");
       
       grid.querySelectorAll(".converter-type-btn").forEach(b => {
         b.addEventListener("click", () => {
-          grid.querySelectorAll(".converter-type-btn").forEach(x => x.classList.remove("active"));
-          b.classList.add("active");
+          grid.querySelectorAll(".converter-type-btn").forEach(x => x.classList.remove("active")); b.classList.add("active");
           currentConverterType = b.dataset.ctype;
-          const latePanel = document.getElementById("bankLatePanel");
-          const sleepPanel = document.getElementById("bankSleepPanel");
-          const supervisePanel = document.getElementById("bankSupervisePanel");
-          const commonPanel = document.getElementById("bankConverterPanel");
+          const latePanel = document.getElementById("bankLatePanel"); const sleepPanel = document.getElementById("bankSleepPanel");
+          const supervisePanel = document.getElementById("bankSupervisePanel"); const commonPanel = document.getElementById("bankConverterPanel");
+          const transferPanel = document.getElementById("bankTransferPanel"); // ★ NEW
           
-          commonPanel.style.display = "none";
-          latePanel.style.display = "none";
-          sleepPanel.style.display = "none";
-          supervisePanel.style.display = "none";
+          commonPanel.style.display = "none"; latePanel.style.display = "none"; sleepPanel.style.display = "none";
+          supervisePanel.style.display = "none"; transferPanel.style.display = "none";
 
           if (currentConverterType === "late") {
-            latePanel.style.display = "block";
-            document.getElementById("lateInput").value = "";
-            document.getElementById("lateResult").style.display = "none";
-            document.getElementById("lateSubmitBtn").disabled = true;
+            latePanel.style.display = "block"; document.getElementById("lateInput").value = "";
+            document.getElementById("lateResult").style.display = "none"; document.getElementById("lateSubmitBtn").disabled = true;
           } else if (currentConverterType === "sleep") {
-            sleepPanel.style.display = "block";
-            document.getElementById("sleepResult").style.display = "none";
-            document.getElementById("sleepSubmitBtn").disabled = true;
-            document.getElementById("sleepBedtime").value = "before_midnight";
+            sleepPanel.style.display = "block"; document.getElementById("sleepResult").style.display = "none";
+            document.getElementById("sleepSubmitBtn").disabled = true; document.getElementById("sleepBedtime").value = "before_midnight";
             document.getElementById("sleepScore").value = "";
           } else if (currentConverterType === "supervise") {
-            supervisePanel.style.display = "block";
-            document.getElementById("superviseCards").value = "";
-            document.getElementById("superviseReason").value = "";
-            document.getElementById("supervisePreview").style.display = "none";
-            document.getElementById("superviseSubmitBtn").disabled = true;
-            updateSupervisePreview();
+            supervisePanel.style.display = "block"; document.getElementById("superviseCards").value = "";
+            document.getElementById("superviseReason").value = ""; document.getElementById("supervisePreview").style.display = "none";
+            document.getElementById("superviseSubmitBtn").disabled = true; updateSupervisePreview();
+          } else if (currentConverterType === "transfer") { // ★ NEW
+            transferPanel.style.display = "block"; document.getElementById("transferCards").value = "";
+            document.getElementById("transferReason").value = ""; document.getElementById("transferPreview").style.display = "none";
+            document.getElementById("transferSubmitBtn").disabled = true; updateTransferPreview();
           } else {
-            const config = CONVERTER_TYPES[currentConverterType];
-            commonPanel.style.display = "block";
+            const config = CONVERTER_TYPES[currentConverterType]; commonPanel.style.display = "block";
             panelTitle.innerHTML = `${config.emoji} ${config.label}换算`;
             document.getElementById("openConverterRatioBtn").style.display = "block";
-            inputLabel.textContent = config.inputLabel;
-            input.placeholder = config.placeholder;
-            input.value = "";
-            result.style.display = "none";
-            btn.disabled = true;
-            btn.textContent = "一键入账";
-            btn.className = "submit-btn green";
+            inputLabel.textContent = config.inputLabel; input.placeholder = config.placeholder; input.value = "";
+            result.style.display = "none"; btn.disabled = true; btn.textContent = "一键入账"; btn.className = "submit-btn green";
           }
         });
       });
       
       window.calcConverter = () => {
-        const val = parseInt(input.value) || 0;
-        const { cards, desc } = getConverterCards(currentConverterType, val, person.value);
-        if (val > 0) {
-          result.style.display = "block";
-          result.textContent = `可兑换 ${cards} 张自由卡（${desc}）`;
-          btn.disabled = cards <= 0;
-        } else {
-          result.style.display = "none";
-          btn.disabled = true;
-        }
+        const val = parseInt(input.value) || 0; const { cards, desc } = getConverterCards(currentConverterType, val, person.value);
+        if (val > 0) { result.style.display = "block"; result.textContent = `可兑换 ${cards} 张自由卡（${desc}）`; btn.disabled = cards <= 0; }
+        else { result.style.display = "none"; btn.disabled = true; }
       };
-      input.addEventListener("input", calcConverter);
-      person.addEventListener("change", calcConverter);
+      input.addEventListener("input", calcConverter); person.addEventListener("change", calcConverter);
       btn.addEventListener("click", async () => {
-        const val = parseInt(input.value) || 0;
-        const config = CONVERTER_TYPES[currentConverterType];
-        const { cards } = getConverterCards(currentConverterType, val, person.value);
-        if (cards <= 0) return;
+        const val = parseInt(input.value) || 0; const config = CONVERTER_TYPES[currentConverterType];
+        const { cards } = getConverterCards(currentConverterType, val, person.value); if (cards <= 0) return;
         btn.disabled = true; btn.textContent = "入账中...";
         const reason = `${config.reasonPrefix} ${val} ${config.inputUnit}`;
-        const { error } = await sb.from("freecard_log").insert({
-          operator: person.value, change_type: "增加", card_num: cards, reason
-        });
+        const { error } = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: cards, reason });
         btn.disabled = false; btn.textContent = "一键入账";
         if (error) { showToast("入账失败：" + error.message, "error"); return; }
-        trackEvent(person.value, 'earn');
-        showToast(`成功入账 ${cards} 张！`, "success");
-        spawnParticles(1);
-        input.value = "";
-        result.style.display = "none";
-        btn.disabled = true;
-        await loadLogs();
+        trackEvent(person.value, 'earn'); showToast(`成功入账 ${cards} 张！`, "success"); spawnParticles(1);
+        input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
       });
     }
 
     /* ==================== SLEEP CONVERTER ==================== */
-    function getBedtimeLabel(val) {
-      if (val === "before_midnight") return "0点前";
-      if (val === "midnight_to_1am") return "0:00~1:00";
-      if (val === "after_1am") return "1点后";
-      return val;
-    }
-
+    function getBedtimeLabel(val) { if (val === "before_midnight") return "0点前"; if (val === "midnight_to_1am") return "0:00~1:00"; if (val === "after_1am") return "1点后"; return val; }
     function getSleepOutcome(bedtime, scoreValue, hasScore) {
-      if (bedtime === "after_1am") {
-        return { change: -3, text: "🚨 1点后上床，扣 3 张", kind: "punish" };
-      }
-      if (!hasScore) {
-        return { change: 0, text: "⌚ 没戴手表，不奖不扣", kind: "neutral" };
-      }
+      if (bedtime === "after_1am") return { change: -3, text: "🚨 1点后上床，扣 3 张", kind: "punish" };
+      if (!hasScore) return { change: 0, text: "⌚ 没戴手表，不奖不扣", kind: "neutral" };
       if (bedtime === "before_midnight") {
         if (scoreValue >= 90) return { change: 2, text: `🌙 0点前上床 + 评分 ${scoreValue} ≥ 90，奖励 2 张`, kind: "reward" };
         else if (scoreValue >= 70) return { change: 0, text: `⚖️ 0点前上床 + 评分 ${scoreValue}（70~89），不奖不扣`, kind: "neutral" };
@@ -2741,94 +2138,41 @@
       }
       return { change: 0, text: "不加不减", kind: "neutral" };
     }
-
     function setupSleepConverter() {
-      const bedtime = document.getElementById("sleepBedtime");
-      const score = document.getElementById("sleepScore");
-      const person = document.getElementById("sleepPerson");
-      const result = document.getElementById("sleepResult");
+      const bedtime = document.getElementById("sleepBedtime"); const score = document.getElementById("sleepScore");
+      const person = document.getElementById("sleepPerson"); const result = document.getElementById("sleepResult");
       const btn = document.getElementById("sleepSubmitBtn");
-
       window.calcSleep = () => {
-        const bedtimeVal = bedtime.value;
-        const scoreRaw = score.value.trim();
-        const hasScore = scoreRaw !== "" && !isNaN(parseInt(scoreRaw));
-        const scoreValue = hasScore ? parseInt(scoreRaw) : null;
-        if (hasScore && (scoreValue < 0 || scoreValue > 100)) {
-          result.style.display = "none";
-          btn.disabled = true;
-          return;
-        }
+        const bedtimeVal = bedtime.value; const scoreRaw = score.value.trim();
+        const hasScore = scoreRaw !== "" && !isNaN(parseInt(scoreRaw)); const scoreValue = hasScore ? parseInt(scoreRaw) : null;
+        if (hasScore && (scoreValue < 0 || scoreValue > 100)) { result.style.display = "none"; btn.disabled = true; return; }
         const outcome = getSleepOutcome(bedtimeVal, scoreValue, hasScore);
-        result.style.display = "block";
-        result.textContent = outcome.text;
-        if (outcome.kind === "punish") {
-          result.classList.add("danger");
-          btn.className = "submit-btn danger";
-          btn.textContent = "确认扣除";
-        } else {
-          result.classList.remove("danger");
-          if (outcome.kind === "reward") {
-            btn.className = "submit-btn green";
-            btn.textContent = "领取奖励";
-          } else {
-            btn.className = "submit-btn";
-            btn.textContent = "确认记录";
-          }
-        }
+        result.style.display = "block"; result.textContent = outcome.text;
+        if (outcome.kind === "punish") { result.classList.add("danger"); btn.className = "submit-btn danger"; btn.textContent = "确认扣除"; }
+        else { result.classList.remove("danger"); if (outcome.kind === "reward") { btn.className = "submit-btn green"; btn.textContent = "领取奖励"; } else { btn.className = "submit-btn"; btn.textContent = "确认记录"; } }
         btn.disabled = false;
       };
-
-      bedtime.addEventListener("change", calcSleep);
-      score.addEventListener("input", calcSleep);
-      person.addEventListener("change", calcSleep);
-
+      bedtime.addEventListener("change", calcSleep); score.addEventListener("input", calcSleep); person.addEventListener("change", calcSleep);
       btn.addEventListener("click", async () => {
-        const bedtimeVal = bedtime.value;
-        const scoreRaw = score.value.trim();
-        const hasScore = scoreRaw !== "" && !isNaN(parseInt(scoreRaw));
-        const scoreValue = hasScore ? parseInt(scoreRaw) : null;
+        const bedtimeVal = bedtime.value; const scoreRaw = score.value.trim();
+        const hasScore = scoreRaw !== "" && !isNaN(parseInt(scoreRaw)); const scoreValue = hasScore ? parseInt(scoreRaw) : null;
         if (hasScore && (scoreValue < 0 || scoreValue > 100)) return;
         const outcome = getSleepOutcome(bedtimeVal, scoreValue, hasScore);
-        const bedtimeLabel = getBedtimeLabel(bedtimeVal);
-        const scoreText = hasScore ? `Apple Watch 评分 ${scoreValue} 分` : "未佩戴手表";
-        btn.disabled = true; 
-        const originalText = btn.textContent;
-        btn.textContent = "记录中...";
+        const bedtimeLabel = getBedtimeLabel(bedtimeVal); const scoreText = hasScore ? `Apple Watch 评分 ${scoreValue} 分` : "未佩戴手表";
+        btn.disabled = true; const originalText = btn.textContent; btn.textContent = "记录中...";
         if (outcome.change === 0) {
-          const { error } = await sb.from("freecard_log").insert({
-            operator: person.value, change_type: "增加", card_num: 0,
-            reason: `😴 睡眠：${bedtimeLabel}上床，${scoreText}（不奖不扣）`
-          });
-          btn.disabled = false; btn.textContent = originalText;
-          if (error) { showToast("记录失败：" + error.message, "error"); return; }
-          showToast("睡眠已记录，不奖不扣", "success");
+          const { error } = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: 0, reason: `😴 睡眠：${bedtimeLabel}上床，${scoreText}（不奖不扣）` });
+          btn.disabled = false; btn.textContent = originalText; if (error) { showToast("记录失败：" + error.message, "error"); return; } showToast("睡眠已记录，不奖不扣", "success");
         } else if (outcome.change > 0) {
-          const { error } = await sb.from("freecard_log").insert({
-            operator: person.value, change_type: "增加", card_num: outcome.change,
-            reason: `😴 睡眠：${bedtimeLabel}上床，${scoreText}（奖励 ${outcome.change} 张）`
-          });
-          btn.disabled = false; btn.textContent = originalText;
-          if (error) { showToast("记录失败：" + error.message, "error"); return; }
-          trackEvent(person.value, 'earn');
-          spawnParticles(1);
-          showToast(`睡眠达标！获得 ${outcome.change} 张自由卡 🎉`, "success");
+          const { error } = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: outcome.change, reason: `😴 睡眠：${bedtimeLabel}上床，${scoreText}（奖励 ${outcome.change} 张）` });
+          btn.disabled = false; btn.textContent = originalText; if (error) { showToast("记录失败：" + error.message, "error"); return; }
+          trackEvent(person.value, 'earn'); spawnParticles(1); showToast(`睡眠达标！获得 ${outcome.change} 张自由卡 🎉`, "success");
         } else {
-          const { error } = await sb.from("freecard_log").insert({
-            operator: person.value, change_type: "减少", card_num: Math.abs(outcome.change),
-            reason: `😴 睡眠：${bedtimeLabel}上床，${scoreText}（扣 ${Math.abs(outcome.change)} 张）`
-          });
-          btn.disabled = false; btn.textContent = originalText;
-          if (error) { showToast("记录失败：" + error.message, "error"); return; }
-          trackEvent(person.value, 'punish');
-          showToast(`睡眠惩罚：扣除 ${Math.abs(outcome.change)} 张自由卡`, "error");
-          if(navigator.vibrate) navigator.vibrate(200);
+          const { error } = await sb.from("freecard_log").insert({ operator: person.value, change_type: "减少", card_num: Math.abs(outcome.change), reason: `😴 睡眠：${bedtimeLabel}上床，${scoreText}（扣 ${Math.abs(outcome.change)} 张）` });
+          btn.disabled = false; btn.textContent = originalText; if (error) { showToast("记录失败：" + error.message, "error"); return; }
+          trackEvent(person.value, 'punish'); showToast(`睡眠惩罚：扣除 ${Math.abs(outcome.change)} 张自由卡`, "error"); if(navigator.vibrate) navigator.vibrate(200);
         }
-        bedtime.value = "before_midnight";
-        score.value = "";
-        result.style.display = "none";
-        btn.disabled = true;
-        await loadLogs();
+        bedtime.value = "before_midnight"; score.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
       });
     }
 
@@ -2836,59 +2180,73 @@
     function setupLateConverter() {
       const input = document.getElementById("lateInput"), person = document.getElementById("latePerson"), result = document.getElementById("lateResult"), btn = document.getElementById("lateSubmitBtn");
       window.calcLate = () => {
-        const mins = parseInt(input.value) || 0;
-        const rawCards = Math.ceil(mins / lateTier);
-        const cards = Math.min(rawCards, lateCap);
+        const mins = parseInt(input.value) || 0; const rawCards = Math.ceil(mins / lateTier); const cards = Math.min(rawCards, lateCap);
         const wasCapped = rawCards > lateCap;
-        if(mins > 0) { 
-          result.style.display = "block"; 
-          let text = `将扣除 ${cards} 张自由卡 (每${lateTier}分钟扣1张)`;
-          if (wasCapped) text += ` ⚠️ 已达单次上限${lateCap}张`;
-          result.textContent = text;
-          btn.disabled = cards <= 0; 
-        } 
+        if(mins > 0) { result.style.display = "block"; let text = `将扣除 ${cards} 张自由卡 (每${lateTier}分钟扣1张)`; if (wasCapped) text += ` ⚠️ 已达单次上限${lateCap}张`; result.textContent = text; btn.disabled = cards <= 0; } 
         else { result.style.display = "none"; btn.disabled = true; }
       };
-      input.addEventListener("input", calcLate); 
-      person.addEventListener("change", calcLate);
+      input.addEventListener("input", calcLate); person.addEventListener("change", calcLate);
       btn.addEventListener("click", async () => {
-        const mins = parseInt(input.value) || 0;
-        const rawCards = Math.ceil(mins / lateTier);
-        const cards = Math.min(rawCards, lateCap);
-        if(cards <= 0) return;
-        btn.disabled = true; btn.textContent = "扣除中...";
+        const mins = parseInt(input.value) || 0; const rawCards = Math.ceil(mins / lateTier); const cards = Math.min(rawCards, lateCap);
+        if(cards <= 0) return; btn.disabled = true; btn.textContent = "扣除中...";
         const {error} = await sb.from("freecard_log").insert({ operator: person.value, change_type: "减少", card_num: cards, reason: `⏰ 迟到 ${mins} 分钟` });
         btn.disabled = false; btn.textContent = "确认扣除";
         if(error) { showToast("扣除失败："+error.message, "error"); return; }
-        trackEvent(person.value, 'punish');
-        showToast(`已扣除 ${cards} 张，下次注意哦`, "error");
-        if(navigator.vibrate) navigator.vibrate(200);
+        trackEvent(person.value, 'punish'); showToast(`已扣除 ${cards} 张，下次注意哦`, "error"); if(navigator.vibrate) navigator.vibrate(200);
         input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
       });
     }
 
     /* ==================== SUPERVISE CONVERTER ==================== */
     function setupSuperviseConverter() {
-      const supervisorSel = document.getElementById("supervisePerson");
-      const victimInput = document.getElementById("superviseVictim");
-      const reasonInput = document.getElementById("superviseReason");
-      const cardsInput = document.getElementById("superviseCards");
-      const preview = document.getElementById("supervisePreview");
-      const btn = document.getElementById("superviseSubmitBtn");
-
-      function getVictim(supervisor) {
-        return supervisor === "Torie" ? "Jory" : "Torie";
-      }
-
+      const supervisorSel = document.getElementById("supervisePerson"); const victimInput = document.getElementById("superviseVictim");
+      const reasonInput = document.getElementById("superviseReason"); const cardsInput = document.getElementById("superviseCards");
+      const preview = document.getElementById("supervisePreview"); const btn = document.getElementById("superviseSubmitBtn");
+      function getVictim(supervisor) { return supervisor === "Torie" ? "Jory" : "Torie"; }
       window.updateSupervisePreview = () => {
-        const supervisor = supervisorSel.value;
-        const victim = getVictim(supervisor);
+        const supervisor = supervisorSel.value; const victim = getVictim(supervisor);
+        const cards = parseInt(cardsInput.value) || 0; const reason = reasonInput.value.trim();
+        victimInput.value = victim;
+        if (cards > 0) { preview.style.display = "block"; preview.innerHTML = `<span class="from">${victim}</span> <span class="arrow">→</span> <span class="to">${supervisor}</span><br><span style="font-size:12px;color:var(--text-2);font-weight:600;margin-top:4px;display:inline-block;">转移 ${cards} 张${reason ? ' · ' + esc(reason) : ''}</span>`; btn.disabled = false; }
+        else { preview.style.display = "none"; btn.disabled = true; }
+      };
+      supervisorSel.addEventListener("change", updateSupervisePreview); cardsInput.addEventListener("input", updateSupervisePreview); reasonInput.addEventListener("input", updateSupervisePreview);
+      btn.addEventListener("click", async () => {
+        const supervisor = supervisorSel.value; const victim = getVictim(supervisor);
+        const cards = parseInt(cardsInput.value) || 0; const reason = reasonInput.value.trim();
+        if (cards <= 0) return; btn.disabled = true; btn.textContent = "记录中...";
+        const reasonText = reason ? `👀 监督：${reason}` : "👀 监督记录";
+        const { error: err1 } = await sb.from("freecard_log").insert({ operator: victim, change_type: "减少", card_num: cards, reason: `${reasonText}（被${supervisor}抓）` });
+        if (err1) { showToast("记录失败：" + err1.message, "error"); btn.disabled = false; btn.textContent = "确认监督"; return; }
+        const { error: err2 } = await sb.from("freecard_log").insert({ operator: supervisor, change_type: "增加", card_num: cards, reason: `${reasonText}（抓到${victim}）` });
+        btn.disabled = false; btn.textContent = "确认监督";
+        if (err2) { showToast("监督者入账失败，请检查数据", "error"); return; }
+        trackEvent(victim, 'punish'); trackEvent(supervisor, 'earn');
+        showToast(`监督成功！${victim} → ${supervisor} ${cards}张`, "success"); spawnParticles(1);
+        cardsInput.value = ""; reasonInput.value = ""; preview.style.display = "none"; btn.disabled = true; await loadLogs();
+      });
+    }
+
+    /* ==================== ★ TRANSFER CONVERTER (NEW) ==================== */
+    function setupTransferConverter() {
+      const fromSel = document.getElementById("transferFrom");
+      const toInput = document.getElementById("transferTo");
+      const reasonInput = document.getElementById("transferReason");
+      const cardsInput = document.getElementById("transferCards");
+      const preview = document.getElementById("transferPreview");
+      const btn = document.getElementById("transferSubmitBtn");
+
+      function getReceiver(sender) { return sender === "Torie" ? "Jory" : "Torie"; }
+
+      window.updateTransferPreview = () => {
+        const from = fromSel.value;
+        const to = getReceiver(from);
         const cards = parseInt(cardsInput.value) || 0;
         const reason = reasonInput.value.trim();
-        victimInput.value = victim;
+        toInput.value = to;
         if (cards > 0) {
           preview.style.display = "block";
-          preview.innerHTML = `<span class="victim">${victim}</span> <span class="arrow">→</span> <span class="supervisor">${supervisor}</span><br><span style="font-size:12px;color:var(--text-2);font-weight:600;margin-top:4px;display:inline-block;">转移 ${cards} 张${reason ? ' · ' + esc(reason) : ''}</span>`;
+          preview.innerHTML = `<span class="from">${from}</span> <span class="arrow">→</span> <span class="to">${to}</span><br><span style="font-size:12px;color:var(--text-2);font-weight:600;margin-top:4px;display:inline-block;">转移 ${cards} 张${reason ? ' · ' + esc(reason) : ''}</span>`;
           btn.disabled = false;
         } else {
           preview.style.display = "none";
@@ -2896,86 +2254,68 @@
         }
       };
 
-      supervisorSel.addEventListener("change", updateSupervisePreview);
-      cardsInput.addEventListener("input", updateSupervisePreview);
-      reasonInput.addEventListener("input", updateSupervisePreview);
+      fromSel.addEventListener("change", updateTransferPreview);
+      cardsInput.addEventListener("input", updateTransferPreview);
+      reasonInput.addEventListener("input", updateTransferPreview);
 
       btn.addEventListener("click", async () => {
-        const supervisor = supervisorSel.value;
-        const victim = getVictim(supervisor);
+        const from = fromSel.value;
+        const to = getReceiver(from);
         const cards = parseInt(cardsInput.value) || 0;
         const reason = reasonInput.value.trim();
         if (cards <= 0) return;
-        btn.disabled = true;
-        btn.textContent = "记录中...";
-        const reasonText = reason ? `👀 监督：${reason}` : "👀 监督记录";
+        
+        btn.disabled = true; btn.textContent = "转移中...";
+        const reasonText = reason ? `🔄 转移：${reason}` : "🔄 自由卡转移";
+        
+        // Deduct from sender
         const { error: err1 } = await sb.from("freecard_log").insert({
-          operator: victim, change_type: "减少", card_num: cards, reason: `${reasonText}（被${supervisor}抓）`
+          operator: from, change_type: "减少", card_num: cards,
+          reason: `${reasonText}（转给${to}）`
         });
         if (err1) {
-          showToast("记录失败：" + err1.message, "error");
-          btn.disabled = false; btn.textContent = "确认监督";
-          return;
+          showToast("转移失败：" + err1.message, "error");
+          btn.disabled = false; btn.textContent = "确认转移"; return;
         }
+        
+        // Add to receiver
         const { error: err2 } = await sb.from("freecard_log").insert({
-          operator: supervisor, change_type: "增加", card_num: cards, reason: `${reasonText}（抓到${victim}）`
+          operator: to, change_type: "增加", card_num: cards,
+          reason: `${reasonText}（来自${from}）`
         });
-        btn.disabled = false; btn.textContent = "确认监督";
+        btn.disabled = false; btn.textContent = "确认转移";
         if (err2) {
-          showToast("监督者入账失败，请检查数据", "error");
-          return;
+          showToast("接收方入账失败，请检查数据", "error"); return;
         }
-        trackEvent(victim, 'punish');
-        trackEvent(supervisor, 'earn');
-        showToast(`监督成功！${victim} → ${supervisor} ${cards}张`, "success");
+        
+        trackEvent(from, 'redeem'); // treat as spend for mood
+        trackEvent(to, 'earn');
+        showToast(`转移成功！${from} → ${to} ${cards}张`, "success");
         spawnParticles(1);
-        cardsInput.value = "";
-        reasonInput.value = "";
-        preview.style.display = "none";
-        btn.disabled = true;
+        cardsInput.value = ""; reasonInput.value = "";
+        preview.style.display = "none"; btn.disabled = true;
         await loadLogs();
       });
     }
 
     /* ==================== RECHARGE ==================== */
     function setupRecharge() {
-      const input = document.getElementById("rechargeAmount");
-      const person = document.getElementById("rechargePerson");
-      const result = document.getElementById("rechargeResult");
-      const btn = document.getElementById("rechargeSubmitBtn");
+      const input = document.getElementById("rechargeAmount"); const person = document.getElementById("rechargePerson");
+      const result = document.getElementById("rechargeResult"); const btn = document.getElementById("rechargeSubmitBtn");
       function calcRecharge() {
-        const amount = parseInt(input.value) || 0;
-        const cards = Math.floor(amount / 10);
-        if (amount >= 10) {
-          result.style.display = "block";
-          result.textContent = `充值 ¥${cards * 10} → 获得 ${cards} 张自由卡`;
-          btn.disabled = cards <= 0;
-        } else {
-          result.style.display = "none";
-          btn.disabled = true;
-        }
+        const amount = parseInt(input.value) || 0; const cards = Math.floor(amount / 10);
+        if (amount >= 10) { result.style.display = "block"; result.textContent = `充值 ¥${cards * 10} → 获得 ${cards} 张自由卡`; btn.disabled = cards <= 0; }
+        else { result.style.display = "none"; btn.disabled = true; }
       }
-      input.addEventListener("input", calcRecharge);
-      person.addEventListener("change", calcRecharge);
+      input.addEventListener("input", calcRecharge); person.addEventListener("change", calcRecharge);
       btn.addEventListener("click", async () => {
-        const amount = parseInt(input.value) || 0;
-        const cards = Math.floor(amount / 10);
-        const actualAmount = cards * 10;
-        if (cards <= 0) return;
-        btn.disabled = true; btn.textContent = "入账中...";
-        const { error } = await sb.from("freecard_log").insert({
-          operator: person.value, change_type: "增加", card_num: cards,
-          reason: `💰 充值 ¥${actualAmount}（${cards}张 × 10¥）`
-        });
+        const amount = parseInt(input.value) || 0; const cards = Math.floor(amount / 10); const actualAmount = cards * 10;
+        if (cards <= 0) return; btn.disabled = true; btn.textContent = "入账中...";
+        const { error } = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: cards, reason: `💰 充值 ¥${actualAmount}（${cards}张 × 10¥）` });
         btn.disabled = false; btn.textContent = "确认充值并入账";
         if (error) { showToast("入账失败：" + error.message, "error"); return; }
-        trackEvent(person.value, 'earn');
-        showToast(`充值成功！${person.value} 获得 ${cards} 张自由卡 🎉`, "success");
-        spawnParticles(1);
-        input.value = "";
-        result.style.display = "none";
-        btn.disabled = true;
-        await loadLogs();
+        trackEvent(person.value, 'earn'); showToast(`充值成功！${person.value} 获得 ${cards} 张自由卡 🎉`, "success"); spawnParticles(1);
+        input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
       });
     }
 
@@ -2991,18 +2331,10 @@
       allProducts=data||[]; renderShop(); renderEarnList(); renderPunishList();
     }
     function refreshAll() {
-      updateBalances();
-      updateSpirits();
-      updateEnergyUI();
-      updateHistoryFilterOptions();
-      renderStats();
-      renderHistory();
-      renderWeeklyCard();
-      renderTrendCard();
-      const bt = document.getElementById("bankTorieBal");
-      const bj = document.getElementById("bankJoryBal");
-      if (bt) bt.textContent = calcBalance("Torie");
-      if (bj) bj.textContent = calcBalance("Jory");
+      updateBalances(); updateSpirits(); updateEnergyUI(); updateHistoryFilterOptions();
+      renderStats(); renderHistory(); renderWeeklyCard(); renderTrendCard();
+      const bt = document.getElementById("bankTorieBal"); const bj = document.getElementById("bankJoryBal");
+      if (bt) bt.textContent = calcBalance("Torie"); if (bj) bj.textContent = calcBalance("Jory");
     }
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
     function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
@@ -3010,43 +2342,25 @@
     /* ==================== DELETE LOG (WITH FEED ROLLBACK) ==================== */
     async function deleteLog(id) {
       if (!confirm("确定删除这条记录？")) return;
-      const log = allLogs.find(l => String(l.id) === String(id));
-      if (!log) return showToast("找不到该记录", "error");
-      
+      const log = allLogs.find(l => String(l.id) === String(id)); if (!log) return showToast("找不到该记录", "error");
       const note = log.note || "";
       if (note.startsWith("FEED:") && log.change_type === "减少") {
-        const parts = note.split(":");
-        if (parts.length === 3) {
-          const oldEnergy = parseFloat(parts[1]);
-          const person = log.operator;
+        const parts = note.split(":"); if (parts.length === 3) {
+          const oldEnergy = parseFloat(parts[1]); const person = log.operator;
           if (petStates[person]) {
-            const feedTime = new Date(log.created_at).getTime();
-            const now = Date.now();
+            const feedTime = new Date(log.created_at).getTime(); const now = Date.now();
             const minsSinceFeed = Math.max(0, (now - feedTime) / 60000);
             const decaySinceFeed = minsSinceFeed * DECAY_RATE_PER_MIN;
-            
-            let rolledBackEnergy = oldEnergy - decaySinceFeed;
-            rolledBackEnergy = Math.max(0, rolledBackEnergy);
-            
-            if (rolledBackEnergy <= 0) {
-              petStates[person].is_fasting = true;
-              petStates[person].energy = 0;
-            } else {
-              petStates[person].is_fasting = false;
-              petStates[person].energy = rolledBackEnergy;
-            }
-            petStates[person].last_updated = new Date().toISOString();
-            await savePetState(person);
+            let rolledBackEnergy = oldEnergy - decaySinceFeed; rolledBackEnergy = Math.max(0, rolledBackEnergy);
+            if (rolledBackEnergy <= 0) { petStates[person].is_fasting = true; petStates[person].energy = 0; }
+            else { petStates[person].is_fasting = false; petStates[person].energy = rolledBackEnergy; }
+            petStates[person].last_updated = new Date().toISOString(); await savePetState(person);
           }
         }
       }
-      
       const { error } = await sb.from("freecard_log").delete().eq("id", id);
       if (error) return showToast("删除失败", "error");
-      showToast("已删除", "success");
-      await loadLogs();
-      updateEnergyUI();
-      updateSpirits();
+      showToast("已删除", "success"); await loadLogs(); updateEnergyUI(); updateSpirits();
     }
 
     /* ==================== UTILS ==================== */
@@ -3058,48 +2372,19 @@
 
     /* ==================== INIT ==================== */
     document.addEventListener("DOMContentLoaded", async () => {
-      initSettings();
-      initRatioModals();
-      initPetInteractions();
-      setupFeedModals();
-      setupEditModal();
-      setupNav();
-      setupBankNav();
-      setupPeriodTabs();
-      setupPerspectiveTabs();
-      setupHistoryFilter();
-      setupAddProduct();
-      setupAddEarn();
-      setupAddPunish();
-      setupUniversalConverter();
-      setupSleepConverter();
-      setupLateConverter();
-      setupSuperviseConverter();
-      setupRecharge();
-      setupChartInteraction(); 
-      checkSpecialDate();
-      
-      // ★ 新的宠物能量系统初始化
-      await loadPetStates();
-      startEnergySync();
-      
-      await loadLogs();
-      await loadProducts();
+      initSettings(); initRatioModals(); initPetInteractions(); setupFeedModals(); setupEditModal();
+      setupNav(); setupBankNav(); setupPeriodTabs(); setupPerspectiveTabs(); setupHistoryFilter();
+      setupAddProduct(); setupAddEarn(); setupAddPunish();
+      setupUniversalConverter(); setupSleepConverter(); setupLateConverter();
+      setupSuperviseConverter(); setupTransferConverter(); // ★ NEW
+      setupRecharge(); setupChartInteraction(); checkSpecialDate();
+      await loadPetStates(); startEnergySync();
+      await loadLogs(); await loadProducts();
       sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
       sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
-      
-      // ★ 页面可见性变化时，立即用时间戳重新计算能量（核心修复）
       document.addEventListener("visibilitychange", handleVisibilityChange);
-
       let resizeTimer;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          if (document.getElementById("page-data").classList.contains("active")) {
-            renderStats();
-          }
-        }, 200);
-      });
+      window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (document.getElementById("page-data").classList.contains("active")) { renderStats(); } }, 200); });
     });
   </script>
 </body>
