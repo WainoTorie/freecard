@@ -16,6 +16,15 @@
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
       --accent: var(--torie);
       --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+      
+      /* Wealth Tier Colors */
+      --wealth-poor: #8e8e93;
+      --wealth-basic: #a2845e;
+      --wealth-comfort: #34c759;
+      --wealth-middle: #007aff;
+      --wealth-rich: #af52de;
+      --wealth-tycoon: #ff9500;
+      --wealth-king: linear-gradient(135deg, #ffd700, #ff375f);
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -23,6 +32,14 @@
         --text-1: #f5f5f7; --text-2: #a1a1a6; --text-3: #636366;
         --border: rgba(255, 255, 255, 0.08); --separator: rgba(255,255,255,0.1);
         --shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        
+        --wealth-poor: #636366;
+        --wealth-basic: #c4a47c;
+        --wealth-comfort: #30d158;
+        --wealth-middle: #0a84ff;
+        --wealth-rich: #bf5af2;
+        --wealth-tycoon: #ff9f0a;
+        --wealth-king: linear-gradient(135deg, #ffd60a, #ff375f);
       }
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -43,7 +60,7 @@
     .festival-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-1); }
     .festival-sub { font-size: 14px; color: var(--text-2); line-height: 1.5; }
 
-    /* === SETTINGS (REDESIGNED) === */
+    /* === SETTINGS === */
     .settings-btn { position: absolute; top: 8px; right: 0; width: 36px; height: 36px; border: none; background: var(--card); border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); border: 1px solid var(--border); z-index: 10; transition: all 0.2s; }
     .settings-btn:active { transform: scale(0.9); }
     .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.25s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
@@ -77,13 +94,11 @@
     .setting-label { font-size: 15px; font-weight: 500; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .setting-value { font-size: 14px; color: var(--text-2); font-weight: 500; flex-shrink: 0; }
     
-    /* Range Slider in Settings */
     .range-wrap { flex: 1; max-width: 140px; display: flex; align-items: center; gap: 8px; }
     input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--torie); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
     .range-val { font-size: 12px; color: var(--text-3); min-width: 32px; text-align: right; font-variant-numeric: tabular-nums; }
 
-    /* Recharge Section in Settings */
     .recharge-section { padding: 16px; background: var(--card); border-radius: var(--r-md); border: 1px solid var(--border); }
     .recharge-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
     .recharge-title { font-size: 15px; font-weight: 700; color: var(--text-1); }
@@ -92,12 +107,11 @@
     .recharge-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
     .recharge-result { font-size: 13px; font-weight: 700; color: var(--green); text-align: center; padding: 8px; background: rgba(52, 199, 89, 0.08); border-radius: var(--r-sm); margin-bottom: 10px; display: none; }
 
-    /* About Section */
     .about-section { text-align: center; padding: 16px; color: var(--text-3); font-size: 12px; line-height: 1.6; }
     .app-version { font-weight: 700; color: var(--text-2); font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .version-badge { background: var(--torie); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
 
-    /* === PET CARD NEW LAYOUT === */
+    /* === PET CARD === */
     .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 12px 14px; text-align: center; transition: all 0.3s ease; position: relative; overflow: visible; display: flex; flex-direction: column; align-items: center; }
     .spirit-card::before { content: ""; position: absolute; inset: 0; opacity: 0.04; pointer-events: none; transition: background 0.3s; border-radius: var(--r-lg); }
@@ -172,14 +186,33 @@
     .summary-text .green-hl { color: var(--green); }
     .summary-text .red-hl { color: var(--red); }
     .balances { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .balance-box { text-align: center; padding: 16px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); }
+    .balance-box { text-align: center; padding: 16px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); position: relative; overflow: hidden;}
     .balance-box.torie { border-color: rgba(0, 122, 255, 0.2); }
     .balance-box.jory { border-color: rgba(255, 149, 0, 0.2); }
-    .balance-name { font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 4px; }
+    .balance-name { font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;}
     .balance-number { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
     .balance-box.torie .balance-number { color: var(--torie); }
     .balance-box.jory .balance-number { color: var(--jory); }
     .balance-unit { font-size: 12px; font-weight: 500; color: var(--text-3); margin-left: 2px; }
+
+    /* ★ WEALTH BADGE STYLES */
+    .wealth-badge {
+      font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px;
+      letter-spacing: 0.3px; line-height: 1.2; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 2px;
+    }
+    .wealth-poor { background: rgba(142,142,147,0.15); color: var(--wealth-poor); }
+    .wealth-basic { background: rgba(162,132,94,0.15); color: var(--wealth-basic); }
+    .wealth-comfort { background: rgba(52,199,89,0.15); color: var(--wealth-comfort); }
+    .wealth-middle { background: rgba(0,122,255,0.15); color: var(--wealth-middle); }
+    .wealth-rich { background: rgba(175,82,222,0.15); color: var(--wealth-rich); }
+    .wealth-tycoon { background: rgba(255,149,0,0.15); color: var(--wealth-tycoon); }
+    .wealth-king { 
+      background: var(--wealth-king); color: #fff; 
+      box-shadow: 0 2px 8px rgba(255,55,95,0.3);
+      animation: kingPulse 2s ease-in-out infinite;
+    }
+    @keyframes kingPulse { 0%,100% { box-shadow: 0 2px 8px rgba(255,55,95,0.3); } 50% { box-shadow: 0 2px 12px rgba(255,55,95,0.5); } }
 
     /* === FORMS === */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -608,7 +641,7 @@
     </div>
   </div>
 
-  <!-- ★ REDESIGNED SETTINGS PANEL -->
+  <!-- SETTINGS PANEL -->
   <div id="settingsOverlay" class="overlay"></div>
   <div id="settingsPanel" class="panel">
     <div class="panel-header">
@@ -616,7 +649,6 @@
     </div>
     
     <div class="settings-content">
-      <!-- Group 1: Appearance -->
       <div class="setting-group-title">外观与显示</div>
       <div class="setting-group">
         <div class="setting-item">
@@ -638,7 +670,6 @@
         </div>
       </div>
 
-      <!-- Group 2: Wallet -->
       <div class="setting-group-title">钱包管理</div>
       <div class="recharge-section">
         <div class="recharge-header">
@@ -659,7 +690,6 @@
         <button id="rechargeSubmitBtn" class="submit-btn green" style="margin-top:0" disabled>确认充值并入账</button>
       </div>
 
-      <!-- Group 3: About -->
       <div class="setting-group-title">关于</div>
       <div class="setting-group">
         <div class="setting-item">
@@ -667,12 +697,12 @@
             <span class="setting-icon">📱</span>
             <span class="setting-label">版本号</span>
           </div>
-          <span class="setting-value">v3.0</span>
+          <span class="setting-value">v3.1</span>
         </div>
       </div>
       
       <div class="about-section">
-        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.0</span></div>
+        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.1</span></div>
         <div>记录每一次获得，也记录每一次自由 ✨</div>
         <div style="margin-top:4px; opacity:0.7;">Made with ❤️ for Torie & Jory</div>
       </div>
@@ -694,11 +724,11 @@
       <div class="card">
         <div class="balances">
           <div class="balance-box torie">
-            <div class="balance-name">Torie</div>
+            <div class="balance-name">Torie <span id="torieWealthBadge" class="wealth-badge wealth-poor">贫困</span></div>
             <div><span id="torieBalance" class="balance-number">0</span><span class="balance-unit">张</span></div>
           </div>
           <div class="balance-box jory">
-            <div class="balance-name">Jory</div>
+            <div class="balance-name">Jory <span id="joryWealthBadge" class="wealth-badge wealth-poor">贫困</span></div>
             <div><span id="joryBalance" class="balance-number">0</span><span class="balance-unit">张</span></div>
           </div>
         </div>
@@ -861,7 +891,6 @@
             <button class="converter-type-btn" data-ctype="late"><span class="ctb-emoji">⏰</span>迟到换算</button>
             <button class="converter-type-btn" data-ctype="sleep"><span class="ctb-emoji">😴</span>睡眠</button>
             <button class="converter-type-btn" data-ctype="supervise"><span class="ctb-emoji">👀</span>监督</button>
-            <!-- ★ NEW: Transfer Button -->
             <button class="converter-type-btn" data-ctype="transfer"><span class="ctb-emoji">🔄</span>转移</button>
           </div>
 
@@ -907,11 +936,11 @@
                 <div class="sleep-no-watch-hint">💡 没戴手表？留空即可，系统按"无评分"处理</div>
               </div>
             </div>
+            <!-- ★ UPDATED SLEEP RULES DISPLAY -->
             <div class="sleep-rules-info">
               <div class="rule-line"><span class="rule-emoji">🚨</span> 1 点后上床 → 无论如何扣 3 张</div>
-              <div class="rule-line"><span class="rule-emoji">🌙</span> 0 点前：≥90 分 +2 张 | 70~89 不加不减 | &lt;70 扣 3 张</div>
-              <div class="rule-line"><span class="rule-emoji">🌃</span> 0~1 点：≥70 不加不减 | &lt;70 扣 3 张</div>
-              <div class="rule-line"><span class="rule-emoji">⌚</span> 没戴手表（留空）：1 点前不奖不扣</div>
+              <div class="rule-line"><span class="rule-emoji">🌙</span> 0 点前：≥90 +3 | ≥80 +2 | ≥70 +1 | 其余/无评分 不加不扣</div>
+              <div class="rule-line"><span class="rule-emoji">🌃</span> 0~1 点：≥90 +2 | ≥80 +1 | &lt;60 -1 | 其余/无评分 不加不扣</div>
             </div>
             <div id="sleepResult" class="converter-result" style="display:none"></div>
             <button id="sleepSubmitBtn" class="submit-btn" disabled>确认记录</button>
@@ -962,7 +991,6 @@
             <button id="superviseSubmitBtn" class="submit-btn" disabled>确认监督</button>
           </div>
 
-          <!-- ★ NEW: TRANSFER PANEL -->
           <div id="bankTransferPanel" class="converter-unified-panel" style="display:none">
             <div class="converter-header">
               <h3 class="section-title" style="margin:0">🔄 自由卡转移</h3>
@@ -1752,6 +1780,12 @@
     }
     function selectBankPerson(person) { bankPerson = person; applyBgTint(person); updateBankPersonBadges(); showBankStep(2); }
     function selectBankSection(section) {
+      // ★ CHECK FASTING STATE BEFORE ENTERING SHOP
+      if (section === "shop" && petStates[bankPerson] && petStates[bankPerson].is_fasting) {
+        showToast(`${bankPerson} 的宠物正在绝食，请先哄好再兑换！`, "error");
+        openFastingModal(bankPerson);
+        return;
+      }
       bankSection = section;
       document.querySelectorAll(".bank-sub-page").forEach(p => p.classList.remove("active"));
       const target = document.getElementById(`bank-${section}`);
@@ -2023,6 +2057,14 @@
     function renderPunishList() { renderList("punishList", "punish"); }
     async function handleListAction(action, id, type) {
       const p = allProducts.find(x => String(x.id) === String(id)); if(!p) return; const displayName = getDisplayName(p);
+      
+      // ★ FASTING CHECK FOR REDEEM ACTION
+      if (action === "redeem" && petStates[bankPerson] && petStates[bankPerson].is_fasting) {
+        showToast(`${bankPerson} 的宠物正在绝食，无法兑换心愿！`, "error");
+        openFastingModal(bankPerson);
+        return;
+      }
+
       if(action === "del") { if(!confirm("确定下架此项目？")) return; const {error} = await sb.from("freecard_shop").delete().eq("id", id); if(error) return showToast("下架失败", "error"); showToast("已下架", "success"); await loadProducts(); } 
       else if(action === "edit") { openEditModal(id, type); }
       else if(action === "redeem") { if(calcBalance(bankPerson) < p.cost) return showToast("余额不足", "error"); if(!confirm(`确认花费 ${p.cost} 张兑换「${displayName}」？`)) return; const {error} = await sb.from("freecard_log").insert({operator:bankPerson, change_type:"减少", card_num:p.cost, reason:`🛒 兑换：${displayName}`}); if(error) return showToast("兑换失败", "error"); trackEvent(bankPerson, 'redeem'); showRedeemCeremony(p, p.cost); await loadLogs(); }
@@ -2074,7 +2116,7 @@
           currentConverterType = b.dataset.ctype;
           const latePanel = document.getElementById("bankLatePanel"); const sleepPanel = document.getElementById("bankSleepPanel");
           const supervisePanel = document.getElementById("bankSupervisePanel"); const commonPanel = document.getElementById("bankConverterPanel");
-          const transferPanel = document.getElementById("bankTransferPanel"); // ★ NEW
+          const transferPanel = document.getElementById("bankTransferPanel");
           
           commonPanel.style.display = "none"; latePanel.style.display = "none"; sleepPanel.style.display = "none";
           supervisePanel.style.display = "none"; transferPanel.style.display = "none";
@@ -2090,7 +2132,7 @@
             supervisePanel.style.display = "block"; document.getElementById("superviseCards").value = "";
             document.getElementById("superviseReason").value = ""; document.getElementById("supervisePreview").style.display = "none";
             document.getElementById("superviseSubmitBtn").disabled = true; updateSupervisePreview();
-          } else if (currentConverterType === "transfer") { // ★ NEW
+          } else if (currentConverterType === "transfer") {
             transferPanel.style.display = "block"; document.getElementById("transferCards").value = "";
             document.getElementById("transferReason").value = ""; document.getElementById("transferPreview").style.display = "none";
             document.getElementById("transferSubmitBtn").disabled = true; updateTransferPreview();
@@ -2123,21 +2165,37 @@
       });
     }
 
-    /* ==================== SLEEP CONVERTER ==================== */
+    /* ==================== ★ UPDATED SLEEP CONVERTER ==================== */
     function getBedtimeLabel(val) { if (val === "before_midnight") return "0点前"; if (val === "midnight_to_1am") return "0:00~1:00"; if (val === "after_1am") return "1点后"; return val; }
+    
+    // ★ NEW SLEEP RULES LOGIC
     function getSleepOutcome(bedtime, scoreValue, hasScore) {
-      if (bedtime === "after_1am") return { change: -3, text: "🚨 1点后上床，扣 3 张", kind: "punish" };
-      if (!hasScore) return { change: 0, text: "⌚ 没戴手表，不奖不扣", kind: "neutral" };
-      if (bedtime === "before_midnight") {
-        if (scoreValue >= 90) return { change: 2, text: `🌙 0点前上床 + 评分 ${scoreValue} ≥ 90，奖励 2 张`, kind: "reward" };
-        else if (scoreValue >= 70) return { change: 0, text: `⚖️ 0点前上床 + 评分 ${scoreValue}（70~89），不奖不扣`, kind: "neutral" };
-        else return { change: -3, text: `❌ 0点前上床 + 评分 ${scoreValue} < 70，扣 3 张`, kind: "punish" };
-      } else if (bedtime === "midnight_to_1am") {
-        if (scoreValue >= 70) return { change: 0, text: `⚖️ 0~1点上床 + 评分 ${scoreValue} ≥ 70，不奖不扣`, kind: "neutral" };
-        else return { change: -3, text: `❌ 0~1点上床 + 评分 ${scoreValue} < 70，扣 3 张`, kind: "punish" };
+      // 1点后：无论评分多少有无，直接扣3张
+      if (bedtime === "after_1am") {
+        return { change: -3, text: "🚨 1点后上床，扣 3 张", kind: "punish" };
       }
+      
+      // 0点前
+      if (bedtime === "before_midnight") {
+        if (!hasScore) return { change: 0, text: "⌚ 0点前上床，无评分，不加不扣", kind: "neutral" };
+        if (scoreValue >= 90) return { change: 3, text: `🌙 0点前 + 评分 ${scoreValue} ≥ 90，奖励 3 张`, kind: "reward" };
+        if (scoreValue >= 80) return { change: 2, text: `🌙 0点前 + 评分 ${scoreValue} ≥ 80，奖励 2 张`, kind: "reward" };
+        if (scoreValue >= 70) return { change: 1, text: `🌙 0点前 + 评分 ${scoreValue} ≥ 70，奖励 1 张`, kind: "reward" };
+        return { change: 0, text: `⚖️ 0点前 + 评分 ${scoreValue} < 70，不加不扣`, kind: "neutral" };
+      }
+      
+      // 0点至1点
+      if (bedtime === "midnight_to_1am") {
+        if (!hasScore) return { change: 0, text: "⌚ 0~1点上床，无评分，不加不扣", kind: "neutral" };
+        if (scoreValue >= 90) return { change: 2, text: `🌃 0~1点 + 评分 ${scoreValue} ≥ 90，奖励 2 张`, kind: "reward" };
+        if (scoreValue >= 80) return { change: 1, text: `🌃 0~1点 + 评分 ${scoreValue} ≥ 80，奖励 1 张`, kind: "reward" };
+        if (scoreValue < 60) return { change: -1, text: `❌ 0~1点 + 评分 ${scoreValue} < 60，扣 1 张`, kind: "punish" };
+        return { change: 0, text: `⚖️ 0~1点 + 评分 ${scoreValue}（60~79），不加不扣`, kind: "neutral" };
+      }
+      
       return { change: 0, text: "不加不减", kind: "neutral" };
     }
+
     function setupSleepConverter() {
       const bedtime = document.getElementById("sleepBedtime"); const score = document.getElementById("sleepScore");
       const person = document.getElementById("sleepPerson"); const result = document.getElementById("sleepResult");
@@ -2227,7 +2285,7 @@
       });
     }
 
-    /* ==================== ★ TRANSFER CONVERTER (NEW) ==================== */
+    /* ==================== TRANSFER CONVERTER ==================== */
     function setupTransferConverter() {
       const fromSel = document.getElementById("transferFrom");
       const toInput = document.getElementById("transferTo");
@@ -2268,7 +2326,6 @@
         btn.disabled = true; btn.textContent = "转移中...";
         const reasonText = reason ? `🔄 转移：${reason}` : "🔄 自由卡转移";
         
-        // Deduct from sender
         const { error: err1 } = await sb.from("freecard_log").insert({
           operator: from, change_type: "减少", card_num: cards,
           reason: `${reasonText}（转给${to}）`
@@ -2278,7 +2335,6 @@
           btn.disabled = false; btn.textContent = "确认转移"; return;
         }
         
-        // Add to receiver
         const { error: err2 } = await sb.from("freecard_log").insert({
           operator: to, change_type: "增加", card_num: cards,
           reason: `${reasonText}（来自${from}）`
@@ -2288,7 +2344,7 @@
           showToast("接收方入账失败，请检查数据", "error"); return;
         }
         
-        trackEvent(from, 'redeem'); // treat as spend for mood
+        trackEvent(from, 'redeem');
         trackEvent(to, 'earn');
         showToast(`转移成功！${from} → ${to} ${cards}张`, "success");
         spawnParticles(1);
@@ -2319,6 +2375,29 @@
       });
     }
 
+    /* ==================== ★ WEALTH TIER SYSTEM ==================== */
+    function getWealthTier(balance) {
+      if (balance >= 80) return { label: "富豪", cls: "wealth-king", emoji: "👑" };
+      if (balance >= 40) return { label: "富翁", cls: "wealth-tycoon", emoji: "💎" };
+      if (balance >= 25) return { label: "富裕", cls: "wealth-rich", emoji: "🤑" };
+      if (balance >= 15) return { label: "中产", cls: "wealth-middle", emoji: "🏡" };
+      if (balance >= 7)  return { label: "小康", cls: "wealth-comfort", emoji: "🌿" };
+      if (balance >= 3)  return { label: "温饱", cls: "wealth-basic", emoji: "🍞" };
+      return { label: "贫困", cls: "wealth-poor", emoji: "🥺" };
+    }
+
+    function updateWealthBadges() {
+      ["Torie", "Jory"].forEach(person => {
+        const balance = calcBalance(person);
+        const tier = getWealthTier(balance);
+        const badgeEl = document.getElementById(`${person.toLowerCase()}WealthBadge`);
+        if (badgeEl) {
+          badgeEl.className = `wealth-badge ${tier.cls}`;
+          badgeEl.textContent = `${tier.emoji} ${tier.label}`;
+        }
+      });
+    }
+
     /* ==================== DATA LOADING ==================== */
     async function loadLogs() {
       const {data,error}=await sb.from("freecard_log").select("*").order("created_at",{ascending:false});
@@ -2333,11 +2412,16 @@
     function refreshAll() {
       updateBalances(); updateSpirits(); updateEnergyUI(); updateHistoryFilterOptions();
       renderStats(); renderHistory(); renderWeeklyCard(); renderTrendCard();
+      updateWealthBadges(); // ★ UPDATE WEALTH BADGES ON REFRESH
       const bt = document.getElementById("bankTorieBal"); const bj = document.getElementById("bankJoryBal");
       if (bt) bt.textContent = calcBalance("Torie"); if (bj) bj.textContent = calcBalance("Jory");
     }
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
-    function updateBalances() { document.getElementById("torieBalance").textContent=calcBalance("Torie"); document.getElementById("joryBalance").textContent=calcBalance("Jory"); }
+    function updateBalances() { 
+      document.getElementById("torieBalance").textContent=calcBalance("Torie"); 
+      document.getElementById("joryBalance").textContent=calcBalance("Jory"); 
+      updateWealthBadges(); // ★ ALSO UPDATE WHEN BALANCES CHANGE
+    }
 
     /* ==================== DELETE LOG (WITH FEED ROLLBACK) ==================== */
     async function deleteLog(id) {
@@ -2376,7 +2460,7 @@
       setupNav(); setupBankNav(); setupPeriodTabs(); setupPerspectiveTabs(); setupHistoryFilter();
       setupAddProduct(); setupAddEarn(); setupAddPunish();
       setupUniversalConverter(); setupSleepConverter(); setupLateConverter();
-      setupSuperviseConverter(); setupTransferConverter(); // ★ NEW
+      setupSuperviseConverter(); setupTransferConverter();
       setupRecharge(); setupChartInteraction(); checkSpecialDate();
       await loadPetStates(); startEnergySync();
       await loadLogs(); await loadProducts();
