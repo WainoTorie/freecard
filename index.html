@@ -706,12 +706,12 @@
             <span class="setting-icon">📱</span>
             <span class="setting-label">版本号</span>
           </div>
-          <span class="setting-value">v3.2</span>
+          <span class="setting-value">v3.3</span>
         </div>
       </div>
       
       <div class="about-section">
-        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.2</span></div>
+        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.3</span></div>
         <div>记录每一次获得，也记录每一次自由 ✨</div>
         <div style="margin-top:4px; opacity:0.7;">Made with ❤️ for Torie & Jory</div>
       </div>
@@ -901,6 +901,8 @@
             <button class="converter-type-btn" data-ctype="sleep"><span class="ctb-emoji">😴</span>睡眠</button>
             <button class="converter-type-btn" data-ctype="supervise"><span class="ctb-emoji">👀</span>监督</button>
             <button class="converter-type-btn" data-ctype="transfer"><span class="ctb-emoji">🔄</span>转移</button>
+            <button class="converter-type-btn" data-ctype="debt"><span class="ctb-emoji">🧾</span>欠条</button>
+            <button class="converter-type-btn" data-ctype="finance"><span class="ctb-emoji">🎰</span>理财</button>
           </div>
 
           <div id="bankConverterPanel" class="converter-unified-panel">
@@ -1023,6 +1025,39 @@
             </div>
             <div id="transferPreview" class="transfer-preview"></div>
             <button id="transferSubmitBtn" class="submit-btn" disabled>确认转移</button>
+          </div>
+
+          <div id="bankDebtPanel" class="converter-unified-panel" style="display:none">
+            <div class="converter-header"><h3 class="section-title" style="margin:0">🧾 欠条 / 分期还款</h3></div>
+            <div id="debtStatus" class="sleep-rules-info">正在读取欠条状态…</div>
+            <div class="form-grid" style="margin-top:12px">
+              <div class="form-group"><label for="debtPerson">借款人</label><select id="debtPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
+              <div class="form-group"><label for="debtBorrowAmount">借入自由卡张数</label><input id="debtBorrowAmount" type="number" min="1" max="999" step="1" placeholder="例如 5" /></div>
+            </div>
+            <button id="debtBorrowBtn" class="submit-btn" disabled>确认借入</button>
+            <div class="divider" style="margin:18px 0;border-top:1px solid var(--border)"></div>
+            <div class="form-grid">
+              <div class="form-group"><label for="debtRepayPerson">还款人</label><select id="debtRepayPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
+              <div class="form-group"><label for="debtRepayAmount">本次抵消欠款（张）</label><input id="debtRepayAmount" type="number" min="1" max="999" step="1" placeholder="每 2 张自由卡还 1 张欠款" /></div>
+            </div>
+            <div id="debtRepayPreview" class="converter-result" style="display:none"></div>
+            <button id="debtRepayBtn" class="submit-btn green" disabled>确认分期还款</button>
+          </div>
+
+          <div id="bankFinancePanel" class="converter-unified-panel" style="display:none">
+            <div class="converter-header"><h3 class="section-title" style="margin:0">🎰 理财抽奖</h3></div>
+            <div class="form-grid">
+              <div class="form-group"><label for="lotteryPerson">选择账户</label><select id="lotteryPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
+              <div class="form-group"><label>当前自由卡余额</label><div id="lotteryBalance" class="converter-result" style="margin:0">0 张</div></div>
+            </div>
+            <div class="feed-modal-info" style="margin-top:12px">
+              <div class="feed-info-item"><span class="feed-info-label">剩余抽奖次数</span><span id="lotteryTickets" class="feed-info-value">读取中…</span></div>
+              <div class="feed-info-item"><span class="feed-info-label">每次参与门槛</span><span class="feed-info-value">余额至少 12 张</span></div>
+            </div>
+            <div class="form-group"><label for="lotteryMultiplier">选择消耗张数（倍率）</label><select id="lotteryMultiplier"><option value="1">1 张 ×1</option><option value="2">2 张 ×2</option><option value="3">3 张 ×3</option></select></div>
+            <div class="sleep-rules-info" style="margin-top:12px">基础结果与概率：<br>+3（5%） · +2（13%） · +1（39%） · 0（10%）<br>−1（20%） · −2（10%） · −3（3%）<br>最终变动 = 基础结果 × 所选倍率；每次抽奖独立随机。</div>
+            <div id="lotteryResult" class="converter-result" style="display:none"></div>
+            <button id="lotteryDrawBtn" class="submit-btn" disabled>🎲 抽奖</button>
           </div>
 
         </div>
@@ -2263,9 +2298,9 @@
           const latePanel = document.getElementById("bankLatePanel"); const sleepPanel = document.getElementById("bankSleepPanel");
           const supervisePanel = document.getElementById("bankSupervisePanel"); const commonPanel = document.getElementById("bankConverterPanel");
           const transferPanel = document.getElementById("bankTransferPanel");
-          
+          const debtPanel = document.getElementById("bankDebtPanel"); const financePanel = document.getElementById("bankFinancePanel");
           commonPanel.style.display = "none"; latePanel.style.display = "none"; sleepPanel.style.display = "none";
-          supervisePanel.style.display = "none"; transferPanel.style.display = "none";
+          supervisePanel.style.display = "none"; transferPanel.style.display = "none"; debtPanel.style.display = "none"; financePanel.style.display = "none";
 
           if (currentConverterType === "late") {
             latePanel.style.display = "block"; document.getElementById("lateInput").value = "";
@@ -2282,6 +2317,10 @@
             transferPanel.style.display = "block"; document.getElementById("transferCards").value = "";
             document.getElementById("transferReason").value = ""; document.getElementById("transferPreview").style.display = "none";
             document.getElementById("transferSubmitBtn").disabled = true; updateTransferPreview();
+          } else if (currentConverterType === "debt") {
+            debtPanel.style.display = "block"; refreshDebtUI();
+          } else if (currentConverterType === "finance") {
+            financePanel.style.display = "block"; refreshLotteryUI();
           } else {
             const config = CONVERTER_TYPES[currentConverterType]; commonPanel.style.display = "block";
             panelTitle.innerHTML = `${config.emoji} ${config.label}换算`;
@@ -2493,6 +2532,96 @@
       });
     }
 
+    /* ==================== DEBT + LOTTERY FEATURES ==================== */
+    let featureStates = { Torie: { debt_cards: 0, lottery_tickets: 0 }, Jory: { debt_cards: 0, lottery_tickets: 0 } };
+    let featureStateReady = false;
+    async function loadFeatureStates() {
+      const { data, error } = await sb.from("freecard_feature_state").select("owner,debt_cards,lottery_tickets");
+      if (error) { showToast("读取欠条/理财数据失败：请先执行附带 SQL 建表", "error"); return false; }
+      (data || []).forEach(r => { if (featureStates[r.owner]) featureStates[r.owner] = { debt_cards: Number(r.debt_cards)||0, lottery_tickets: Number(r.lottery_tickets)||0 }; });
+      featureStateReady = true; refreshDebtUI(); refreshLotteryUI(); return true;
+    }
+    async function saveFeatureState(person, patch) {
+      // Update only requested columns so the database trigger's ticket increments are not overwritten.
+      const { error } = await sb.from("freecard_feature_state").update({ ...patch, updated_at: new Date().toISOString() }).eq("owner", person);
+      if (error) { showToast("保存失败：" + error.message, "error"); return false; }
+      featureStates[person] = { ...featureStates[person], ...patch };
+      refreshDebtUI(); refreshLotteryUI(); return true;
+    }
+    function refreshDebtUI() {
+      const person = document.getElementById("debtPerson")?.value || "Torie";
+      const state = featureStates[person] || {debt_cards:0}; const debt = Number(state.debt_cards)||0;
+      const status = document.getElementById("debtStatus"); if (!status) return;
+      status.textContent = featureStateReady ? (debt > 0 ? `${person} 当前欠款：${debt} 张。还清前不能再次借款；每支付 2 张自由卡，可抵消 1 张欠款。全部还清后才能重新借款。` : `${person} 当前没有欠款。可借入自由卡；借入后需按 1:2 比例还款。`) : "请先完成 Supabase 建表并刷新页面。";
+      const borrow = document.getElementById("debtBorrowBtn"); const amount = parseInt(document.getElementById("debtBorrowAmount")?.value)||0;
+      if (borrow) borrow.disabled = !featureStateReady || debt > 0 || amount <= 0;
+      updateDebtRepayPreview();
+    }
+    function updateDebtRepayPreview() {
+      const person = document.getElementById("debtRepayPerson")?.value || "Torie";
+      const debt = Number(featureStates[person]?.debt_cards)||0; const amount = parseInt(document.getElementById("debtRepayAmount")?.value)||0;
+      const preview = document.getElementById("debtRepayPreview"); const btn = document.getElementById("debtRepayBtn"); if (!preview || !btn) return;
+      const cards = amount * 2; const valid = featureStateReady && amount > 0 && amount <= debt && calcBalance(person) >= cards;
+      if (amount > 0) { preview.style.display="block"; preview.textContent=`本次消耗 ${cards} 张自由卡，欠款减少 ${amount} 张；剩余欠款 ${Math.max(0,debt-amount)} 张。`; }
+      else preview.style.display="none";
+      btn.disabled = !valid;
+    }
+    function setupDebtFeature() {
+      const person = document.getElementById("debtPerson"), amount = document.getElementById("debtBorrowAmount"), borrow = document.getElementById("debtBorrowBtn");
+      const repayPerson = document.getElementById("debtRepayPerson"), repayAmount = document.getElementById("debtRepayAmount"), repay = document.getElementById("debtRepayBtn");
+      person.addEventListener("change", refreshDebtUI); amount.addEventListener("input", refreshDebtUI); repayPerson.addEventListener("change", updateDebtRepayPreview); repayAmount.addEventListener("input", updateDebtRepayPreview);
+      borrow.addEventListener("click", async () => {
+        const who=person.value, n=parseInt(amount.value)||0; if(n<1) return;
+        if ((featureStates[who]?.debt_cards||0)>0) return showToast("还有欠款未还清，不能再次打欠条", "error");
+        borrow.disabled=true;
+        const {error}=await sb.from("freecard_log").insert({operator:who,change_type:"增加",card_num:n,reason:`🧾 借条借入 ${n} 张`});
+        if(error){showToast("借入失败："+error.message,"error");refreshDebtUI();return;}
+        if(!await saveFeatureState(who,{debt_cards:n})){ await loadLogs(); return; }
+        amount.value=""; await loadLogs(); showToast(`已借入 ${n} 张自由卡`,"success");
+      });
+      repay.addEventListener("click", async () => {
+        const who=repayPerson.value, n=parseInt(repayAmount.value)||0, debt=Number(featureStates[who]?.debt_cards)||0;
+        if(n<1||n>debt||calcBalance(who)<n*2) return showToast("还款张数或余额不符合要求", "error");
+        repay.disabled=true;
+        const {error}=await sb.from("freecard_log").insert({operator:who,change_type:"减少",card_num:n*2,reason:`🧾 欠条分期还款：支付 ${n*2} 张，抵消 ${n} 张欠款`});
+        if(error){showToast("还款失败："+error.message,"error");updateDebtRepayPreview();return;}
+        if(!await saveFeatureState(who,{debt_cards:debt-n})){ await loadLogs(); return; }
+        repayAmount.value=""; await loadLogs(); showToast(`还款成功，欠款减少 ${n} 张`,"success");
+      });
+    }
+    function refreshLotteryUI() {
+      const who = document.getElementById("lotteryPerson")?.value || "Torie";
+      const tickets = Number(featureStates[who]?.lottery_tickets)||0, balance=calcBalance(who);
+      const t=document.getElementById("lotteryTickets"), b=document.getElementById("lotteryBalance"), btn=document.getElementById("lotteryDrawBtn");
+      if(!t||!b||!btn)return; t.textContent=featureStateReady?`${tickets} 次`:"读取中…"; b.textContent=`${balance} 张`;
+      const multiplier=parseInt(document.getElementById("lotteryMultiplier")?.value)||1;
+      btn.disabled=!featureStateReady || tickets<1 || balance<12 || balance<multiplier;
+    }
+    function weightedLotteryResult() {
+      const r=Math.random()*100;
+      if(r<5)return 3; if(r<18)return 2; if(r<57)return 1; if(r<67)return 0; if(r<87)return -1; if(r<97)return -2; return -3;
+    }
+    function setupLotteryFeature() {
+      document.getElementById("lotteryPerson").addEventListener("change",refreshLotteryUI);
+      document.getElementById("lotteryMultiplier").addEventListener("change",refreshLotteryUI);
+      document.getElementById("lotteryDrawBtn").addEventListener("click",async()=>{
+        const who=document.getElementById("lotteryPerson").value, mult=parseInt(document.getElementById("lotteryMultiplier").value)||1;
+        const tickets=Number(featureStates[who]?.lottery_tickets)||0, balance=calcBalance(who);
+        if(balance<12)return showToast("自由卡余额需至少 12 张才能抽奖","error");
+        if(tickets<1)return showToast("抽奖次数不足","error"); if(mult<1||mult>3||balance<mult)return showToast("余额不足以支付所选倍率","error");
+        const btn=document.getElementById("lotteryDrawBtn"); btn.disabled=true; btn.textContent="抽奖中…";
+        // Spend the draw ticket first, then record the independent random result.
+        if(!await saveFeatureState(who,{lottery_tickets:tickets-1})){btn.textContent="🎲 抽奖";refreshLotteryUI();return;}
+        const base=weightedLotteryResult(), change=base*mult;
+        if(change!==0){ const {error}=await sb.from("freecard_log").insert({operator:who,change_type:change>0?"增加":"减少",card_num:Math.abs(change),reason:`🎰 理财抽奖：基础结果 ${base>0?"+":""}${base} × 倍率 ${mult} = ${change>0?"+":""}${change}`});
+          if(error){await saveFeatureState(who,{lottery_tickets:tickets});showToast("抽奖结果入账失败，已尝试退回次数："+error.message,"error");btn.textContent="🎲 抽奖";refreshLotteryUI();return;}
+        }
+        const result=document.getElementById("lotteryResult"); result.style.display="block"; result.className="converter-result"+(change<0?" danger":"");
+        result.textContent=`抽中基础结果 ${base>0?"+":""}${base}，倍率 ×${mult}，自由卡${change>0?"增加":"减少"} ${Math.abs(change)} 张。`;
+        btn.textContent="🎲 抽奖"; await loadLogs(); await loadFeatureStates(); refreshLotteryUI(); showToast("抽奖完成！","success");
+      });
+    }
+
     /* ==================== RECHARGE ==================== */
     function setupRecharge() {
       const input = document.getElementById("rechargeAmount"); const person = document.getElementById("rechargePerson");
@@ -2542,6 +2671,7 @@
       const {data,error}=await sb.from("freecard_log").select("*").order("created_at",{ascending:false});
       if(error){showToast("读取记录失败："+error.message,"error");return;}
       allLogs=data||[]; refreshAll();
+      if (featureStateReady) await loadFeatureStates();
     }
     async function loadProducts() {
       const {data,error}=await sb.from("freecard_shop").select("*").order("created_at",{ascending:true});
@@ -2554,6 +2684,7 @@
       updateWealthBadges();
       const bt = document.getElementById("bankTorieBal"); const bj = document.getElementById("bankJoryBal");
       if (bt) bt.textContent = calcBalance("Torie"); if (bj) bj.textContent = calcBalance("Jory");
+      if (typeof refreshLotteryUI === "function") refreshLotteryUI(); if (typeof refreshDebtUI === "function") refreshDebtUI();
     }
     function calcBalance(op) { return allLogs.filter((l)=>l.operator===op).reduce((total,l)=>total+(l.change_type==="增加"?Number(l.card_num)||0:-(Number(l.card_num)||0)),0); }
     function updateBalances() { 
@@ -2583,6 +2714,35 @@
       }
       const { error } = await sb.from("freecard_log").delete().eq("id", id);
       if (error) return showToast("删除失败", "error");
+
+      // Keep the separate feature-state table in sync when a related ledger row is deleted.
+      // Borrow/repayment ledger rows are the source of truth for reversing debt changes.
+      const reason = String(log.reason || "");
+      const person = log.operator;
+      if (featureStateReady && (reason.includes("借条借入") || reason.includes("欠条分期还款"))) {
+        const currentDebt = Number(featureStates[person]?.debt_cards) || 0;
+        let nextDebt = currentDebt;
+        if (reason.includes("借条借入")) {
+          nextDebt = Math.max(0, currentDebt - (Number(log.card_num) || 0));
+        } else {
+          const match = reason.match(/抵消\s*(\d+)\s*张欠款/);
+          const repaid = match ? Number(match[1]) : 0;
+          nextDebt = currentDebt + repaid;
+        }
+        await saveFeatureState(person, { debt_cards: nextDebt });
+      }
+
+      // Undo the ticket granted by a deleted qualifying positive ledger entry.
+      // For a deleted lottery-result entry, also restore the ticket spent on that draw.
+      if (featureStateReady && log.change_type === "增加" && (Number(log.card_num) || 0) > 0 && !reason.includes("充值")) {
+        const currentTickets = Number(featureStates[person]?.lottery_tickets) || 0;
+        await saveFeatureState(person, { lottery_tickets: Math.max(0, currentTickets - 1) });
+      }
+      if (featureStateReady && reason.includes("🎰 理财抽奖")) {
+        const currentTickets = Number(featureStates[person]?.lottery_tickets) || 0;
+        await saveFeatureState(person, { lottery_tickets: currentTickets + 1 });
+      }
+
       showToast("已删除", "success"); await loadLogs(); updateEnergyUI(); updateSpirits();
     }
 
@@ -2599,10 +2759,10 @@
       setupNav(); setupBankNav(); setupPeriodTabs(); setupPerspectiveTabs(); setupHistoryFilter();
       setupAddProduct(); setupAddEarn(); setupAddPunish();
       setupUniversalConverter(); setupSleepConverter(); setupLateConverter();
-      setupSuperviseConverter(); setupTransferConverter();
+      setupSuperviseConverter(); setupTransferConverter(); setupDebtFeature(); setupLotteryFeature();
       setupRecharge(); setupChartInteraction(); checkSpecialDate();
       await loadPetStates(); startEnergySync();
-      await loadLogs(); await loadProducts();
+      await loadLogs(); await loadProducts(); await loadFeatureStates();
       sb.channel("freecard-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_log"},()=>loadLogs()).subscribe();
       sb.channel("shop-realtime").on("postgres_changes",{event:"*",schema:"public",table:"freecard_shop"},()=>loadProducts()).subscribe();
       document.addEventListener("visibilitychange", handleVisibilityChange);
