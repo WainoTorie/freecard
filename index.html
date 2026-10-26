@@ -10,7 +10,7 @@
       --bg: #f2f2f7; --bg-tint: #f2f2f7; --card: #ffffff; --card-trans: rgba(255, 255, 255, 0.88);
       --text-1: #1d1d1f; --text-2: #86868b; --text-3: #aeaeb2;
       --border: rgba(0, 0, 0, 0.06); --separator: rgba(0,0,0,0.08);
-      --torie: #007aff; --jory: #ff9500; --green: #34c759; --red: #ff3b30;
+      --torie: #007aff; --jory: #ff9500; --green: #34c759; --red: #ff3b30; --blue: #007aff;
       --r-lg: 16px; --r-md: 12px; --r-sm: 8px;
       --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
@@ -18,12 +18,8 @@
       --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
       
       /* Wealth Tier Colors */
-      --wealth-poor: #8e8e93;
-      --wealth-basic: #a2845e;
-      --wealth-comfort: #34c759;
-      --wealth-middle: #007aff;
-      --wealth-rich: #af52de;
-      --wealth-tycoon: #ff9500;
+      --wealth-poor: #8e8e93; --wealth-basic: #a2845e; --wealth-comfort: #34c759;
+      --wealth-middle: #007aff; --wealth-rich: #af52de; --wealth-tycoon: #ff9500;
       --wealth-king: linear-gradient(135deg, #ffd700, #ff375f);
     }
     @media (prefers-color-scheme: dark) {
@@ -32,13 +28,10 @@
         --text-1: #f5f5f7; --text-2: #a1a1a6; --text-3: #636366;
         --border: rgba(255, 255, 255, 0.08); --separator: rgba(255,255,255,0.1);
         --shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        --blue: #0a84ff;
         
-        --wealth-poor: #636366;
-        --wealth-basic: #c4a47c;
-        --wealth-comfort: #30d158;
-        --wealth-middle: #0a84ff;
-        --wealth-rich: #bf5af2;
-        --wealth-tycoon: #ff9f0a;
+        --wealth-poor: #636366; --wealth-basic: #c4a47c; --wealth-comfort: #30d158;
+        --wealth-middle: #0a84ff; --wealth-rich: #bf5af2; --wealth-tycoon: #ff9f0a;
         --wealth-king: linear-gradient(135deg, #ffd60a, #ff375f);
       }
     }
@@ -249,7 +242,7 @@
     .chart-container { position: relative; height: 220px; min-width: 100%; border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .chart-canvas { width: 100%; height: 100%; display: block; }
     .chart-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-3); font-size: 13px; pointer-events: none; }
-    .chart-legend { display: flex; justify-content: center; gap: 16px; font-size: 11px; color: var(--text-2); margin-top: 8px; font-weight: 600; }
+    .chart-legend { display: flex; justify-content: center; gap: 12px; font-size: 11px; color: var(--text-2); margin-top: 8px; font-weight: 600; flex-wrap: wrap; }
     .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
 
     .chart-tooltip {
@@ -263,16 +256,31 @@
     .chart-tooltip .tt-reason { font-weight: 600; color: var(--text-1); margin-bottom: 2px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
     .chart-tooltip .tt-val { font-weight: 800; font-size: 14px; }
     .chart-tooltip .tt-val.plus { color: var(--green); }
+    .chart-tooltip .tt-val.recharge { color: var(--blue); }
     .chart-tooltip .tt-val.minus { color: var(--red); }
     .chart-tooltip .tt-bal { color: var(--text-2); font-size: 10px; margin-top: 2px; }
 
-    /* === HISTORY === */
-    .history-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-width: 0; }
-    .history-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .history-filter { width: auto; min-width: 90px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; }
-    .history-person-filter { width: auto; min-width: 76px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 0; font-weight: 700; }
-    .history-search { width: auto; min-width: 120px; flex: 1; max-width: 200px; height: 36px; font-size: 13px; border-radius: var(--r-sm); flex-shrink: 1; padding: 0 10px; }
-    .history-count { font-size: 12px; font-weight: 700; color: var(--text-3); background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap; flex-shrink: 0; }
+    /* === HISTORY (UPDATED) === */
+    .history-header { margin-bottom: 16px; }
+    .history-controls-panel {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-md);
+      padding: 12px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .history-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .history-filter-select {
+      flex: 1; min-width: 0; height: 36px; font-size: 13px; border-radius: var(--r-sm);
+      background: var(--card); border: 1px solid var(--border); padding: 0 8px;
+    }
+    .history-search-input {
+      flex: 2; min-width: 120px; height: 36px; font-size: 13px; border-radius: var(--r-sm);
+      background: var(--card); border: 1px solid var(--border); padding: 0 10px;
+    }
+    .history-count-badge {
+      font-size: 11px; font-weight: 700; color: var(--text-3); background: var(--card);
+      border: 1px solid var(--border); padding: 4px 8px; border-radius: 12px; white-space: nowrap;
+      flex-shrink: 0; margin-left: auto;
+    }
+
     .history-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px 0; border-bottom: 1px solid var(--separator); min-width: 0; width: 100%; align-items: start; position: relative; animation: fadeIn 0.3s ease; }
     .history-item:last-child { border-bottom: none; }
     .history-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; width: 100%; flex-wrap: wrap; }
@@ -283,6 +291,7 @@
     .history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; min-width: 40px; width: auto; position: relative; }
     .history-change { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
     .history-change.plus { color: var(--green); }
+    .history-change.recharge { color: var(--blue); }
     .history-change.minus { color: var(--red); }
     .menu-btn { border: none; background: transparent; color: var(--text-3); font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; line-height: 1; letter-spacing: 2px; }
     .menu-btn:hover, .menu-btn.active { background: var(--bg); color: var(--text-1); }
@@ -470,8 +479,8 @@
       .bank-sub-nav { gap: 8px; }
       .bank-sub-nav-btn { padding: 18px 8px; }
       .converter-type-grid { grid-template-columns: repeat(2, 1fr); }
-      .history-controls { flex-wrap: wrap; }
-      .history-search { min-width: 100px; max-width: none; flex: 1 1 100%; order: 10; margin-top: 4px; }
+      .history-row { flex-wrap: wrap; }
+      .history-search-input { flex: 1 1 100%; order: 10; margin-top: 4px; }
       .feed-stepper { gap: 12px; }
       .stepper-btn { width: 40px; height: 40px; font-size: 18px; }
       .stepper-count { font-size: 28px; }
@@ -697,12 +706,12 @@
             <span class="setting-icon">📱</span>
             <span class="setting-label">版本号</span>
           </div>
-          <span class="setting-value">v3.1</span>
+          <span class="setting-value">v3.2</span>
         </div>
       </div>
       
       <div class="about-section">
-        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.1</span></div>
+        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.2</span></div>
         <div>记录每一次获得，也记录每一次自由 ✨</div>
         <div style="margin-top:4px; opacity:0.7;">Made with ❤️ for Torie & Jory</div>
       </div>
@@ -936,7 +945,6 @@
                 <div class="sleep-no-watch-hint">💡 没戴手表？留空即可，系统按"无评分"处理</div>
               </div>
             </div>
-            <!-- ★ UPDATED SLEEP RULES DISPLAY -->
             <div class="sleep-rules-info">
               <div class="rule-line"><span class="rule-emoji">🚨</span> 1 点后上床 → 无论如何扣 3 张</div>
               <div class="rule-line"><span class="rule-emoji">🌙</span> 0 点前：≥90 +3 | ≥80 +2 | ≥70 +1 | 其余/无评分 不加不扣</div>
@@ -1088,25 +1096,53 @@
             <div id="chartEmpty" class="chart-empty" style="display:none;">暂无足够数据绘制趋势图</div>
           </div>
         </div>
+        <!-- ★ UPDATED LEGEND -->
         <div class="chart-legend">
-          <span><span class="legend-dot" style="background:var(--green)"></span>余额上升</span>
-          <span><span class="legend-dot" style="background:var(--red)"></span>余额下降</span>
+          <span><span class="legend-dot" style="background:var(--green)"></span>赚取</span>
+          <span><span class="legend-dot" style="background:var(--blue)"></span>充值</span>
+          <span><span class="legend-dot" style="background:var(--red)"></span>消费/扣除</span>
         </div>
 
         <div id="statsContent" style="margin-top: 16px;"></div>
       </div>
+      
       <div class="card">
         <div class="history-header">
           <h2 class="section-title">🧾 流水明细</h2>
-          <div class="history-controls">
-            <span id="historyCount" class="history-count">0条</span>
-            <select id="historyPersonFilter" class="history-person-filter">
-              <option value="all">👥 全部</option>
-              <option value="Torie">🦉 Torie</option>
-              <option value="Jory">🐰 Jory</option>
-            </select>
-            <select id="historyFilter" class="history-filter"><option value="all">全部</option></select>
-            <input id="historySearch" class="history-search" type="search" placeholder="🔍 搜索原因/备注..." />
+          
+          <!-- ★ NEW UNIFIED FILTER PANEL -->
+          <div class="history-controls-panel">
+            <div class="history-row">
+              <select id="historyPersonFilter" class="history-filter-select">
+                <option value="all">👥 全部成员</option>
+                <option value="Torie">🦉 Torie</option>
+                <option value="Jory">🐰 Jory</option>
+              </select>
+              
+              <select id="historyCategoryFilter" class="history-filter-select">
+                <option value="all">📂 所有种类</option>
+                <option value="exercise">🔥 运动/健身</option>
+                <option value="study">📖 学习/打卡</option>
+                <option value="sleep">😴 睡眠记录</option>
+                <option value="recharge">💰 充值</option>
+                <option value="redeem">🛒 兑换心愿</option>
+                <option value="punish">⚠️ 惩罚/迟到</option>
+                <option value="interact">🔄 互动/转移</option>
+                <option value="other">📎 其他</option>
+              </select>
+              
+              <span id="historyCount" class="history-count-badge">0条</span>
+            </div>
+            
+            <div class="history-row">
+              <select id="historyTimeFilter" class="history-filter-select">
+                <option value="all">📅 全部时间</option>
+                <option value="today">今日</option>
+                <option value="week">本周</option>
+              </select>
+              
+              <input id="historySearch" class="history-search-input" type="search" placeholder="🔍 搜索备注或详情..." />
+            </div>
           </div>
         </div>
         <div id="historyList" class="history-list"></div>
@@ -1127,7 +1163,10 @@
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let allLogs = [], allProducts = [];
-    let currentPeriod = "today", currentHistoryFilter = "all";
+    let currentPeriod = "today";
+    // ★ UPDATED FILTER VARIABLES
+    let currentHistoryTimeFilter = "all"; 
+    let currentHistoryCategory = "all";
     let currentHistorySearch = "";
     let currentHistoryPerson = "all";
     let currentPerspective = "torie";
@@ -1780,7 +1819,6 @@
     }
     function selectBankPerson(person) { bankPerson = person; applyBgTint(person); updateBankPersonBadges(); showBankStep(2); }
     function selectBankSection(section) {
-      // ★ CHECK FASTING STATE BEFORE ENTERING SHOP
       if (section === "shop" && petStates[bankPerson] && petStates[bankPerson].is_fasting) {
         showToast(`${bankPerson} 的宠物正在绝食，请先哄好再兑换！`, "error");
         openFastingModal(bankPerson);
@@ -1842,11 +1880,15 @@
         });
       });
     }
+    
+    // ★ UPDATED HISTORY FILTER SETUP
     function setupHistoryFilter() {
       document.getElementById("historyPersonFilter").addEventListener("change",(e)=>{ currentHistoryPerson = e.target.value; renderHistory(); });
-      document.getElementById("historyFilter").addEventListener("change",(e)=>{currentHistoryFilter=e.target.value;renderHistory();});
+      document.getElementById("historyCategoryFilter").addEventListener("change",(e)=>{ currentHistoryCategory = e.target.value; renderHistory(); });
+      document.getElementById("historyTimeFilter").addEventListener("change",(e)=>{ currentHistoryTimeFilter = e.target.value; renderHistory(); });
       document.getElementById("historySearch").addEventListener("input",(e)=>{currentHistorySearch=e.target.value.trim().toLowerCase();renderHistory();});
     }
+    
     function getStartOfToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
     function getStartOfMonth() { const d=new Date(); d.setHours(0,0,0,0); d.setDate(1); return d; }
     function filterByPeriod(logs,period) { if(period==="all") return logs; const map={today:getStartOfToday,week:getStartOfWeekDate,month:getStartOfMonth}; return logs.filter((l)=>new Date(l.created_at)>=map[period]()); }
@@ -1877,6 +1919,11 @@
       `;
     }
 
+    // ★ HELPER: IDENTIFY RECHARGE VS EARN
+    function isRechargeLog(log) {
+      return log.change_type === "增加" && log.reason && log.reason.includes("💰 充值");
+    }
+
     function drawBalanceChart(logs, perspective) {
       const scrollContainer = document.getElementById("chartScrollContainer");
       const container = document.getElementById("chartContainer");
@@ -1894,15 +1941,27 @@
       }
       if (currentPeriod === "today") {
         let runningBalance = baseBalance;
-        points.push({ label: "0点", balance: baseBalance, delta: 0, logData: null, timeStr: "00:00" });
-        pLogs.forEach(l => { const n = Number(l.card_num) || 0; const delta = l.change_type === "增加" ? n : -n; runningBalance += delta; const d = new Date(l.created_at); const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; points.push({ label: timeStr, balance: runningBalance, delta: delta, logData: l, timeStr: timeStr }); });
+        points.push({ label: "0点", balance: baseBalance, delta: 0, logData: null, timeStr: "00:00", type: 'neutral' });
+        pLogs.forEach(l => { 
+          const n = Number(l.card_num) || 0; 
+          const delta = l.change_type === "增加" ? n : -n; 
+          runningBalance += delta; 
+          const d = new Date(l.created_at); 
+          const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; 
+          // ★ DETERMINE LINE COLOR TYPE
+          let type = 'down';
+          if (l.change_type === "增加") {
+            type = isRechargeLog(l) ? 'recharge' : 'up';
+          }
+          points.push({ label: timeStr, balance: runningBalance, delta: delta, logData: l, timeStr: timeStr, type: type }); 
+        });
         const minW = Math.max(points.length * 60, container.parentElement.clientWidth); container.style.minWidth = minW + "px";
       } else {
         const dayMap = {}; const dayLogs = {}; 
         pLogs.forEach(l => { const ld = new Date(l.created_at); const key = `${ld.getFullYear()}-${String(ld.getMonth()+1).padStart(2,'0')}-${String(ld.getDate()).padStart(2,'0')}`; if (!dayMap[key]) { dayMap[key] = 0; dayLogs[key] = []; } const n = Number(l.card_num) || 0; dayMap[key] += l.change_type === "增加" ? n : -n; dayLogs[key].push(l); });
         const dates = Object.keys(dayMap).sort();
         if (dates.length === 0) { emptyHint.style.display = "flex"; c.clearRect(0, 0, cvs.width, cvs.height); chartPointsCache = []; return; }
-        dates.forEach(key => { const parts = key.split('-'); const label = `${parseInt(parts[1])}/${parseInt(parts[2])}`; points.push({ label, balance: dayMap[key], delta: dayMap[key], logData: null, dayLogs: dayLogs[key], dateKey: key }); });
+        dates.forEach(key => { const parts = key.split('-'); const label = `${parseInt(parts[1])}/${parseInt(parts[2])}`; points.push({ label, balance: dayMap[key], delta: dayMap[key], logData: null, dayLogs: dayLogs[key], dateKey: key, type: dayMap[key] >= 0 ? 'up' : 'down' }); });
         const minW = Math.max(points.length * 40, container.parentElement.clientWidth); container.style.minWidth = minW + "px";
       }
       if (points.length === 0) { emptyHint.style.display = "flex"; c.clearRect(0, 0, cvs.width, cvs.height); chartPointsCache = []; return; }
@@ -1921,6 +1980,8 @@
       const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#aeaeb2';
       const greenColor = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#34c759';
       const redColor = getComputedStyle(document.documentElement).getPropertyValue('--red').trim() || '#ff3b30';
+      const blueColor = getComputedStyle(document.documentElement).getPropertyValue('--blue').trim() || '#007aff';
+      
       c.strokeStyle = gridColor; c.lineWidth = 0.5;
       for (let i = 0; i <= 4; i++) { const y = padT + (chartH / 4) * i; c.beginPath(); c.moveTo(padL, y); c.lineTo(W - padR, y); c.stroke(); }
       if (minVal < 0 && maxVal > 0) { const zeroY = getY(0); c.strokeStyle = textColor; c.lineWidth = 1; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(padL, zeroY); c.lineTo(W - padR, zeroY); c.stroke(); c.setLineDash([]); }
@@ -1930,11 +1991,34 @@
       const labelStep = Math.max(1, Math.floor(points.length / 8));
       points.forEach((p, i) => { if (i % labelStep === 0 || i === points.length - 1) { c.fillText(p.label, getX(i), H - padB + 8); } });
       chartPointsCache = points.map((p, i) => ({ x: getX(i), y: getY(currentPeriod === "today" ? p.balance : p.balance), point: p }));
+      
       if (points.length >= 2) {
         c.lineWidth = 2.5; c.lineJoin = 'round'; c.lineCap = 'round';
-        for (let i = 1; i < points.length; i++) { const x0 = getX(i - 1), y0 = getY(values[i - 1]); const x1 = getX(i), y1 = getY(values[i]); const isUp = values[i] >= values[i - 1]; c.strokeStyle = isUp ? greenColor : redColor; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); }
+        for (let i = 1; i < points.length; i++) { 
+          const x0 = getX(i - 1), y0 = getY(values[i - 1]); 
+          const x1 = getX(i), y1 = getY(values[i]); 
+          // ★ MULTI-COLOR LINE LOGIC
+          let strokeColor = redColor; // Default down
+          const pType = points[i].type;
+          if (pType === 'up') strokeColor = greenColor;
+          else if (pType === 'recharge') strokeColor = blueColor;
+          
+          c.strokeStyle = strokeColor; 
+          c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); 
+        }
         c.globalAlpha = 0.06; c.beginPath(); c.moveTo(getX(0), getY(values[0])); for (let i = 1; i < points.length; i++) { c.lineTo(getX(i), getY(values[i])); } c.lineTo(getX(points.length - 1), padT + chartH); c.lineTo(getX(0), padT + chartH); c.closePath(); c.fillStyle = currentPeriod === "today" ? greenColor : (values[values.length-1] >= 0 ? greenColor : redColor); c.fill(); c.globalAlpha = 1;
-        chartPointsCache.forEach((cp, i) => { const prevVal = i > 0 ? values[i-1] : values[i]; const isUp = values[i] >= prevVal; const dotColor = isUp ? greenColor : redColor; c.fillStyle = dotColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); c.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff'; c.beginPath(); c.arc(cp.x, cp.y, 2, 0, Math.PI * 2); c.fill(); });
+        chartPointsCache.forEach((cp, i) => { 
+          const prevVal = i > 0 ? values[i-1] : values[i]; 
+          const isUp = values[i] >= prevVal; 
+          // Dot color matches line color
+          let dotColor = redColor;
+          const pType = points[i].type;
+          if (pType === 'up') dotColor = greenColor;
+          else if (pType === 'recharge') dotColor = blueColor;
+          
+          c.fillStyle = dotColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); 
+          c.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff'; c.beginPath(); c.arc(cp.x, cp.y, 2, 0, Math.PI * 2); c.fill(); 
+        });
       } else if (points.length === 1) { const cp = chartPointsCache[0]; c.fillStyle = greenColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); }
     }
 
@@ -1948,7 +2032,15 @@
         chartPointsCache.forEach(cp => { const dist = Math.sqrt((cp.x - x) ** 2 + (cp.y - y) ** 2); if (dist < minDist) { minDist = dist; nearest = cp; } });
         if (nearest && minDist < 30) {
           const p = nearest.point; let html = '';
-          if (currentPeriod === "today" && p.logData) { const isPlus = p.logData.change_type === "增加"; const sign = isPlus ? "+" : "−"; const cls = isPlus ? "plus" : "minus"; html = `<div class="tt-time">${p.timeStr}</div><div class="tt-reason">${esc(p.logData.reason || '—')}</div><div class="tt-val ${cls}">${sign}${Number(p.logData.card_num)}</div><div class="tt-bal">余额: ${p.balance}</div>`; }
+          if (currentPeriod === "today" && p.logData) { 
+            const isPlus = p.logData.change_type === "增加"; 
+            const sign = isPlus ? "+" : "−"; 
+            // ★ TOOLTIP COLOR CLASS
+            let valClass = "minus";
+            if (isPlus) valClass = isRechargeLog(p.logData) ? "recharge" : "plus";
+            
+            html = `<div class="tt-time">${p.timeStr}</div><div class="tt-reason">${esc(p.logData.reason || '—')}</div><div class="tt-val ${valClass}">${sign}${Number(p.logData.card_num)}</div><div class="tt-bal">余额: ${p.balance}</div>`; 
+          }
           else if (currentPeriod === "today" && !p.logData) { html = `<div class="tt-time">${p.timeStr}</div><div class="tt-reason">今日起始余额</div><div class="tt-bal">余额: ${p.balance}</div>`; }
           else { const isPlus = p.delta >= 0; const sign = isPlus ? "+" : "−"; const cls = isPlus ? "plus" : "minus"; html = `<div class="tt-time">${p.label}</div><div class="tt-reason">日净积累</div><div class="tt-val ${cls}">${sign}${Math.abs(p.delta)}</div>`; }
           tooltip.innerHTML = html;
@@ -1969,15 +2061,40 @@
     }
 
     /* ==================== HISTORY ==================== */
+    // ★ REMOVED OLD MONTH FILTER LOGIC, REPLACED WITH CATEGORY/TIME LOGIC
     function updateHistoryFilterOptions() {
-      const select=document.getElementById("historyFilter"), months=new Set();
-      allLogs.forEach((l)=>{const d=new Date(l.created_at);months.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`);});
-      const sorted=[...months].sort((a,b)=>b.localeCompare(a)), current=currentHistoryFilter;
-      let html = '<option value="all">全部</option>'; html += '<option value="today">今日</option>'; html += '<option value="week">本周</option>';
-      sorted.forEach((key)=>{const[y,m]=key.split("-");html += `<option value="${key}">${y}年${Number(m)}月</option>`;});
-      select.innerHTML = html;
-      if([...select.options].some((o)=>o.value===current)) select.value=current; else { currentHistoryFilter="all"; select.value="all"; }
+      // No longer need dynamic month population as we use fixed categories and time ranges
+      // But we keep the function signature for compatibility if called elsewhere
     }
+
+    // ★ NEW CATEGORY CLASSIFIER
+    function getLogCategory(log) {
+      const r = (log.reason || "").toLowerCase();
+      const n = (log.note || "").toLowerCase();
+      
+      if (r.includes("充值")) return "recharge";
+      if (r.includes("兑换")) return "redeem";
+      if (r.includes("惩罚") || r.includes("迟到")) return "punish";
+      if (r.includes("睡眠")) return "sleep";
+      if (r.includes("监督") || r.includes("转移")) return "interact";
+      if (r.includes("喂食") || n.startsWith("feed:") || n.includes("fasting_recover")) return "interact";
+      
+      // Exercise / Study keywords
+      const exerciseKeys = ["卡路里", "大卡", "俯卧撑", "引体向上", "仰卧起坐", "撑双杠", "运动"];
+      const studyKeys = ["墨墨", "背单词", "单词"];
+      
+      if (exerciseKeys.some(k => r.includes(k))) return "exercise";
+      if (studyKeys.some(k => r.includes(k))) return "study";
+      
+      // Check prefixes from shop items
+      if (r.includes("[earn]") || r.includes("[punish]")) {
+         // Try to infer from context or default to other
+         if (r.includes("任务")) return "exercise"; // Generic task often implies effort
+      }
+
+      return "other";
+    }
+
     async function editNote(id, currentNote) {
       const newNote = prompt("编辑备注：", currentNote || ""); if (newNote === null) return; 
       const { error } = await sb.from("freecard_log").update({ note: newNote }).eq("id", id);
@@ -1986,21 +2103,51 @@
       renderHistory(); showToast("备注已更新", "success");
     }
     function closeAllMenus() { document.querySelectorAll(".action-menu.show").forEach(m => m.classList.remove("show")); document.querySelectorAll(".menu-btn.active").forEach(b => b.classList.remove("active")); }
+    
     function renderHistory() {
       const container=document.getElementById("historyList"); const countBadge=document.getElementById("historyCount");
-      let logs;
-      if (currentHistoryFilter === "all") { logs = allLogs; }
-      else if (currentHistoryFilter === "today") { const todayStart = getStartOfToday(); logs = allLogs.filter(l => new Date(l.created_at) >= todayStart); }
-      else if (currentHistoryFilter === "week") { const weekStart = getStartOfWeekDate(); logs = allLogs.filter(l => new Date(l.created_at) >= weekStart); }
-      else { logs = allLogs.filter((l)=>{const d=new Date(l.created_at);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`===currentHistoryFilter;}); }
+      let logs = allLogs;
+
+      // 1. Person Filter
       if (currentHistoryPerson !== "all") { logs = logs.filter(l => l.operator === currentHistoryPerson); }
-      if (currentHistorySearch) { const kw = currentHistorySearch; logs = logs.filter(l => { const reason = (l.reason || "").toLowerCase(); const note = (l.note || "").toLowerCase(); const operator = (l.operator || "").toLowerCase(); return reason.includes(kw) || note.includes(kw) || operator.includes(kw); }); }
+
+      // 2. Time Filter
+      if (currentHistoryTimeFilter === "today") {
+        const todayStart = getStartOfToday(); 
+        logs = logs.filter(l => new Date(l.created_at) >= todayStart);
+      } else if (currentHistoryTimeFilter === "week") {
+        const weekStart = getStartOfWeekDate(); 
+        logs = logs.filter(l => new Date(l.created_at) >= weekStart);
+      }
+
+      // 3. Category Filter
+      if (currentHistoryCategory !== "all") {
+        logs = logs.filter(l => getLogCategory(l) === currentHistoryCategory);
+      }
+
+      // 4. Search Filter
+      if (currentHistorySearch) { 
+        const kw = currentHistorySearch; 
+        logs = logs.filter(l => { 
+          const reason = (l.reason || "").toLowerCase(); 
+          const note = (l.note || "").toLowerCase(); 
+          const operator = (l.operator || "").toLowerCase(); 
+          return reason.includes(kw) || note.includes(kw) || operator.includes(kw); 
+        }); 
+      }
+
       if (countBadge) countBadge.textContent = `${logs.length}条`;
-      if(!logs.length){ container.innerHTML = currentHistorySearch ? '<div class="empty-history">没有匹配的记录 🔍</div>' : '<div class="empty-history">暂无记录 🍃</div>'; return; }
+      if(!logs.length){ container.innerHTML = currentHistorySearch || currentHistoryCategory !== 'all' ? '<div class="empty-history">没有匹配的记录 🔍</div>' : '<div class="empty-history">暂无记录 🍃</div>'; return; }
+      
       container.innerHTML=logs.map((l)=>{
         const d=new Date(l.created_at),time=fmtDate(d),plus=l.change_type==="增加",symbol=plus?"+":"−";
         const note = l.note ? `<div class="history-note">📝 ${esc(l.note)}</div>` : '';
-        return `<div class="history-item"><div><div class="history-top"><span class="history-person">${esc(l.operator)}</span><span class="history-reason">${esc(l.reason||"—")}</span></div>${note}<div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${plus?"plus":"minus"}">${symbol}${Number(l.card_num)}</div><button class="menu-btn" data-menu-id="${escAttr(l.id)}" data-note="${escAttr(l.note || '')}">···</button><div class="action-menu" id="menu-${escAttr(l.id)}"><button class="action-menu-item" data-action="note" data-id="${escAttr(l.id)}">📝 备注</button><button class="action-menu-item danger" data-action="del" data-id="${escAttr(l.id)}">🗑️ 删除</button></div></div></div>`;
+        
+        // ★ ADD RECHARGE CLASS TO HISTORY ITEM IF APPLICABLE
+        const isRecharge = isRechargeLog(l);
+        const changeClass = plus ? (isRecharge ? "recharge" : "plus") : "minus";
+        
+        return `<div class="history-item"><div><div class="history-top"><span class="history-person">${esc(l.operator)}</span><span class="history-reason">${esc(l.reason||"—")}</span></div>${note}<div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${changeClass}">${symbol}${Number(l.card_num)}</div><button class="menu-btn" data-menu-id="${escAttr(l.id)}" data-note="${escAttr(l.note || '')}">···</button><div class="action-menu" id="menu-${escAttr(l.id)}"><button class="action-menu-item" data-action="note" data-id="${escAttr(l.id)}">📝 备注</button><button class="action-menu-item danger" data-action="del" data-id="${escAttr(l.id)}">🗑️ 删除</button></div></div></div>`;
       }).join("");
       container.querySelectorAll(".menu-btn").forEach(btn => { btn.addEventListener("click", (e) => { e.stopPropagation(); const id = btn.dataset.menuId; const menu = document.getElementById(`menu-${id}`); const isOpen = menu.classList.contains("show"); closeAllMenus(); if (!isOpen) { menu.classList.add("show"); btn.classList.add("active"); } }); });
       container.querySelectorAll("[data-action='del']").forEach(b => { b.addEventListener("click", (e) => { e.stopPropagation(); closeAllMenus(); deleteLog(b.dataset.id); }); });
@@ -2058,7 +2205,6 @@
     async function handleListAction(action, id, type) {
       const p = allProducts.find(x => String(x.id) === String(id)); if(!p) return; const displayName = getDisplayName(p);
       
-      // ★ FASTING CHECK FOR REDEEM ACTION
       if (action === "redeem" && petStates[bankPerson] && petStates[bankPerson].is_fasting) {
         showToast(`${bankPerson} 的宠物正在绝食，无法兑换心愿！`, "error");
         openFastingModal(bankPerson);
@@ -2168,14 +2314,10 @@
     /* ==================== ★ UPDATED SLEEP CONVERTER ==================== */
     function getBedtimeLabel(val) { if (val === "before_midnight") return "0点前"; if (val === "midnight_to_1am") return "0:00~1:00"; if (val === "after_1am") return "1点后"; return val; }
     
-    // ★ NEW SLEEP RULES LOGIC
     function getSleepOutcome(bedtime, scoreValue, hasScore) {
-      // 1点后：无论评分多少有无，直接扣3张
       if (bedtime === "after_1am") {
         return { change: -3, text: "🚨 1点后上床，扣 3 张", kind: "punish" };
       }
-      
-      // 0点前
       if (bedtime === "before_midnight") {
         if (!hasScore) return { change: 0, text: "⌚ 0点前上床，无评分，不加不扣", kind: "neutral" };
         if (scoreValue >= 90) return { change: 3, text: `🌙 0点前 + 评分 ${scoreValue} ≥ 90，奖励 3 张`, kind: "reward" };
@@ -2183,8 +2325,6 @@
         if (scoreValue >= 70) return { change: 1, text: `🌙 0点前 + 评分 ${scoreValue} ≥ 70，奖励 1 张`, kind: "reward" };
         return { change: 0, text: `⚖️ 0点前 + 评分 ${scoreValue} < 70，不加不扣`, kind: "neutral" };
       }
-      
-      // 0点至1点
       if (bedtime === "midnight_to_1am") {
         if (!hasScore) return { change: 0, text: "⌚ 0~1点上床，无评分，不加不扣", kind: "neutral" };
         if (scoreValue >= 90) return { change: 2, text: `🌃 0~1点 + 评分 ${scoreValue} ≥ 90，奖励 2 张`, kind: "reward" };
@@ -2192,7 +2332,6 @@
         if (scoreValue < 60) return { change: -1, text: `❌ 0~1点 + 评分 ${scoreValue} < 60，扣 1 张`, kind: "punish" };
         return { change: 0, text: `⚖️ 0~1点 + 评分 ${scoreValue}（60~79），不加不扣`, kind: "neutral" };
       }
-      
       return { change: 0, text: "不加不减", kind: "neutral" };
     }
 
@@ -2412,7 +2551,7 @@
     function refreshAll() {
       updateBalances(); updateSpirits(); updateEnergyUI(); updateHistoryFilterOptions();
       renderStats(); renderHistory(); renderWeeklyCard(); renderTrendCard();
-      updateWealthBadges(); // ★ UPDATE WEALTH BADGES ON REFRESH
+      updateWealthBadges();
       const bt = document.getElementById("bankTorieBal"); const bj = document.getElementById("bankJoryBal");
       if (bt) bt.textContent = calcBalance("Torie"); if (bj) bj.textContent = calcBalance("Jory");
     }
@@ -2420,7 +2559,7 @@
     function updateBalances() { 
       document.getElementById("torieBalance").textContent=calcBalance("Torie"); 
       document.getElementById("joryBalance").textContent=calcBalance("Jory"); 
-      updateWealthBadges(); // ★ ALSO UPDATE WHEN BALANCES CHANGE
+      updateWealthBadges();
     }
 
     /* ==================== DELETE LOG (WITH FEED ROLLBACK) ==================== */
