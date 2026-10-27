@@ -104,6 +104,30 @@
     .app-version { font-weight: 700; color: var(--text-2); font-size: 13px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .version-badge { background: var(--torie); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
 
+
+    /* === RANDOM DRAW === */
+    .random-draw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .random-draw-card { min-width: 0; padding: 16px 10px 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); text-align: center; }
+    .random-draw-title { font-size: 14px; font-weight: 800; color: var(--text-1); }
+    .random-draw-desc { font-size: 11px; color: var(--text-3); margin: 3px 0 12px; }
+    .random-draw-result { height: 76px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text-1); font-size: 25px; font-weight: 900; overflow: hidden; }
+    .random-draw-result.torie { color: var(--torie); }
+    .random-draw-result.jory { color: var(--jory); }
+    .random-draw-result .dice-face { font-size: 52px; line-height: 1; display: inline-block; }
+    .random-draw-result.is-spinning .dice-face { animation: diceRoll .42s ease-in-out infinite; }
+    .random-draw-result.is-spinning .draw-name { animation: nameFlicker .12s linear infinite; }
+    .random-draw-result.is-winner { animation: drawWinner .55s var(--ease-spring); }
+    .random-draw-btn { width: 100%; height: 38px; border: 0; border-radius: 10px; color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; transition: transform .15s, opacity .15s; }
+    .random-draw-btn:active { transform: scale(.96); }
+    .random-draw-btn:disabled { opacity: .55; cursor: wait; }
+    .random-draw-btn.people { background: linear-gradient(135deg, var(--torie), var(--jory)); }
+    .random-draw-btn.dice { background: #5856d6; }
+    @keyframes diceRoll { 0% { transform: rotate(0) scale(.8); } 50% { transform: rotate(180deg) scale(1.12); } 100% { transform: rotate(360deg) scale(.8); } }
+    @keyframes nameFlicker { from { transform: translateY(-5px); opacity: .5; } to { transform: translateY(5px); opacity: 1; } }
+    @keyframes drawWinner { 0% { transform: scale(.82); } 55% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    @media (max-width: 360px) { .random-draw-grid { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { .random-draw-result.is-spinning .dice-face, .random-draw-result.is-spinning .draw-name { animation-duration: 1s; } }
+
     /* === PET CARD === */
     .spirits-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .spirit-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px 12px 14px; text-align: center; transition: all 0.3s ease; position: relative; overflow: visible; display: flex; flex-direction: column; align-items: center; }
@@ -485,6 +509,32 @@
       .stepper-btn { width: 40px; height: 40px; font-size: 18px; }
       .stepper-count { font-size: 28px; }
     }
+
+
+    /* === DEBT / FINANCE / MOMO UI REFINEMENT === */
+    .feature-intro { padding: 12px 14px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text-2); font-size: 12px; line-height: 1.65; margin: 10px 0 14px; }
+    .feature-intro strong { color: var(--text-1); }
+    .feature-section { border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-top: 12px; background: var(--card); }
+    .feature-section-title { font-size: 14px; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; color: var(--text-1); }
+    .feature-section-title small { font-size: 11px; font-weight: 600; color: var(--text-3); margin-left: auto; }
+    .feature-status { padding: 12px 14px; border-radius: 12px; background: rgba(0,122,255,.07); border: 1px solid rgba(0,122,255,.15); color: var(--text-1); font-size: 13px; line-height: 1.65; margin: 10px 0 12px; }
+    .feature-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+    .feature-stat { padding: 12px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); min-width: 0; }
+    .feature-stat-label { color: var(--text-2); font-size: 11px; margin-bottom: 4px; }
+    .feature-stat-value { color: var(--text-1); font-size: 20px; font-weight: 800; line-height: 1.2; }
+    .feature-stat-hint { color: var(--text-3); font-size: 11px; margin-top: 4px; }
+    .feature-rule-list { display: grid; gap: 6px; margin: 10px 0 12px; }
+    .feature-rule { display: flex; gap: 8px; align-items: flex-start; color: var(--text-2); font-size: 12px; line-height: 1.5; }
+    .feature-rule b { color: var(--text-1); }
+    .momo-bonus-option { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; padding: 12px; border: 1px solid rgba(52,199,89,.3); border-radius: 12px; background: rgba(52,199,89,.07); cursor: pointer; }
+    .momo-bonus-option input[type="checkbox"] { appearance: auto; -webkit-appearance: checkbox; width: 18px; height: 18px; flex: 0 0 18px; margin: 2px 0 0; accent-color: var(--green); }
+    .momo-bonus-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .momo-bonus-title { font-size: 13px; font-weight: 800; color: var(--text-1); }
+    .momo-bonus-desc, .momo-bonus-status { font-size: 11px; color: var(--text-2); line-height: 1.5; }
+    .momo-bonus-status { margin-top: 4px; font-weight: 700; }
+    .momo-bonus-option:has(input:disabled) { opacity: .65; cursor: not-allowed; }
+    @media (max-width: 480px) { .feature-section { padding: 12px; } .feature-stat-value { font-size: 18px; } }
+
   </style>
 </head>
 <body>
@@ -679,6 +729,23 @@
         </div>
       </div>
 
+
+      <div class="setting-group-title">🎲 随机抽</div>
+      <div class="random-draw-grid">
+        <div class="random-draw-card">
+          <div class="random-draw-title">👂 听谁的</div>
+          <div class="random-draw-desc">这次听 Torie 还是 Jory？</div>
+          <div class="random-draw-result" id="drawPersonResult" aria-live="polite"><span class="draw-name">Torie / Jory</span></div>
+          <button type="button" class="random-draw-btn people" id="drawPersonBtn">随机决定</button>
+        </div>
+        <div class="random-draw-card">
+          <div class="random-draw-title">🎲 骰子</div>
+          <div class="random-draw-desc">随机掷出 1–6 点</div>
+          <div class="random-draw-result" id="drawDiceResult" aria-live="polite"><span class="dice-face">⚀</span></div>
+          <button type="button" class="random-draw-btn dice" id="drawDiceBtn">掷骰子</button>
+        </div>
+      </div>
+
       <div class="setting-group-title">钱包管理</div>
       <div class="recharge-section">
         <div class="recharge-header">
@@ -706,12 +773,12 @@
             <span class="setting-icon">📱</span>
             <span class="setting-label">版本号</span>
           </div>
-          <span class="setting-value">v3.3</span>
+          <span class="setting-value">v3.5</span>
         </div>
       </div>
       
       <div class="about-section">
-        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.3</span></div>
+        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.5</span></div>
         <div>记录每一次获得，也记录每一次自由 ✨</div>
         <div style="margin-top:4px; opacity:0.7;">Made with ❤️ for Torie & Jory</div>
       </div>
@@ -921,6 +988,14 @@
               </div>
             </div>
             <div id="converterResult" class="converter-result" style="display:none"></div>
+            <label id="momoBonusWrap" class="momo-bonus-option" style="display:none" for="momoDailyBonus">
+              <input id="momoDailyBonus" type="checkbox" />
+              <span class="momo-bonus-copy">
+                <span class="momo-bonus-title">🎯 已完成今天分配的全部单词量（额外 +2 张）</span>
+                <span class="momo-bonus-desc">确认今天的墨墨背单词目标已完成。每个账户每天只能领取一次，奖励会与本次记录一起入账。</span>
+                <span id="momoBonusStatus" class="momo-bonus-status">完成今日目标后勾选即可领取</span>
+              </span>
+            </label>
             <button id="converterSubmitBtn" class="submit-btn green" disabled>一键入账</button>
           </div>
 
@@ -1028,36 +1103,50 @@
           </div>
 
           <div id="bankDebtPanel" class="converter-unified-panel" style="display:none">
-            <div class="converter-header"><h3 class="section-title" style="margin:0">🧾 欠条 / 分期还款</h3></div>
-            <div id="debtStatus" class="sleep-rules-info">正在读取欠条状态…</div>
-            <div class="form-grid" style="margin-top:12px">
-              <div class="form-group"><label for="debtPerson">借款人</label><select id="debtPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
-              <div class="form-group"><label for="debtBorrowAmount">借入自由卡张数</label><input id="debtBorrowAmount" type="number" min="1" max="999" step="1" placeholder="例如 5" /></div>
+            <div class="converter-header"><h3 class="section-title" style="margin:0">🧾 欠条管理</h3></div>
+            <div class="feature-intro">借入时立即获得自由卡；还款按 <strong>支付 2 张自由卡 = 抵消 1 张欠款</strong> 计算。欠款结清后才能再次借入。</div>
+            <div id="debtStatus" class="feature-status">正在读取欠条状态…</div>
+            <div class="feature-section">
+              <div class="feature-section-title">📥 借入自由卡 <small>未结清时不可再次借款</small></div>
+              <div class="form-grid">
+                <div class="form-group"><label for="debtPerson">借款人</label><select id="debtPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
+                <div class="form-group"><label for="debtBorrowAmount">借入张数</label><input id="debtBorrowAmount" type="number" min="1" max="999" step="1" placeholder="例如 5" /></div>
+              </div>
+              <button id="debtBorrowBtn" class="submit-btn" disabled>确认借入</button>
             </div>
-            <button id="debtBorrowBtn" class="submit-btn" disabled>确认借入</button>
-            <div class="divider" style="margin:18px 0;border-top:1px solid var(--border)"></div>
-            <div class="form-grid">
-              <div class="form-group"><label for="debtRepayPerson">还款人</label><select id="debtRepayPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
-              <div class="form-group"><label for="debtRepayAmount">本次抵消欠款（张）</label><input id="debtRepayAmount" type="number" min="1" max="999" step="1" placeholder="每 2 张自由卡还 1 张欠款" /></div>
+            <div class="feature-section">
+              <div class="feature-section-title">📤 分期还款 <small>可分多次偿还</small></div>
+              <div class="form-grid">
+                <div class="form-group"><label for="debtRepayPerson">还款人</label><select id="debtRepayPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
+                <div class="form-group"><label for="debtRepayAmount">抵消欠款张数</label><input id="debtRepayAmount" type="number" min="1" max="999" step="1" placeholder="例如 2" /></div>
+              </div>
+              <div id="debtRepayPreview" class="converter-result" style="display:none"></div>
+              <button id="debtRepayBtn" class="submit-btn green" disabled>确认分期还款</button>
             </div>
-            <div id="debtRepayPreview" class="converter-result" style="display:none"></div>
-            <button id="debtRepayBtn" class="submit-btn green" disabled>确认分期还款</button>
           </div>
 
           <div id="bankFinancePanel" class="converter-unified-panel" style="display:none">
             <div class="converter-header"><h3 class="section-title" style="margin:0">🎰 理财抽奖</h3></div>
+            <div class="feature-intro">每次抽奖消耗 1 次机会，余额需至少 <strong>12 张自由卡</strong>。可选择 1～3 倍倍率，结果按倍率放大。</div>
             <div class="form-grid">
               <div class="form-group"><label for="lotteryPerson">选择账户</label><select id="lotteryPerson"><option value="Torie">Torie</option><option value="Jory">Jory</option></select></div>
-              <div class="form-group"><label>当前自由卡余额</label><div id="lotteryBalance" class="converter-result" style="margin:0">0 张</div></div>
+              <div class="form-group"><label for="lotteryMultiplier">抽奖倍率</label><select id="lotteryMultiplier"><option value="1">×1（消耗 1 张）</option><option value="2">×2（消耗 2 张）</option><option value="3">×3（消耗 3 张）</option></select></div>
             </div>
-            <div class="feed-modal-info" style="margin-top:12px">
-              <div class="feed-info-item"><span class="feed-info-label">剩余抽奖次数</span><span id="lotteryTickets" class="feed-info-value">读取中…</span></div>
-              <div class="feed-info-item"><span class="feed-info-label">每次参与门槛</span><span class="feed-info-value">余额至少 12 张</span></div>
+            <div class="feature-stat-grid">
+              <div class="feature-stat"><div class="feature-stat-label">💳 当前自由卡余额</div><div id="lotteryBalance" class="feature-stat-value">0 张</div><div class="feature-stat-hint">参与门槛：至少 12 张</div></div>
+              <div class="feature-stat"><div class="feature-stat-label">🎟️ 剩余抽奖次数</div><div id="lotteryTickets" class="feature-stat-value">读取中…</div><div class="feature-stat-hint">每次抽奖消耗 1 次</div></div>
             </div>
-            <div class="form-group"><label for="lotteryMultiplier">选择消耗张数（倍率）</label><select id="lotteryMultiplier"><option value="1">1 张 ×1</option><option value="2">2 张 ×2</option><option value="3">3 张 ×3</option></select></div>
-            <div class="sleep-rules-info" style="margin-top:12px">基础结果与概率：<br>+3（5%） · +2（13%） · +1（39%） · 0（10%）<br>−1（20%） · −2（10%） · −3（3%）<br>最终变动 = 基础结果 × 所选倍率；每次抽奖独立随机。</div>
+            <div class="feature-section">
+              <div class="feature-section-title">🎲 抽奖规则</div>
+              <div class="feature-rule-list">
+                <div class="feature-rule"><span>🟢</span><span><b>获得自由卡：</b>+1（39%）、+2（13%）、+3（5%）</span></div>
+                <div class="feature-rule"><span>⚪</span><span><b>没有变化：</b>0（10%）</span></div>
+                <div class="feature-rule"><span>🔴</span><span><b>失去自由卡：</b>−1（20%）、−2（10%）、−3（3%）</span></div>
+              </div>
+              <div class="feature-rule"><span>🧮</span><span>最终变动 = 随机基础结果 × 所选倍率；每次抽奖独立随机。</span></div>
+            </div>
             <div id="lotteryResult" class="converter-result" style="display:none"></div>
-            <button id="lotteryDrawBtn" class="submit-btn" disabled>🎲 抽奖</button>
+            <button id="lotteryDrawBtn" class="submit-btn" disabled>🎲 开始抽奖</button>
           </div>
 
         </div>
@@ -1778,6 +1867,48 @@
       const overlay=document.getElementById("settingsOverlay"),panel=document.getElementById("settingsPanel");
       document.getElementById("settingsBtn").addEventListener("click",()=>{overlay.classList.add("show");panel.classList.add("show");});
       overlay.addEventListener("click",()=>{overlay.classList.remove("show");panel.classList.remove("show");});
+
+      // Random draw: animate through candidates before revealing the final result.
+      const personResult = document.getElementById("drawPersonResult");
+      const personBtn = document.getElementById("drawPersonBtn");
+      const diceResult = document.getElementById("drawDiceResult");
+      const diceBtn = document.getElementById("drawDiceBtn");
+      const diceFaces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+      personBtn.addEventListener("click", () => {
+        if (personBtn.disabled) return;
+        personBtn.disabled = true;
+        personResult.className = "random-draw-result is-spinning";
+        let ticks = 0;
+        const timer = setInterval(() => {
+          personResult.innerHTML = `<span class="draw-name">${Math.random() < .5 ? "Torie" : "Jory"}</span>`;
+          ticks++;
+          if (ticks >= 14) {
+            clearInterval(timer);
+            const winner = Math.random() < .5 ? "Torie" : "Jory";
+            personResult.className = `random-draw-result ${winner.toLowerCase()} is-winner`;
+            personResult.innerHTML = `<span class="draw-name">${winner}</span>`;
+            personBtn.disabled = false;
+          }
+        }, 95);
+      });
+      diceBtn.addEventListener("click", () => {
+        if (diceBtn.disabled) return;
+        diceBtn.disabled = true;
+        diceResult.className = "random-draw-result is-spinning";
+        let ticks = 0;
+        const timer = setInterval(() => {
+          diceResult.innerHTML = `<span class="dice-face">${diceFaces[Math.floor(Math.random() * 6)]}</span>`;
+          ticks++;
+          if (ticks >= 16) {
+            clearInterval(timer);
+            const roll = Math.floor(Math.random() * 6) + 1;
+            diceResult.className = "random-draw-result is-winner";
+            diceResult.innerHTML = `<span class="dice-face">${diceFaces[roll - 1]}</span>`;
+            diceResult.setAttribute("aria-label", `骰子结果：${roll} 点`);
+            diceBtn.disabled = false;
+          }
+        }, 80);
+      });
     }
 
     /* ==================== RATIO MODALS ==================== */
@@ -2290,6 +2421,23 @@
       const person = document.getElementById("converterPerson"); const result = document.getElementById("converterResult");
       const btn = document.getElementById("converterSubmitBtn"); const inputLabel = document.getElementById("converterInputLabel");
       const panelTitle = document.getElementById("converterPanelTitle");
+      const momoBonusWrap = document.getElementById("momoBonusWrap");
+      const momoBonusCheck = document.getElementById("momoDailyBonus");
+      const momoBonusStatus = document.getElementById("momoBonusStatus");
+      function localDayKey(dateValue) {
+        const d = dateValue ? new Date(dateValue) : new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+      }
+      function hasMomoBonusClaimed(who) {
+        const today = localDayKey();
+        return allLogs.some(log => log.operator === who && String(log.reason || "").includes("墨墨今日达标奖励") && localDayKey(log.created_at) === today);
+      }
+      function refreshMomoBonusUI() {
+        if (!momoBonusWrap || currentConverterType !== "momo") return;
+        const claimed = hasMomoBonusClaimed(person.value);
+        if (claimed) { momoBonusCheck.checked = false; momoBonusCheck.disabled = true; momoBonusStatus.textContent = "该账户今天已领取过 +2 张奖励，明天可再次领取。"; }
+        else { momoBonusCheck.disabled = false; momoBonusStatus.textContent = momoBonusCheck.checked ? "本次将额外奖励 +2 张自由卡。" : "完成今日目标后勾选即可领取（每天一次）。"; }
+      }
       
       grid.querySelectorAll(".converter-type-btn").forEach(b => {
         b.addEventListener("click", () => {
@@ -2302,6 +2450,8 @@
           commonPanel.style.display = "none"; latePanel.style.display = "none"; sleepPanel.style.display = "none";
           supervisePanel.style.display = "none"; transferPanel.style.display = "none"; debtPanel.style.display = "none"; financePanel.style.display = "none";
 
+          if (momoBonusWrap) momoBonusWrap.style.display = currentConverterType === "momo" ? "flex" : "none";
+          if (momoBonusCheck) momoBonusCheck.checked = false;
           if (currentConverterType === "late") {
             latePanel.style.display = "block"; document.getElementById("lateInput").value = "";
             document.getElementById("lateResult").style.display = "none"; document.getElementById("lateSubmitBtn").disabled = true;
@@ -2327,26 +2477,37 @@
             document.getElementById("openConverterRatioBtn").style.display = "block";
             inputLabel.textContent = config.inputLabel; input.placeholder = config.placeholder; input.value = "";
             result.style.display = "none"; btn.disabled = true; btn.textContent = "一键入账"; btn.className = "submit-btn green";
+            if (currentConverterType === "momo") refreshMomoBonusUI();
           }
         });
       });
       
       window.calcConverter = () => {
         const val = parseInt(input.value) || 0; const { cards, desc } = getConverterCards(currentConverterType, val, person.value);
-        if (val > 0) { result.style.display = "block"; result.textContent = `可兑换 ${cards} 张自由卡（${desc}）`; btn.disabled = cards <= 0; }
-        else { result.style.display = "none"; btn.disabled = true; }
+        const bonus = currentConverterType === "momo" && momoBonusCheck?.checked && !hasMomoBonusClaimed(person.value) ? 2 : 0;
+        if (val > 0) {
+          result.style.display = "block";
+          result.textContent = `可兑换 ${cards} 张自由卡（${desc}）${bonus ? `；今日达标奖励 +${bonus} 张，共 ${cards + bonus} 张` : ""}`;
+          btn.disabled = cards + bonus <= 0;
+        } else { result.style.display = "none"; btn.disabled = true; }
+        if (currentConverterType === "momo") refreshMomoBonusUI();
       };
-      input.addEventListener("input", calcConverter); person.addEventListener("change", calcConverter);
+      input.addEventListener("input", calcConverter); person.addEventListener("change", () => { calcConverter(); refreshMomoBonusUI(); });
+      if (momoBonusCheck) momoBonusCheck.addEventListener("change", calcConverter);
       btn.addEventListener("click", async () => {
         const val = parseInt(input.value) || 0; const config = CONVERTER_TYPES[currentConverterType];
-        const { cards } = getConverterCards(currentConverterType, val, person.value); if (cards <= 0) return;
+        const who = person.value;
+        const { cards } = getConverterCards(currentConverterType, val, who);
+        const bonus = currentConverterType === "momo" && momoBonusCheck?.checked ? 2 : 0;
+        if (val <= 0 || cards + bonus <= 0) return;
+        if (bonus && hasMomoBonusClaimed(who)) { momoBonusCheck.checked = false; refreshMomoBonusUI(); calcConverter(); return showToast("该账户今天已领取过墨墨达标奖励", "error"); }
         btn.disabled = true; btn.textContent = "入账中...";
-        const reason = `${config.reasonPrefix} ${val} ${config.inputUnit}`;
-        const { error } = await sb.from("freecard_log").insert({ operator: person.value, change_type: "增加", card_num: cards, reason });
+        const reason = `${config.reasonPrefix} ${val} ${config.inputUnit}${bonus ? "（墨墨今日达标奖励 +2 张）" : ""}`;
+        const { error } = await sb.from("freecard_log").insert({ operator: who, change_type: "增加", card_num: cards + bonus, reason });
         btn.disabled = false; btn.textContent = "一键入账";
         if (error) { showToast("入账失败：" + error.message, "error"); return; }
-        trackEvent(person.value, 'earn'); showToast(`成功入账 ${cards} 张！`, "success"); spawnParticles(1);
-        input.value = ""; result.style.display = "none"; btn.disabled = true; await loadLogs();
+        trackEvent(who, 'earn'); showToast(`成功入账 ${cards + bonus} 张${bonus ? "（含今日达标奖励 +2 张）" : ""}！`, "success"); spawnParticles(1);
+        input.value = ""; if (momoBonusCheck) momoBonusCheck.checked = false; result.style.display = "none"; btn.disabled = true; await loadLogs(); refreshMomoBonusUI();
       });
     }
 
