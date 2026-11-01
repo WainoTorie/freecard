@@ -256,6 +256,10 @@
     /* === STATS CHART === */
     .stats-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
     .summary-item { text-align: center; padding: 12px 8px; border-radius: var(--r-md); background: var(--bg); border: 1px solid var(--border); }
+    /* 统计值为 0 时，用浅紫色轻柔标记 */
+    .summary-item.zero { background: #f3edff; border-color: #d9c8ff; }
+    .summary-item.zero .summary-value { color: #7955b8; }
+    .stats-zero-highlight { background: #f3edff !important; border-color: #d9c8ff !important; color: #7955b8 !important; }
     .summary-label { font-size: 11px; color: var(--text-2); font-weight: 600; margin-bottom: 2px; }
     .summary-value { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
     .summary-value.plus { color: var(--green); }
@@ -317,6 +321,7 @@
     .history-change.plus { color: var(--green); }
     .history-change.recharge { color: var(--blue); }
     .history-change.minus { color: var(--red); }
+    .history-change.zero { color: #7955b8; }
     .menu-btn { border: none; background: transparent; color: var(--text-3); font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; line-height: 1; letter-spacing: 2px; }
     .menu-btn:hover, .menu-btn.active { background: var(--bg); color: var(--text-1); }
     .action-menu { position: absolute; top: 24px; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 100; display: none; flex-direction: column; min-width: 100px; overflow: hidden; animation: menuFadeIn 0.15s ease; }
@@ -773,12 +778,12 @@
             <span class="setting-icon">📱</span>
             <span class="setting-label">版本号</span>
           </div>
-          <span class="setting-value">v3.5</span>
+          <span class="setting-value">v3.6</span>
         </div>
       </div>
       
       <div class="about-section">
-        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.5</span></div>
+        <div class="app-version">一起变好 · 自由卡记录 <span class="version-badge">v3.6</span></div>
         <div>记录每一次获得，也记录每一次自由 ✨</div>
         <div style="margin-top:4px; opacity:0.7;">Made with ❤️ for Torie & Jory</div>
       </div>
@@ -2070,16 +2075,16 @@
       else { earn = tE + jE; spend = tS + jS; name = "Together"; emoji = "💑"; }
       const net = earn - spend;
       document.getElementById("statsSummary").innerHTML = `
-        <div class="summary-item"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${earn}</div></div>
-        <div class="summary-item"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${spend}</div></div>
-        <div class="summary-item"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
+        <div class="summary-item ${earn===0?"zero":""}"><div class="summary-label">${pLabel}获得</div><div class="summary-value plus">+${earn}</div></div>
+        <div class="summary-item ${spend===0?"zero":""}"><div class="summary-label">${pLabel}使用</div><div class="summary-value minus">−${spend}</div></div>
+        <div class="summary-item ${net===0?"zero":""}"><div class="summary-label">${pLabel}净积累</div><div class="summary-value ${net>=0?"net":"minus"}">${net>=0?"+":""}${net}</div></div>
       `;
       drawBalanceChart(filtered, currentPerspective);
       const verdict = net > 0 ? "赚得更多 💪" : net < 0 ? "花得更多 💸" : "收支平衡 ⚖️";
       const netColor = net >= 0 ? "var(--green)" : "var(--red)";
       const netSign = net >= 0 ? "+" : "";
       document.getElementById("statsContent").innerHTML = `
-        <div style="text-align:center; padding: 8px; background: var(--bg); border-radius: var(--r-sm); border: 1px solid var(--border); font-size: 13px; font-weight: 700; color: ${netColor};">
+        <div class="${net===0?"stats-zero-highlight":""}" style="text-align:center; padding: 8px; background: var(--bg); border-radius: var(--r-sm); border: 1px solid var(--border); font-size: 13px; font-weight: 700; color: ${netColor};">
           ${emoji} ${name} 净积累 ${netSign}${net} · ${verdict}
         </div>
       `;
@@ -2147,6 +2152,7 @@
       const greenColor = getComputedStyle(document.documentElement).getPropertyValue('--green').trim() || '#34c759';
       const redColor = getComputedStyle(document.documentElement).getPropertyValue('--red').trim() || '#ff3b30';
       const blueColor = getComputedStyle(document.documentElement).getPropertyValue('--blue').trim() || '#007aff';
+      const zeroColor = '#b99ae8'; // 浅紫色：标记折线图中数值为 0 的点及相邻线段
       
       c.strokeStyle = gridColor; c.lineWidth = 0.5;
       for (let i = 0; i <= 4; i++) { const y = padT + (chartH / 4) * i; c.beginPath(); c.moveTo(padL, y); c.lineTo(W - padR, y); c.stroke(); }
@@ -2168,6 +2174,11 @@
           const pType = points[i].type;
           if (pType === 'up') strokeColor = greenColor;
           else if (pType === 'recharge') strokeColor = blueColor;
+          // 本条流水为“增加 0 张”时，余额不变，因此将对应的水平线段标记为浅紫色
+          const currentLog = points[i].logData;
+          if (currentLog && currentLog.change_type === '增加' && Number(currentLog.card_num) === 0) strokeColor = zeroColor;
+          // 历史统计中当天净变化为 0，也用浅紫色标记水平线段
+          else if (!currentLog && Number(points[i].delta) === 0) strokeColor = zeroColor;
           
           c.strokeStyle = strokeColor; 
           c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); 
@@ -2181,11 +2192,13 @@
           const pType = points[i].type;
           if (pType === 'up') dotColor = greenColor;
           else if (pType === 'recharge') dotColor = blueColor;
+          const pointLog = points[i].logData;
+          if ((pointLog && pointLog.change_type === '增加' && Number(pointLog.card_num) === 0) || (!pointLog && Number(points[i].delta) === 0)) dotColor = zeroColor;
           
           c.fillStyle = dotColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); 
           c.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff'; c.beginPath(); c.arc(cp.x, cp.y, 2, 0, Math.PI * 2); c.fill(); 
         });
-      } else if (points.length === 1) { const cp = chartPointsCache[0]; c.fillStyle = greenColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); }
+      } else if (points.length === 1) { const cp = chartPointsCache[0]; c.fillStyle = Number(points[0].delta) === 0 ? zeroColor : greenColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); }
     }
 
     function setupChartInteraction() {
@@ -2311,9 +2324,11 @@
         
         // ★ ADD RECHARGE CLASS TO HISTORY ITEM IF APPLICABLE
         const isRecharge = isRechargeLog(l);
-        const changeClass = plus ? (isRecharge ? "recharge" : "plus") : "minus";
+        const isZero = Number(l.card_num) === 0;
+        const changeClass = isZero ? "zero" : (plus ? (isRecharge ? "recharge" : "plus") : "minus");
+        const changeText = isZero ? "0" : `${symbol}${Number(l.card_num)}`;
         
-        return `<div class="history-item"><div><div class="history-top"><span class="history-person">${esc(l.operator)}</span><span class="history-reason">${esc(l.reason||"—")}</span></div>${note}<div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${changeClass}">${symbol}${Number(l.card_num)}</div><button class="menu-btn" data-menu-id="${escAttr(l.id)}" data-note="${escAttr(l.note || '')}">···</button><div class="action-menu" id="menu-${escAttr(l.id)}"><button class="action-menu-item" data-action="note" data-id="${escAttr(l.id)}">📝 备注</button><button class="action-menu-item danger" data-action="del" data-id="${escAttr(l.id)}">🗑️ 删除</button></div></div></div>`;
+        return `<div class="history-item"><div><div class="history-top"><span class="history-person">${esc(l.operator)}</span><span class="history-reason">${esc(l.reason||"—")}</span></div>${note}<div class="history-time">${time}</div></div><div class="history-right"><div class="history-change ${changeClass}">${changeText}</div><button class="menu-btn" data-menu-id="${escAttr(l.id)}" data-note="${escAttr(l.note || '')}">···</button><div class="action-menu" id="menu-${escAttr(l.id)}"><button class="action-menu-item" data-action="note" data-id="${escAttr(l.id)}">📝 备注</button><button class="action-menu-item danger" data-action="del" data-id="${escAttr(l.id)}">🗑️ 删除</button></div></div></div>`;
       }).join("");
       container.querySelectorAll(".menu-btn").forEach(btn => { btn.addEventListener("click", (e) => { e.stopPropagation(); const id = btn.dataset.menuId; const menu = document.getElementById(`menu-${id}`); const isOpen = menu.classList.contains("show"); closeAllMenus(); if (!isOpen) { menu.classList.add("show"); btn.classList.add("active"); } }); });
       container.querySelectorAll("[data-action='del']").forEach(b => { b.addEventListener("click", (e) => { e.stopPropagation(); closeAllMenus(); deleteLog(b.dataset.id); }); });
@@ -2476,7 +2491,7 @@
             panelTitle.innerHTML = `${config.emoji} ${config.label}换算`;
             document.getElementById("openConverterRatioBtn").style.display = "block";
             inputLabel.textContent = config.inputLabel; input.placeholder = config.placeholder; input.value = "";
-            result.style.display = "none"; btn.disabled = true; btn.textContent = "一键入账"; btn.className = "submit-btn green";
+            result.style.display = "none"; btn.disabled = true; btn.textContent = "一键记录"; btn.className = "submit-btn green";
             if (currentConverterType === "momo") refreshMomoBonusUI();
           }
         });
@@ -2487,9 +2502,13 @@
         const bonus = currentConverterType === "momo" && momoBonusCheck?.checked && !hasMomoBonusClaimed(person.value) ? 2 : 0;
         if (val > 0) {
           result.style.display = "block";
-          result.textContent = `可兑换 ${cards} 张自由卡（${desc}）${bonus ? `；今日达标奖励 +${bonus} 张，共 ${cards + bonus} 张` : ""}`;
-          btn.disabled = cards + bonus <= 0;
-        } else { result.style.display = "none"; btn.disabled = true; }
+          result.textContent = cards + bonus > 0
+            ? `可兑换 ${cards} 张自由卡（${desc}）${bonus ? `；今日达标奖励 +${bonus} 张，共 ${cards + bonus} 张` : ""}`
+            : `换算结果为 0 张（${desc}），自由卡余额不变，仍可记录本次流水。`;
+          // 有效输入就允许记录流水，即使换算后不足一张自由卡（记为 0 张）。
+          btn.disabled = false;
+          btn.textContent = "一键记录";
+        } else { result.style.display = "none"; btn.disabled = true; btn.textContent = "一键记录"; }
         if (currentConverterType === "momo") refreshMomoBonusUI();
       };
       input.addEventListener("input", calcConverter); person.addEventListener("change", () => { calcConverter(); refreshMomoBonusUI(); });
@@ -2499,14 +2518,16 @@
         const who = person.value;
         const { cards } = getConverterCards(currentConverterType, val, who);
         const bonus = currentConverterType === "momo" && momoBonusCheck?.checked ? 2 : 0;
-        if (val <= 0 || cards + bonus <= 0) return;
+        // 0 张也属于有效记录：流水应保留本次行为，余额变化可以为 0。
+        if (val <= 0) return;
         if (bonus && hasMomoBonusClaimed(who)) { momoBonusCheck.checked = false; refreshMomoBonusUI(); calcConverter(); return showToast("该账户今天已领取过墨墨达标奖励", "error"); }
         btn.disabled = true; btn.textContent = "入账中...";
         const reason = `${config.reasonPrefix} ${val} ${config.inputUnit}${bonus ? "（墨墨今日达标奖励 +2 张）" : ""}`;
         const { error } = await sb.from("freecard_log").insert({ operator: who, change_type: "增加", card_num: cards + bonus, reason });
-        btn.disabled = false; btn.textContent = "一键入账";
-        if (error) { showToast("入账失败：" + error.message, "error"); return; }
-        trackEvent(who, 'earn'); showToast(`成功入账 ${cards + bonus} 张${bonus ? "（含今日达标奖励 +2 张）" : ""}！`, "success"); spawnParticles(1);
+        btn.disabled = false; btn.textContent = "一键记录";
+        if (error) { showToast("记录失败：" + error.message, "error"); return; }
+        if (cards + bonus > 0) { trackEvent(who, 'earn'); spawnParticles(1); }
+        showToast(cards + bonus > 0 ? `成功入账 ${cards + bonus} 张${bonus ? "（含今日达标奖励 +2 张）" : ""}！` : "已记录本次行为，自由卡变化 0 张", "success");
         input.value = ""; if (momoBonusCheck) momoBonusCheck.checked = false; result.style.display = "none"; btn.disabled = true; await loadLogs(); refreshMomoBonusUI();
       });
     }
@@ -2774,11 +2795,11 @@
         // Spend the draw ticket first, then record the independent random result.
         if(!await saveFeatureState(who,{lottery_tickets:tickets-1})){btn.textContent="🎲 抽奖";refreshLotteryUI();return;}
         const base=weightedLotteryResult(), change=base*mult;
-        if(change!==0){ const {error}=await sb.from("freecard_log").insert({operator:who,change_type:change>0?"增加":"减少",card_num:Math.abs(change),reason:`🎰 理财抽奖：基础结果 ${base>0?"+":""}${base} × 倍率 ${mult} = ${change>0?"+":""}${change}`});
-          if(error){await saveFeatureState(who,{lottery_tickets:tickets});showToast("抽奖结果入账失败，已尝试退回次数："+error.message,"error");btn.textContent="🎲 抽奖";refreshLotteryUI();return;}
+        { const {error}=await sb.from("freecard_log").insert({operator:who,change_type:change<0?"减少":"增加",card_num:Math.abs(change),reason:`🎰 理财抽奖：基础结果 ${base>0?"+":""}${base} × 倍率 ${mult} = ${change>0?"+":""}${change}${change===0?"（不增不减）":""}`});
+          if(error){await saveFeatureState(who,{lottery_tickets:tickets});showToast("抽奖结果记录失败，已尝试退回次数："+error.message,"error");btn.textContent="🎲 抽奖";refreshLotteryUI();return;}
         }
         const result=document.getElementById("lotteryResult"); result.style.display="block"; result.className="converter-result"+(change<0?" danger":"");
-        result.textContent=`抽中基础结果 ${base>0?"+":""}${base}，倍率 ×${mult}，自由卡${change>0?"增加":"减少"} ${Math.abs(change)} 张。`;
+        result.textContent=`抽中基础结果 ${base>0?"+":""}${base}，倍率 ×${mult}，${change===0?"自由卡不增不减":`自由卡${change>0?"增加":"减少"} ${Math.abs(change)} 张`}。`;
         btn.textContent="🎲 抽奖"; await loadLogs(); await loadFeatureStates(); refreshLotteryUI(); showToast("抽奖完成！","success");
       });
     }
