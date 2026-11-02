@@ -540,6 +540,75 @@
     .momo-bonus-option:has(input:disabled) { opacity: .65; cursor: not-allowed; }
     @media (max-width: 480px) { .feature-section { padding: 12px; } .feature-stat-value { font-size: 18px; } }
 
+
+    .mail-compose{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:12px 0}.mail-compose-heading{font-weight:800;font-size:16px;margin-bottom:12px}.mail-compose-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mail-compose-grid label{display:flex;flex-direction:column;gap:5px}.mail-compose-grid input,.mail-compose-grid select,.mail-compose-grid textarea{width:100%;min-height:42px;border:1px solid var(--border);border-radius:9px;padding:9px;background:var(--bg);color:var(--text-1);font:inherit}.mail-compose-grid textarea{resize:vertical}.mail-compose-wide{grid-column:1/-1}.mail-compose-hint{font-size:11px;color:var(--text-2);line-height:1.6;margin:10px 0}.mail-compose-actions,.mail-item-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.mailbox-secondary{border:1px solid var(--border);border-radius:10px;padding:9px 12px;background:var(--bg);color:var(--text-1);font-size:12px;font-weight:700;cursor:pointer}.mail-empty{padding:28px 12px;text-align:center;color:var(--text-3);font-size:13px}@media(max-width:480px){.mail-compose-grid{grid-template-columns:1fr}.mail-compose-wide{grid-column:auto}}
+
+    /* === MAILBOX LOCK GATE === */
+    .mailbox-lock {
+      display: none;
+      margin: 8px 0 24px;
+      padding: 22px 18px 20px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .mailbox-lock.show { display: block; animation: fadeUp 0.35s var(--ease-spring); }
+    .mailbox-lock-title { font-size: 18px; font-weight: 800; text-align: center; margin-bottom: 6px; color: var(--text-1); }
+    .mailbox-lock-desc { font-size: 12px; color: var(--text-2); text-align: center; line-height: 1.6; margin-bottom: 18px; }
+    .mailbox-id-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+    .mailbox-id-card {
+      border: 2px solid var(--border); border-radius: 16px; padding: 18px 12px; text-align: center;
+      background: var(--bg); cursor: pointer; transition: all 0.2s var(--ease-spring); user-select: none;
+    }
+    .mailbox-id-card:active { transform: scale(0.96); }
+    .mailbox-id-card .id-emoji { font-size: 28px; display: block; margin-bottom: 6px; }
+    .mailbox-id-card .id-name { font-size: 16px; font-weight: 800; color: var(--text-1); }
+    .mailbox-id-card.torie.selected { border-color: var(--torie); background: rgba(0,122,255,0.08); box-shadow: 0 0 0 3px rgba(0,122,255,0.12); }
+    .mailbox-id-card.jory.selected { border-color: var(--jory); background: rgba(255,149,0,0.08); box-shadow: 0 0 0 3px rgba(255,149,0,0.12); }
+    @media (prefers-color-scheme: dark) {
+      .mailbox-id-card.torie.selected { background: rgba(10,132,255,0.12); }
+      .mailbox-id-card.jory.selected { background: rgba(255,159,10,0.12); }
+    }
+    .mailbox-lock-form { display: flex; flex-direction: column; gap: 10px; }
+    .mailbox-lock-form label { font-size: 12px; font-weight: 700; color: var(--text-2); }
+    .mailbox-lock-form input[type="text"],
+    .mailbox-lock-form input[type="password"] {
+      width: 100%; height: 48px; padding: 0 14px; border: 1px solid var(--border); border-radius: 12px;
+      background: var(--bg); color: var(--text-1); font-size: 16px; outline: none;
+    }
+    .mailbox-lock-form input:focus { border-color: var(--torie); box-shadow: 0 0 0 3px rgba(0,122,255,0.12); }
+    .mailbox-lock-error { min-height: 18px; font-size: 12px; font-weight: 600; color: var(--red); text-align: center; }
+    .mailbox-unlock-btn {
+      width: 100%; height: 48px; border: 0; border-radius: 14px; background: var(--text-1); color: var(--bg);
+      font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 4px;
+    }
+    .mailbox-unlock-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .mailbox-unlock-btn:active:not(:disabled) { transform: scale(0.98); }
+    .mailbox-main { display: none; }
+    .mailbox-main.show { display: block; animation: fadeUp 0.3s var(--ease-spring); }
+    .mailbox-user-chip {
+      display: inline-flex; align-items: center; gap: 6px; margin: 0 0 12px; padding: 6px 12px;
+      border-radius: 999px; font-size: 12px; font-weight: 700; border: 1px solid var(--border); background: var(--card);
+    }
+    .mailbox-user-chip.torie { color: var(--torie); background: rgba(0,122,255,0.08); border-color: rgba(0,122,255,0.2); }
+    .mailbox-user-chip.jory { color: var(--jory); background: rgba(255,149,0,0.08); border-color: rgba(255,149,0,0.2); }
+
+    /* === TIME CAPSULE MAILBOX === */
+    .mailbox-entry { display:flex; align-items:center; gap:14px; padding:16px; margin:16px 0; border:1px solid rgba(218,174,187,.35); border-radius:18px; background:linear-gradient(135deg,rgba(255,245,247,.96),rgba(255,255,255,.96)); color:#493b42; box-shadow:0 8px 24px rgba(153,91,113,.08); cursor:pointer; text-align:left; width:100%; transition:transform .2s,box-shadow .2s; }
+    @media(prefers-color-scheme:dark){.mailbox-entry{background:linear-gradient(135deg,#30252b,#262326);color:#f6eaf0;border-color:rgba(255,190,210,.18)}}
+    .mailbox-entry:active{transform:scale(.985)} .mailbox-entry-icon{width:52px;height:52px;display:grid;place-items:center;flex:0 0 52px;border-radius:16px;background:rgba(220,139,165,.15);font-size:27px}
+    .mailbox-entry-copy{min-width:0;flex:1}.mailbox-entry-title{font-weight:800;font-size:16px}.mailbox-entry-desc{font-size:12px;opacity:.72;margin-top:3px}.mailbox-entry-count{font-size:11px;font-weight:700;margin-top:7px;color:#b66e8a}.mailbox-entry-arrow{font-size:22px;opacity:.5}
+    .mailbox-overlay{position:fixed;inset:0;z-index:12000;background:var(--bg-tint);overflow-y:auto;padding: max(18px,env(safe-area-inset-top)) 16px max(100px,calc(84px + env(safe-area-inset-bottom)));opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .22s,transform .22s}
+    .mailbox-overlay.show{opacity:1;pointer-events:auto;transform:translateY(0)} .mailbox-shell{max-width:620px;margin:0 auto}.mailbox-top{display:flex;align-items:center;gap:12px;margin:8px 0 18px}.mailbox-back{width:40px;height:40px;border:1px solid var(--border);background:var(--card);border-radius:13px;color:var(--text-1);font-size:19px;cursor:pointer}.mailbox-heading{font-size:24px;font-weight:850;letter-spacing:-.5px}.mailbox-subheading{font-size:12px;color:var(--text-2);margin-top:2px}
+    .mailbox-hero{padding:20px;border-radius:20px;background:linear-gradient(135deg,#fff1f5,#fffaf4);border:1px solid rgba(214,158,177,.28);color:#614650;margin-bottom:14px}.mailbox-hero-emoji{font-size:25px}.mailbox-hero h3{font-size:19px;margin:6px 0}.mailbox-hero p{font-size:12px;line-height:1.7;opacity:.8}
+    .mailbox-actions{display:flex;gap:9px;margin:12px 0}.mailbox-primary,.mailbox-secondary{border:0;border-radius:13px;padding:12px 14px;font-size:13px;font-weight:800;cursor:pointer}.mailbox-primary{background:#b96f8c;color:#fff;box-shadow:0 5px 14px rgba(185,111,140,.2)}.mailbox-secondary{background:var(--card);border:1px solid var(--border);color:var(--text-1)}
+    .mailbox-tabs{display:flex;gap:7px;overflow-x:auto;padding:3px 0 10px;margin:12px 0}.mailbox-tab{white-space:nowrap;border:1px solid var(--border);border-radius:100px;padding:8px 13px;background:var(--card);color:var(--text-2);font-size:12px;font-weight:700;cursor:pointer}.mailbox-tab.active{background:var(--text-1);color:var(--bg);border-color:var(--text-1)}
+    .mailbox-list{display:grid;gap:10px}.mail-item{display:flex;gap:12px;align-items:flex-start;padding:15px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}.mail-envelope{width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;background:var(--bg);border-radius:13px;font-size:22px}.mail-item-main{min-width:0;flex:1}.mail-item-title{font-weight:800;font-size:14px;overflow-wrap:anywhere}.mail-item-meta{font-size:11px;color:var(--text-2);margin-top:4px;line-height:1.6}.mail-item-preview{font-size:12px;color:var(--text-2);margin-top:7px;line-height:1.6}.mail-item-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.mail-small-btn{border:1px solid var(--border);background:var(--bg);color:var(--text-1);border-radius:9px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer}.mail-small-btn.danger{color:var(--red)}.mail-empty{text-align:center;padding:34px 16px;color:var(--text-2);background:var(--card);border:1px dashed var(--border);border-radius:16px;font-size:13px;line-height:1.8}
+    .mail-form{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:12px}.mail-form h3{font-size:16px;margin-bottom:5px}.mail-form-note{font-size:12px;color:var(--text-2);line-height:1.7;margin-bottom:15px}.mail-field{display:grid;gap:6px;margin:13px 0}.mail-field label{font-size:12px;font-weight:750;color:var(--text-2)}.mail-field input,.mail-field select,.mail-field textarea{width:100%;min-width:0;border:1px solid var(--border);background:var(--bg);color:var(--text-1);border-radius:11px;padding:11px 12px;font:inherit;font-size:13px;outline:none}.mail-field textarea{min-height:150px;resize:vertical;line-height:1.7}.mail-field input:focus,.mail-field select:focus,.mail-field textarea:focus{border-color:#c9829c;box-shadow:0 0 0 3px rgba(201,130,156,.12)}.mail-cost{padding:11px 12px;border-radius:11px;background:rgba(185,111,140,.09);font-size:12px;line-height:1.6;color:var(--text-2)}.mail-cost strong{color:var(--text-1)}.mail-form-actions{display:flex;gap:8px;margin-top:16px}.mail-form-actions button{flex:1}
+    .mail-read-overlay{position:fixed;inset:0;z-index:13000;background:rgba(25,16,21,.48);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .2s}.mail-read-overlay.show{opacity:1;pointer-events:auto}.mail-letter{position:relative;width:min(520px,100%);max-height:min(82vh,800px);overflow:auto;border-radius:22px;padding:25px 22px;background:linear-gradient(160deg,#fffaf7,#fff0f5);color:#4c3740;box-shadow:0 24px 80px rgba(0,0,0,.24);transform:translateY(12px) scale(.98);transition:transform .25s}.mail-read-overlay.show .mail-letter{transform:translateY(0) scale(1)}.mail-letter.special-anniversary{background:linear-gradient(160deg,#fffaf7,#ffeaf2)}.mail-letter.special-birthday{background:linear-gradient(160deg,#fffaf0,#fff0f5)}.mail-letter-top{text-align:center;font-size:30px}.mail-letter-kicker{text-align:center;font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.58;margin-top:7px}.mail-letter-title{text-align:center;font-size:23px;font-weight:850;margin:9px 0 5px;overflow-wrap:anywhere}.mail-letter-meta{text-align:center;font-size:11px;opacity:.65;line-height:1.7}.mail-letter-body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.95;font-size:14px;margin:22px 0;padding:18px 0;border-top:1px solid rgba(125,75,94,.16);border-bottom:1px solid rgba(125,75,94,.16)}.mail-letter-preview{font-size:12px;line-height:1.7;margin:15px 0;padding:12px;border-radius:12px;background:rgba(255,255,255,.6)}.mail-letter-close{width:100%;border:0;border-radius:12px;background:#b96f8c;color:#fff;font-weight:800;padding:12px;cursor:pointer}.mail-locked{filter:none;opacity:.8}.mailbox-unread-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#d77898;margin-right:5px}
+    @media(prefers-reduced-motion:reduce){.mailbox-overlay,.mail-read-overlay,.mail-letter,.mailbox-entry{transition:none!important}}
+
   </style>
 </head>
 <body>
@@ -798,7 +867,6 @@
     <section id="page-home" class="app-page active">
       <div class="page-title">一起变好</div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
-      
       <div id="weeklyCard" class="card summary-card" style="display:none"></div>
       <div id="trendCard" class="card summary-card" style="display:none"></div>
       
@@ -899,6 +967,12 @@
           </div>
         </div>
       </div>
+
+      <button class="mailbox-entry" id="mailboxEntry" type="button" aria-label="打开时光信箱">
+        <span class="mailbox-entry-icon">💌</span>
+        <span class="mailbox-entry-copy"><span class="mailbox-entry-title">时光信箱</span><span class="mailbox-entry-desc">有些话，值得留给未来的你。</span><span class="mailbox-entry-count" id="mailboxEntrySummary">写一封信，或看看有没有信在等你</span></span>
+        <span class="mailbox-entry-arrow">›</span>
+      </button>
     </section>
 
     <!-- BANK PAGE -->
@@ -1278,6 +1352,47 @@
       </div>
     </section>
   </div>
+
+
+  <div class="mailbox-overlay" id="mailboxOverlay" aria-hidden="true">
+    <div class="mailbox-shell">
+      <div class="mailbox-top"><button class="mailbox-back" id="mailboxClose" type="button" aria-label="返回首页">‹</button><div><div class="mailbox-heading">时光信箱</div><div class="mailbox-subheading" id="mailboxSubheading">选择身份并输入密码后进入</div></div></div>
+
+      <!-- 登录门禁：每次打开都重新验证，不持久化登录状态 -->
+      <div class="mailbox-lock show" id="mailboxLock">
+        <div class="mailbox-lock-title">🔒 打开你的信箱</div>
+        <div class="mailbox-lock-desc">先选择身份，再输入对应密码。<br/>Safari 可记住各自密码，用 Face ID 自动填充。</div>
+        <div class="mailbox-id-grid" role="group" aria-label="选择身份">
+          <button type="button" class="mailbox-id-card torie" id="mailIdTorie" data-person="Torie" aria-pressed="false">
+            <span class="id-emoji">🦉</span>
+            <span class="id-name">Torie</span>
+          </button>
+          <button type="button" class="mailbox-id-card jory" id="mailIdJory" data-person="Jory" aria-pressed="false">
+            <span class="id-emoji">🐰</span>
+            <span class="id-name">Jory</span>
+          </button>
+        </div>
+        <form class="mailbox-lock-form" id="mailboxUnlockForm" autocomplete="on" method="post" action="/mailbox-unlock">
+          <label for="mailboxUsername">身份（用户名）</label>
+          <input id="mailboxUsername" name="username" type="text" autocomplete="username" placeholder="Torie 或 Jory" required />
+          <label for="mailboxPassword">密码</label>
+          <input id="mailboxPassword" name="password" type="password" autocomplete="current-password" placeholder="输入密码" required inputmode="numeric" />
+          <div class="mailbox-lock-error" id="mailboxLockError" role="alert"></div>
+          <button class="mailbox-unlock-btn" id="mailboxUnlockBtn" type="submit" disabled>解锁进入</button>
+        </form>
+      </div>
+
+      <!-- 解锁后的信箱主体 -->
+      <div class="mailbox-main" id="mailboxMain">
+        <div class="mailbox-user-chip" id="mailboxUserChip">🦉 Torie</div>
+        <div class="mailbox-hero"><div class="mailbox-hero-emoji">✉️</div><h3>有些话，值得被好好珍藏。</h3><p>每封信消耗 6 张自由卡。你可以立即送达，也可以把它留给未来某个特别的时刻。</p></div>
+        <div class="mailbox-actions"><button class="mailbox-primary" id="mailboxComposeBtn" type="button">✍️ 写一封信 · 6 张</button><button class="mailbox-secondary" id="mailboxRefreshBtn" type="button">↻ 刷新</button></div>
+        <div class="mailbox-tabs" id="mailboxTabs" role="tablist"><button class="mailbox-tab active" data-mail-tab="inbox" type="button">收件箱</button><button class="mailbox-tab" data-mail-tab="future" type="button">未来的信</button><button class="mailbox-tab" data-mail-tab="sent" type="button">已发送</button></div>
+        <div id="mailboxFormMount"></div><div class="mailbox-list" id="mailboxList"><div class="mail-empty">正在打开信箱……</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="mail-read-overlay" id="mailReadOverlay" aria-hidden="true"><article class="mail-letter" id="mailLetter" role="dialog" aria-modal="true" aria-label="信件"><div class="mail-letter-top" id="mailLetterEmoji">💌</div><div class="mail-letter-kicker" id="mailLetterKicker">A LETTER FOR YOU</div><div class="mail-letter-title" id="mailLetterTitle"></div><div class="mail-letter-meta" id="mailLetterMeta"></div><div class="mail-letter-preview" id="mailLetterPreview" style="display:none"></div><div class="mail-letter-body" id="mailLetterBody"></div><button class="mail-letter-close" id="mailLetterClose" type="button">把这份心意收好</button></article></div>
 
   <nav class="bottom-nav" aria-label="页面导航">
     <button class="nav-btn active" data-page="home" type="button"><span class="nav-icon">🏠</span><span>首页</span></button>
@@ -2935,8 +3050,373 @@
     function escAttr(v) { return String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/'/g,"&#039;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
     function showToast(msg,type="success") { const toast=document.getElementById("toast"); toast.textContent=msg; toast.className=`toast ${type} show`; clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>{toast.classList.remove("show");},2500); }
 
+    /* ==================== TIME CAPSULE MAILBOX ==================== */
+    function setupMailbox() {
+      const entry = document.getElementById("mailboxEntry");
+      const overlay = document.getElementById("mailboxOverlay");
+      const closeBtn = document.getElementById("mailboxClose");
+      const list = document.getElementById("mailboxList");
+      const formMount = document.getElementById("mailboxFormMount");
+      const lockPanel = document.getElementById("mailboxLock");
+      const mainPanel = document.getElementById("mailboxMain");
+      const unlockForm = document.getElementById("mailboxUnlockForm");
+      const usernameInput = document.getElementById("mailboxUsername");
+      const passwordInput = document.getElementById("mailboxPassword");
+      const unlockBtn = document.getElementById("mailboxUnlockBtn");
+      const lockError = document.getElementById("mailboxLockError");
+      const subheading = document.getElementById("mailboxSubheading");
+      const userChip = document.getElementById("mailboxUserChip");
+      const idCards = [document.getElementById("mailIdTorie"), document.getElementById("mailIdJory")];
+
+      // 简易双人密码（仅前端门槛，不持久化登录态）
+      const MAILBOX_PASSWORDS = { Torie: "123456", Jory: "654321" };
+      let mailboxUser = null; // 仅内存中有效，关闭信箱即清空
+      let selectedPerson = null;
+      let activeTab = "inbox";
+      let letters = [];
+
+      const personName = () => mailboxUser;
+      const otherName = p => p === "Torie" ? "Jory" : "Torie";
+      const rpcError = (label, error) => { console.error(label, error); showToast(label + (error?.message ? "：" + error.message : "，请稍后重试"), "error"); };
+
+      function resetLockUI() {
+        selectedPerson = null;
+        mailboxUser = null;
+        idCards.forEach(c => { if (c) { c.classList.remove("selected"); c.setAttribute("aria-pressed", "false"); } });
+        if (usernameInput) usernameInput.value = "";
+        if (passwordInput) passwordInput.value = "";
+        if (lockError) lockError.textContent = "";
+        if (unlockBtn) unlockBtn.disabled = true;
+        if (lockPanel) lockPanel.classList.add("show");
+        if (mainPanel) mainPanel.classList.remove("show");
+        if (subheading) subheading.textContent = "选择身份并输入密码后进入";
+        if (formMount) formMount.innerHTML = "";
+        if (list) list.innerHTML = '<div class="mail-empty">正在打开信箱……</div>';
+        activeTab = "inbox";
+        document.querySelectorAll("[data-mail-tab]").forEach(b => b.classList.toggle("active", b.dataset.mailTab === "inbox"));
+      }
+
+      function updateUnlockBtn() {
+        if (unlockBtn) unlockBtn.disabled = !(usernameInput?.value.trim() && passwordInput?.value);
+      }
+      function selectIdentity(person, { clearPassword = true, focusPassword = true } = {}) {
+        selectedPerson = person;
+        idCards.forEach(c => {
+          if (!c) return;
+          const on = c.dataset.person === person;
+          c.classList.toggle("selected", on);
+          c.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        if (usernameInput) usernameInput.value = person;
+        if (passwordInput && clearPassword) passwordInput.value = "";
+        if (passwordInput && focusPassword) passwordInput.focus();
+        if (lockError) lockError.textContent = "";
+        updateUnlockBtn();
+      }
+
+      function closeMailbox() {
+        // 关闭时清除当前登录身份，不写入 localStorage / sessionStorage
+        mailboxUser = null;
+        selectedPerson = null;
+        overlay.classList.remove("show");
+        overlay.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        const read = document.getElementById("mailReadOverlay");
+        if (read) { read.classList.remove("show"); read.setAttribute("aria-hidden", "true"); }
+        resetLockUI();
+      }
+
+      function openMailbox() {
+        // 每次打开都要求重新验证
+        resetLockUI();
+        overlay.classList.add("show");
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function enterMailbox(person) {
+        mailboxUser = person;
+        if (lockPanel) lockPanel.classList.remove("show");
+        if (mainPanel) mainPanel.classList.add("show");
+        if (subheading) subheading.textContent = "把现在的话，留给未来的某一天。";
+        if (userChip) {
+          const emoji = person === "Torie" ? "🦉" : "🐰";
+          userChip.className = "mailbox-user-chip " + person.toLowerCase();
+          userChip.textContent = `${emoji} ${person} 的信箱`;
+        }
+        if (passwordInput) passwordInput.value = "";
+        if (formMount) formMount.innerHTML = "";
+        if (list) list.innerHTML = '<div class="mail-empty">正在整理你的信件……</div>';
+        activeTab = "inbox";
+        document.querySelectorAll("[data-mail-tab]").forEach(b => b.classList.toggle("active", b.dataset.mailTab === "inbox"));
+        refreshLetters();
+      }
+
+      async function refreshLetters() {
+        if (!mailboxUser) return;
+        const { data, error } = await sb.rpc("list_time_letters", { p_person: personName() });
+        if (error) {
+          list.innerHTML = '<div class="mail-empty">暂时无法读取信箱，请检查 Supabase 函数是否已成功创建。</div>';
+          rpcError("读取信箱失败", error);
+          return;
+        }
+        letters = Array.isArray(data) ? data : (data?.letters || []);
+        renderLetters();
+        updateEntrySummary();
+      }
+
+      function updateEntrySummary() {
+        if (!mailboxUser) return;
+        const unread = letters.filter(x => x.recipient === personName() && !x.read_at && x.status !== "cancelled" && new Date(x.unlock_at) <= new Date()).length;
+        const el = document.getElementById("mailboxEntrySummary");
+        if (el) el.textContent = unread ? `有 ${unread} 封信正在等你打开` : `写一封信，或看看有没有信在等你`;
+      }
+
+      function renderLetters() {
+        if (!mailboxUser) return;
+        const now = Date.now();
+        const filtered = letters.filter(x => {
+          if (activeTab === "sent") return x.sender === personName();
+          if (activeTab === "future") return x.sender === personName() && new Date(x.unlock_at).getTime() > now;
+          return x.recipient === personName() && new Date(x.unlock_at).getTime() <= now;
+        });
+        document.querySelectorAll("[data-mail-tab]").forEach(b => b.classList.toggle("active", b.dataset.mailTab === activeTab));
+        if (!filtered.length) {
+          list.innerHTML = `<div class="mail-empty">${activeTab === "sent" ? "还没有寄出信件。" : "这里暂时空空的，未来会有温柔的惊喜。"}</div>`;
+          return;
+        }
+        list.innerHTML = filtered.map(x => {
+          const locked = new Date(x.unlock_at).getTime() > now;
+          const when = new Date(x.unlock_at).toLocaleString("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+          const canCancel = activeTab === "future" && x.sender === personName() && locked;
+          const canDelete = x.sender === personName() || x.recipient === personName();
+          const canOpen = !locked; // 收件箱/已解锁，或发件人查看自己已寄出的信
+          return `<article class="mail-item"><div class="mail-envelope">${x.theme === "birthday" ? "🎂" : x.theme === "anniversary" ? "💞" : "💌"}</div><div class="mail-item-main"><div class="mail-item-title">${esc(x.title || "一封信")}</div><div class="mail-item-meta">${esc(x.sender || "")} → ${esc(x.recipient || "")} · ${locked ? "开启时间 " : "送达时间 "}${esc(when)}</div><div class="mail-item-meta">${locked ? "🔒 还未到开启时间" : (x.read_at ? "已读" : "未读")}</div><div class="mail-item-actions">${canOpen ? `<button class="mailbox-secondary" data-open-letter="${escAttr(x.id)}" type="button">打开信件</button>` : ""}${canCancel ? `<button class="mailbox-secondary" data-cancel-letter="${escAttr(x.id)}" type="button">撤回（不退自由卡）</button>` : ""}${canDelete ? `<button class="mailbox-secondary mail-small-btn danger" data-delete-letter="${escAttr(x.id)}" type="button">🗑️ 删除</button>` : ""}</div></div></article>`;
+        }).join("");
+        list.querySelectorAll("[data-open-letter]").forEach(b => b.addEventListener("click", () => openLetter(b.dataset.openLetter)));
+        list.querySelectorAll("[data-cancel-letter]").forEach(b => b.addEventListener("click", () => cancelLetter(b.dataset.cancelLetter)));
+        list.querySelectorAll("[data-delete-letter]").forEach(b => b.addEventListener("click", () => deleteLetter(b.dataset.deleteLetter)));
+      }
+
+      function showComposer() {
+        if (!mailboxUser) return;
+        const sender = personName(), recipient = otherName(sender);
+        const min = new Date(Date.now() + 5 * 60000); min.setSeconds(0, 0);
+        const local = new Date(min.getTime() - min.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+        formMount.innerHTML = `<form class="mail-compose" id="mailComposeForm"><div class="mail-compose-heading">写给未来的 ${recipient}</div><div class="mail-compose-grid"><label>写信人<input value="${sender}" disabled></label><label>收信人<input value="${recipient}" disabled></label><label>信件主题<select name="theme"><option value="normal">日常心意</option><option value="birthday">生日</option><option value="anniversary">纪念日</option></select></label><label>信件标题<input name="title" maxlength="60" placeholder="给未来的一句话" required></label><label class="mail-compose-wide">信封预览（选填）<input name="preview" maxlength="100" placeholder="例如：等你打开时，希望你正好很开心"></label><label class="mail-compose-wide">信件正文<textarea name="body" rows="5" maxlength="5000" placeholder="把想说的话写在这里……" required></textarea></label><label class="mail-compose-wide">开启时间<input name="unlock_at" type="datetime-local" min="${local}" value="${local}" required></label></div><div class="mail-compose-hint">每封信消耗 6 张自由卡；信件未开启前可以撤回，但不退还自由卡。</div><div class="mail-compose-actions"><button class="mailbox-primary" type="submit">寄出这封信 · 6 张</button><button class="mailbox-secondary" id="mailComposeCancel" type="button">暂不写了</button></div></form>`;
+        document.getElementById("mailComposeCancel").addEventListener("click", () => formMount.innerHTML = "");
+        document.getElementById("mailComposeForm").addEventListener("submit", async e => {
+          e.preventDefault();
+          const f = e.currentTarget, fd = new FormData(f), btn = f.querySelector('[type="submit"]');
+          const unlock = new Date(fd.get("unlock_at"));
+          if (!Number.isFinite(unlock.getTime()) || unlock.getTime() < Date.now() - 60000) return showToast("请选择有效的开启时间", "error");
+          if (String(fd.get("body") || "").trim().length < 1) return showToast("请写下信件正文", "error");
+          btn.disabled = true; btn.textContent = "正在寄出……";
+          const { data, error } = await sb.rpc("create_time_letter", {
+            p_sender: sender,
+            p_recipient: recipient,
+            p_theme: fd.get("theme"),
+            p_title: String(fd.get("title")).trim(),
+            p_preview: String(fd.get("preview") || "").trim(),
+            p_body: String(fd.get("body")).trim(),
+            p_unlock_at: unlock.toISOString()
+          });
+          if (error) { btn.disabled = false; btn.textContent = "寄出这封信 · 6 张"; return rpcError("寄信失败", error); }
+          showToast("信件已寄出，愿这份心意准时抵达", "success");
+          formMount.innerHTML = "";
+          activeTab = "sent";
+          await refreshLetters();
+          if (typeof loadLogs === "function") await loadLogs();
+        });
+      }
+
+      function normalizeLetterRow(raw, fallback = {}) {
+        if (!raw && !fallback) return null;
+        let src = raw;
+        if (Array.isArray(src)) src = src[0];
+        if (src && typeof src === "object") {
+          // open_time_letter 实际返回: { ok: true, letter: { body, title, ... } }
+          if (src.letter && typeof src.letter === "object") src = { ...src.letter, ...src, ...src.letter };
+          if (src.data && typeof src.data === "object" && !src.body && !src.title) src = { ...src, ...src.data };
+          if (src.record && typeof src.record === "object") src = { ...src, ...src.record };
+        }
+        const base = { ...(fallback || {}), ...(src || {}) };
+        const body = base.body ?? base.content ?? base.letter_body ?? base.message ?? fallback.body ?? "";
+        return {
+          id: base.id ?? fallback.id,
+          sender: base.sender ?? fallback.sender ?? "",
+          recipient: base.recipient ?? fallback.recipient ?? "",
+          theme: base.theme ?? fallback.theme ?? "normal",
+          title: base.title ?? fallback.title ?? "一封信",
+          preview: base.preview ?? fallback.preview ?? "",
+          body: body == null ? "" : String(body),
+          unlock_at: base.unlock_at ?? fallback.unlock_at,
+          status: base.status ?? fallback.status,
+          read_at: base.read_at ?? fallback.read_at,
+          created_at: base.created_at ?? fallback.created_at
+        };
+      }
+
+      async function fetchLetterFromTable(id) {
+        // 直接读表兜底：RPC 若未返回正文，仍能展示数据库里的 body
+        const tables = ["time_letters", "freecard_time_letters", "letters"];
+        for (const table of tables) {
+          try {
+            const { data, error } = await sb.from(table).select("*").eq("id", id).maybeSingle();
+            if (!error && data) return { table, row: data };
+          } catch (e) { /* try next */ }
+        }
+        return null;
+      }
+
+      async function openLetter(id) {
+        if (!mailboxUser) return;
+        const local = letters.find(x => String(x.id) === String(id)) || {};
+        let row = null;
+
+        // 1) 优先走 open_time_letter（会标记已读）
+        const { data, error } = await sb.rpc("open_time_letter", { p_letter_id: id, p_person: personName() });
+        if (!error) row = normalizeLetterRow(data, local);
+
+        // 2) 若 RPC 失败，或正文仍空，用列表缓存 + 直查表兜底
+        const bodyEmpty = !row || !String(row.body || "").trim();
+        if (error || bodyEmpty) {
+          const tableHit = await fetchLetterFromTable(id);
+          if (tableHit?.row) {
+            row = normalizeLetterRow(tableHit.row, row || local);
+          } else if (!row) {
+            row = normalizeLetterRow(local, local);
+          }
+        }
+
+        if (!row) {
+          if (error) return rpcError("打开信件失败", error);
+          return showToast("暂时无法打开这封信", "error");
+        }
+
+        // 发件人打开自己寄出的信：即使 RPC 因身份校验失败，也允许用本地/表数据预览
+        if (error && row.sender !== personName() && row.recipient !== personName()) {
+          return rpcError("打开信件失败", error);
+        }
+
+        document.getElementById("mailLetterEmoji").textContent = row.theme === "birthday" ? "🎂" : row.theme === "anniversary" ? "💞" : "💌";
+        document.getElementById("mailLetterTitle").textContent = row.title || "一封信";
+        document.getElementById("mailLetterKicker").textContent = `FROM ${row.sender || ""} · TO ${row.recipient || ""}`;
+        document.getElementById("mailLetterMeta").textContent = new Date(row.created_at || Date.now()).toLocaleString("zh-CN");
+        const preview = document.getElementById("mailLetterPreview");
+        preview.textContent = row.preview || "";
+        preview.style.display = row.preview ? "block" : "none";
+        const bodyText = String(row.body || "").trim();
+        document.getElementById("mailLetterBody").textContent = bodyText || "（这封信没有正文内容）";
+        const read = document.getElementById("mailReadOverlay");
+        read.classList.add("show");
+        read.setAttribute("aria-hidden", "false");
+        await refreshLetters();
+      }
+
+      async function cancelLetter(id) {
+        if (!mailboxUser) return;
+        if (!confirm("确定撤回这封尚未开启的信吗？已消耗的 6 张自由卡不会退还。")) return;
+        const { error } = await sb.rpc("cancel_time_letter", { p_letter_id: id, p_sender: personName() });
+        if (error) return rpcError("撤回失败", error);
+        showToast("信件已撤回（不退还自由卡）", "success");
+        await refreshLetters();
+      }
+
+      async function deleteLetter(id) {
+        if (!mailboxUser) return;
+        const local = letters.find(x => String(x.id) === String(id));
+        const isSender = local && local.sender === personName();
+        if (!confirm("确定删除这封信吗？\n\n说明：若数据库尚未开放删除权限，已开启的信可能删不掉，需要到 Supabase 的 time_letters 表手动删，或先执行一次删除函数 SQL。")) return;
+
+        // 1) 若有 delete_time_letter RPC 则优先
+        try {
+          const rpcTry = await sb.rpc("delete_time_letter", { p_letter_id: id, p_person: personName() });
+          if (!rpcTry.error) {
+            showToast("信件已删除", "success");
+            await refreshLetters();
+            return;
+          }
+        } catch (e) { /* ignore */ }
+
+        // 2) 直删表（需要 anon 有 DELETE 权限；默认可能没有）
+        {
+          const { error } = await sb.from("time_letters").delete().eq("id", id);
+          if (!error) {
+            showToast("信件已删除", "success");
+            await refreshLetters();
+            return;
+          }
+        }
+
+        // 3) 未到开启时间且本人是发件人：可撤回隐藏
+        if (isSender) {
+          const { error: cErr } = await sb.rpc("cancel_time_letter", { p_letter_id: id, p_sender: personName() });
+          if (!cErr) {
+            showToast("已撤回并隐藏（未物理删除）", "success");
+            await refreshLetters();
+            return;
+          }
+        }
+
+        showToast("删除失败：当前密钥无权删表。请到 Supabase → Table Editor → time_letters 手动删除测试行。", "error");
+      }
+
+      idCards.forEach(card => {
+        card?.addEventListener("click", () => selectIdentity(card.dataset.person));
+      });
+
+      // 用户手动输入或 Safari 自动填充用户名时，同步身份卡片高亮
+      usernameInput?.addEventListener("input", () => {
+        const v = usernameInput.value.trim();
+        if (MAILBOX_PASSWORDS[v]) selectIdentity(v, { clearPassword: false, focusPassword: false });
+        else {
+          selectedPerson = null;
+          idCards.forEach(c => { if (c) { c.classList.remove("selected"); c.setAttribute("aria-pressed", "false"); } });
+          updateUnlockBtn();
+        }
+      });
+      passwordInput?.addEventListener("input", updateUnlockBtn);
+
+      unlockForm?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const person = (selectedPerson || usernameInput.value.trim());
+        const pwd = (passwordInput.value || "").trim();
+        if (!person || !MAILBOX_PASSWORDS[person]) {
+          lockError.textContent = "请选择或填写正确身份（Torie / Jory）";
+          return;
+        }
+        if (pwd !== MAILBOX_PASSWORDS[person]) {
+          lockError.textContent = "密码不正确，请再试一次";
+          passwordInput.value = "";
+          passwordInput.focus();
+          return;
+        }
+        lockError.textContent = "";
+        enterMailbox(person);
+      });
+
+      entry?.addEventListener("click", openMailbox);
+      closeBtn?.addEventListener("click", closeMailbox);
+      document.getElementById("mailboxComposeBtn")?.addEventListener("click", showComposer);
+      document.getElementById("mailboxRefreshBtn")?.addEventListener("click", refreshLetters);
+      document.querySelectorAll("[data-mail-tab]").forEach(b => b.addEventListener("click", () => {
+        if (!mailboxUser) return;
+        activeTab = b.dataset.mailTab;
+        formMount.innerHTML = "";
+        renderLetters();
+      }));
+      document.getElementById("mailLetterClose")?.addEventListener("click", () => {
+        const r = document.getElementById("mailReadOverlay");
+        r.classList.remove("show");
+        r.setAttribute("aria-hidden", "true");
+      });
+    }
+
+
     /* ==================== INIT ==================== */
     document.addEventListener("DOMContentLoaded", async () => {
+      setupMailbox();
       initSettings(); initRatioModals(); initPetInteractions(); setupFeedModals(); setupEditModal();
       setupNav(); setupBankNav(); setupPeriodTabs(); setupPerspectiveTabs(); setupHistoryFilter();
       setupAddProduct(); setupAddEarn(); setupAddPunish();
