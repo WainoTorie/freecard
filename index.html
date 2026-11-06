@@ -547,6 +547,10 @@
     @media(prefers-color-scheme:dark){.mailbox-entry{background:linear-gradient(135deg,#30252b,#262326);color:#f6eaf0;border-color:rgba(255,190,210,.18)}}
     .mailbox-entry:active{transform:scale(.985)} .mailbox-entry-icon{width:52px;height:52px;display:grid;place-items:center;flex:0 0 52px;border-radius:16px;background:rgba(220,139,165,.15);font-size:27px}
     .mailbox-entry-copy{min-width:0;flex:1}.mailbox-entry-title{font-weight:800;font-size:16px}.mailbox-entry-desc{font-size:12px;opacity:.72;margin-top:3px}.mailbox-entry-count{font-size:11px;font-weight:700;margin-top:7px;color:#b66e8a}.mailbox-entry-arrow{font-size:22px;opacity:.5}
+    /* === DIRECTION BOARD ENTRY (BLUE VARIANT) === */
+    .direction-mailbox-entry{border-color:rgba(174,200,230,.35);background:linear-gradient(135deg,rgba(245,250,255,.96),rgba(255,255,255,.96));color:#2c4a6e;box-shadow:0 8px 24px rgba(100,150,220,.08)}
+    @media(prefers-color-scheme:dark){.direction-mailbox-entry{background:linear-gradient(135deg,#1e2a3a,#262d35);color:#c8daf0;border-color:rgba(130,180,230,.18)}}
+
     .mailbox-overlay{position:fixed;inset:0;z-index:12000;background:var(--bg-tint);overflow-y:auto;padding: max(18px,env(safe-area-inset-top)) 16px max(100px,calc(84px + env(safe-area-inset-bottom)));opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .22s,transform .22s}
     .mailbox-overlay.show{opacity:1;pointer-events:auto;transform:translateY(0)} .mailbox-shell{max-width:620px;margin:0 auto}.mailbox-top{display:flex;align-items:center;gap:12px;margin:8px 0 18px}.mailbox-back{width:40px;height:40px;border:1px solid var(--border);background:var(--card);border-radius:13px;color:var(--text-1);font-size:19px;cursor:pointer}.mailbox-heading{font-size:24px;font-weight:850;letter-spacing:-.5px}.mailbox-subheading{font-size:12px;color:var(--text-2);margin-top:2px}
     .mailbox-hero{padding:20px;border-radius:20px;background:linear-gradient(135deg,#fff1f5,#fffaf4);border:1px solid rgba(214,158,177,.28);color:#614650;margin-bottom:14px}.mailbox-hero-emoji{font-size:25px}.mailbox-hero h3{font-size:19px;margin:6px 0}.mailbox-hero p{font-size:12px;line-height:1.7;opacity:.8}
@@ -575,7 +579,231 @@
     @media(max-width:380px){.mail-login{padding:16px}.mail-login-card{padding:16px 6px}.mail-password-card{padding:12px 8px}}
     @media(prefers-reduced-motion:reduce){.mailbox-overlay,.mail-read-overlay,.mail-letter,.mailbox-entry{transition:none!important}}
 
-  </style>
+  
+
+    /* ==================== PERSONAL DIRECTION BOARD ==================== */
+    .direction-page-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:18px; }
+    .direction-kicker { color:var(--text-3); font-size:10px; font-weight:800; letter-spacing:1.5px; margin-bottom:5px; }
+    .direction-lead { color:var(--text-2); font-size:13px; line-height:1.55; margin-top:5px; }
+    .direction-auth, .direction-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-lg); padding:18px; margin-bottom:14px; box-shadow:var(--shadow); }
+    .direction-auth h2 { font-size:18px; margin-bottom:6px; }
+    .direction-auth p { color:var(--text-2); font-size:13px; line-height:1.6; margin-bottom:14px; }
+    .direction-form { display:grid; gap:10px; }
+    .direction-form input { appearance:auto; }
+    .direction-btn { border:0; border-radius:11px; min-height:42px; padding:0 14px; background:var(--text-1); color:var(--bg); font-size:13px; font-weight:750; cursor:pointer; }
+    .direction-btn:disabled { opacity:.5; cursor:wait; }
+    .direction-btn.secondary { background:var(--bg); color:var(--text-1); border:1px solid var(--border); }
+    .direction-btn.danger { background:rgba(255,59,48,.1); color:var(--red); }
+    .direction-btn.small { min-height:34px; padding:0 10px; font-size:12px; }
+    .direction-auth-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+    .direction-message { min-height:18px; color:var(--text-2); font-size:12px; margin-top:10px; line-height:1.5; }
+    .direction-topline { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .direction-user { font-size:11px; color:var(--text-2); overflow-wrap:anywhere; }
+    .direction-view-tabs { display:grid; grid-template-columns:1fr 1fr; gap:5px; padding:4px; border-radius:12px; background:var(--bg); margin-bottom:14px; }
+    .direction-view-tab { border:0; border-radius:9px; background:transparent; color:var(--text-2); min-height:36px; font-size:12px; font-weight:700; }
+    .direction-view-tab.active { background:var(--card); color:var(--text-1); box-shadow:var(--shadow); }
+    .direction-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+    .direction-stat { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:11px 8px; min-width:0; }
+    .direction-stat strong { display:block; font-size:21px; letter-spacing:-.5px; }
+    .direction-stat span { color:var(--text-2); font-size:10px; }
+    .direction-section-title { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:16px 0 10px; }
+    .direction-section-title h3 { font-size:15px; font-weight:800; }
+    .direction-hint { font-size:11px; color:var(--text-3); line-height:1.5; }
+    .direction-global-list { display:grid; gap:8px; }
+    .direction-item { cursor:grab; touch-action:pan-y; user-select:none; -webkit-user-select:none; display:grid; grid-template-columns:28px minmax(0,1fr) auto; gap:9px; align-items:center; padding:11px; border:1px solid var(--border); border-radius:13px; background:var(--card); min-width:0; }
+    .direction-drag-handle { color:var(--text-3);font-size:17px;cursor:grab;padding:0 2px; }
+    .direction-item.dragging { opacity:.45; border-style:dashed; } .direction-item.drag-over { outline:2px solid var(--torie); outline-offset:1px; }
+    .direction-rank { width:27px; height:27px; border-radius:9px; background:var(--bg); color:var(--text-2); display:grid; place-items:center; font-size:11px; font-weight:850; font-variant-numeric:tabular-nums; }
+    .direction-item-title { font-size:13px; font-weight:750; overflow-wrap:anywhere; }
+    .direction-item-meta { color:var(--text-3); font-size:10px; margin-top:3px; }
+    .direction-item-actions { display:flex; align-items:center; gap:4px; }
+    .direction-icon-btn { width:31px; height:31px; border:1px solid var(--border); border-radius:9px; background:var(--bg); color:var(--text-2); font-size:14px; cursor:pointer; display:grid; place-items:center; padding:0; }
+    .direction-icon-btn:disabled { opacity:.25; cursor:default; }
+    .direction-status { display:inline-flex; border-radius:6px; padding:2px 6px; font-size:10px; font-weight:750; margin-left:5px; white-space:nowrap; }
+    .direction-status.focus { color:#d93636; background:rgba(255,59,48,.1); }
+    .direction-status.normal { color:#a66b00; background:rgba(255,159,10,.13); }
+    .direction-status.paused { color:var(--text-3); background:var(--bg); }
+
+    .direction-home-entry{width:100%;display:flex;align-items:center;gap:13px;text-align:left;padding:15px 16px;margin:0 0 16px;border:1px solid var(--border);border-radius:16px;background:var(--card);box-shadow:var(--shadow);color:var(--text-1);cursor:pointer}
+    .direction-home-entry:active{transform:scale(.985)}
+    .direction-home-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:rgba(0,122,255,.1);font-size:23px;flex-shrink:0}
+    .direction-home-copy{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+    .direction-home-copy strong{font-size:15px;font-weight:800}.direction-home-copy small{font-size:11px;color:var(--text-2)}
+    .direction-home-arrow{font-size:25px;color:var(--text-3);line-height:1}
+    /* 与时光信箱 mailbox-shell 同宽；头像卡片使用银行页同款 SVG */
+    #page-direction{width:min(620px,100%);margin-inline:auto}
+    .direction-person-picker{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0 8px}
+    .direction-person-card{appearance:none;-webkit-appearance:none;display:block;width:100%;min-width:0;background:var(--card);color:var(--text-1);border:2px solid var(--border);border-radius:var(--r-lg);padding:26px 12px;text-align:center;cursor:pointer;touch-action:manipulation;position:relative;z-index:1;transition:all .25s var(--ease-spring);font:inherit}
+    .direction-person-card:active{transform:scale(.97)}.direction-person-card.torie-card{border-color:rgba(0,122,255,.2)}.direction-person-card.jory-card{border-color:rgba(255,149,0,.2)}
+    .direction-person-card.torie-card:hover,.direction-person-card.torie-card:focus-visible{border-color:var(--torie);background:rgba(0,122,255,.04)}.direction-person-card.jory-card:hover,.direction-person-card.jory-card:focus-visible{border-color:var(--jory);background:rgba(255,149,0,.04)}
+    .direction-person-avatar{width:64px;height:64px;display:block;margin:0 auto 10px;pointer-events:none}
+    .direction-person-name{font-size:18px;font-weight:850;pointer-events:none}.direction-person-hint{font-size:11px;color:var(--text-2);margin-top:4px;pointer-events:none}
+    .direction-back-home{margin-bottom:14px}
+    @media(max-width:420px){.direction-person-picker{gap:10px}.direction-person-card{padding:20px 8px}.direction-person-avatar{width:54px;height:54px}}
+
+    .direction-category-list { display:grid; gap:10px; }
+    .direction-category { border:1px solid var(--border); background:var(--card); border-radius:14px; overflow:hidden; }
+    .direction-category-head { display:flex; background:var(--category-tint, rgba(0,122,255,.06)); border-left:4px solid var(--category-color, #8bb8e8); align-items:center; gap:9px; padding:13px; }
+    .direction-category-emoji { font-size:20px; }
+    .direction-category-name { flex:1; min-width:0; font-size:14px; font-weight:800; }
+    .direction-category-count { color:var(--text-3); font-size:10px; }
+    .direction-category-tools { display:flex; gap:4px; }
+    .direction-category-items { border-top:1px solid var(--border); padding:7px 10px 10px; display:grid; gap:6px; }
+    .direction-mini-item { display:flex; align-items:center; gap:8px; padding:8px 7px; border-radius:9px; background:var(--bg); min-width:0; }
+    .direction-mini-item-name { flex:1; min-width:0; font-size:12px; overflow-wrap:anywhere; }
+    .direction-mini-item small { color:var(--text-3); font-size:10px; }
+    .direction-empty { padding:22px 10px; text-align:center; color:var(--text-3); font-size:12px; }
+    .direction-toolbar { display:flex; flex-wrap:wrap; gap:7px; margin:12px 0; }
+    .direction-toolbar .direction-btn { flex:1; min-width:100px; }
+    .direction-sync { display:flex; align-items:center; gap:6px; color:var(--text-3); font-size:10px; margin-top:10px; }
+    .direction-sync::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--green); }
+    .direction-sync.pending::before { background:#ff9f0a; }
+    .direction-modal-backdrop { position:fixed; inset:0; z-index:10020; background:rgba(0,0,0,.42); display:none; align-items:flex-end; justify-content:center; padding:12px; }
+    .direction-modal-backdrop.show { display:flex; }
+    .direction-modal { width:min(480px,100%); max-height:88vh; overflow:auto; background:var(--card); color:var(--text-1); border-radius:18px; padding:18px; box-shadow:0 16px 48px rgba(0,0,0,.25); }
+    .direction-modal h3 { font-size:17px; margin-bottom:14px; }
+    .direction-modal .form-group { margin-bottom:11px; }
+    .direction-modal textarea { width:100%; min-height:74px; resize:vertical; padding:11px 12px; border:1px solid var(--border); border-radius:9px; background:var(--bg); color:var(--text-1); font:inherit; font-size:14px; }
+    .direction-modal-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px; }
+    .direction-modal-actions .direction-btn { width:100%; }
+    .direction-export-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .direction-export-row button { flex:1; }
+    @media (min-width:700px) {
+      #page-direction .direction-workspace { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr); gap:14px; align-items:start; }
+      #page-direction .direction-main-col, #page-direction .direction-side-col { min-width:0; }
+      .direction-modal-backdrop { align-items:center; }
+    }
+    @media (max-width:420px) {
+      .direction-card, .direction-auth { padding:14px; }
+      .direction-item { grid-template-columns:25px minmax(0,1fr) auto; gap:6px; padding:9px 7px; }
+      .direction-item-actions { gap:2px; }
+      .direction-icon-btn { width:28px; height:29px; }
+    }
+
+
+
+    /* Three-card navigation and refined editing controls */
+    #page-direction .direction-nav-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px!important;margin:0 0 16px!important}
+    #page-direction .direction-nav-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0;min-height:91px;padding:13px 14px;border:1px solid rgba(145,124,93,.13);border-radius:18px;background:linear-gradient(155deg,#fffefa,#f8f3e9);color:#51483d;text-align:left;cursor:pointer;box-shadow:0 5px 16px rgba(90,72,45,.045);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;font:inherit}
+    #page-direction .direction-nav-card:active{transform:scale(.97)}
+    #page-direction .direction-nav-card:focus-visible{outline:3px solid rgba(130,122,171,.28);outline-offset:2px}
+    #page-direction .direction-nav-number{font-size:25px;line-height:1.1;font-weight:780;letter-spacing:-.7px;color:#51483d}
+    #page-direction .direction-nav-label{font-size:11px;font-weight:650;color:#948a7d;margin-top:7px;white-space:nowrap}
+    #page-direction .direction-nav-arrow{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:22px;color:#b4aa9b}
+    #page-direction .focus-nav{background:linear-gradient(150deg,#fffaf7,#f8ece8)}
+    #page-direction .ranking-nav{background:linear-gradient(150deg,#fffefa,#f4f0e8)}
+    #page-direction .category-nav{background:linear-gradient(150deg,#fbfaff,#f0edf8)}
+    #page-direction .direction-item{grid-template-columns:28px minmax(0,1fr) auto;cursor:default}
+    #page-direction .direction-item-actions{gap:7px}
+    #page-direction .direction-item-actions .direction-icon-btn{order:1;width:34px;height:34px;border-radius:11px;background:#f8f5ef;border-color:rgba(145,124,93,.13);font-size:15px}
+    #page-direction .direction-drag-handle{order:2;display:grid;place-items:center;width:34px;height:34px;padding:0;border-radius:11px;background:#eee9df;color:#81786b;font-size:20px;cursor:grab;touch-action:none}
+    #page-direction .direction-drag-handle:active{cursor:grabbing;background:#e6dfd2}
+    #page-direction .direction-item.drop-before{box-shadow:inset 0 3px 0 #9b8fc2,0 3px 12px rgba(90,72,45,.04)}
+    #page-direction .direction-item.drop-after{box-shadow:inset 0 -3px 0 #9b8fc2,0 3px 12px rgba(90,72,45,.04)}
+    #page-direction .direction-modal{border-radius:25px;padding:23px;background:linear-gradient(155deg,#fffefa,#f8f4ed);border:1px solid rgba(145,124,93,.13);box-shadow:0 22px 70px rgba(60,48,34,.20)}
+    #page-direction .direction-modal h3{font-size:20px;letter-spacing:-.4px;color:#4b4339;margin-bottom:20px}
+    #page-direction .direction-modal .form-group{margin-bottom:17px}
+    #page-direction .direction-modal .form-group label{display:block;margin-bottom:8px;color:#776d60;font-size:12px;font-weight:750;letter-spacing:.1px}
+    #page-direction .direction-modal input,#page-direction .direction-modal select,#page-direction .direction-modal textarea{width:100%;min-height:47px;padding:12px 14px;border:1px solid rgba(145,124,93,.18);border-radius:14px;background:#fffefa;color:#51483d;font:inherit;font-size:14px;outline:none;box-shadow:0 2px 7px rgba(90,72,45,.025);transition:border-color .2s,box-shadow .2s}
+    #page-direction .direction-modal textarea{min-height:92px;line-height:1.6}
+    #page-direction .direction-modal input:focus,#page-direction .direction-modal select:focus,#page-direction .direction-modal textarea:focus{border-color:#a99bc9;box-shadow:0 0 0 4px rgba(169,155,201,.15)}
+    #page-direction .direction-modal select{appearance:none;-webkit-appearance:none;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23948a7d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+    #page-direction .direction-modal select option{padding:10px;background:#fffefa;color:#51483d}
+    #page-direction .direction-modal-actions{gap:10px;margin-top:21px}
+    #page-direction .direction-modal-actions .direction-btn{min-height:46px;border-radius:14px;font-weight:750}
+    @media(max-width:380px){#page-direction .direction-nav-card{min-height:82px;padding:11px 10px}#page-direction .direction-nav-number{font-size:22px}#page-direction .direction-nav-label{font-size:10px}}
+
+    /* Direction board — calm, tactile, cream UI */
+    #page-direction { --dir-cream:#fbf8f2; --dir-ink:#39352f; --dir-muted:#958d82; --dir-line:rgba(103,88,67,.10); --dir-lilac:#eee8f8; }
+    #page-direction .direction-back-home { border:0; background:rgba(255,255,255,.72); color:#82796e; border-radius:999px; padding:9px 15px; font-size:13px; box-shadow:0 3px 14px rgba(85,68,45,.05); }
+    #page-direction .direction-workspace-header { padding:18px 18px 15px; margin:0 0 14px!important; border-radius:22px; background:linear-gradient(135deg,#fffdf9 0%,#f8f1e7 100%); border:1px solid rgba(159,137,105,.12); box-shadow:0 8px 24px rgba(100,78,45,.045); }
+    #page-direction .direction-workspace-header .page-title { color:#423b32; font-size:23px; letter-spacing:-.6px; }
+    #page-direction .direction-workspace-header .subtitle { color:#988d7e; font-size:12px; }
+    #page-direction .direction-icon-btn, #page-direction #directionSwitchPersonBtn { border-radius:999px; min-height:35px; background:rgba(255,255,255,.82); border:1px solid rgba(133,111,79,.12); color:#776e62; box-shadow:none; }
+    #page-direction .direction-stats { gap:9px!important; margin-bottom:14px!important; }
+    #page-direction .direction-stats > div { border:1px solid rgba(145,124,93,.10)!important; border-radius:18px!important; background:linear-gradient(160deg,#fffefa,#f9f5ed)!important; padding:13px 8px!important; box-shadow:0 5px 16px rgba(90,72,45,.035); }
+    #page-direction .direction-stats > div > div:first-child { color:#51483d!important; font-size:23px!important; font-weight:750!important; }
+    #page-direction .direction-stats > div > div:last-child { color:#a1988b!important; font-size:11px!important; margin-top:3px; }
+    #page-direction .direction-view-tabs { display:grid!important; grid-template-columns:1fr 1fr; gap:6px!important; padding:5px!important; border-radius:17px!important; background:#f0ece5!important; border:1px solid rgba(130,110,82,.08); }
+    #page-direction .direction-view-tabs .perspective-tab { min-height:43px; border:0!important; border-radius:13px!important; background:transparent!important; color:#948a7d!important; font-size:13px!important; font-weight:650!important; box-shadow:none!important; transition:background .22s ease, color .22s ease, transform .22s ease; }
+    #page-direction .direction-view-tabs .perspective-tab.active { background:#fffdf9!important; color:#51483d!important; box-shadow:0 3px 10px rgba(91,72,44,.08)!important; }
+    #page-direction .direction-toolbar { display:grid!important; grid-template-columns:1.15fr 1fr; gap:9px!important; margin:0 0 14px!important; }
+    #page-direction .direction-toolbar .direction-btn { min-height:45px; border-radius:15px; background:#827aab; color:#fff; font-size:13px; font-weight:700; box-shadow:0 5px 13px rgba(130,122,171,.17); transition:transform .18s ease, box-shadow .18s ease; }
+    #page-direction .direction-toolbar .direction-btn:active { transform:scale(.98); }
+    #page-direction .direction-toolbar .direction-btn.secondary { background:#fffdf9; color:#766d60; border:1px solid rgba(145,124,93,.15); box-shadow:0 3px 10px rgba(90,72,45,.035); }
+    #page-direction .direction-card { border:1px solid rgba(145,124,93,.12)!important; border-radius:21px!important; padding:17px!important; background:rgba(255,253,249,.94)!important; box-shadow:0 8px 24px rgba(90,72,45,.045)!important; }
+    #page-direction .direction-section-title { margin-bottom:13px!important; }
+    #page-direction .direction-section-title h3 { color:#51483d; font-size:15px; letter-spacing:.1px; }
+    #page-direction .direction-hint { color:#a0978a; font-size:11px; }
+    #page-direction .direction-item { border:1px solid rgba(145,124,93,.12); border-radius:16px; background:#fffefa; padding:12px; box-shadow:0 3px 11px rgba(90,72,45,.025); transition:transform .2s ease, box-shadow .2s ease; }
+    #page-direction .direction-item:active { transform:scale(.995); }
+    #page-direction .direction-category { border:1px solid rgba(145,124,93,.12); border-radius:18px; background:#fffefa; box-shadow:0 4px 14px rgba(90,72,45,.03); }
+    #page-direction .direction-category-head { padding:15px; }
+    #page-direction .direction-btn, #page-direction .direction-icon-btn { transition:transform .18s ease, box-shadow .18s ease, background .18s ease; }
+    #page-direction .direction-btn:active, #page-direction .direction-icon-btn:active { transform:scale(.98); }
+    #page-direction .direction-sync { border-radius:999px; background:rgba(255,255,255,.72); border:1px solid rgba(145,124,93,.10); color:#9a9185; padding:8px 12px; width:max-content; margin:12px auto 0; }
+    #page-direction .direction-picker-instruction { text-align:center; margin:17px 0 0; color:#9a9083; font-size:12px; }
+    #page-direction #directionPersonPicker > div:first-child { margin:30px 0 18px!important; }
+    #page-direction #directionPersonPicker .page-title { color:#453e35; letter-spacing:-.5px; }
+    #page-direction .direction-person-picker { gap:12px; margin:20px 0 0; }
+    #page-direction .direction-person-card { border:1px solid rgba(145,124,93,.13); border-radius:22px; background:linear-gradient(160deg,#fffefa,#f8f3ea); box-shadow:0 8px 22px rgba(90,72,45,.055); padding:24px 12px; }
+    #page-direction .direction-person-card:active { transform:scale(.975); }
+    #page-direction .direction-person-name { color:#51483d; font-size:16px; font-weight:750; }
+    #page-direction .direction-person-hint { color:#a1988b; font-size:11px; }
+    #page-direction .direction-modal { border-radius:24px 24px 18px 18px; border:1px solid rgba(145,124,93,.12); background:#fffdf9; box-shadow:0 20px 60px rgba(57,47,34,.18); }
+    #page-direction .direction-modal .direction-btn { border-radius:13px; }
+    @media(max-width:420px){ #page-direction .direction-workspace-header{padding:15px 14px 13px!important} #page-direction .direction-card{padding:14px!important} #page-direction .direction-toolbar{grid-template-columns:1fr 1fr} #page-direction .direction-stats>div{padding:11px 5px!important} }
+
+  
+    /* Inline creation actions and calm, Apple-inspired item editor */
+    #page-direction .direction-page-heading{margin:2px 0 14px;min-height:42px}
+    #page-direction .direction-page-heading h3{font-size:17px;letter-spacing:-.25px}
+    #page-direction .direction-inline-add{flex:0 0 auto;min-height:36px;padding:0 13px;border-radius:12px;font-size:12px;box-shadow:0 3px 10px rgba(75,65,48,.07)}
+    #page-direction .direction-inline-add span{font-size:15px;margin-right:3px}
+    #page-direction .direction-inline-add:active{transform:scale(.97)}
+    .direction-modal-backdrop{padding:14px;background:rgba(39,34,27,.38);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .direction-modal{width:min(520px,100%);max-height:min(90vh,820px);padding:22px;background:#fbfaf6;border:1px solid rgba(255,255,255,.82);border-radius:25px;box-shadow:0 24px 80px rgba(35,29,20,.22)}
+    .direction-modal h3{font-size:21px;letter-spacing:-.55px;margin:0 0 17px;color:#39352f}
+    .edit-intro{display:flex;align-items:center;gap:12px;padding:13px 15px;margin-bottom:14px;border-radius:17px;background:linear-gradient(135deg,#f4efe5,#f8f5ed);border:1px solid #eee7d9}
+    .edit-intro-icon{width:38px;height:38px;display:grid;place-items:center;flex:0 0 38px;border-radius:13px;background:#fffdf8;color:#a18b67;font-size:19px;box-shadow:0 2px 8px rgba(82,67,44,.07)}
+    .edit-intro strong{display:block;font-size:13px;color:#4c463c;letter-spacing:.05px}
+    .edit-intro small{display:block;margin-top:4px;color:#958b7d;font-size:11px;line-height:1.45}
+    .edit-section{padding:16px;margin:11px 0;border-radius:18px;border:1px solid rgba(130,113,86,.10);background:#fffefa;box-shadow:0 3px 12px rgba(72,58,37,.025)}
+    .edit-section-name{background:linear-gradient(145deg,#fffefa,#f7f4ed)}
+    .edit-section-classify{background:linear-gradient(145deg,#fbfaf6,#f2f5f0)}
+    .edit-section-note{background:linear-gradient(145deg,#fffefa,#f5f1f8)}
+    .edit-section-heading{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+    .edit-step{width:27px;height:27px;display:grid;place-items:center;flex:0 0 27px;border-radius:9px;background:#eee8dc;color:#786b55;font-size:10px;font-weight:800;letter-spacing:.2px}
+    .edit-section-heading b{display:block;font-size:12px;color:#514a40}
+    .edit-section-heading small{display:block;margin-top:3px;color:#a09789;font-size:10px}
+    .direction-modal .form-group{margin:0;min-width:0}
+    .direction-modal .form-group label{display:flex;align-items:center;gap:6px;margin:0 0 7px;color:#766e62;font-size:11px;font-weight:750}
+    .direction-modal .form-group label em{font-style:normal;font-weight:500;color:#aaa194}
+    .direction-modal input,.direction-modal select,.direction-modal textarea{box-sizing:border-box;width:100%;min-height:44px;padding:11px 13px;border:1px solid #e9e3d8;border-radius:12px;background:#fff;color:#484239;font:inherit;font-size:13px;outline:none;box-shadow:inset 0 1px 2px rgba(55,45,30,.025);transition:border-color .18s,box-shadow .18s,background .18s}
+    .direction-modal input:focus,.direction-modal select:focus,.direction-modal textarea:focus{border-color:#b9aa8d;background:#fffefa;box-shadow:0 0 0 3px rgba(185,170,141,.17)}
+    .direction-modal input::placeholder,.direction-modal textarea::placeholder{color:#b6aea2}
+    .direction-modal select{appearance:auto;cursor:pointer}
+    .direction-modal textarea{min-height:88px;line-height:1.55;resize:vertical}
+    .edit-two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .edit-field-caption{display:block;margin:6px 1px 0;color:#a39a8e;font-size:9px;line-height:1.35}
+    .edit-choice-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .edit-choice{--choice-bg:#f1eee8;--choice-ink:#766e62;--choice-line:rgba(120,108,90,.16);display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:39px;padding:8px 13px;border:1px solid var(--choice-line);border-radius:13px;background:var(--choice-bg);color:var(--choice-ink);font:inherit;font-size:11px;font-weight:750;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease;}
+    .edit-choice:active{transform:scale(.97)}
+    .edit-choice[aria-pressed="true"]{border-color:var(--choice-ink);box-shadow:0 0 0 2px color-mix(in srgb,var(--choice-ink) 15%,transparent),0 4px 10px rgba(65,55,40,.07);background:color-mix(in srgb,var(--choice-bg) 78%,white);}
+    .edit-choice[aria-pressed="true"]::after{content:"✓";font-size:11px;font-weight:900}
+    .edit-choice-dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:var(--choice-ink);box-shadow:0 0 0 3px color-mix(in srgb,var(--choice-ink) 13%,transparent)}
+    .edit-category-choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .edit-category-choice{justify-content:flex-start;max-width:100%;}
+    .edit-category-choice .edit-choice-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .edit-field-caption{margin-top:8px}
+    @media(max-width:480px){.edit-choice{min-height:42px;padding:9px 11px}.edit-category-choices{gap:7px}.edit-category-choice{flex:1 1 calc(50% - 7px)}}
+    .direction-modal-actions{gap:10px;margin-top:16px;padding-top:3px}
+    .direction-modal-actions .direction-btn{min-height:45px;border-radius:13px}
+    .direction-modal-actions .direction-btn:not(.secondary){background:#514b40;color:#fffaf1;box-shadow:0 5px 14px rgba(66,57,43,.14)}
+    .direction-modal-actions .direction-btn.secondary{background:#f0ede6;border-color:#e8e1d5;color:#756d61}
+    #directionModalDelete{width:100%;min-height:38px;border-radius:11px}
+    @media(max-width:480px){.direction-modal{padding:17px;border-radius:22px}.edit-section{padding:13px}.edit-two-col{grid-template-columns:1fr;gap:12px}.direction-modal-backdrop{padding:9px}.direction-modal-actions{position:sticky;bottom:-17px;padding:12px 0 0;background:linear-gradient(180deg,rgba(251,250,246,0),#fbfaf6 22%)} }
+</style>
 </head>
 <body>
 
@@ -800,6 +1028,7 @@
     <section id="page-home" class="app-page active">
       <div class="page-title">一起变好 <span class="version-badge">v3.8</span></div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
+
       <div id="weeklyCard" class="card summary-card" style="display:none"></div>
       <div id="trendCard" class="card summary-card" style="display:none"></div>
       
@@ -901,7 +1130,12 @@
         </div>
       </div>
 
-      <button class="mailbox-entry" id="mailboxEntry" type="button" aria-label="打开时光信箱">
+      <button class="mailbox-entry direction-mailbox-entry" id="openDirectionBoard" type="button" aria-label="打开大方向看板">
+        <span class="mailbox-entry-icon" style="background:rgba(130,180,230,.15);">🧭</span>
+        <span class="mailbox-entry-copy"><span class="mailbox-entry-title">方向看板</span></span>
+        <span class="mailbox-entry-arrow">›</span>
+      </button>
+<button class="mailbox-entry" id="mailboxEntry" type="button" aria-label="打开时光信箱">
         <span class="mailbox-entry-icon">💌</span>
         <span class="mailbox-entry-copy"><span class="mailbox-entry-title">时光信箱</span><span class="mailbox-entry-count" id="mailboxEntrySummary"></span></span>
         <span class="mailbox-entry-arrow">›</span>
@@ -1312,6 +1546,100 @@
     </div>
   </div>
   <div class="mail-read-overlay" id="mailReadOverlay" aria-hidden="true"><article class="mail-letter" id="mailLetter" role="dialog" aria-modal="true" aria-label="信件"><div class="mail-letter-top" id="mailLetterEmoji">💌</div><div class="mail-letter-kicker" id="mailLetterKicker">A LETTER FOR YOU</div><div class="mail-letter-title" id="mailLetterTitle"></div><div class="mail-letter-meta" id="mailLetterMeta"></div><div class="mail-letter-preview" id="mailLetterPreview" style="display:none"></div><div class="mail-letter-body" id="mailLetterBody"></div><button class="mail-letter-close" id="mailLetterClose" type="button">收下心意📩</button></article></div>
+
+
+
+  <!-- PERSONAL DIRECTION BOARD: 独立管理方向与全局优先级，不承载日程 -->
+  <section id="page-direction" class="app-page">
+    <button class="bank-back-btn direction-back-home" id="directionBackHome" type="button">‹ 返回首页</button>
+    
+    <!-- Person Picker -->
+    <div id="directionPersonPicker">
+      <div style="text-align:center;margin:40px 0 24px;">
+        <div style="font-size:42px;margin-bottom:12px;">🧭</div>
+        <div class="page-title" style="margin-bottom:8px;">方向看板</div>
+        <div class="subtitle" style="margin-bottom:0;">把想去的方向，慢慢整理清楚</div>
+      </div>
+      <div class="direction-person-picker" id="directionPersonCards">
+        <button class="direction-person-card torie-card" id="directionPickTorie" data-direction-person="torie" type="button" aria-label="进入 Torie 的方向看板">
+          <svg class="direction-person-avatar" viewBox="0 0 100 100" fill="none" stroke="var(--torie)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M25 45 C25 20, 75 20, 75 45 C75 75, 65 90, 50 90 C35 90, 25 75, 25 45 Z" fill="rgba(0,122,255,0.08)"/><path d="M25 35 L20 20 L35 28"/><path d="M75 35 L80 20 L65 28"/><circle cx="38" cy="45" r="4" fill="var(--torie)" stroke="none"/><circle cx="62" cy="45" r="4" fill="var(--torie)" stroke="none"/><path d="M50 52 L46 58 L54 58 Z" fill="var(--jory)" stroke="var(--jory)"/>
+          </svg>
+          <div class="direction-person-name">Torie</div><div class="direction-person-hint">进入 Torie 的方向看板</div>
+        </button>
+        <button class="direction-person-card jory-card" id="directionPickJory" data-direction-person="jory" type="button" aria-label="进入 Jory 的方向看板">
+          <svg class="direction-person-avatar" viewBox="0 0 100 100" fill="none" stroke="var(--jory)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <ellipse cx="50" cy="65" rx="26" ry="22" fill="rgba(255,149,0,0.08)"/><path d="M28 44 C18 32, 8 16, 14 6 C20 -2, 36 14, 40 44" fill="rgba(255,149,0,0.08)"/><path d="M72 44 C82 32, 92 16, 86 6 C80 -2, 64 14, 60 44" fill="rgba(255,149,0,0.08)"/><ellipse cx="40" cy="62" rx="2.5" ry="3.5" fill="var(--jory)" stroke="none"/><ellipse cx="60" cy="62" rx="2.5" ry="3.5" fill="var(--jory)" stroke="none"/><circle cx="50" cy="68" r="1.5" fill="var(--red)" stroke="none" opacity="0.6"/><path d="M47 71 Q50 73 53 71" stroke-width="1.5"/>
+          </svg>
+          <div class="direction-person-name">Jory</div><div class="direction-person-hint">进入 Jory 的方向看板</div>
+        </button>
+      </div>
+      <div class="subtitle direction-picker-instruction">选择使用者，进入你的方向管理</div>
+    </div>
+
+    <!-- Workspace -->
+    <div id="directionWorkspace" hidden>
+      <div class="direction-workspace-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <div class="page-title" id="directionPageTitle" style="margin-bottom:4px;">我的方向</div>
+          <div class="subtitle" style="margin-bottom:0;">把重要的事，按自己的节奏慢慢推进</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="direction-icon-btn" id="directionRefreshBtn" type="button" title="重新同步">↻</button>
+          <button class="direction-btn secondary small" id="directionSwitchPersonBtn" type="button">切换人物</button>
+        </div>
+      </div>
+      
+      <!-- 三张导航卡片：重点推进 / 全局排名 / 大方向 -->
+      <div class="direction-stats direction-nav-cards" aria-label="方向看板导航">
+        <button class="direction-nav-card focus-nav" id="directionFocusNav" type="button" aria-label="查看重点推进事项">
+          <span class="direction-nav-number" id="directionFocusCount">0</span><span class="direction-nav-label">重点推进</span><span class="direction-nav-arrow">›</span>
+        </button>
+        <button class="direction-nav-card ranking-nav" id="directionRankingNav" type="button" aria-label="查看全局排名">
+          <span class="direction-nav-number" id="directionItemCount">0</span><span class="direction-nav-label">全局排名</span><span class="direction-nav-arrow">›</span>
+        </button>
+        <button class="direction-nav-card category-nav" id="directionCategoryNav" type="button" aria-label="查看大方向">
+          <span class="direction-nav-number" id="directionCategoryCount">0</span><span class="direction-nav-label">大方向</span><span class="direction-nav-arrow">›</span>
+        </button>
+      </div>
+
+      <!-- Global Priority View -->
+      <div id="directionGlobalView" hidden>
+        <div class="direction-card">
+          <div class="direction-section-title direction-page-heading"><h3 id="directionGlobalTitle">全局排名</h3><button class="direction-btn direction-inline-add" id="directionAddItemBtn" type="button"><span aria-hidden="true">＋</span> 添加事项</button></div>
+          <p class="direction-hint" id="directionPriorityHint" style="margin-bottom:10px">按住每项最右侧的拖动柄，可将它插入到其他事项之间。重点推进、正常推进、暂缓依次排列。</p>
+          <div id="directionGlobalList" class="direction-global-list"></div>
+        </div>
+      </div>
+
+      <!-- Categories View -->
+      <div id="directionCategoriesView">
+        <div class="direction-card">
+          <div class="direction-section-title direction-page-heading"><h3>大方向</h3><button class="direction-btn secondary direction-inline-add" id="directionAddCategoryBtn" type="button"><span aria-hidden="true">＋</span> 添加大方向</button></div>
+          <div id="directionCategoryList" class="direction-category-list"></div>
+        </div>
+      </div>
+
+      <!-- Sync Status -->
+      <div class="direction-export-row" style="display:flex;gap:8px;margin:16px 0;">
+        <button class="direction-btn secondary small" id="directionExportBtn" type="button">导出备份</button>
+        <button class="direction-btn secondary small" id="directionImportBtn" type="button">导入备份</button>
+        <input id="directionImportFile" type="file" accept="application/json,.json" hidden />
+      </div>
+      <div class="direction-sync" id="directionSyncStatus">云端已同步</div>
+    </div>
+  </section>
+
+  <div class="direction-modal-backdrop" id="directionModalBackdrop" aria-hidden="true">
+    <div class="direction-modal" role="dialog" aria-modal="true" aria-labelledby="directionModalTitle">
+      <h3 id="directionModalTitle">编辑事项</h3>
+      <div id="directionModalBody"></div>
+      <div class="direction-modal-actions">
+        <button class="direction-btn secondary" id="directionModalCancel" type="button">取消</button>
+        <button class="direction-btn" id="directionModalSave" type="button">保存</button>
+      </div>
+    </div>
+  </div>
 
   <nav class="bottom-nav" aria-label="页面导航">
     <button class="nav-btn active" data-page="home" type="button"><span class="nav-icon">🏠</span><span>首页</span></button>
@@ -2053,6 +2381,11 @@
 
     /* ==================== PAGE NAV ==================== */
     function setupNav() {
+      document.getElementById("openDirectionBoard")?.addEventListener("click",()=>{
+        document.querySelectorAll(".app-page").forEach((s)=>s.classList.toggle("active",s.id==="page-direction"));
+        document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page==="home"));
+        directionBackToPicker();window.scrollTo({top:0,behavior:"smooth"});
+      });
       document.querySelectorAll(".nav-btn").forEach((btn)=>{
         btn.addEventListener("click",()=>{
           const page=btn.dataset.page;
@@ -2060,6 +2393,7 @@
           document.querySelectorAll(".nav-btn").forEach((b)=>{const active=b===btn;b.classList.toggle("active",active);});
           window.scrollTo({top:0,behavior:"smooth"});
           if (page === "bank") resetBankToStep1();
+          if (page === "home" && document.getElementById("page-direction").classList.contains("active")) directionBackToPicker();
           if (page !== "bank") applyBgTint("");
           if (page === "data") renderStats();
         });
@@ -2207,11 +2541,8 @@
           const pType = points[i].type;
           if (pType === 'up') strokeColor = greenColor;
           else if (pType === 'recharge') strokeColor = blueColor;
-          // 本条流水为“增加 0 张”时，余额不变，因此将对应的水平线段标记为浅紫色
-          const currentLog = points[i].logData;
-          if (currentLog && currentLog.change_type === '增加' && Number(currentLog.card_num) === 0) strokeColor = zeroColor;
-          // 历史统计中当天净变化为 0，也用浅紫色标记水平线段
-          else if (!currentLog && Number(points[i].delta) === 0) strokeColor = zeroColor;
+          // 只有相邻两点余额相同、线段确实水平时，才使用浅紫色
+          if (values[i] === values[i - 1]) strokeColor = zeroColor;
           
           c.strokeStyle = strokeColor; 
           c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); 
@@ -2225,9 +2556,6 @@
           const pType = points[i].type;
           if (pType === 'up') dotColor = greenColor;
           else if (pType === 'recharge') dotColor = blueColor;
-          const pointLog = points[i].logData;
-          if ((pointLog && pointLog.change_type === '增加' && Number(pointLog.card_num) === 0) || (!pointLog && Number(points[i].delta) === 0)) dotColor = zeroColor;
-          
           c.fillStyle = dotColor; c.beginPath(); c.arc(cp.x, cp.y, 4, 0, Math.PI * 2); c.fill(); 
           c.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#fff'; c.beginPath(); c.arc(cp.x, cp.y, 2, 0, Math.PI * 2); c.fill(); 
         });
@@ -3070,6 +3398,7 @@
     /* ==================== INIT ==================== */
     document.addEventListener("DOMContentLoaded", async () => {
       setupMailbox();
+      setupDirectionBoard();
       initSettings(); initRatioModals(); initPetInteractions(); setupFeedModals(); setupEditModal();
       setupNav(); setupBankNav(); setupPeriodTabs(); setupPerspectiveTabs(); setupHistoryFilter();
       setupAddProduct(); setupAddEarn(); setupAddPunish();
@@ -3084,6 +3413,346 @@
       let resizeTimer;
       window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (document.getElementById("page-data").classList.contains("active")) { renderStats(); } }, 200); });
     });
-  </script>
+  
+
+    /* ==================== PERSONAL DIRECTION BOARD ==================== */
+    const DIRECTION_TABLE = "direction_boards_shared";
+    const DIRECTION_DEFAULT_BOARD = {
+      categories: [
+        { id:"cat-improv", name:"即兴伴奏", emoji:"🎹", items:[
+          {id:"dir-improv-1",title:"中小学教材全部作品",status:"normal",note:""},
+          {id:"dir-improv-2",title:"阿里云盘流行经验",status:"normal",note:""},
+          {id:"dir-improv-3",title:"看完吴老师即兴课",status:"normal",note:""}
+        ]},
+        { id:"cat-classical", name:"古典钢琴", emoji:"🎼", items:[
+          {id:"dir-classical-1",title:"巴赫",status:"normal",note:""},
+          {id:"dir-classical-2",title:"紫丁香",status:"normal",note:""},
+          {id:"dir-classical-3",title:"山丹丹",status:"normal",note:""},
+          {id:"dir-classical-4",title:"格林卡《夜莺》",status:"normal",note:""},
+          {id:"dir-classical-5",title:"拉赫音乐瞬间",status:"normal",note:""}
+        ]},
+        { id:"cat-production", name:"音乐制作", emoji:"🎧", items:[
+          {id:"dir-production-1",title:"学 Suno",status:"normal",note:""},
+          {id:"dir-production-2",title:"看完吴老师编曲课",status:"normal",note:""},
+          {id:"dir-production-3",title:"学编鼓",status:"normal",note:""},
+          {id:"dir-production-4",title:"制作一个 Demo（面试展示）",status:"normal",note:""}
+        ]},
+        { id:"cat-instrument", name:"第二乐器", emoji:"🎋", items:[
+          {id:"dir-instrument-1",title:"竹笛：找首适合的曲子练一下",status:"normal",note:""}
+        ]},
+        { id:"cat-exam", name:"笔试", emoji:"📚", items:[
+          {id:"dir-exam-1",title:"中西音乐史刷题",status:"normal",note:""}
+        ]},
+        { id:"cat-life", name:"其他", emoji:"⚽", items:[
+          {id:"dir-life-1",title:"练足球",status:"normal",note:""},
+          {id:"dir-life-2",title:"跑步练体能",status:"normal",note:""},
+          {id:"dir-life-3",title:"仰卧起坐、俯卧撑之类的",status:"normal",note:""},
+          {id:"dir-life-4",title:"整理删除照片",status:"normal",note:""}
+        ]}
+      ],
+      priority: ["dir-improv-1","dir-improv-2","dir-improv-3","dir-classical-1","dir-classical-2","dir-classical-3","dir-classical-4","dir-classical-5","dir-production-1","dir-production-2","dir-production-3","dir-production-4","dir-instrument-1","dir-exam-1","dir-life-1","dir-life-2","dir-life-3","dir-life-4"],
+      prioritySet: false
+    };
+    let directionBoard = null;
+    let directionUser = null;
+    let directionLoadingUserId = null;
+    let directionLoadToken = 0;
+    let directionView = "categories";
+    let directionGlobalFilter = "all";
+    let directionSaveTimer = null;
+    let directionSaving = false;
+    let directionDirty = false;
+    let directionChannel = null;
+    let directionLastUpdated = null;
+    let directionChangeVersion = 0;
+    let directionModalMode = "";
+    let directionModalData = null;
+
+    function directionClone(value) { return JSON.parse(JSON.stringify(value)); }
+    function directionId(prefix="dir") { return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`; }
+    function directionEscape(value) { return String(value ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+    function directionAllItems() {
+      return (directionBoard?.categories || []).flatMap(c=>(c.items||[]).map(item=>({...item,categoryId:c.id,categoryName:c.name,categoryEmoji:c.emoji})));
+    }
+    function directionNormalize(raw) {
+      const base = raw && Array.isArray(raw.categories) ? directionClone(raw) : directionClone(DIRECTION_DEFAULT_BOARD);
+      base.categories = base.categories.map(c=>({id:String(c.id||directionId("cat")),name:String(c.name||"未命名领域"),emoji:String(c.emoji||"📁"),items:Array.isArray(c.items)?c.items.map(i=>({id:String(i.id||directionId()),title:String(i.title||"未命名事项"),status:["focus","normal","paused"].includes(i.status)?i.status:"normal",note:String(i.note||"")})):[]}));
+      const ids = base.categories.flatMap(c=>c.items.map(i=>i.id));
+      const unique = [...new Set(ids)];
+      const requested = Array.isArray(base.priority)?base.priority.map(String):[];
+      base.priority = [...requested.filter(id=>unique.includes(id) && requested.indexOf(id)===requested.lastIndexOf(id)), ...unique.filter(id=>!requested.includes(id))];
+      base.prioritySet = base.prioritySet === true;
+      const itemById = new Map(base.categories.flatMap(c=>c.items).map(i=>[i.id,i]));
+      const tier = {focus:0,normal:1,paused:2};
+      base.priority.sort((a,b)=>tier[itemById.get(a)?.status||"normal"]-tier[itemById.get(b)?.status||"normal"]);
+      return base;
+    }
+    function directionSetSync(message,pending=false) {
+      const el=document.getElementById("directionSyncStatus"); if(el){el.textContent=message;el.classList.toggle("pending",pending);}
+    }
+    function directionShowWorkspace(yes) {
+      document.getElementById("directionPersonPicker").hidden=!!yes;
+      document.getElementById("directionWorkspace").hidden=!yes;
+    }
+    function directionStatusLabel(status) { return status==="focus"?"重点推进":status==="paused"?"暂缓保留":"正常推进"; }
+    function directionStatusClass(status) { return status==="focus"?"focus":status==="paused"?"paused":"normal"; }
+    const DIRECTION_PEOPLE = { torie:{id:"torie",name:"Torie"}, jory:{id:"jory",name:"Jory"} };
+    function directionChoosePerson(personKey) {
+      const person=DIRECTION_PEOPLE[personKey]; if(!person)return;
+      directionUser=person;
+      directionLoadToken++;
+      directionBoard=null;directionDirty=false;directionChangeVersion=0;directionLastUpdated=null;
+      // directionUserLabel 在当前页面结构中并不存在；不能让这个可选标签阻断整个入口。
+      const userLabel=document.getElementById("directionUserLabel");
+      if(userLabel) userLabel.textContent=`当前人物：${person.name}`;
+      const pageTitle=document.getElementById("directionPageTitle");
+      if(pageTitle) pageTitle.textContent=`${person.name} 的方向`;
+      directionShowWorkspace(true);
+      directionSetSync("正在从云端读取…",true);
+      directionLoadBoard().then(()=>directionSubscribe()).catch(error=>{
+        console.error("direction board load failed",error);
+        directionSetSync("云端读取暂不可用，可稍后重试",true);
+        showToast("方向看板暂时无法读取，请检查网络或 Supabase 设置","error");
+      });
+    }
+    function directionBackToPicker() {
+      clearTimeout(directionSaveTimer);
+      if(directionDirty && directionBoard) directionSaveBoard(false);
+      if(directionChannel){sb.removeChannel(directionChannel);directionChannel=null;}
+      directionLoadToken++;
+      directionUser=null;directionBoard=null;directionDirty=false;
+      directionShowWorkspace(false);
+    }
+
+    async function directionLoadBoard() {
+      if(!directionUser)return;
+      const personId=directionUser.id;
+      const loadToken=directionLoadToken;
+      directionSetSync("正在从云端读取…",true);
+      const {data,error}=await sb.from(DIRECTION_TABLE).select("board,updated_at").eq("person_id",personId).maybeSingle();
+      if(loadToken!==directionLoadToken || directionUser?.id!==personId)return;
+      if(error){directionSetSync("读取失败，请检查方向看板 SQL 与 RLS",true);showToast("方向看板读取失败："+error.message,"error");return;}
+      if(data){directionBoard=directionNormalize(data.board);directionLastUpdated=data.updated_at;}
+      else {
+        directionBoard=directionNormalize(directionUser.id==="torie"?DIRECTION_DEFAULT_BOARD:{categories:[],priority:[],prioritySet:false});
+        await directionSaveBoard(true);
+      }
+      directionRender();directionSetSync("云端已同步");
+    }
+    function directionSubscribe() {
+      if(!directionUser)return;
+      if(directionChannel)sb.removeChannel(directionChannel);
+      directionChannel=sb.channel("direction-board-"+directionUser.id)
+        .on("postgres_changes",{event:"*",schema:"public",table:DIRECTION_TABLE,filter:"person_id=eq."+directionUser.id},payload=>{
+          if(directionDirty || directionSaving)return;
+          const stamp=payload.new?.updated_at;
+          if(stamp && (!directionLastUpdated || new Date(stamp)>new Date(directionLastUpdated))){
+            directionBoard=directionNormalize(payload.new.board);directionLastUpdated=stamp;directionRender();directionSetSync("已接收另一台设备的更新");
+          }
+        }).subscribe();
+    }
+    function directionQueueSave() {
+      directionChangeVersion++;
+      directionDirty=true;directionSetSync("有修改，等待同步…",true);
+      clearTimeout(directionSaveTimer);
+      directionSaveTimer=setTimeout(()=>directionSaveBoard(false),500);
+    }
+    async function directionSaveBoard(isInitial=false) {
+      if(!directionUser || !directionBoard)return;
+      clearTimeout(directionSaveTimer);directionSaving=true;directionSetSync("正在同步…",true);
+      const snapshot=directionClone(directionBoard);
+      const saveVersion=directionChangeVersion;
+      const stamp=new Date().toISOString();
+      const {data,error}=await sb.from(DIRECTION_TABLE).upsert({person_id:directionUser.id,board:snapshot,updated_at:stamp},{onConflict:"person_id"}).select("updated_at").single();
+      directionSaving=false;
+      if(error){directionDirty=true;directionSetSync("同步失败：请检查网络或数据库权限",true);showToast("看板保存失败："+error.message,"error");return false;}
+      directionLastUpdated=data?.updated_at||stamp;
+      if(directionChangeVersion===saveVersion){directionDirty=false;directionSetSync("云端已同步");}
+      else {directionDirty=true;directionSetSync("有较新的修改，继续同步…",true);directionSaveTimer=setTimeout(()=>directionSaveBoard(false),150);}
+      return true;
+    }
+    function directionRender() {
+      if(!directionBoard)return;
+      const items=directionAllItems();
+      const palette=[['#8bb8e8','rgba(139,184,232,.13)'],['#9bc9ad','rgba(155,201,173,.15)'],['#d5ad83','rgba(213,173,131,.15)'],['#b6a0dc','rgba(182,160,220,.15)'],['#e3a6b0','rgba(227,166,176,.15)'],['#8fc7c5','rgba(143,199,197,.15)'],['#c3b47c','rgba(195,180,124,.15)']];
+      const categoryColorById=new Map(directionBoard.categories.map((cat,index)=>[cat.id,palette[index%palette.length]]));
+      const byId=new Map(items.map(i=>[i.id,i]));
+      directionBoard.priority=directionBoard.priority.filter(id=>byId.has(id));
+      items.forEach(i=>{if(!directionBoard.priority.includes(i.id))directionBoard.priority.push(i.id);});
+      document.getElementById("directionItemCount").textContent=items.length;
+      document.getElementById("directionCategoryCount").textContent=directionBoard.categories.length;
+      document.getElementById("directionFocusCount").textContent=items.filter(i=>i.status==="focus").length;
+      const hint=document.getElementById("directionPriorityHint");if(hint)hint.textContent="按住每项最右侧的拖动柄，可将它插入到其他事项之间。重点推进、正常推进、暂缓依次排列。";
+      const global=document.getElementById("directionGlobalList");
+      const visiblePriority=directionGlobalFilter==="focus"?directionBoard.priority.filter(id=>byId.get(id)?.status==="focus"):directionBoard.priority;
+      const globalTitle=document.getElementById("directionGlobalTitle");if(globalTitle)globalTitle.textContent=directionGlobalFilter==="focus"?"重点推进":"全局排名";
+      if(!visiblePriority.length)global.innerHTML='<div class="direction-empty">'+(directionGlobalFilter==="focus"?'目前还没有重点推进事项。':'还没有事项，点击「添加事项」开始建立你的方向清单。')+'</div>';
+      else global.innerHTML=visiblePriority.map((id,index)=>{
+        const item=byId.get(id);if(!item)return "";
+        const tint=categoryColorById.get(item.categoryId)||palette[0];
+        const rank=directionBoard.priority.indexOf(id)+1;
+        return `<div class="direction-item" style="--category-color:${tint[0]};--category-tint:${tint[1]};border-left:4px solid var(--category-color);background:linear-gradient(90deg,var(--category-tint),var(--card) 48%)" draggable="true" data-direction-id="${directionEscape(item.id)}" data-status="${item.status}">
+          <div class="direction-rank">${directionBoard.prioritySet?rank:"—"}</div>
+          <div><div class="direction-item-title">${directionEscape(item.title)}<span class="direction-status ${directionStatusClass(item.status)}">${directionStatusLabel(item.status)}</span></div><div class="direction-item-meta">${directionEscape(item.categoryEmoji)} ${directionEscape(item.categoryName)}</div></div>
+          <div class="direction-item-actions"><button class="direction-icon-btn" data-dir-action="edit" data-id="${directionEscape(id)}" aria-label="编辑事项" title="编辑">✎</button><span class="direction-drag-handle" title="按住拖动，插入到其他事项之间" aria-label="拖动调整排名" draggable="true">⠿</span></div>
+        </div>`;
+      }).join("");
+      const cats=document.getElementById("directionCategoryList");
+      if(!directionBoard.categories.length)cats.innerHTML='<div class="direction-empty">还没有大方向，点击「添加大方向」创建。</div>';
+      else cats.innerHTML=directionBoard.categories.map((cat,catIndex)=>{const tint=palette[catIndex%palette.length];return `<div class="direction-category" style="--category-color:${tint[0]};--category-tint:${tint[1]}">
+        <div class="direction-category-head"><span class="direction-category-emoji">${directionEscape(cat.emoji)}</span><span class="direction-category-name">${directionEscape(cat.name)}</span><span class="direction-category-count">${cat.items.length} 项</span><div class="direction-category-tools"><button class="direction-icon-btn" data-cat-action="add" data-id="${directionEscape(cat.id)}" title="在此大方向添加小方向">＋</button><button class="direction-icon-btn" data-cat-action="edit" data-id="${directionEscape(cat.id)}" title="编辑大方向">✎</button><button class="direction-icon-btn" data-cat-action="delete" data-id="${directionEscape(cat.id)}" title="删除领域">×</button></div></div>
+        <div class="direction-category-items">${cat.items.length?cat.items.map(item=>`<div class="direction-mini-item"><span class="direction-mini-item-name">${directionEscape(item.title)}</span><small>${directionStatusLabel(item.status)}</small><button class="direction-icon-btn" data-dir-action="edit" data-id="${directionEscape(item.id)}" aria-label="编辑事项">✎</button></div>`).join(""):'<div class="direction-empty">此领域还没有事项</div>'}</div>
+      </div>`;}).join("");
+    }
+    function directionSetView(view,filter="all") {
+      directionView=view;directionGlobalFilter=filter;
+      document.getElementById("directionGlobalView").hidden=view!=="global";
+      document.getElementById("directionCategoriesView").hidden=view!=="categories";
+      if(directionBoard)directionRender();
+      const target=document.getElementById(view==="global"?"directionGlobalView":"directionCategoriesView");
+      target?.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }
+    function directionInsertBetween(dragId,targetId,after){
+      if(!dragId||!targetId||dragId===targetId)return;
+      const all=new Map(directionAllItems().map(i=>[i.id,i]));
+      const dragged=all.get(dragId),target=all.get(targetId);
+      if(!dragged||!target)return;
+      if(dragged.status!==target.status){showToast("事项只能在相同推进级别内调整位置","error");return;}
+      const list=directionBoard.priority;const from=list.indexOf(dragId);if(from<0)return;
+      list.splice(from,1);
+      let targetIndex=list.indexOf(targetId);if(targetIndex<0)return;
+      let insertAt=targetIndex+(after?1:0);
+      const tier={focus:0,normal:1,paused:2};
+      let tierStart=0;while(tierStart<list.length&&tier[all.get(list[tierStart])?.status||"normal"]<tier[dragged.status])tierStart++;
+      let tierEnd=tierStart;while(tierEnd<list.length&&tier[all.get(list[tierEnd])?.status||"normal"]===tier[dragged.status])tierEnd++;
+      insertAt=Math.max(tierStart,Math.min(insertAt,tierEnd));
+      list.splice(insertAt,0,dragId);directionBoard.prioritySet=true;directionRender();directionQueueSave();showToast("已插入到新的排名位置","success");
+    }
+    function directionOpenModal(mode,data=null) {
+      directionModalMode=mode;directionModalData=data;
+      const body=document.getElementById("directionModalBody");
+      const title=document.getElementById("directionModalTitle");
+      const cats=directionBoard.categories;
+      if(mode==="category"){
+        title.textContent=data?"编辑大方向":"新增大方向";
+        body.innerHTML=`<div class="form-group"><label for="directionCatName">大方向名称</label><input id="directionCatName" maxlength="50" placeholder="例如：语言学习" value="${directionEscape(data?.name||"")}" /></div><div class="form-group"><label for="directionCatEmoji">图标（可选）</label><input id="directionCatEmoji" maxlength="8" placeholder="📁" value="${directionEscape(data?.emoji||"📁")}" /></div>`;
+      } else {
+        const item=data?.item||null;
+        title.textContent=item?"编辑事项":"新增事项";
+        const modalPalette=[['#8bb8e8','#edf4fb'],['#9bc9ad','#edf6ef'],['#d5ad83','#f8f0e7'],['#b6a0dc','#f2eef9'],['#e3a6b0','#fbf0f2'],['#8fc7c5','#edf7f6'],['#c3b47c','#f7f4e8']];
+        body.innerHTML=`
+          <div class="edit-intro"><span class="edit-intro-icon">✦</span><div><strong>${item?"把方向调整得更清晰":"记录一件想推进的事"}</strong><small>简单填写即可，之后也可以随时修改。</small></div></div>
+          <section class="edit-section edit-section-name"><div class="edit-section-heading"><span class="edit-step">01</span><div><b>这件事是什么？</b><small>用一句话描述你想完成的方向</small></div></div><div class="form-group"><label for="directionItemTitle">事项名称</label><input id="directionItemTitle" maxlength="120" placeholder="例如：完成英语口语练习计划" value="${directionEscape(item?.title||"")}" /></div></section>
+          <section class="edit-section edit-section-classify"><div class="edit-section-heading"><span class="edit-step">02</span><div><b>放到哪里、以什么节奏推进？</b><small>点击色块即可选择，无需打开下拉菜单</small></div></div><div class="form-group"><label>所属大方向</label><input type="hidden" id="directionItemCategory" value="${directionEscape(data?.categoryId||item?.categoryId||cats[0]?.id||"")}"><div class="edit-category-choices" id="directionCategoryChoices">${cats.map((c,i)=>{const tint=modalPalette[i%modalPalette.length];const selected=(data?.categoryId||item?.categoryId||cats[0]?.id)===c.id;return `<button type="button" class="edit-choice edit-category-choice" data-category-choice="${directionEscape(c.id)}" aria-pressed="${selected}" style="--choice-bg:${tint[1]};--choice-ink:${tint[0]};--choice-line:${tint[0]}55"><span class="edit-choice-dot"></span><span class="edit-choice-name">${directionEscape(c.emoji)} ${directionEscape(c.name)}</span></button>`;}).join("")}</div><span class="edit-field-caption">每个颜色对应一个大方向，选中后会同步到事项卡片。</span></div><div class="form-group" style="margin-top:17px"><label>推进状态</label><input type="hidden" id="directionItemStatus" value="${item?.status||"normal"}"><div class="edit-choice-group" id="directionStatusChoices"><button type="button" class="edit-choice" data-status-choice="focus" aria-pressed="${item?.status==="focus"}" style="--choice-bg:#fae9e7;--choice-ink:#b45f56;--choice-line:#e8c4bf"><span class="edit-choice-dot"></span>重点推进</button><button type="button" class="edit-choice" data-status-choice="normal" aria-pressed="${!item||item.status==="normal"}" style="--choice-bg:#f8f0dd;--choice-ink:#9a7a35;--choice-line:#e9d9b3"><span class="edit-choice-dot"></span>正常推进</button><button type="button" class="edit-choice" data-status-choice="paused" aria-pressed="${item?.status==="paused"}" style="--choice-bg:#eeedf1;--choice-ink:#817b88;--choice-line:#d9d5df"><span class="edit-choice-dot"></span>暂缓保留</button></div><span class="edit-field-caption">状态会影响事项在全局排名中的分组位置。</span></div></section>
+          <section class="edit-section edit-section-note"><div class="edit-section-heading"><span class="edit-step">03</span><div><b>补充一点背景</b><small>选填，写下有助于理解这件事的信息</small></div></div><div class="form-group"><label for="directionItemNote">备注 <em>选填</em></label><textarea id="directionItemNote" maxlength="500" placeholder="例如：希望在年底前能够独立完成一次英文演讲。">${directionEscape(item?.note||"")}</textarea></div></section>`
+      }
+      if(mode==="item"){
+        const categoryValue=document.getElementById("directionItemCategory");
+        const categoryChoices=document.getElementById("directionCategoryChoices");
+        if(categoryChoices&&categoryValue)categoryChoices.addEventListener("click",e=>{const btn=e.target.closest("[data-category-choice]");if(!btn)return;categoryValue.value=btn.dataset.categoryChoice;categoryChoices.querySelectorAll("[data-category-choice]").forEach(el=>el.setAttribute("aria-pressed",String(el===btn)));});
+        const statusValue=document.getElementById("directionItemStatus");
+        const statusChoices=document.getElementById("directionStatusChoices");
+        if(statusChoices&&statusValue)statusChoices.addEventListener("click",e=>{const btn=e.target.closest("[data-status-choice]");if(!btn)return;statusValue.value=btn.dataset.statusChoice;statusChoices.querySelectorAll("[data-status-choice]").forEach(el=>el.setAttribute("aria-pressed",String(el===btn)));});
+      }
+      const del=document.getElementById("directionModalDelete");if(del)del.remove();
+      if(mode==="item"&&data?.item){const b=document.createElement("button");b.id="directionModalDelete";b.type="button";b.className="direction-btn danger small";b.textContent="删除此事项";b.style.marginTop="10px";b.onclick=()=>directionDeleteItem(data.item.id);body.appendChild(b);}
+      document.getElementById("directionModalBackdrop").classList.add("show");document.getElementById("directionModalBackdrop").setAttribute("aria-hidden","false");
+    }
+    function directionCloseModal(){document.getElementById("directionModalBackdrop").classList.remove("show");document.getElementById("directionModalBackdrop").setAttribute("aria-hidden","true");directionModalMode="";directionModalData=null;}
+    function directionSaveModal(){
+      let statusChanged=false;
+      if(directionModalMode==="category"){
+        const name=document.getElementById("directionCatName").value.trim();const emoji=document.getElementById("directionCatEmoji").value.trim()||"📁";
+        if(!name){showToast("请填写大方向名称","error");return;}
+        if(directionModalData){const c=directionBoard.categories.find(x=>x.id===directionModalData.id);if(c){c.name=name;c.emoji=emoji;}}
+        else directionBoard.categories.push({id:directionId("cat"),name,emoji,items:[]});
+      } else {
+        const title=document.getElementById("directionItemTitle").value.trim();const categoryId=document.getElementById("directionItemCategory").value;const status=document.getElementById("directionItemStatus").value;const note=document.getElementById("directionItemNote").value.trim();
+        if(!title){showToast("请填写事项名称","error");return;}
+        const target=directionBoard.categories.find(c=>c.id===categoryId);if(!target){showToast("请先创建一个大方向","error");return;}
+        if(directionModalData?.item){
+          const id=directionModalData.item.id;let found=null;
+          directionBoard.categories.forEach(c=>{const idx=c.items.findIndex(i=>i.id===id);if(idx>=0){found=c.items.splice(idx,1)[0];}});
+          if(found){const oldStatus=found.status;found.title=title;found.status=status;found.note=note;target.items.push(found);
+            if(oldStatus!==status){statusChanged=true;directionBoard.priority=directionBoard.priority.filter(x=>x!==id);const allNow=new Map(directionAllItems().map(i=>[i.id,i]));const tier={focus:0,normal:1,paused:2};let insertAt=directionBoard.priority.findIndex(x=>tier[allNow.get(x)?.status||"normal"]>=tier[status]);if(insertAt<0)insertAt=directionBoard.priority.length;directionBoard.priority.splice(insertAt,0,id);directionBoard.prioritySet=true;}
+          }
+        } else {
+          const id=directionId();target.items.push({id,title,status,note});const allNow=new Map(directionAllItems().map(i=>[i.id,i]));const tier={focus:0,normal:1,paused:2};let insertAt=directionBoard.priority.findIndex(x=>tier[allNow.get(x)?.status||"normal"]>=tier[status]);if(insertAt<0)insertAt=directionBoard.priority.length;directionBoard.priority.splice(insertAt,0,id);
+        }
+      }
+      directionCloseModal();directionRender();directionQueueSave();showToast(statusChanged?"推进级别已调整，排名已自动移至对应级别位置":"已更新方向看板","success");
+    }
+    function directionDeleteItem(id){
+      if(!confirm("确定删除这个事项？此操作会从全局排名中移除。"))return;
+      directionBoard.categories.forEach(c=>c.items=c.items.filter(i=>i.id!==id));directionBoard.priority=directionBoard.priority.filter(x=>x!==id);
+      directionCloseModal();directionRender();directionQueueSave();showToast("事项已删除","success");
+    }
+    function directionCategoryAction(action,id){
+      const cat=directionBoard.categories.find(c=>c.id===id);if(!cat)return;
+      if(action==="add"){directionOpenModal("item",{categoryId:id});return;}
+      if(action==="edit"){directionOpenModal("category",cat);return;}
+      if(action==="delete"){
+        if(cat.items.length){showToast("这个大方向还有事项，请先移动或删除事项。","error");return;}
+        if(!confirm(`确定删除大方向「${cat.name}」？`))return;
+        directionBoard.categories=directionBoard.categories.filter(c=>c.id!==id);directionRender();directionQueueSave();
+      }
+    }
+    function directionExport(){
+      if(!directionBoard)return;
+      const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),board:directionBoard},null,2)],{type:"application/json"});
+      const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`个人方向看板备份-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);showToast("备份文件已导出","success");
+    }
+    async function directionImport(file){
+      if(!file)return;
+      try{const parsed=JSON.parse(await file.text());const raw=parsed.board||parsed;if(!Array.isArray(raw.categories))throw new Error("文件格式不正确");
+        if(!confirm("导入会覆盖当前云端看板。建议先导出当前备份，确定继续吗？"))return;
+        directionBoard=directionNormalize(raw);directionRender();await directionSaveBoard();showToast("备份已导入","success");
+      }catch(e){showToast("导入失败："+e.message,"error");}
+      finally{document.getElementById("directionImportFile").value="";}
+    }
+    function setupDirectionBoard(){
+      const personPicker=document.getElementById("directionPersonCards");
+      if(personPicker && !personPicker.dataset.bound){
+        personPicker.dataset.bound="1";
+        personPicker.addEventListener("click",event=>{
+          const card=event.target.closest("[data-direction-person]");
+          if(!card || !personPicker.contains(card))return;
+          event.preventDefault();
+          directionChoosePerson(card.dataset.directionPerson);
+        });
+      }
+      document.getElementById("directionBackHome").addEventListener("click",()=>{directionBackToPicker();document.querySelector('[data-page="home"]').click();});
+      document.getElementById("directionSwitchPersonBtn").addEventListener("click",directionBackToPicker);
+      document.getElementById("directionRefreshBtn").addEventListener("click",()=>directionLoadBoard());
+      document.getElementById("directionAddItemBtn").addEventListener("click",()=>{
+        if(!directionBoard.categories.length){showToast("请先添加一个领域","error");directionOpenModal("category");return;}
+        directionOpenModal("item",{categoryId:directionBoard.categories[0].id});
+      });
+      document.getElementById("directionAddCategoryBtn").addEventListener("click",()=>directionOpenModal("category"));
+      document.getElementById("directionFocusNav").addEventListener("click",()=>directionSetView("global","focus"));
+      document.getElementById("directionRankingNav").addEventListener("click",()=>directionSetView("global","all"));
+      document.getElementById("directionCategoryNav").addEventListener("click",()=>directionSetView("categories"));
+      document.getElementById("directionGlobalList").addEventListener("click",e=>{const b=e.target.closest('[data-dir-action="edit"]');if(!b)return;const item=directionAllItems().find(i=>i.id===b.dataset.id);if(item)directionOpenModal("item",{item,categoryId:item.categoryId});});
+      const priorityList=document.getElementById("directionGlobalList");let draggedDirectionId=null;let dropAfter=false;
+      priorityList.addEventListener("dragstart",e=>{const handle=e.target.closest(".direction-drag-handle");const card=e.target.closest("[data-direction-id]");if(!handle||!card){e.preventDefault();return;}draggedDirectionId=card.dataset.directionId;card.classList.add("dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",draggedDirectionId);});
+      priorityList.addEventListener("dragend",e=>{priorityList.querySelectorAll(".dragging,.drop-before,.drop-after").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));draggedDirectionId=null;});
+      priorityList.addEventListener("dragover",e=>{const card=e.target.closest("[data-direction-id]");if(!card||!draggedDirectionId||card.dataset.directionId===draggedDirectionId)return;e.preventDefault();const rect=card.getBoundingClientRect();dropAfter=e.clientY>rect.top+rect.height/2;priorityList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));card.classList.add(dropAfter?"drop-after":"drop-before");e.dataTransfer.dropEffect="move";});
+      priorityList.addEventListener("drop",e=>{const card=e.target.closest("[data-direction-id]");if(!card||!draggedDirectionId||card.dataset.directionId===draggedDirectionId)return;e.preventDefault();directionInsertBetween(draggedDirectionId,card.dataset.directionId,dropAfter);priorityList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));});
+      document.getElementById("directionCategoryList").addEventListener("click",e=>{const c=e.target.closest("[data-cat-action]");if(c){directionCategoryAction(c.dataset.catAction,c.dataset.id);return;}const b=e.target.closest("[data-dir-action]");if(b){const item=directionAllItems().find(i=>i.id===b.dataset.id);if(item)directionOpenModal("item",{item,categoryId:item.categoryId});}});
+      document.getElementById("directionModalCancel").addEventListener("click",directionCloseModal);
+      document.getElementById("directionModalSave").addEventListener("click",directionSaveModal);
+      document.getElementById("directionModalBackdrop").addEventListener("click",e=>{if(e.target.id==="directionModalBackdrop")directionCloseModal();});
+      document.getElementById("directionExportBtn").addEventListener("click",directionExport);
+      document.getElementById("directionImportBtn").addEventListener("click",()=>document.getElementById("directionImportFile").click());
+      const _dif = document.getElementById("directionImportFile");
+      const _dib = document.getElementById("directionImportBtn");
+      const _deb = document.getElementById("directionExportBtn");
+      if(_dif) _dif.addEventListener("change",e=>directionImport(e.target.files?.[0]));
+      if(_dib) _dib.addEventListener("click",()=>{const f=document.getElementById("directionImportFile");if(f)f.click();});
+      if(_deb) _deb.addEventListener("click",directionExport);
+
+    }
+
+</script>
 </body>
 </html>
