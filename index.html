@@ -647,7 +647,14 @@
     .direction-category-emoji { font-size:20px; }
     .direction-category-name { flex:1; min-width:0; font-size:14px; font-weight:800; }
     .direction-category-count { color:var(--text-3); font-size:10px; }
-    .direction-category-tools { display:flex; gap:4px; }
+    .direction-category-tools { display:flex; gap:4px; align-items:center; }
+    .direction-category-drag-handle { display:inline-flex; align-items:center; justify-content:center; width:27px; height:29px; margin-left:2px; border-radius:9px; color:var(--text-3); cursor:grab; user-select:none; touch-action:none; font-size:19px; line-height:1; transition:background .18s,color .18s,transform .18s; }
+    .direction-category-drag-handle:hover { background:rgba(125,110,88,.10); color:var(--text); }
+    .direction-category-drag-handle:active { cursor:grabbing; }
+    .direction-category.dragging { opacity:.48; transform:scale(.995); }
+    .direction-category.drop-before { box-shadow:inset 0 3px 0 var(--category-color),var(--shadow); }
+    .direction-category.drop-after { box-shadow:inset 0 -3px 0 var(--category-color),var(--shadow); }
+    #directionCategoryList { display:grid; gap:11px; }
     .direction-category-items { border-top:1px solid var(--border); padding:7px 10px 10px; display:grid; gap:6px; }
     .direction-mini-item { display:flex; align-items:center; gap:8px; padding:8px 7px; border-radius:9px; background:var(--bg); min-width:0; }
     .direction-mini-item-name { flex:1; min-width:0; font-size:12px; overflow-wrap:anywhere; }
@@ -1026,7 +1033,7 @@
 
     <!-- HOME PAGE -->
     <section id="page-home" class="app-page active">
-      <div class="page-title">一起变好 <span class="version-badge">v5.2</span></div>
+      <div class="page-title">一起变好 <span class="version-badge">v3.8</span></div>
       <div class="subtitle">记录每一次获得，也记录每一次自由 ✨</div>
 
       <div id="weeklyCard" class="card summary-card" style="display:none"></div>
@@ -3599,10 +3606,21 @@
       }).join("");
       const cats=document.getElementById("directionCategoryList");
       if(!directionBoard.categories.length)cats.innerHTML='<div class="direction-empty">还没有大方向，点击「添加大方向」创建。</div>';
-      else cats.innerHTML=directionBoard.categories.map((cat,catIndex)=>{const tint=palette[catIndex%palette.length];return `<div class="direction-category" style="--category-color:${tint[0]};--category-tint:${tint[1]}">
-        <div class="direction-category-head"><span class="direction-category-emoji">${directionEscape(cat.emoji)}</span><span class="direction-category-name">${directionEscape(cat.name)}</span><span class="direction-category-count">${cat.items.length} 项</span><div class="direction-category-tools"><button class="direction-icon-btn" data-cat-action="add" data-id="${directionEscape(cat.id)}" title="在此大方向添加小方向">＋</button><button class="direction-icon-btn" data-cat-action="edit" data-id="${directionEscape(cat.id)}" title="编辑大方向">✎</button><button class="direction-icon-btn" data-cat-action="delete" data-id="${directionEscape(cat.id)}" title="删除领域">×</button></div></div>
+      else cats.innerHTML=directionBoard.categories.map((cat,catIndex)=>{const tint=palette[catIndex%palette.length];return `<div class="direction-category" data-category-id="${directionEscape(cat.id)}" style="--category-color:${tint[0]};--category-tint:${tint[1]}">
+        <div class="direction-category-head"><span class="direction-category-emoji">${directionEscape(cat.emoji)}</span><span class="direction-category-name">${directionEscape(cat.name)}</span><span class="direction-category-count">${cat.items.length} 项</span><div class="direction-category-tools"><button class="direction-icon-btn" data-cat-action="add" data-id="${directionEscape(cat.id)}" title="在此大方向添加小方向">＋</button><button class="direction-icon-btn" data-cat-action="edit" data-id="${directionEscape(cat.id)}" title="编辑大方向">✎</button><button class="direction-icon-btn" data-cat-action="delete" data-id="${directionEscape(cat.id)}" title="删除领域">×</button><span class="direction-category-drag-handle" draggable="true" title="按住拖动，调整大方向顺序" aria-label="拖动调整大方向顺序">⠿</span></div></div>
         <div class="direction-category-items">${cat.items.length?cat.items.map(item=>`<div class="direction-mini-item"><span class="direction-mini-item-name">${directionEscape(item.title)}</span><small>${directionStatusLabel(item.status)}</small><button class="direction-icon-btn" data-dir-action="edit" data-id="${directionEscape(item.id)}" aria-label="编辑事项">✎</button></div>`).join(""):'<div class="direction-empty">此领域还没有事项</div>'}</div>
       </div>`;}).join("");
+    }
+    function directionReorderCategories(dragId,targetId,after){
+      if(!dragId||!targetId||dragId===targetId)return;
+      const list=directionBoard.categories;
+      const from=list.findIndex(c=>c.id===dragId);
+      if(from<0)return;
+      const [dragged]=list.splice(from,1);
+      const targetIndex=list.findIndex(c=>c.id===targetId);
+      if(targetIndex<0){list.splice(from,0,dragged);return;}
+      list.splice(targetIndex+(after?1:0),0,dragged);
+      directionRender();directionQueueSave();showToast("大方向顺序已更新","success");
     }
     function directionSetView(view,filter="all") {
       directionView=view;directionGlobalFilter=filter;
@@ -3739,6 +3757,11 @@
       priorityList.addEventListener("dragover",e=>{const card=e.target.closest("[data-direction-id]");if(!card||!draggedDirectionId||card.dataset.directionId===draggedDirectionId)return;e.preventDefault();const rect=card.getBoundingClientRect();dropAfter=e.clientY>rect.top+rect.height/2;priorityList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));card.classList.add(dropAfter?"drop-after":"drop-before");e.dataTransfer.dropEffect="move";});
       priorityList.addEventListener("drop",e=>{const card=e.target.closest("[data-direction-id]");if(!card||!draggedDirectionId||card.dataset.directionId===draggedDirectionId)return;e.preventDefault();directionInsertBetween(draggedDirectionId,card.dataset.directionId,dropAfter);priorityList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));});
       document.getElementById("directionCategoryList").addEventListener("click",e=>{const c=e.target.closest("[data-cat-action]");if(c){directionCategoryAction(c.dataset.catAction,c.dataset.id);return;}const b=e.target.closest("[data-dir-action]");if(b){const item=directionAllItems().find(i=>i.id===b.dataset.id);if(item)directionOpenModal("item",{item,categoryId:item.categoryId});}});
+      const categoryList=document.getElementById("directionCategoryList");let draggedCategoryId=null;let categoryDropAfter=false;
+      categoryList.addEventListener("dragstart",e=>{const handle=e.target.closest(".direction-category-drag-handle");const card=e.target.closest("[data-category-id]");if(!handle||!card){e.preventDefault();return;}draggedCategoryId=card.dataset.categoryId;card.classList.add("dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",draggedCategoryId);});
+      categoryList.addEventListener("dragend",()=>{categoryList.querySelectorAll(".dragging,.drop-before,.drop-after").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));draggedCategoryId=null;});
+      categoryList.addEventListener("dragover",e=>{const card=e.target.closest("[data-category-id]");if(!card||!draggedCategoryId||card.dataset.categoryId===draggedCategoryId)return;e.preventDefault();const rect=card.getBoundingClientRect();categoryDropAfter=e.clientY>rect.top+rect.height/2;categoryList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));card.classList.add(categoryDropAfter?"drop-after":"drop-before");e.dataTransfer.dropEffect="move";});
+      categoryList.addEventListener("drop",e=>{const card=e.target.closest("[data-category-id]");if(!card||!draggedCategoryId||card.dataset.categoryId===draggedCategoryId)return;e.preventDefault();directionReorderCategories(draggedCategoryId,card.dataset.categoryId,categoryDropAfter);categoryList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));});
       document.getElementById("directionModalCancel").addEventListener("click",directionCloseModal);
       document.getElementById("directionModalSave").addEventListener("click",directionSaveModal);
       document.getElementById("directionModalBackdrop").addEventListener("click",e=>{if(e.target.id==="directionModalBackdrop")directionCloseModal();});
