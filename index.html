@@ -700,11 +700,11 @@
     #page-direction .focus-nav{background:linear-gradient(150deg,#fffaf7,#f8ece8)}
     #page-direction .ranking-nav{background:linear-gradient(150deg,#fffefa,#f4f0e8)}
     #page-direction .category-nav{background:linear-gradient(150deg,#fbfaff,#f0edf8)}
-    #page-direction .direction-item{grid-template-columns:28px minmax(0,1fr) auto;cursor:default}
-    #page-direction .direction-item-actions{gap:7px}
-    #page-direction .direction-item-actions .direction-icon-btn{order:1;width:34px;height:34px;border-radius:11px;background:#f8f5ef;border-color:rgba(145,124,93,.13);font-size:15px}
-    #page-direction .direction-drag-handle{order:2;display:grid;place-items:center;width:34px;height:34px;padding:0;border-radius:11px;background:#eee9df;color:#81786b;font-size:20px;cursor:grab;touch-action:none}
-    #page-direction .direction-drag-handle:active{cursor:grabbing;background:#e6dfd2}
+    #page-direction .direction-item{grid-template-columns:28px minmax(0,1fr);cursor:pointer;touch-action:pan-y}
+    #page-direction .direction-item:active{background:var(--bg)!important}
+    #page-direction .direction-item.long-press-dragging{opacity:.55;outline:2px dashed #9b8fc2;transform:scale(.99)}
+    #page-direction .direction-mini-item{cursor:pointer}
+    #page-direction .direction-mini-item:active{filter:brightness(.97)}
     #page-direction .direction-item.drop-before{box-shadow:inset 0 3px 0 #9b8fc2,0 3px 12px rgba(90,72,45,.04)}
     #page-direction .direction-item.drop-after{box-shadow:inset 0 -3px 0 #9b8fc2,0 3px 12px rgba(90,72,45,.04)}
     #page-direction .direction-modal{border-radius:25px;padding:23px;background:linear-gradient(155deg,#fffefa,#f8f4ed);border:1px solid rgba(145,124,93,.13);box-shadow:0 22px 70px rgba(60,48,34,.20)}
@@ -3598,17 +3598,16 @@
         const item=byId.get(id);if(!item)return "";
         const tint=categoryColorById.get(item.categoryId)||palette[0];
         const rank=directionBoard.priority.indexOf(id)+1;
-        return `<div class="direction-item" style="--category-color:${tint[0]};--category-tint:${tint[1]};border-left:4px solid var(--category-color);background:linear-gradient(90deg,var(--category-tint),var(--card) 48%)" draggable="true" data-direction-id="${directionEscape(item.id)}" data-status="${item.status}">
+        return `<div class="direction-item" style="--category-color:${tint[0]};--category-tint:${tint[1]};border-left:4px solid var(--category-color);background:linear-gradient(90deg,var(--category-tint),var(--card) 48%)" data-direction-id="${directionEscape(item.id)}" data-status="${item.status}" role="button" tabindex="0" aria-label="点击编辑 ${directionEscape(item.title)}，长按拖动调整排名">
           <div class="direction-rank">${directionBoard.prioritySet?rank:"—"}</div>
           <div><div class="direction-item-title">${directionEscape(item.title)}<span class="direction-status ${directionStatusClass(item.status)}">${directionStatusLabel(item.status)}</span></div><div class="direction-item-meta">${directionEscape(item.categoryEmoji)} ${directionEscape(item.categoryName)}</div></div>
-          <div class="direction-item-actions"><button class="direction-icon-btn" data-dir-action="edit" data-id="${directionEscape(id)}" aria-label="编辑事项" title="编辑">✎</button><span class="direction-drag-handle" title="按住拖动，插入到其他事项之间" aria-label="拖动调整排名" draggable="true">⠿</span></div>
         </div>`;
       }).join("");
       const cats=document.getElementById("directionCategoryList");
       if(!directionBoard.categories.length)cats.innerHTML='<div class="direction-empty">还没有大方向，点击「添加大方向」创建。</div>';
       else cats.innerHTML=directionBoard.categories.map((cat,catIndex)=>{const tint=palette[catIndex%palette.length];return `<div class="direction-category" data-category-id="${directionEscape(cat.id)}" style="--category-color:${tint[0]};--category-tint:${tint[1]}">
         <div class="direction-category-head"><span class="direction-category-emoji">${directionEscape(cat.emoji)}</span><span class="direction-category-name">${directionEscape(cat.name)}</span><span class="direction-category-count">${cat.items.length} 项</span><div class="direction-category-tools"><button class="direction-icon-btn" data-cat-action="add" data-id="${directionEscape(cat.id)}" title="在此大方向添加小方向">＋</button><button class="direction-icon-btn" data-cat-action="edit" data-id="${directionEscape(cat.id)}" title="编辑大方向">✎</button><button class="direction-icon-btn" data-cat-action="delete" data-id="${directionEscape(cat.id)}" title="删除领域">×</button><span class="direction-category-drag-handle" draggable="true" title="按住拖动，调整大方向顺序" aria-label="拖动调整大方向顺序">⠿</span></div></div>
-        <div class="direction-category-items">${cat.items.length?cat.items.map(item=>`<div class="direction-mini-item"><span class="direction-mini-item-name">${directionEscape(item.title)}</span><small>${directionStatusLabel(item.status)}</small><button class="direction-icon-btn" data-dir-action="edit" data-id="${directionEscape(item.id)}" aria-label="编辑事项">✎</button></div>`).join(""):'<div class="direction-empty">此领域还没有事项</div>'}</div>
+        <div class="direction-category-items">${cat.items.length?cat.items.map(item=>`<div class="direction-mini-item" data-direction-id="${directionEscape(item.id)}" role="button" tabindex="0" aria-label="点击编辑 ${directionEscape(item.title)}"><span class="direction-mini-item-name">${directionEscape(item.title)}</span><small>${directionStatusLabel(item.status)}</small></div>`).join(""):'<div class="direction-empty">此领域还没有事项</div>'}</div>
       </div>`;}).join("");
     }
     function directionReorderCategories(dragId,targetId,after){
@@ -3750,13 +3749,34 @@
       document.getElementById("directionFocusNav").addEventListener("click",()=>directionSetView("global","focus"));
       document.getElementById("directionRankingNav").addEventListener("click",()=>directionSetView("global","all"));
       document.getElementById("directionCategoryNav").addEventListener("click",()=>directionSetView("categories"));
-      document.getElementById("directionGlobalList").addEventListener("click",e=>{const b=e.target.closest('[data-dir-action="edit"]');if(!b)return;const item=directionAllItems().find(i=>i.id===b.dataset.id);if(item)directionOpenModal("item",{item,categoryId:item.categoryId});});
-      const priorityList=document.getElementById("directionGlobalList");let draggedDirectionId=null;let dropAfter=false;
-      priorityList.addEventListener("dragstart",e=>{const handle=e.target.closest(".direction-drag-handle");const card=e.target.closest("[data-direction-id]");if(!handle||!card){e.preventDefault();return;}draggedDirectionId=card.dataset.directionId;card.classList.add("dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",draggedDirectionId);});
-      priorityList.addEventListener("dragend",e=>{priorityList.querySelectorAll(".dragging,.drop-before,.drop-after").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));draggedDirectionId=null;});
-      priorityList.addEventListener("dragover",e=>{const card=e.target.closest("[data-direction-id]");if(!card||!draggedDirectionId||card.dataset.directionId===draggedDirectionId)return;e.preventDefault();const rect=card.getBoundingClientRect();dropAfter=e.clientY>rect.top+rect.height/2;priorityList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));card.classList.add(dropAfter?"drop-after":"drop-before");e.dataTransfer.dropEffect="move";});
-      priorityList.addEventListener("drop",e=>{const card=e.target.closest("[data-direction-id]");if(!card||!draggedDirectionId||card.dataset.directionId===draggedDirectionId)return;e.preventDefault();directionInsertBetween(draggedDirectionId,card.dataset.directionId,dropAfter);priorityList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));});
-      document.getElementById("directionCategoryList").addEventListener("click",e=>{const c=e.target.closest("[data-cat-action]");if(c){directionCategoryAction(c.dataset.catAction,c.dataset.id);return;}const b=e.target.closest("[data-dir-action]");if(b){const item=directionAllItems().find(i=>i.id===b.dataset.id);if(item)directionOpenModal("item",{item,categoryId:item.categoryId});}});
+      const priorityList=document.getElementById("directionGlobalList");
+      const openDirectionItem=id=>{const item=directionAllItems().find(i=>i.id===id);if(item)directionOpenModal("item",{item,categoryId:item.categoryId});};
+      priorityList.addEventListener("click",e=>{if(priorityList.dataset.longPressed==="1"){priorityList.dataset.longPressed="0";return;}const card=e.target.closest("[data-direction-id]");if(card)openDirectionItem(card.dataset.directionId);});
+      priorityList.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-direction-id]")){e.preventDefault();openDirectionItem(e.target.dataset.directionId);}});
+      // 长按小方向卡片后进入拖动；普通点击仍然打开编辑窗口。
+      let pressTimer=null,pressCard=null,draggingDirectionId=null,pointerId=null,dropAfter=false;
+      const clearPress=()=>{if(pressTimer)clearTimeout(pressTimer);pressTimer=null;};
+      const clearDragStyles=()=>priorityList.querySelectorAll(".long-press-dragging,.drop-before,.drop-after").forEach(x=>x.classList.remove("long-press-dragging","drop-before","drop-after"));
+      priorityList.addEventListener("pointerdown",e=>{
+        const card=e.target.closest("[data-direction-id]");if(!card||e.button!==0)return;
+        clearPress();pressCard=card;pointerId=e.pointerId;pressCard._pressX=e.clientX;pressCard._pressY=e.clientY;
+        pressTimer=setTimeout(()=>{draggingDirectionId=card.dataset.directionId;priorityList.dataset.longPressed="1";card.classList.add("long-press-dragging");card.setPointerCapture?.(pointerId);if(navigator.vibrate)navigator.vibrate(25);},450);
+      });
+      priorityList.addEventListener("pointermove",e=>{
+        if(!pressCard||e.pointerId!==pointerId)return;
+        if(!draggingDirectionId&&Math.hypot(e.clientX-(pressCard._pressX??e.clientX),e.clientY-(pressCard._pressY??e.clientY))>10){clearPress();return;}
+        if(!draggingDirectionId)return;
+        const target=document.elementFromPoint(e.clientX,e.clientY)?.closest("[data-direction-id]");
+        priorityList.querySelectorAll(".drop-before,.drop-after").forEach(x=>x.classList.remove("drop-before","drop-after"));
+        if(target&&target.dataset.directionId!==draggingDirectionId){const rect=target.getBoundingClientRect();dropAfter=e.clientY>rect.top+rect.height/2;target.classList.add(dropAfter?"drop-after":"drop-before");}
+      });
+      priorityList.addEventListener("pointerup",e=>{
+        if(e.pointerId!==pointerId)return;clearPress();
+        if(draggingDirectionId){const target=document.elementFromPoint(e.clientX,e.clientY)?.closest("[data-direction-id]");if(target&&target.dataset.directionId!==draggingDirectionId)directionInsertBetween(draggingDirectionId,target.dataset.directionId,dropAfter);clearDragStyles();setTimeout(()=>{priorityList.dataset.longPressed="0";},0);}
+        draggingDirectionId=null;pressCard=null;pointerId=null;
+      });
+      priorityList.addEventListener("pointercancel",()=>{clearPress();clearDragStyles();draggingDirectionId=null;pressCard=null;pointerId=null;});
+      document.getElementById("directionCategoryList").addEventListener("click",e=>{const c=e.target.closest("[data-cat-action]");if(c){directionCategoryAction(c.dataset.catAction,c.dataset.id);return;}const mini=e.target.closest(".direction-mini-item[data-direction-id]");if(mini)openDirectionItem(mini.dataset.directionId);});
       const categoryList=document.getElementById("directionCategoryList");let draggedCategoryId=null;let categoryDropAfter=false;
       categoryList.addEventListener("dragstart",e=>{const handle=e.target.closest(".direction-category-drag-handle");const card=e.target.closest("[data-category-id]");if(!handle||!card){e.preventDefault();return;}draggedCategoryId=card.dataset.categoryId;card.classList.add("dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",draggedCategoryId);});
       categoryList.addEventListener("dragend",()=>{categoryList.querySelectorAll(".dragging,.drop-before,.drop-after").forEach(x=>x.classList.remove("dragging","drop-before","drop-after"));draggedCategoryId=null;});
